@@ -8,17 +8,17 @@
 # WITHOUT ANY WARRANTY, to the extent permitted by law; without even the
 # implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 
-<<<<<<< HEAD
+
 # We require CMake >= 3.0
 cmake_minimum_required(VERSION 3.0)
 
 =======
->>>>>>> origin/master
+
 # Set projectname (must be done AFTER setting configurationtypes)
 project(TrinityCore)
 
 # CMake policies (can not be handled elsewhere)
-<<<<<<< HEAD
+
 cmake_policy(SET CMP0005 OLD)
 if(POLICY CMP0043)
   cmake_policy(SET CMP0043 OLD) # Disable 'Ignore COMPILE_DEFINITIONS_<Config> properties'
@@ -33,7 +33,7 @@ cmake_policy(SET CMP0005 OLD)
 if(POLICY CMP0043)
   cmake_policy(SET CMP0043 OLD) # Disable 'Ignore COMPILE_DEFINITIONS_<Config> properties'
 endif(POLICY CMP0043)
->>>>>>> origin/master
+
 
 # add this options before PROJECT keyword
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
@@ -55,10 +55,10 @@ endif()
 
 include(CheckCXXSourceRuns)
 include(CheckIncludeFiles)
-<<<<<<< HEAD
+
 include(ConfigureScripts)
 =======
->>>>>>> origin/master
+
 
 # set default buildoptions and print them
 include(cmake/options.cmake)
@@ -72,7 +72,7 @@ endif()
 include(CheckPlatform)
 
 include(GroupSources)
-<<<<<<< HEAD
+
 include(AutoCollect)
 
 find_package(PCHSupport)
@@ -96,7 +96,7 @@ if( UNIX )
   find_package(BZip2)
 endif()
 
->>>>>>> origin/master
+
 if(NOT WITHOUT_GIT)
   find_package(Git)
 endif()
