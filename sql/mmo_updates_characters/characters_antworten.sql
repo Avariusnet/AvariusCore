@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS `antworten` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
+  `frage` VARCHAR(250) NOT NULL COMMENT '',
+  `antwort` VARCHAR(45) NOT NULL COMMENT '',
+  `belohnung` INT NOT NULL COMMENT '',
+  `anzahl` INT NOT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '');
