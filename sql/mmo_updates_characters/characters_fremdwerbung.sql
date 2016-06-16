@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS `fremdwerbung` (
+  `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
+  `nachricht` VARCHAR(45) NULL COMMENT '',
+  `player` VARCHAR(45) NULL COMMENT '',
+  `guid` INT NULL COMMENT '',
+  `accid` INT NULL COMMENT '',
+  `datum` INT NULL COMMENT '',
+  PRIMARY KEY (`id`)  COMMENT '');
