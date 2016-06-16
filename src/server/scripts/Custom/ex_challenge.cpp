@@ -36,7 +36,9 @@ public: challenge() : CreatureScript("challenge"){ }
 		{
 			switch (uiAction)
 			{
+			default:
                     return true;
+
             }
 			return true;
 		}

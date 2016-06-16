@@ -33,6 +33,24 @@ class gildenvendor : public CreatureScript
 public: gildenvendor() : CreatureScript("gildenvendor"){ }
 
 
+		void gildenhausfrei(Player* player, uint32 id){
+			QueryResult result;
+			result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", id);
+			Field *fields = result->Fetch();
+			uint32 gilde = fields[0].GetUInt32();
+			if (gilde == 0){
+				Gildenhausport(id, player->GetSession()->GetPlayer());
+				player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
+				return;
+			}
+			else {
+				player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
+				return;
+			}
+
+		}
+
+
 		void Gildenhausverkauf(Player* player){
 			uint32 platzhalter = 0;
 			uint32 gilde = player->GetGuildId();
@@ -408,13 +426,13 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 
 			case 39:
 			{
-				QueryResult result;
+				/*QueryResult result;
 				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 2);
 				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
+				uint32 gilde = fields[0].GetUInt32();*/
 
-
-				if (gilde == 0){
+				gildenhausfrei(player->GetSession()->GetPlayer() , 2);
+				/*if (gilde == 0){
 					Gildenhausport(2, player->GetSession()->GetPlayer());
 					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
 				}
@@ -422,12 +440,14 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 				else {
 					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
 					return true;
-				}
+				}*/
 			}break;
 
 			case 40:
 			{
-				QueryResult result;
+
+				gildenhausfrei(player->GetSession()->GetPlayer(), 3);
+				/*QueryResult result;
 				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 3);
 				Field *fields = result->Fetch();
 				uint32 gilde = fields[0].GetUInt32();
@@ -439,7 +459,7 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 				else {
 					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
 					return true;
-				}
+				}*/
 			}break;
 
 			case 41:
@@ -1299,7 +1319,7 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 				uint32 gildenid = player->GetGuildId();
 
 				// Wetlands mountain camp -> würde ich nicht verwenden!!! (oder für eine 1-Mann Gilde *gg*)
-				Gildenhauszuordnung(gildenid, 26, 10, 20, player->GetSession()->GetPlayer());
+				//Gildenhauszuordnung(gildenid, 26, 10, 20, player->GetSession()->GetPlayer());
 				player->PlayerTalkClass->SendCloseGossip();
 			}break;
 
@@ -1325,7 +1345,7 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 			{
 				uint32 gildenid = player->GetGuildId();
 				// Karazhan Smiley -> würde ich nicht verwenden -> Man versperrt damit den mit Absicht verbauten Weg von Blizz!!!
-				Gildenhauszuordnung(gildenid, 29, 10, 30, player->GetSession()->GetPlayer());
+				//Gildenhauszuordnung(gildenid, 29, 10, 30, player->GetSession()->GetPlayer());
 				player->PlayerTalkClass->SendCloseGossip();
 				
 			}break;
@@ -1343,7 +1363,7 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 			{
 				uint32 gildenid = player->GetGuildId();
 				// Undercity Top Tier -> bitte nicht verwenden, ich wüsste nicht wie man das sichern sollte + von außen sieht man rein!
-				Gildenhauszuordnung(gildenid, 31, 25, 40, player->GetSession()->GetPlayer());
+				//Gildenhauszuordnung(gildenid, 31, 25, 40, player->GetSession()->GetPlayer());
 				player->PlayerTalkClass->SendCloseGossip();
 			}break;
 
@@ -1351,7 +1371,7 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 			{
 				uint32 gildenid = player->GetGuildId();
 				// Stormwind Cut-Throat Alley -> direkt in SW...
-				Gildenhauszuordnung(gildenid, 32, 10, 30, player->GetSession()->GetPlayer());
+				//Gildenhauszuordnung(gildenid, 32, 10, 30, player->GetSession()->GetPlayer());
 				player->PlayerTalkClass->SendCloseGossip();
 			}break;
 
@@ -1375,7 +1395,7 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 			{
 				uint32 gildenid = player->GetGuildId();
 				// Outland Nagrand: Challes Home for Little Tykes -> NICHT verwenden, QUEST Gebiet!!!
-				Gildenhauszuordnung(gildenid, 35, 25, 40, player->GetSession()->GetPlayer());
+				//Gildenhauszuordnung(gildenid, 35, 25, 40, player->GetSession()->GetPlayer());
 				player->PlayerTalkClass->SendCloseGossip();
 			}break;
 
@@ -1399,7 +1419,7 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 			{
 				uint32 gildenid = player->GetGuildId();
 				// Troll Village in mountains 2 (Darkshore) -> Ist schon oben verwendet! Troll Dorf!
-				Gildenhauszuordnung(gildenid, 38, 40, 50, player->GetSession()->GetPlayer());
+				//Gildenhauszuordnung(gildenid, 38, 40, 50, player->GetSession()->GetPlayer());
 				player->PlayerTalkClass->SendCloseGossip();
 			}break;
 
