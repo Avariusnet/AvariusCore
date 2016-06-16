@@ -554,3 +554,9 @@ rbac::RBACPermissionContainer const& AccountMgr::GetRBACDefaultPermissions(uint8
     TC_LOG_TRACE("rbac", "AccountMgr::GetRBACDefaultPermissions: secLevel %u - size: %u", secLevel, uint32(_defaultPermissions[secLevel].size()));
     return _defaultPermissions[secLevel];
 }
+
+uint32 AccountMgr::VipDaysLeft(uint32 accountId)
+{
+	QueryResult result = LoginDatabase.PQuery("SELECT DATEDIFF(FROM_UNIXTIME(unsetdate), NOW()) FROM account_premium WHERE id = %u AND active = 1", accountId);
+	return (result) ? (*result)[0].GetUInt32() : 0;
+}
