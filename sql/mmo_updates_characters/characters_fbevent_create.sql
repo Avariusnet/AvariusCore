@@ -1,8 +1,0 @@
-CREATE TABLE  IF NOT EXISTS `fb_event` (
-  `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
-  `name` VARCHAR(45) NULL COMMENT '',
-  `guid` VARCHAR(45) NULL COMMENT '',
-  `accountname` VARCHAR(45) NULL COMMENT '',
-  `accountid` VARCHAR(45) NULL COMMENT '',
-  `date` INT NULL COMMENT '',
-  PRIMARY KEY (`id`)  COMMENT '');
