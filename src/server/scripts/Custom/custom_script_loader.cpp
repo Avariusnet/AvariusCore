@@ -30,7 +30,7 @@ void AddSC_npc_vip();
 //TeleNPC2
 void AddSC_npc_teleport();
 // Fake Players
-void AddSC_fake_commandscript();
+//void AddSC_fake_commandscript();
 // WorldChat
 //void AddSC_cs_world_chat();
 // Congrats on Level
@@ -105,7 +105,7 @@ void AddCustomScripts()
 	// TeleNPC2
 	AddSC_npc_teleport();
 	// Fake Players
-	AddSC_fake_commandscript();
+	//AddSC_fake_commandscript();
 	//WorldChat
 	//AddSC_cs_world_chat();	
 	// Congrats on Level
