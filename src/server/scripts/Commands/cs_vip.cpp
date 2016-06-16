@@ -91,12 +91,12 @@ bool static HandleVipAddCommand(ChatHandler* handler, char const* args)
 
 	if (!account || !duration || !atoi(duration))
 		return false;
-
+	
 	std::string accountName = account;
 	uint32 durationSecs = atoi(duration) * 86400;
 	std::string gm = handler->GetSession()->GetPlayerName();
-
-	if (!AccountMgr::normalizeString(accountName))
+	uint32 accountid = AccountMgr::GetId(accountName);
+	if (!AccountMgr::GetName(accountid ,accountName))
 	{
 		handler->PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, accountName.c_str());
 		handler->SetSentErrorMessage(true);
@@ -478,8 +478,9 @@ static bool HandleVipStatusCommand(ChatHandler* handler, char const* args)
 			return false;
 
 		std::string accountName = strtok((char*)args, " ");
-
-		if (!AccountMgr::normalizeString(accountName))
+		// Fix?!
+		uint32 accountid = AccountMgr::GetId(accountName);
+		if (!AccountMgr::GetName(accountid,accountName))
 		{
 			handler->PSendSysMessage(LANG_ACCOUNT_NOT_EXIST, accountName.c_str());
 			handler->SetSentErrorMessage(true);
