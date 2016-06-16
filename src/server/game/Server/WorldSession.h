@@ -278,7 +278,9 @@ class TC_GAME_API WorldSession
 
         void InitializeSession();
         void InitializeSessionCallback(SQLQueryHolder* realmHolder);
-
+		//MMO Custom start
+		bool IsPremium() const { return _ispremium; }
+		//MMO Custom end
         rbac::RBACData* GetRBACData();
         bool HasPermission(uint32 permissionId);
         void LoadPermissions();
@@ -1045,7 +1047,9 @@ class TC_GAME_API WorldSession
 
         // Warden
         Warden* _warden;                                    // Remains NULL if Warden system is not enabled by config
-
+		//MMO Custom start
+		bool _ispremium;
+		//MMO Custom end
         time_t _logoutTime;
         bool m_inQueue;                                     // session wait in auth.queue
         bool m_playerLoading;                               // code processed in LoginPlayer
