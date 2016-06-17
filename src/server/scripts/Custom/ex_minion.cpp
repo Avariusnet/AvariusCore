@@ -32,11 +32,11 @@ public: minion() : CreatureScript("minion"){ }
 			switch (uiAction)
 			{
 
-			case 1:
+			case 0:
 			{
-				if (Creature* creature = player->FindNearestCreature(190001, 25.0f))
+				if (Creature* creature = player->FindNearestCreature(800059, 25.0f))
 				{
-					creature->Say(190001, creature);
+					
 					creature->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, creature->GetFollowAngle(), MOTION_SLOT_ACTIVE);
 				}
 
