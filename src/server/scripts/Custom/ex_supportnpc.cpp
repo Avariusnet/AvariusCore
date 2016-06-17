@@ -20,6 +20,8 @@
 #include "WorldSession.h"
 #include <sstream>
 #include <string>
+#include "ScriptedCreature.h"
+#include "Player.h"
 
 
 class supportnpc : public CreatureScript
@@ -27,38 +29,21 @@ class supportnpc : public CreatureScript
 public:
 		supportnpc() : CreatureScript("supportnpc") { }
 		
-		struct supportnpc_welcome_ai : public ScriptedAI
-		{
-			
+		
+	
+		
+		
 
-			void Reset(){
-				
-			}
-
-			void MoveInLineOfSight(Unit* target){
-				if (target->GetTypeId() != TYPEID_PLAYER){
-					return;
-				}
-				if (target && me->IsWithinDistInMap(target, 10.0f)){
-					if (Player* player = target->ToPlayer()){
-						target->Say("Solltet Ihr Hilfe gebrauchen, so findet Ihr sie hier!", LANG_UNIVERSAL,nullptr);
-					}
-				}
-				ScriptedAI::MoveInLineOfSight(target);
-			}
-		};
-
-
-    void erklaerung(Player* player, std::string hilfe){
+		void erklaerung(Player* player, std::string hilfe){
         
-        ChatHandler(player->GetSession()).PSendSysMessage(hilfe.c_str(), player->GetName());
-        player->PlayerTalkClass->SendCloseGossip();
-        std::ostringstream ss;
-        ss << hilfe;
-        player->GetSession()->SendAreaTriggerMessage(ss.str().c_str());
-        return;
+			ChatHandler(player->GetSession()).PSendSysMessage(hilfe.c_str(), player->GetName());
+			player->PlayerTalkClass->SendCloseGossip();
+			std::ostringstream ss;
+			ss << hilfe;
+			player->GetSession()->SendAreaTriggerMessage(ss.str().c_str());
+			return;
         
-    }
+		}
     
     
 		bool OnGossipHello(Player* player, Creature* creature)
@@ -172,11 +157,40 @@ public:
 			return true;
 		}
 
-		CreatureAI * GetAI(Creature* pCreature) const override
+
+		struct support_helpAI : public ScriptedAI
 		{
-			return new supportnpc_welcome_ai(pCreature);
+				
+			support_helpAI(Creature* creature) : ScriptedAI(creature) { }
+
+			void Reset() override
+			{
+
+			}
+
+			void MoveInLineofSight(Unit* who)
+			{
+				if (who->GetTypeId != TYPEID_PLAYER){
+					return;
+				}
+
+				if (who && me->IsWithinDistInMap(me, 10.0f)){
+					if (Player* player = who->ToPlayer()){
+						me->Say("Sucht Ihr Hilfe? Kommt zu mir, und ich helfe Euch", LANG_UNIVERSAL, nullptr);
+					}
+					
+				}
+			}
+
+		};
+
+
+		CreatureAI* GetAI(Creature* creature) const override
+		{
+			return new support_helpAI(creature);
 		}
 
+	
 };
 
 
