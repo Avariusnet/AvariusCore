@@ -27,6 +27,28 @@ class supportnpc : public CreatureScript
 public:
 		supportnpc() : CreatureScript("supportnpc") { }
 		
+		struct supportnpc_welcome_ai : public ScriptedAI
+		{
+			
+
+			void Reset(){
+				
+			}
+
+			void MoveInLineOfSight(Unit* target){
+				if (target->GetTypeId() != TYPEID_PLAYER){
+					return;
+				}
+				if (target && me->IsWithinDistInMap(target, 10.0f)){
+					if (Player* player = target->ToPlayer()){
+						target->Say("Solltet Ihr Hilfe gebrauchen, so findet Ihr sie hier!", LANG_UNIVERSAL,nullptr);
+					}
+				}
+
+			}
+		};
+
+
     void erklaerung(Player* player, std::string hilfe){
         
         ChatHandler(player->GetSession()).PSendSysMessage(hilfe.c_str(), player->GetName());

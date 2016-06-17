@@ -34,7 +34,6 @@ UPDATE `creature_template` SET `npcflag`='4194305' WHERE `entry`='9988';
 UPDATE `creature_template` SET `faction`='21' WHERE `entry`='23872';
 
 
-
 /* Seuchenschleim Naxx DMG */
 UPDATE `creature_template` SET `DamageModifier`='14' WHERE `entry`='16243';
 
@@ -51,9 +50,6 @@ UPDATE `creature_template` SET `ScriptName`='janarius' WHERE `entry`='800085';
 /* ARGENTUMGRUNZLING */
 UPDATE `creature_template` SET `type_flags`='1216348160' WHERE `entry`='33239';
 UPDATE `creature_template` SET `type_flags`='1216348160' WHERE `entry`='33238';
-
-/* RENAME TYRANIUM */
-UPDATE `creature_template` SET `name`='Eonar' WHERE `entry`='800050';
 
 
 /*BOSSZEICHEN TYPEFLAGS */
