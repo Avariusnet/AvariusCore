@@ -170,7 +170,7 @@ public:
 
 			void MoveInLineofSight(Unit* who)
 			{
-				if (who->GetTypeId != TYPEID_PLAYER){
+				if (who->GetTypeId() != TYPEID_PLAYER){
 					return;
 				}
 
