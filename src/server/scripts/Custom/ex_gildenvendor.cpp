@@ -226,10 +226,10 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 					return true;
 				}
 
-				if (guid != leaderid){
-					player->GetSession()->SendNotification("Du bist nicht der Leiter deiner Gilde, daher kannst du dir nur Gildenhaeuser ansehen.");
+				else if (guid != leaderid){
 					player->ADD_GOSSIP_ITEM(7, "Gildenhaus ansehen", GOSSIP_SENDER_MAIN, 120);
 					player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+					player->GetSession()->SendNotification("Du bist nicht der Leiter deiner Gilde, daher kannst du dir nur Gildenhaeuser ansehen.");
 					return true;
 				}
 
