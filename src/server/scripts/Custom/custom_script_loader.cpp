@@ -93,6 +93,8 @@ void AddSC_inselnpc();
 //codenpc
 void AddSC_codenpc();
 
+void AddSC_minion();
+
 
 void AddCustomScripts()
 {
@@ -168,5 +170,7 @@ void AddCustomScripts()
 
 	//codenpc
 	AddSC_codenpc();
+
+	AddSC_minion();
 
 }

@@ -53,8 +53,8 @@ public: minion() : CreatureScript("minion"){ }
 
 
 
-void AddSC_challenge()
+void AddSC_minion()
 {
-	new challenge();
+	new minion();
 }
 
