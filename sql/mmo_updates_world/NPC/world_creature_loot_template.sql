@@ -30,7 +30,8 @@ REPLACE INTO `creature_loot_template` VALUES (800068,700511,0,20,0,1,1,1,1,NULL)
 DELETE FROM `creature_loot_template` WHERE `entry` = 33498 AND `item` = 45082;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('33498', '45082', '0', '100', '1', '1', '0', '1', '1', 'Quest 13654');
 
-
+REPLACE INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) 
+VALUES ('28860', '700525', '0', '15', '0', '1', '3', '1', '3');
 
 
 /* Mal des Sageras */
@@ -215,7 +216,7 @@ REPLACE INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `
 
 
 /* Kuerbissoldaten lootid und loot  Halloweenevent*/
-UPDATE `creature_template` SET `lootid`='27936' WHERE `entry`='27936';
+
 REPLACE INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('27936', '700520', '0', '50', '0', '1', '0', '1', '13', 'Halloweenabzeichen');
 REPLACE INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('800010', '700520', '0', '50', '0', '1', '0', '1', '13', 'Halloweenabzeichen');
 REPLACE INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('800058', '700520', '0', '50', '0', '1', '0', '1', '13', 'Halloweenabzeichen');

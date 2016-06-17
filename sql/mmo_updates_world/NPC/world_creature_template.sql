@@ -102,7 +102,7 @@ VALUES ( /*  ID */ 800102,
  
 
 
-
+UPDATE `creature_template` SET `lootid`='27936' WHERE `entry`='27936';
 
 /* ORGRIMMAR STALLMEISTER */
 UPDATE `creature_template` SET `npcflag`='4194305' WHERE `entry`='9988';

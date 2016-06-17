@@ -21,7 +21,7 @@ public:
 
 	std::vector<ChatCommand> GetCommands() const
 	{
-		static std::vector<ChatCommand> vipCommandTable =
+		static std::vector<ChatCommand> botCommandTable =
 		{
 			{ "add", SEC_ADMINISTRATOR, false, &HandleBotAddCommand, "" },
 			{ "del", SEC_ADMINISTRATOR, false, &HandleBotDelCommand, "" },
@@ -33,7 +33,7 @@ public:
 
 		static std::vector<ChatCommand> commandTable =
 		{
-			{ "bot", SEC_ADMINISTRATOR, false, NULL, "", vipCommandTable },
+			{ "bot", SEC_ADMINISTRATOR, false, NULL, "", botCommandTable },
 		};
 
 		return commandTable;
@@ -41,31 +41,36 @@ public:
 
 	
 	//Allows members of your team, with sec > 2 to set their chars to Testing mode.
-	static bool HandleBotAddCommand(ChatHandler* handler, const char* /*args*/)
+	static bool HandleBotAddCommand(ChatHandler* handler, const char* args)
 	{
+
+		char* px = strtok((char*)args, " ");
+		uint32 npcid = (uint32)atoi(px);
+
+		if (npcid != 800059){
+			return false;
+		}
+
+		if (!sObjectMgr->GetCreatureTemplate(npcid)){
+			return false;
+		}
+
+
 		Player* player;
-		player->SummonCreature(800059, player->GetPositionX() + 5, player->GetPositionY(), player->GetPositionZ() + 5, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,120000);
+		player->SummonCreature(npcid, player->GetPositionX() + 5, player->GetPositionY(), player->GetPositionZ() + 5, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,120000);
 
 	};
 
 
 	static bool HandleBotDelCommand(ChatHandler* handler, const char* /*args*/)
 	{
-		Player* player = player->GetSession()->GetPlayer();
-		Creature* creature;
-
-
 
 	};
 
 
 	static bool HandleBotAttackCommand(ChatHandler* handler, const char* /*args*/)
 	{
-		Player* player = player->GetSession()->GetPlayer();
-		Creature* creature;
-
-
-
+		
 	};
 
 
