@@ -110,12 +110,7 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 				return;
 			}
 
-			if (chr->GetGuildId() == 0)
-			{
-				
-				chr->GetSession()->SendNotification("Du bist in keiner Gilde.");
-				return;
-			}
+			
 
 			QueryResult result;
 			result = CharacterDatabase.PQuery("SELECT `x`, `y`, `z`, `map` FROM `guildhouses` WHERE `id` = %u", gildenhausid);
@@ -222,6 +217,7 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 				if (guid == leaderid){
 					player->ADD_GOSSIP_ITEM(7, "Gildenhaus kaufen", GOSSIP_SENDER_MAIN, 0);
 					player->ADD_GOSSIP_ITEM(7, "Gildenhaus verkaufen", GOSSIP_SENDER_MAIN, 1);
+					player->ADD_GOSSIP_ITEM(7, "Gildenhaus ansehen", GOSSIP_SENDER_MAIN, 120);
 					player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
 					return true;
 				}

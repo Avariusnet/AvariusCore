@@ -42,6 +42,7 @@ public:
 
 		pPlayer->ADD_GOSSIP_ITEM(7, "Was bin ich?", GOSSIP_SENDER_MAIN, 1);
 		pPlayer->ADD_GOSSIP_ITEM(7, "Gibt es eine Moeglichkeit einen Port zu nehmen?", GOSSIP_SENDER_MAIN, 2);
+		pPlayer->ADD_GOSSIP_ITEM(7, "Gebt Ihr mir die Weihnachtsquest?", GOSSIP_SENDER_MAIN, 3);
         
 		pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
 		return true;
@@ -76,6 +77,14 @@ public:
 				ChatHandler(pPlayer->GetSession()).PSendSysMessage("Wenn ihr die Quest abgeschlossen habt, koennt ihr Euch immer wieder nach oben porten.",
 					pPlayer->GetName());
 				pPlayer->PlayerTalkClass->SendCloseGossip();
+			}break;
+
+			case 3:
+			{
+				ChatHandler(pPlayer->GetSession()).PSendSysMessage("Ich habe Euch zu dem Questgeber geportet. Diese Freiheit habe ich mir herausgenommen.",
+					pPlayer->GetName());
+				pPlayer->PlayerTalkClass->SendCloseGossip();
+				pPlayer->TeleportTo(571,5806.13,629.32,647.40,1.64);
 			}break;
 
 			return true;
