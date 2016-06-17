@@ -1,0 +1,1 @@
+copy *.sql world_contentpatch_new.sql

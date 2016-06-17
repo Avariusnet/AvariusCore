@@ -43,8 +43,7 @@ public:
 	//Allows members of your team, with sec > 2 to set their chars to Testing mode.
 	static bool HandleBotAddCommand(ChatHandler* handler, const char* /*args*/)
 	{
-		Player* player = player->GetSession()->GetPlayer();
-		player->GetWorldLocation();
+		Player* player;
 		player->SummonCreature(800059, player->GetPositionX() + 5, player->GetPositionY(), player->GetPositionZ() + 5, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,120000);
 
 	};

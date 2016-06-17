@@ -1,0 +1,1 @@
+./worldserver2 -c worldserver2.conf

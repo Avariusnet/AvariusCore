@@ -1,0 +1,7 @@
+(SELECT_TARGET_RANDOM, 0)    //Any random target.
+(SELECT_TARGET_RANDOM, 1)    //Random target in Short Range.
+(SELECT_TARGET_RANDOM, 2)    //Random target in Mid Range.
+(SELECT_TARGET_RANDOM, 3)    //Random target in Long Range.
+(SELECT_TARGET_RANDOM, 4)    //Random target with Mana.
+(SELECT_TARGET_RANDOM, 5)    //Random target with Rage.
+(SELECT_TARGET_RANDOM, 6)    //Random target with Energy.
