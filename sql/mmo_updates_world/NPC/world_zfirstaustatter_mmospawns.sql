@@ -45,6 +45,3 @@ INSERT INTO `creature` VALUES
 
 
 
-/* Firstausstatter spawncorrection */
-DELETE FROM `creature` WHERE `guid`='798007';
-DELETE FROM `creature` WHERE `guid`='798008';
