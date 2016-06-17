@@ -139,6 +139,32 @@ INSERT INTO `creature` VALUES
 (798033 ,500121,0,0,0,1,1,17072,0,-803.1,-1595.95,142.19,5.58,20000,0,0,1000000,250000,0,0,0,0,0);
 
 
+/* FIRST AUSTATTER ORGRIMMAR UND STURMWIND */
+DELETE FROM `creature` WHERE `guid` = 798007 and `id` = 800044;
+DELETE FROM `creature` WHERE `guid` = 798008 and `id` = 800044;
+REPLACE INTO `creature` VALUES
+('798007', '800044', '0', '0', '0', '1', '1', '0', '0', '-8845.45', '595.526', '93.3644', '2.14466', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('798008', '800044', '1', '0', '0', '1', '1', '0', '0', '1599.62', '-4422.29', '9.91688', '3.41793', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0');
+
+
+/*Boss Spawn Anpassungen */
+UPDATE `creature` SET `map`='169', `position_x`='-313.07', `position_y`='3084.26', `position_z`='100.08', `orientation`='0.17' WHERE `guid`='800030';
+UPDATE `creature` SET `map`='169', `position_x`='3514.63', `position_y`='4012.01', `position_z`='92.0083', `orientation`='0.384703' WHERE `guid`='800038';
+UPDATE `creature` SET `map`='169', `position_x`='-1199.58', `position_y`='-2390.67', `position_z`='109.692', `orientation`='3.71644' WHERE `guid`='800037';
+UPDATE `creature` SET `map`='169', `position_x`='-1784.85', `position_y`='-780.503', `position_z`='121.452', `orientation`='5.25372' WHERE `guid`='800035';
+UPDATE `creature` SET `map`='169', `position_x`='-2902.88', `position_y`='-1368.75', `position_z`='125.728', `orientation`='5.71264' WHERE `guid`='800039';
+UPDATE `creature` SET `map`='169', `position_x`='-2660.49', `position_y`='-2700.24', `position_z`='130.028', `orientation`='3.79707' WHERE `guid`='800041';
+UPDATE `creature` SET `map`='169', `position_x`='-4313.12', `position_y`='-1465.59', `position_z`='92.007', `orientation`='3.22764' WHERE `guid`='800050';
+UPDATE `creature` SET `map`='169', `position_x`='-4338.46', `position_y`='-719.724', `position_z`='127.903', `orientation`='4.24175' WHERE `guid`='800040';
+UPDATE `creature` SET `map`='169', `position_x`='-3694.01', `position_y`='-1061.39', `position_z`='126.757', `orientation`='0.243516' WHERE `guid`='800058';
+
+/* LUCION*/
+
+UPDATE `creature` SET `spawntimesecs`='60' WHERE `guid`='800055';
+UPDATE `creature` SET `unit_flags`='8' WHERE `guid`='800055';
+
+/*NPC Weihnachtswichtel */
+UPDATE `creature` SET `position_x`='16227.75', `position_y`='16344.58', `position_z`='215.31', `orientation`='2.18' WHERE `guid`='800066';
 
 /*!40000 ALTER TABLE `creature` ENABLE KEYS */;
 UNLOCK TABLES;

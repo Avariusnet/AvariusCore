@@ -45,7 +45,63 @@ UPDATE `creature_template` SET `unit_flags`='0' WHERE `entry`='10161';
 
 UPDATE `creature_template` SET `lootid`='33498' WHERE `entry`='33498';
 
+/* WAndervolk Script Janarius */
+UPDATE `creature_template` SET `ScriptName`='janarius' WHERE `entry`='800085';
 
+/* ARGENTUMGRUNZLING */
+UPDATE `creature_template` SET `type_flags`='1216348160' WHERE `entry`='33239';
+UPDATE `creature_template` SET `type_flags`='1216348160' WHERE `entry`='33238';
+
+/* RENAME TYRANIUM */
+UPDATE `creature_template` SET `name`='Eonar' WHERE `entry`='800050';
+
+
+/*BOSSZEICHEN TYPEFLAGS */
+UPDATE `creature_template` SET `type_flags`='4' WHERE `entry`='800010';
+UPDATE `creature_template` SET `type_flags`='4' WHERE `entry`='800030';
+UPDATE `creature_template` SET `type_flags`='4' WHERE `entry`='800025';
+UPDATE `creature_template` SET `type_flags`='4' WHERE `entry`='800038';
+UPDATE `creature_template` SET `type_flags`='4' WHERE `entry`='800037';
+UPDATE `creature_template` SET `type_flags`='4' WHERE `entry`='800039';
+UPDATE `creature_template` SET `type_flags`='4' WHERE `entry`='800041';
+UPDATE `creature_template` SET `type_flags`='4' WHERE `entry`='800050';
+UPDATE `creature_template` SET `type_flags`='4' WHERE `entry`='800040';
+UPDATE `creature_template` SET `type_flags`='4' WHERE `entry`='800058';
+UPDATE `creature_template` SET `type_flags`='4' WHERE `entry`='800035';
+
+UPDATE `creature_template` SET `ArmorModifier`='20' WHERE `entry`='800010';
+UPDATE `creature_template` SET `ArmorModifier`='20' WHERE `entry`='800030';
+UPDATE `creature_template` SET `ArmorModifier`='20' WHERE `entry`='800025';
+UPDATE `creature_template` SET `ArmorModifier`='20' WHERE `entry`='800038';
+UPDATE `creature_template` SET `ArmorModifier`='20' WHERE `entry`='800037';
+UPDATE `creature_template` SET `ArmorModifier`='20' WHERE `entry`='800039';
+UPDATE `creature_template` SET `ArmorModifier`='20' WHERE `entry`='800041';
+UPDATE `creature_template` SET `ArmorModifier`='20' WHERE `entry`='800050';
+UPDATE `creature_template` SET `ArmorModifier`='20' WHERE `entry`='800040';
+UPDATE `creature_template` SET `ArmorModifier`='20' WHERE `entry`='800058';
+
+
+/* Wandervolk Baum*/
+UPDATE `creature_template` SET `scale`='2' WHERE `entry`='800072';
+
+
+/* Eowyn */
+UPDATE `creature_template` SET `npcflag`='4227' WHERE `entry`='800027';
+
+/*Lok Regual */
+UPDATE `creature_template` SET `name`='Lok Regual', `npcflag`='3', `trainer_race`='0', `type`='0' WHERE `entry`='800009';
+
+-- Bitty Frostschleuder FLAGGER
+UPDATE `creature_template` SET `npcflag`='3' WHERE `entry`= '32690';
+
+/* InselScript anpassungen */
+UPDATE `creature_template` SET `ScriptName`='exitarenpc' WHERE `entry`='800015';
+UPDATE `creature_template` SET `ScriptName`='indomatanpc' WHERE `entry`='800087';
+
+/* Lucion */
+UPDATE `creature_template` SET `ScriptName`='lucion' WHERE `entry`='800055';
+UPDATE `creature_template` SET `lootid`='800055' WHERE entry = 800055;
+UPDATE `creature_template` SET `HealthModifier` = 10, `ArmorModifier`=5, `DamageModifier`= 50 WHERE `entry` = 800055;
 
 /*!40000 ALTER TABLE `creature_template` ENABLE KEYS */;
 UNLOCK TABLES;
