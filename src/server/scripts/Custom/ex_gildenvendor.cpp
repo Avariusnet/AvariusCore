@@ -234,7 +234,7 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 				}
 
 				else{
-					return;
+					return true;
 				}
 			}
 
