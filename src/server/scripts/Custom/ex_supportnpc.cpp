@@ -171,6 +171,12 @@ public:
 			};
 			return true;
 		}
+
+		CreatureAI * GetAI(Creature* pCreature) const override
+		{
+			return new supportnpc_welcome_ai(pCreature);
+		}
+
 };
 
 
