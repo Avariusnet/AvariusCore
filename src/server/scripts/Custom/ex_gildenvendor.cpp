@@ -239,7 +239,9 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 			}
 
 			if(test == 0){
-				player->GetSession()->SendNotification("Du bist in keiner Gilde");
+				player->ADD_GOSSIP_ITEM(7, "Gildenhaus ansehen", GOSSIP_SENDER_MAIN, 120);
+				player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+				player->GetSession()->SendNotification("Du bist in keiner Gilde,daher kannst du dir die Haeuser nur ansehen.");
 				return true;
 			}
 
