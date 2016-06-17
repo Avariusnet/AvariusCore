@@ -207,6 +207,8 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 
 		bool OnGossipHello(Player *player, Creature* _creature)
 		{
+			player->ADD_GOSSIP_ITEM(7, "Gildenhaus ansehen", GOSSIP_SENDER_MAIN, 120);
+
 			uint32 test = player->GetGuildId();
 			if (test != 0){
 				QueryResult result;
@@ -220,7 +222,6 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 				if (guid == leaderid){
 					player->ADD_GOSSIP_ITEM(7, "Gildenhaus kaufen", GOSSIP_SENDER_MAIN, 0);
 					player->ADD_GOSSIP_ITEM(7, "Gildenhaus verkaufen", GOSSIP_SENDER_MAIN, 1);
-					player->ADD_GOSSIP_ITEM(7, "Gildenhaus ansehen", GOSSIP_SENDER_MAIN, 120);
 					player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
 
 					return true;
