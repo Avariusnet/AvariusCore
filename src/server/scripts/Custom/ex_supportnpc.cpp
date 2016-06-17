@@ -24,6 +24,38 @@
 #include "Player.h"
 
 
+class support_npc_welcome_trigger : public CreatureScript
+{
+public:
+	support_npc_welcome_trigger() : CreatureScript("tutorial_npc_welcome_trigger") { }
+
+	struct support_npc_welcome_AI_trigger : public ScriptedAI
+	{
+		support_npc_welcome_AI_trigger(Creature * c) : ScriptedAI(c) { }
+
+		void MoveInLineOfSight(Unit * who)
+		{
+			if (who->GetTypeId() != TYPEID_PLAYER)
+				return;
+
+			if (who && me->IsWithinDistInMap(who, 10.0f))
+			{
+				if (Player * player = who->ToPlayer())
+				{
+					me->Say("Sucht Ihr Hilfe? Kommt zu mir, und ich helfe Euch", LANG_UNIVERSAL, nullptr);
+				}
+			}
+			ScriptedAI::MoveInLineOfSight(who);
+		}
+	};
+
+	CreatureAI * GetAI(Creature * pCreature) const
+	{
+		return new support_npc_welcome_AI_trigger(pCreature);
+	}
+};
+
+
 class supportnpc : public CreatureScript
 {
 public:
@@ -148,7 +180,7 @@ public:
                     
                 case 9:
                 {
-                    erklaerung(pPlayer->GetSession()->GetPlayer(), "Die speziellen Eventquests koennen nur bei den Eventquestgebern /nehmern abgegeben werden. Bitte gedulde dich daher, bis das Event wieder aktiv wird.");
+                    erklaerung(pPlayer->GetSession()->GetPlayer(), "Die speziellen Eventquests koennen nur bei den Eventquestgebern (-nehmern) abgegeben werden. Bitte gedulde dich daher, bis das Event wieder aktiv wird.");
                 }
 				
 
@@ -158,36 +190,24 @@ public:
 		}
 
 
-		struct support_helpAI : public ScriptedAI
+		struct tutorial_npc_welcomeAI : public ScriptedAI
 		{
+			tutorial_npc_welcomeAI(Creature * c) : ScriptedAI(c) { }
+
+			
+			void Reset()
+			{
 				
-			support_helpAI(Creature* creature) : ScriptedAI(creature) { }
-
-			void Reset() override
-			{
-
 			}
 
-			void MoveInLineofSight(Unit* who)
-			{
-				if (who->GetTypeId() != TYPEID_PLAYER){
-					return;
-				}
+			
 
-				if (who && me->IsWithinDistInMap(me, 10.0f)){
-					if (Player* player = who->ToPlayer()){
-						me->Say("Sucht Ihr Hilfe? Kommt zu mir, und ich helfe Euch", LANG_UNIVERSAL, nullptr);
-					}
-					
-				}
-			}
-
+			
 		};
 
-
-		CreatureAI* GetAI(Creature* creature) const override
+		CreatureAI * GetAI(Creature * pCreature) const
 		{
-			return new support_helpAI(creature);
+			return new tutorial_npc_welcomeAI(pCreature);
 		}
 
 	
