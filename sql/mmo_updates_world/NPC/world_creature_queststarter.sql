@@ -41,3 +41,6 @@ UNLOCK TABLES;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2016-06-16 22:23:35
+
+
+DELETE FROM `creature_queststarter` WHERE `id`='32690' and`quest`='900001';

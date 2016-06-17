@@ -44,7 +44,7 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 				return;
 			}
 			else {
-				player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
+				player->GetSession()->SendNotification("Das Gildenhaus ist schon belegt und kann daher nicht besichtigt werden.");
 				return;
 			}
 
@@ -431,650 +431,226 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 
 			case 39:
 			{
-				/*QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 2);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();*/
-
+				
 				gildenhausfrei(player->GetSession()->GetPlayer() , 2);
-				/*if (gilde == 0){
-					Gildenhausport(2, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}*/
+				
 			}break;
 
 			case 40:
 			{
 
 				gildenhausfrei(player->GetSession()->GetPlayer(), 3);
-				/*QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 3);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(3, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}*/
+				
 			}break;
 
 			case 41:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 4);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(4, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 4);
+				
+				
 			}break;
 
 			case 42:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 5);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(5, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 5);
+				
 			}break;
 
 			case 43:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 7);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(7, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 7);
+			
 			}break;
 
 			case 44:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 8);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(8, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 8);
+				
 			}break;
 
 			case 45:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 9);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(9, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 9);
+				
 			}break;
 
 			case 46:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 10);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(10, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 10);
+				
 			}break;
 
 			case 47:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 11);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(11, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(),11);
+				
 			}break;
 
 			case 48:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 12);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(12, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(),12);
+				
 			}break;
 
 			case 49:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 13);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(13, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 13);
+				
 			}break;
 
 			case 50:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 14);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(14, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 14);
+				
 			}break;
 
 			case 51:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u",15);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(15, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 15);
+				
 			}break;
 
 			case 52:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 16);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(16, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 16);
+				
 			}break;
 
 			case 53:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 17);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(17, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 17);
+				
 			}break;
 
 			case 54:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 18);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(18, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 18);
+				
 			}break;
 
 			case 55:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 19);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(19, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 19);
+			
 			}break;
 
 			case 56:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 20);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(20, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 20);
+				
 			}break;
 
 			case 57:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 21);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(21, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 21);
+				
 			}break;
 
 			case 58:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 22);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(22, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 22);
+			
 			}break;
 
 			case 59:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 23);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(23, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 23);
+				
 			}break;
 
 			case 60:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 24);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(24, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 24);
+				
 			}break;
 
 			case 61:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 25);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(25, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 25);
+				
 			}break;
 
 			case 62:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 26);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(26, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 26);
+				
 			}break;
 
 			case 63:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 27);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(27, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 27);
+				
 			}break;
 
 			case 64:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 28);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(28, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 28);
+				
 			}break;
 
 			case 65:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 29);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(29, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 29);
+				
 			}break;
 
 			case 66:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 30);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(30, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 30);
+				
 			}break;
 
 			case 67:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 31);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(31, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 31);
+				
 			}break;
 
 			case 68:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 32);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(32, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 32);
+				
 			}break;
 
 			case 69:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 33);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(33, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 33);
+				
 			}break;
 
 			case 70:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 34);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(34, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 34);
+				
 			}break;
 
 			case 71:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u",35);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(35, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 35);
+				
 			}break;
 
 			case 72:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 36);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(36, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 36);
+				
 			}break;
 			
 			case 73:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 37);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(37, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 37);
+				
 			}break;
 
 			case 74:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 38);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(38, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 38);
+				
 			}break;
 
 			case 80:
 			{
+
 				uint32 gildenid = player->GetGuildId();
 				// 1: gildenID , 2: GildenhausID ,	3: Kosten ,   4: Playerarray
 				Gildenhauszuordnung(gildenid, 6, 10, 30, player->GetSession()->GetPlayer());
@@ -1084,20 +660,8 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 
 			case 81:
 			{
-				QueryResult result;
-				result = CharacterDatabase.PQuery("SELECT guildid FROM `guildhouses` WHERE `id` = %u", 6);
-				Field *fields = result->Fetch();
-				uint32 gilde = fields[0].GetUInt32();
-				if (gilde == 0){
-					Gildenhausport(6, player->GetSession()->GetPlayer());
-					player->GetSession()->SendNotification("Du schaust dir nun das Gildenhaus an.");
-				}
-
-
-				else {
-					player->GetSession()->SendNotification("Du bist in einer Gilde bzw das Gildenhaus ist schon belegt.");
-					return true;
-				}
+				gildenhausfrei(player->GetSession()->GetPlayer(), 6);
+								
 			}break;
 
 
