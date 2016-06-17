@@ -207,7 +207,7 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 
 		bool OnGossipHello(Player *player, Creature* _creature)
 		{
-			player->ADD_GOSSIP_ITEM(7, "Gildenhaus ansehen", GOSSIP_SENDER_MAIN, 120);
+			
 
 			uint32 test = player->GetGuildId();
 			if (test != 0){
@@ -223,12 +223,18 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 					player->ADD_GOSSIP_ITEM(7, "Gildenhaus kaufen", GOSSIP_SENDER_MAIN, 0);
 					player->ADD_GOSSIP_ITEM(7, "Gildenhaus verkaufen", GOSSIP_SENDER_MAIN, 1);
 					player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
-
 					return true;
 				}
 
 				if (guid != leaderid){
-					player->GetSession()->SendNotification("Du bist nicht der Leiter deiner Gilde.");
+					player->GetSession()->SendNotification("Du bist nicht der Leiter deiner Gilde, daher kannst du dir nur Gildenhaeuser ansehen.");
+					player->ADD_GOSSIP_ITEM(7, "Gildenhaus ansehen", GOSSIP_SENDER_MAIN, 120);
+					player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+					return true;
+				}
+
+				else{
+					return;
 				}
 			}
 
