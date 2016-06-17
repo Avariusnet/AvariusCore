@@ -13,7 +13,7 @@ public: minion() : CreatureScript("minion"){ }
 		bool OnGossipHello(Player *pPlayer, Creature* _creature)
 		{
 			pPlayer->ADD_GOSSIP_ITEM(7, "Folgt mir!", GOSSIP_SENDER_MAIN, 0);
-			pPlayer->ADD_GOSSIP_ITEM(7, "Wir fordern Orrig heraus!", GOSSIP_SENDER_MAIN, 1);
+			pPlayer->ADD_GOSSIP_ITEM(7, "Angriff!", GOSSIP_SENDER_MAIN, 1);
 			pPlayer->ADD_GOSSIP_ITEM(7, "Reset!", GOSSIP_SENDER_MAIN, 2);
 			pPlayer->ADD_GOSSIP_ITEM(7, "", GOSSIP_SENDER_MAIN, 3);
 			
@@ -36,12 +36,15 @@ public: minion() : CreatureScript("minion"){ }
 			{
 				if (Creature* creature = player->FindNearestCreature(800059, 25.0f))
 				{
-					
 					creature->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, creature->GetFollowAngle(), MOTION_SLOT_ACTIVE);
 				}
 
-				
 			}break;
+
+			case 1:
+			{
+
+			}
 
 				default:
                     return true;

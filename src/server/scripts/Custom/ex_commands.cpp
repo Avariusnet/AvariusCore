@@ -19,14 +19,21 @@ class ex_commands : public CommandScript
 public:
 	ex_commands() : CommandScript("ex_commands") { }
 
-	std::vector<ChatCommand> GetCommands() const override
+	std::vector<ChatCommand> GetCommands() const
 	{
+		static std::vector<ChatCommand> vipCommandTable =
+		{
+			{ "add", SEC_ADMINISTRATOR, false, &HandleBotAddCommand, "" },
+			{ "del", SEC_ADMINISTRATOR, false, &HandleBotDelCommand, "" },
+			{ "attack", SEC_ADMINISTRATOR, false, &HandleBotAttackCommand, "" },
+				
+
+		};
+
 
 		static std::vector<ChatCommand> commandTable =
 		{
-
-			//Set your Characterstats to test single Bosses
-			{ "tester", SEC_ADMINISTRATOR, false, &HandleTestingCommand, ""},
+			{ "bot", SEC_ADMINISTRATOR, false, NULL, "", vipCommandTable },
 		};
 
 		return commandTable;
@@ -34,22 +41,35 @@ public:
 
 	
 	//Allows members of your team, with sec > 2 to set their chars to Testing mode.
-	static bool HandleTestingCommand(ChatHandler* handler, const char* /*args*/)
+	static bool HandleBotAddCommand(ChatHandler* handler, const char* /*args*/)
 	{
-		Player *player = handler->GetSession()->GetPlayer();
-		if (player->GetSession()->GetSecurity() < 2){
-			return false;
-		}
-		player->ResurrectPlayer(100, false);
-		player->SetHealth(400000000);
-		player->SetGameMaster(true);
-		player->DurabilityRepairAll(false,0,false);
-		
-        return true;
-	}
+		Player* player = player->GetSession()->GetPlayer();
+		player->GetWorldLocation();
+		player->SummonCreature(800059, player->GetPositionX() + 5, player->GetPositionY(), player->GetPositionZ() + 5, 0, TEMPSUMMON_TIMED_OR_DEAD_DESPAWN,120000);
+
+	};
 
 
-	
+	static bool HandleBotDelCommand(ChatHandler* handler, const char* /*args*/)
+	{
+		Player* player = player->GetSession()->GetPlayer();
+		Creature* creature;
+
+
+
+	};
+
+
+	static bool HandleBotAttackCommand(ChatHandler* handler, const char* /*args*/)
+	{
+		Player* player = player->GetSession()->GetPlayer();
+		Creature* creature;
+
+
+
+	};
+
+
 	
 		
 };
