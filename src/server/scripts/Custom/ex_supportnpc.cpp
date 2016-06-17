@@ -44,7 +44,7 @@ public:
 						target->Say("Solltet Ihr Hilfe gebrauchen, so findet Ihr sie hier!", LANG_UNIVERSAL,nullptr);
 					}
 				}
-
+				ScriptedAI::MoveInLineOfSight(target);
 			}
 		};
 
