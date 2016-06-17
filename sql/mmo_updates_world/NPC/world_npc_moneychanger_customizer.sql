@@ -5,9 +5,7 @@ INSERT INTO `creature_template` (`entry`, `difficulty_entry_1`, `difficulty_entr
 (99321, 0, 0, 0, 0, 0, 25811, 25811, 0, 0, 'MMOwning Reseller', 'Moneychanger', '', 0, 76, 80, 0, 35, 128, 1, 1, 1, 0, 0, 2000, 2000, 1, 1, 1, 0, 0, 8, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '', 0, 3, 1, 2, 1, 1, 1, 1, 0, 0, 1, 0, 2, '', 0);
 
 
-DELETE FROM `locales_creature` WHERE (`entry`=99321);
-INSERT INTO `locales_creature` (`entry`, `name_loc1`, `name_loc2`, `name_loc3`, `name_loc4`, `name_loc5`, `name_loc6`, `name_loc7`, `name_loc8`, `subname_loc1`, `subname_loc2`, `subname_loc3`, `subname_loc4`, `subname_loc5`, `subname_loc6`, `subname_loc7`, `subname_loc8`) VALUES
-(99321, 'MMOwning Reseller', '', '', '', '', '', '', '', 'Moneychanger', NULL, NULL, NULL, NULL, NULL, NULL, '');
+
 
 /* DELETE FROM `creature` WHERE `id`=99321;
  INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `modelid`, `equipment_id`, `position_x`, `position_y`, `position_z`, `orientation`, `spawntimesecs`, `spawndist`, `currentwaypoint`, `curhealth`, `curmana`, `DeathState`, `MovementType`) VALUES
