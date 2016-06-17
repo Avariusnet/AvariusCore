@@ -85,6 +85,7 @@ public:
 					pPlayer->GetName());
 				pPlayer->PlayerTalkClass->SendCloseGossip();
 				pPlayer->TeleportTo(571,5806.13,629.32,647.40,1.64);
+				pPlayer->AddAura(155, pPlayer);
 			}break;
 
 			return true;

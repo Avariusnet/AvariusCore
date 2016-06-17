@@ -42,7 +42,7 @@ public: seruc() : CreatureScript("seruc"){ }
 			pPlayer->ADD_GOSSIP_ITEM(7, "Instanz", GOSSIP_SENDER_MAIN, 13);
 			pPlayer->ADD_GOSSIP_ITEM(7, "Teleport zum PVP Areal", GOSSIP_SENDER_MAIN, 1);
 			pPlayer->ADD_GOSSIP_ITEM(7, "Teleport zur Insel ", GOSSIP_SENDER_MAIN, 2);
-			pPlayer->ADD_GOSSIP_ITEM(7, "Teleport zu Yasio ", GOSSIP_SENDER_MAIN, 3);
+			pPlayer->ADD_GOSSIP_ITEM(7, "Teleport zu Klee ", GOSSIP_SENDER_MAIN, 3);
 			pPlayer->ADD_GOSSIP_ITEM(7, "MMOwning Worldbosse", GOSSIP_SENDER_MAIN, 15);
 			pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
 			return true;
