@@ -52,7 +52,80 @@ public:
 	static bool HandleBotAddCommand(ChatHandler* handler, const char* /*args*/)
 	{
 
-		uint32 id = 800059;
+
+		Creature* creatureTarget = handler->getSelectedCreature();
+		if (!creatureTarget || creatureTarget->IsPet())
+		{
+			handler->PSendSysMessage(LANG_SELECT_CREATURE);
+			handler->SetSentErrorMessage(true);
+			return false;
+		}
+
+		
+
+		Player* player = handler->GetSession()->GetPlayer();
+
+		if (player->GetPetGUID())
+		{
+			handler->SendSysMessage(LANG_YOU_ALREADY_HAVE_PET);
+			handler->SetSentErrorMessage(true);
+			return false;
+		}
+
+		CreatureTemplate const* cInfo = creatureTarget->GetCreatureTemplate();
+
+		if (creatureTarget->GetCreatureTemplate()->Entry != 800059){
+			handler->PSendSysMessage("Du darfst nur den Minion zaehmen. Alles andere waere doch Betrug :)");
+			return false;
+		}
+
+		if (!cInfo->IsTameable(player->CanTameExoticPets()))
+		{
+			handler->PSendSysMessage(LANG_CREATURE_NON_TAMEABLE, cInfo->Entry);
+			handler->SetSentErrorMessage(true);
+			return false;
+		}
+
+		// Everything looks OK, create new pet
+		Pet* pet = player->CreateTamedPetFrom(creatureTarget);
+		if (!pet)
+		{
+			handler->PSendSysMessage(LANG_CREATURE_NON_TAMEABLE, cInfo->Entry);
+			handler->SetSentErrorMessage(true);
+			return false;
+		}
+
+		// place pet before player
+		float x, y, z;
+		player->GetClosePoint(x, y, z, creatureTarget->GetObjectSize(), CONTACT_DISTANCE);
+		pet->Relocate(x, y, z, float(M_PI) - player->GetOrientation());
+
+		// set pet to defensive mode by default (some classes can't control controlled pets in fact).
+		pet->SetReactState(REACT_DEFENSIVE);
+
+		// calculate proper level
+		uint8 level = (creatureTarget->getLevel() < (player->getLevel() - 5)) ? (player->getLevel() - 5) : creatureTarget->getLevel();
+
+		// prepare visual effect for levelup
+		pet->SetUInt32Value(UNIT_FIELD_LEVEL, level - 1);
+
+		// add to world
+		pet->GetMap()->AddToMap(pet->ToCreature());
+
+		// visual effect for levelup
+		pet->SetUInt32Value(UNIT_FIELD_LEVEL, level);
+
+		// caster have pet now
+		player->SetMinion(pet, true);
+
+		pet->SavePetToDB(PET_SAVE_AS_CURRENT);
+		player->PetSpellInitialize();
+
+		return true;
+
+
+
+		/*uint32 id = 800059;
 
 		if (id != 800059){
 			return false;
@@ -110,7 +183,7 @@ public:
 		}
 
 		sObjectMgr->AddCreatureToGrid(db_guid, sObjectMgr->GetCreatureData(db_guid));		
-		return true;
+		return true; */
 	};
 
 
