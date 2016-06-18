@@ -35,6 +35,7 @@ public: minion() : CreatureScript("minion"){ }
 			case 0:
 			{
 				
+				ChatHandler* handler;
 				Creature* creatureTarget = handler->getSelectedCreature();
 				if (!creatureTarget || creatureTarget->IsPet())
 				{
