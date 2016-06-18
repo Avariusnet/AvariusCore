@@ -29,11 +29,11 @@ public:
 	{
 		static std::vector<ChatCommand> botCommandTable =
 		{
-			{ "add", SEC_ADMINISTRATOR, false, &HandleBotAddCommand, "" },
-			{ "del", SEC_ADMINISTRATOR, false, &HandleBotDelCommand, "" },
-			{ "attack", SEC_ADMINISTRATOR, false, &HandleBotAttackCommand, "" },
-			{ "stop", SEC_ADMINISTRATOR, false, &HandleBotStopAttackCommand, "" },
-			{ "follow", SEC_ADMINISTRATOR, false, &HandleBotFollowCommand, "" },
+			{ "add", SEC_PLAYER, false, &HandleBotAddCommand, "" },
+			{ "del", SEC_PLAYER, false, &HandleBotDelCommand, "" },
+			{ "attack", SEC_PLAYER, false, &HandleBotAttackCommand, "" },
+			{ "stop", SEC_PLAYER, false, &HandleBotStopAttackCommand, "" },
+			{ "follow", SEC_PLAYER, false, &HandleBotFollowCommand, "" },
 				
 
 		};
@@ -41,7 +41,7 @@ public:
 
 		static std::vector<ChatCommand> commandTable =
 		{
-			{ "bot", SEC_ADMINISTRATOR, false, NULL, "", botCommandTable },
+			{ "bot", SEC_PLAYER, false, NULL, "", botCommandTable },
 		};
 
 		return commandTable;
@@ -209,14 +209,17 @@ public:
 
 
 		Creature* target = handler->getSelectedCreature();
+		if (!target)
+		{
+			handler->PSendSysMessage(LANG_SELECT_CREATURE);
+			handler->SetSentErrorMessage(true);
+			return false;
+		}
+
 		if (target->GetCreatureTemplate()->Entry != 800059){
 			return true;
 		}
 
-
-		if (!target){
-			return false;
-		}
 
 		if (target){
 			target->setFaction(35);
