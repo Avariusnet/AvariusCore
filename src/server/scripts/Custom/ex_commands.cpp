@@ -32,6 +32,7 @@ public:
 			{ "add", SEC_ADMINISTRATOR, false, &HandleBotAddCommand, "" },
 			{ "del", SEC_ADMINISTRATOR, false, &HandleBotDelCommand, "" },
 			{ "attack", SEC_ADMINISTRATOR, false, &HandleBotAttackCommand, "" },
+			{ "follow", SEC_ADMINISTRATOR, false, &HandleBotFollowCommand, "" },
 				
 
 		};
@@ -59,7 +60,7 @@ public:
 
 		uint32 id = atoi(charID);
 
-		if (id != 800058){
+		if (id != 800059){
 			return false;
 		}
 
@@ -124,7 +125,7 @@ public:
 		Creature* unit = nullptr;
 		Creature* creature = handler->getSelectedCreature();
 
-		if (creature->GetCreatureTemplate()->Entry != 800058){
+		if (creature->GetCreatureTemplate()->Entry != 800059){
 			return false;
 		}
 
@@ -175,6 +176,27 @@ public:
 
 		target->setFaction(1);
 		target->Attack(victim,true);
+	};
+
+
+	static bool HandleBotFollowCommand(ChatHandler* handler, const char* /*args*/)
+	{
+
+		Player* player = handler->GetSession()->GetPlayer();
+		Creature* creature = handler->getSelectedCreature();
+
+		if (!creature)
+		{
+			handler->PSendSysMessage(LANG_SELECT_CREATURE);
+			handler->SetSentErrorMessage(true);
+			return false;
+		}
+
+		if (creature->GetCreatureTemplate == 800059){
+			creature->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, creature->GetFollowAngle());
+			return true;
+		}
+
 	};
 
 
