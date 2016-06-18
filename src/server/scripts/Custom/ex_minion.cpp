@@ -3,6 +3,8 @@
 #include "ScriptedCreature.h"
 #include "Player.h"
 #include "Language.h"
+#include "Player.h"
+#include "Pet.h"
 
 
 
