@@ -189,7 +189,7 @@ public:
 		}
 
 		sObjectMgr->AddCreatureToGrid(db_guid, sObjectMgr->GetCreatureData(db_guid));		
-		return true; 
+		return true; */
 	};
 
 
@@ -242,7 +242,7 @@ public:
 
 		handler->SendSysMessage(LANG_COMMAND_DELCREATMESSAGE);
 
-		return true;*/
+		return true;
 	};
 
 
