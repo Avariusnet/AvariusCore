@@ -51,43 +51,10 @@ public:
 	//Allows members of your team, with sec > 2 to set their chars to Testing mode.
 	static bool HandleBotAddCommand(ChatHandler* handler, const char* /*args*/)
 	{
-		Player* player;
 
-		if (player->GetPet()){
-			return false;
-		}
 		uint32 id = 800059;
-		
-		float x, y, z;
-		player->GetPosition(x, y, z);
-		
-		Creature* creaturepet = creaturepet->SummonCreature(800059, x+2 , y+2 , z+1 , 0, TEMPSUMMON_MANUAL_DESPAWN, 0);
-		if (!creaturepet){
-			return false;
-		}
 
-		Pet* pet = player->CreateTamedPetFrom(creaturepet, 0);
-		if (!pet){
-			return false;
-		}
-
-		pet->SetPower(POWER_HAPPINESS, 100);
-		pet->SetUInt32Value(UNIT_FIELD_FACTIONTEMPLATE, player->getFaction());
-		pet->SetUInt64Value(UNIT_FIELD_CREATEDBY, player->GetGUID());
-		pet->SetUInt32Value(UNIT_FIELD_LEVEL, player->getLevel());
-		pet->GetMap()->AddToMap(pet->ToCreature());
-		pet->GetCharmInfo()->SetPetNumber(sObjectMgr->GeneratePetNumber(), true);
-		player->SetMinion(pet, true);
-		pet->SavePetToDB(PET_SAVE_AS_CURRENT);
-		pet->InitTalentForLevel();
-		pet->InitStatsForLevel(player->getLevel());
-		player->PetSpellInitialize();
-
-		creaturepet->DespawnOrUnsummon(100);
-		return true;
-
-
-		/*if (id != 800059){
+		if (id != 800059){
 			return false;
 		}
 
@@ -143,7 +110,7 @@ public:
 		}
 
 		sObjectMgr->AddCreatureToGrid(db_guid, sObjectMgr->GetCreatureData(db_guid));		
-		return true;*/
+		return true;
 	};
 
 
