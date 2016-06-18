@@ -245,16 +245,30 @@ public:
 	
 	static bool HandleBotRespawnCommand(ChatHandler* handler, const char* /*args*/)
 	{
-		Player* player;
-		Creature* creature = handler->getSelectedCreature();
-		if (!creature){
-			handler->SendSysMessage(LANG_SELECT_CREATURE);
-			return false;
+		Player* player = handler->GetSession()->GetPlayer();
+
+		// accept only explicitly selected target (not implicitly self targeting case)
+		Creature* target = player->GetTarget() ? handler->getSelectedCreature() : nullptr;
+		if (target)
+		{
+			if (target->IsPet())
+			{
+				target->Respawn();
+				/*handler->SendSysMessage(LANG_SELECT_CREATURE);
+				handler->SetSentErrorMessage(true);*/
+				return true;
+			}
+
+			if (target->isDead())
+				target->Respawn();
+			return true;
 		}
 
-		Pet* pet;
-		pet->Respawn();
-		creature->Respawn(true);
+		Trinity::RespawnDo u_do;
+		Trinity::WorldObjectWorker<Trinity::RespawnDo> worker(player, u_do);
+		player->VisitNearbyGridObject(player->GetGridActivationRange(), worker);
+
+		return true;
 
 	}
 
