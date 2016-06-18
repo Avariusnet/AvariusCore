@@ -134,26 +134,26 @@ public:
         char* frage = strtok((char*)args, " ");
         if (!frage){
             player->GetSession()->SendNotification("Ohne Frage geht das leider nicht!");
-            return true;
+			return false;
         }
         
         char* antwort = strtok(NULL, " ");
         if (!antwort){
             player->GetSession()->SendNotification("Ohne Antwort geht das leider nicht!");
-            return true;
+			return false;
         }
         
         
         char* belohnung = strtok(NULL, " ");
         if (!belohnung){
             player->GetSession()->SendNotification("Ohne Belohnung geht das leider nicht!");
-            return true;
+            return false;
         }
         
         char* anzahl = strtok(NULL, " ");
         if (!anzahl){
             player->GetSession()->SendNotification("Ohne Anzahl geht das leider nicht!");
-            return true;
+			return false;
         }
         
         uint32 intanzahl = atoi((char*)anzahl);
@@ -203,11 +203,20 @@ public:
 
 		uint32 item = atoi((char*)itemid);
 
-		char* anzahl = strtok(NULL, " ");
-		if (!anzahl || !atoi(anzahl)){
+		char* itemanzahl = strtok(NULL, " ");
+		if (!itemanzahl || !atoi(itemanzahl)){
 			player->GetSession()->SendNotification("Ohne Anzahl geht das leider nicht!");
 			return true;
 		}
+
+
+		char* anzahlnutzer = strtok(NULL, " ");
+		if (!anzahlnutzer){
+			player->GetSession()->SendNotification("Ohne Anzahl wie oft der Code eingesetzt werden kann, geht das nicht!");
+			return false;
+		}
+
+
 			
         PreparedStatement * itemquery = WorldDatabase.GetPreparedStatement(WORLD_SEL_ITEM_NR);
         itemquery->setUInt32(0,item);
@@ -220,8 +229,8 @@ public:
         }
         
         
-		uint32 anzahlint = atoi((char*)anzahl);
-		
+		uint32 anzahlint = atoi((char*)itemanzahl);
+		uint32 codebenutztbar = atoi((char*)anzahlnutzer);
 		//uint32 item = atoi((char*)args);
 
         
@@ -231,12 +240,16 @@ public:
             return true;
         }
 
-		if (!anzahl)
+		if (!itemanzahl)
 		{
 			player->GetSession()->SendNotification("Ohne Anzahl geht das leider nicht!");
 			return true;
 		}
 
+		if (!anzahlnutzer){
+			player->GetSession()->SendNotification("Ohne Anzahl der Nutzung geht das leider nicht!");
+			return true;
+		}
         
         
         if(item == 49623){
@@ -245,19 +258,7 @@ public:
                                        "(player,guid, itemid,gutscheincode,anzahl)"
                                        "VALUES ('%s', '%u', '%u', '%s','%u')",
                                        player->GetSession()->GetPlayerName(),player->GetGUID(),item,"Schattemgram",0);
-            
-            /*std::string name = player->GetSession()->GetPlayerName();
-            std::ostringstream ss;
-            ss << "Verstoss: " << name << " hat versucht Schattengram als Belohnung zu generieren.";
-            
-			
-            SQLTransaction trans = CharacterDatabase.BeginTransaction();
-            MailDraft("Eventteamverstoss", ss.str().c_str())
-            .SendMailTo(trans, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
-            CharacterDatabase.CommitTransaction(trans);*/
-            
-
-            return true;
+							           return true;
         }
         
 
@@ -282,7 +283,7 @@ public:
         inscode->setUInt32(1, item);
         inscode->setUInt32(2, anzahlint);
         inscode->setUInt32(3, 0);
-        inscode->setUInt32(4, 1);
+		inscode->setUInt32(4, codebenutztbar);
         CharacterDatabase.Execute(inscode);
         
         

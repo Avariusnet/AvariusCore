@@ -55,7 +55,7 @@ UPDATE `command` SET `permission`='195' WHERE `name`='gm ingame';
 
 /* ex-commands */
 DELETE FROM command WHERE `name` = 'fragen';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('frage', 193, '');
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('frage', 193, 'Syntax: .frage [Frage] [Antwort] [Itemid] [Anzahl]');
 
 DELETE FROM command WHERE `name`='bot add';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bot add', 195, 'Syntax: .bot add. Fügt einen neuen Bot hinzu.'); 
@@ -74,7 +74,7 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bot stop', 195, 'S
 
 /* ITEM CODE BEFEHL */
 DELETE FROM command WHERE `name`='gutschein';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('gutschein', 195, '');   
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('gutschein', 195, 'Syntax: .gutschein [Euer Gutscheincode].');   
 
 DELETE FROM command WHERE `name`='generate';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('generate', 195, '');   
@@ -85,4 +85,4 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('werbung', 195, '')
 
 /* Gutscheineventteam */
 DELETE FROM command WHERE `name`='gutscheinerstellen';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('gutscheinerstellen', 194, ''); 
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('gutscheinerstellen', 194, 'Syntax: .gutscheinerstellen [Itemid] [Itemanzahl]'); 

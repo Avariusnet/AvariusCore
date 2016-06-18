@@ -54,7 +54,7 @@ public:
             { "home",           SEC_ADMINISTRATOR,  false, &HandleVipHomeCommand,               "" },
             { "capital",        SEC_ADMINISTRATOR,  false, &HandleVipCapitalCommand,            "" },
             { "status",         SEC_ADMINISTRATOR,  false, &HandleVipStatusCommand,             ""},
-			{"insel",			SEC_PLAYER,			false, &HandleInselCommand,					"" },				
+			{ "insel",			SEC_PLAYER,			false, &HandleInselCommand,					"" },				
             //{ "",         		SEC_ADMINISTRATOR,  true,  &HandleVipCommand,		            "" },			
 
         };
