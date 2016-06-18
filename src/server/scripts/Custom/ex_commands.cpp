@@ -131,7 +131,7 @@ public:
 
 
 
-		uint32 id = 800059;
+		/*uint32 id = 800059;
 
 		if (id != 800059){
 			return false;
@@ -242,7 +242,7 @@ public:
 
 		handler->SendSysMessage(LANG_COMMAND_DELCREATMESSAGE);
 
-		return true;
+		return true;*/
 	};
 
 
