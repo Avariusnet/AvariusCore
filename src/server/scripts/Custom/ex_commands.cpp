@@ -130,6 +130,13 @@ public:
 			return false;
 		}
 
+		if (!creature)
+		{
+			handler->PSendSysMessage(LANG_SELECT_CREATURE);
+			handler->SetSentErrorMessage(true);
+			return false;
+		}
+
 		if (*args)
 		{
 			// number or [name] Shift-click form |color|Hcreature:creature_guid|h[name]|h|r
@@ -170,15 +177,20 @@ public:
 		if (!args){
 			return false;
 		}
-
+		
 		Creature* target = handler->getSelectedCreature();
+
+		if (!target)
+		{
+			handler->PSendSysMessage(LANG_SELECT_CREATURE);
+			handler->SetSentErrorMessage(true);
+			return false;
+		}
+
 		if (target->GetCreatureTemplate()->Entry != 800059){
 			return true;
 		}
 
-		if (!target){
-			return false;
-		}
 
 		if (target){
 			target->setFaction(1);
