@@ -29,7 +29,7 @@ public:
 	{
 		static std::vector<ChatCommand> botCommandTable =
 		{
-			{ "add", SEC_PLAYER, false, &HandleBotAddCommand, "" },
+			{ "add", SEC_ADMINISTRATOR , false, &HandleBotAddCommand, "" },
 			{ "del", SEC_PLAYER, false, &HandleBotDelCommand, "" },
 			{ "attack", SEC_PLAYER, false, &HandleBotAttackCommand, "" },
 			{ "stop", SEC_PLAYER, false, &HandleBotStopAttackCommand, "" },
