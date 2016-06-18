@@ -177,6 +177,10 @@ UPDATE `creature_template` SET `ScriptName`='lucion' WHERE `entry`='800055';
 UPDATE `creature_template` SET `lootid`='800055' WHERE entry = 800055;
 UPDATE `creature_template` SET `HealthModifier` = 10, `ArmorModifier`=5, `DamageModifier`= 50 WHERE `entry` = 800055;
 
+/* Minion Anpassung */
+UPDATE `creature_template` SET `speed_run`='2', `dmgschool`='1', `ArmorModifier`='20', `DamageModifier`='20' WHERE `entry`='800059';
+
+
 /*!40000 ALTER TABLE `creature_template` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

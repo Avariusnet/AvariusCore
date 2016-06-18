@@ -32,6 +32,7 @@ public:
 			{ "add", SEC_ADMINISTRATOR, false, &HandleBotAddCommand, "" },
 			{ "del", SEC_ADMINISTRATOR, false, &HandleBotDelCommand, "" },
 			{ "attack", SEC_ADMINISTRATOR, false, &HandleBotAttackCommand, "" },
+			{ "stop", SEC_ADMINISTRATOR, false, &HandleBotStopAttackCommand, "" },
 			{ "follow", SEC_ADMINISTRATOR, false, &HandleBotFollowCommand, "" },
 				
 
@@ -164,18 +165,43 @@ public:
 	};
 
 
-	static bool HandleBotAttackCommand(ChatHandler* handler, const char* /*args*/)
+	static bool HandleBotAttackCommand(ChatHandler* handler, const char* args)
 	{
-		
-		Unit* victim;
-		victim->SelectNearbyTarget();
+		if (!args){
+			return false;
+		}
+
 		Creature* target = handler->getSelectedCreature();
 		if (!target){
 			return false;
 		}
 
-		target->setFaction(1);
-		target->Attack(victim,true);
+		if (target){
+			target->setFaction(1);
+			return true;
+		}
+
+		return true;
+	};
+
+
+	static bool HandleBotStopAttackCommand(ChatHandler* handler, const char* args)
+	{
+		if (!args){
+			return false;
+		}
+
+		Creature* target = handler->getSelectedCreature();
+		if (!target){
+			return false;
+		}
+
+		if (target){
+			target->setFaction(35);
+			return true;
+		}
+
+		return true;
 	};
 
 
@@ -197,6 +223,7 @@ public:
 			return true;
 		}
 
+		return true;
 	};
 
 
