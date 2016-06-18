@@ -116,7 +116,7 @@ public:
 			return false;
 		}
 
-		sObjectMgr->AddCreatureToGrid(db_guid, sObjectMgr->GetCreatureData(db_guid));
+		sObjectMgr->AddCreatureToGrid(db_guid, sObjectMgr->GetCreatureData(db_guid));		
 		return true;
 	};
 
