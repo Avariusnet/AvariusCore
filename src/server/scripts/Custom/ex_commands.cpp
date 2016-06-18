@@ -172,6 +172,10 @@ public:
 		}
 
 		Creature* target = handler->getSelectedCreature();
+		if (target->GetCreatureTemplate()->Entry != 800059){
+			return true;
+		}
+
 		if (!target){
 			return false;
 		}
@@ -191,7 +195,13 @@ public:
 			return false;
 		}
 
+
 		Creature* target = handler->getSelectedCreature();
+		if (target->GetCreatureTemplate()->Entry != 800059){
+			return true;
+		}
+
+
 		if (!target){
 			return false;
 		}
