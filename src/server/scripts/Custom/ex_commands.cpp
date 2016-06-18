@@ -30,11 +30,8 @@ public:
 		static std::vector<ChatCommand> botCommandTable =
 		{
 			{ "add", SEC_ADMINISTRATOR , false, &HandleBotAddCommand, "" },
-			{ "del", SEC_ADMINISTRATOR, false, &HandleBotDelCommand, "" },
-			{ "attack", SEC_ADMINISTRATOR, false, &HandleBotAttackCommand, "" },
-			{ "spawn", SEC_ADMINISTRATOR, false, &HandleBotStopAttackCommand, "" },
-			{ "follow", SEC_ADMINISTRATOR, false, &HandleBotFollowCommand, "" },
-				
+			/*{ "del", SEC_ADMINISTRATOR, false, &HandleBotDelCommand, "" },*/	
+			{ "respawn", SEC_ADMINISTRATOR, false, &HandleBotRespawnCommand, "" },
 
 		};
 
@@ -193,7 +190,7 @@ public:
 	};
 
 
-	static bool HandleBotDelCommand(ChatHandler* handler, const char* args)
+	/*static bool HandleBotDelCommand(ChatHandler* handler, const char* args)
 	{
 		Creature* unit = nullptr;
 		Creature* creature = handler->getSelectedCreature();
@@ -243,97 +240,24 @@ public:
 		handler->SendSysMessage(LANG_COMMAND_DELCREATMESSAGE);
 
 		return true;
-	};
-
-
-	static bool HandleBotAttackCommand(ChatHandler* handler, const char* args)
-	{
-		if (!args){
-			return false;
-		}
-
-		Player* player;
-		
-		Creature* target = handler->getSelectedCreature();
-
-		if (!target)
-		{
-			handler->PSendSysMessage(LANG_SELECT_CREATURE);
-			handler->SetSentErrorMessage(true);
-			return false;
-		}
-
-		if (target->GetCreatureTemplate()->Entry != 800059){
-			return true;
-		}
-
-
-		if (target){
-			target->setFaction(1);
-			target->GetMotionMaster()->MoveFollow(player->GetSession()->GetPlayer(), PET_FOLLOW_DIST, target->GetFollowAngle());
-			return true;
-		}
-
-		return true;
-	};
-
-
-	static bool HandleBotStopAttackCommand(ChatHandler* handler, const char* args)
-	{
-		if (!args){
-			handler->PSendSysMessage(LANG_SELECT_CREATURE);
-			return false;
-		}
-
-		Creature* target = handler->getSelectedCreature();
-		if (!target)
-		{
-			handler->PSendSysMessage(LANG_SELECT_CREATURE);
-			handler->SetSentErrorMessage(true);
-			return false;
-		}
-
-
-		Player* player;
-		player->GetSession()->GetPlayer();
-		if (target->GetCreatureTemplate()->Entry != 800059){
-			return true;
-		}
-
-
-		if (target){
-			target->setFaction(35);
-			target->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, target->GetFollowAngle());
-			return true;
-		}
-
-		return true;
-	};
-
-
-	static bool HandleBotFollowCommand(ChatHandler* handler, const char* /*args*/)
-	{
-
-		Player* player = handler->GetSession()->GetPlayer();
-		Creature* creature = handler->getSelectedCreature();
-
-		if (!creature)
-		{
-			handler->PSendSysMessage(LANG_SELECT_CREATURE);
-			handler->SetSentErrorMessage(true);
-			return false;
-		}
-
-		if (creature->GetCreatureTemplate()->Entry == 800059){
-			creature->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, creature->GetFollowAngle());
-			return true;
-		}
-
-		return true;
-	};
-
+	};*/
 
 	
+	static bool HandleBotRespawnCommand(ChatHandler* handler, const char* /*args*/)
+	{
+		Player* player;
+		Creature* creature = handler->getSelectedCreature();
+		if (!creature){
+			handler->SendSysMessage(LANG_SELECT_CREATURE);
+			return false;
+		}
+
+		Pet* pet;
+		pet->Respawn();
+		creature->Respawn(true);
+
+	}
+
 		
 };
 

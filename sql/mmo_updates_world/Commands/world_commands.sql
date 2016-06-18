@@ -60,17 +60,10 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('frage', 193, 'Synt
 DELETE FROM command WHERE `name`='bot add';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bot add', 195, 'Syntax: .bot add. Fügt einen neuen Bot hinzu.'); 
 
-DELETE FROM command WHERE `name`='bot del';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bot del', 195, 'Syntax: .bot del. Entlässt einen Bot.');     
 
-DELETE FROM command WHERE `name`='bot follow';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bot follow', 195, 'Syntax: .bot follow. Bringt den Bot dazu euch zu folgen.'); 
+DELETE FROM command WHERE `name`='bot respawn';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bot respawn', 195, 'Syntax: .bot respawn. Bringt euren Begleiter ins Leben zurück.'); 
 
-DELETE FROM command WHERE `name`='bot attack';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bot attack', 195, 'Syntax: .bot attack. Bringt euren Bot dazu anzugreifen.');   
-
-DELETE FROM command WHERE `name`='bot stop';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bot stop', 195, 'Syntax: .bot stop. Bringt euren Bot dazu nicht mehr anzugreifen.');  
 
 /* ITEM CODE BEFEHL */
 DELETE FROM command WHERE `name`='gutschein';
