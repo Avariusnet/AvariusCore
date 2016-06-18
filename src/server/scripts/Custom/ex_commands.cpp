@@ -41,7 +41,7 @@ public:
 
 		static std::vector<ChatCommand> commandTable =
 		{
-			{ "bot", SEC_PLAYER, false, NULL, "", botCommandTable },
+			{ "bot", SEC_ADMINISTRATOR , false, NULL, "", botCommandTable },
 		};
 
 		return commandTable;
@@ -210,7 +210,6 @@ public:
 			return false;
 		}
 
-		Player* player = player->GetSession()->GetPlayer();
 		Creature* target = handler->getSelectedCreature();
 		if (!target)
 		{
@@ -219,6 +218,9 @@ public:
 			return false;
 		}
 
+
+		Player* player;
+		player->GetSession()->GetPlayer();
 		if (target->GetCreatureTemplate()->Entry != 800059){
 			return true;
 		}

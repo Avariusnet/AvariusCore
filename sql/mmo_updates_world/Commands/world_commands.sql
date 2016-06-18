@@ -85,4 +85,4 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('werbung', 195, '')
 
 /* Gutscheineventteam */
 DELETE FROM command WHERE `name`='gutscheinerstellen';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('gutscheinerstellen', 194, 'Syntax: .gutscheinerstellen [Itemid] [Itemanzahl]'); 
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('gutscheinerstellen', 194, 'Syntax: .gutscheinerstellen [Itemid] [Itemanzahl] [Anzahl der Nutzbarkeit].'); 

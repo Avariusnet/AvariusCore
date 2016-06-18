@@ -198,7 +198,7 @@ public:
 		char* itemid = strtok((char*)args, " ");
 		if (!itemid){
 			player->GetSession()->SendNotification("Ohne ItemID geht das leider nicht!");
-			return true;
+			return false;
 		}
 
 		uint32 item = atoi((char*)itemid);
@@ -206,7 +206,7 @@ public:
 		char* itemanzahl = strtok(NULL, " ");
 		if (!itemanzahl || !atoi(itemanzahl)){
 			player->GetSession()->SendNotification("Ohne Anzahl geht das leider nicht!");
-			return true;
+			return false;
 		}
 
 
@@ -298,7 +298,7 @@ public:
 		ss << "Der Code fuer das Item: " << itemname << " mit der Anzahl "<< anzahlint <<" lautet " << str <<" . Wir wuenschen dir weiterhin viel Spass auf MMOwning. Dein MMOwning-Team";
         player->GetSession()->SendNotification("Dein Code wurde generiert und dir zugesendet.");
         
-        tt << str << " ist der generierte Gutscheincode fuer das Item " << itemname << " und der Anzahl " << anzahlint;
+        tt << str << " ist der generierte Gutscheincode fuer das Item " << itemname << " mit der Itemanzahl " << anzahlint << ". Der Code kann " << codebenutztbar << " benutzt werden.";
         handler->PSendSysMessage(tt.str().c_str(),player->GetName());
         SQLTransaction trans = CharacterDatabase.BeginTransaction();
         MailDraft("Dein Gutscheincode", ss.str().c_str())
