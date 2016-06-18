@@ -32,7 +32,7 @@ public:
 			{ "add", SEC_ADMINISTRATOR , false, &HandleBotAddCommand, "" },
 			{ "del", SEC_ADMINISTRATOR, false, &HandleBotDelCommand, "" },
 			{ "attack", SEC_ADMINISTRATOR, false, &HandleBotAttackCommand, "" },
-			{ "stop", SEC_ADMINISTRATOR, false, &HandleBotStopAttackCommand, "" },
+			{ "spawn", SEC_ADMINISTRATOR, false, &HandleBotStopAttackCommand, "" },
 			{ "follow", SEC_ADMINISTRATOR, false, &HandleBotFollowCommand, "" },
 				
 
@@ -114,7 +114,13 @@ public:
 
 		// visual effect for levelup
 		pet->SetUInt32Value(UNIT_FIELD_LEVEL, level);
-
+		pet->SetArmor(210);
+		pet->SetBonusDamage(20000);
+		pet->SetCanFly(true);
+		pet->setActive(true);
+		pet->SetCreateHealth(1500000);
+		pet->SetCreateStat(STAT_STRENGTH, 10000);
+			
 		// caster have pet now
 		player->SetMinion(pet, true);
 
@@ -125,7 +131,7 @@ public:
 
 
 
-		/*uint32 id = 800059;
+		uint32 id = 800059;
 
 		if (id != 800059){
 			return false;
@@ -183,7 +189,7 @@ public:
 		}
 
 		sObjectMgr->AddCreatureToGrid(db_guid, sObjectMgr->GetCreatureData(db_guid));		
-		return true; */
+		return true; 
 	};
 
 
