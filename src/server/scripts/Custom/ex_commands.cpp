@@ -192,7 +192,7 @@ public:
 			return false;
 		}
 
-		if (creature->GetCreatureTemplate == 800059){
+		if (creature->GetCreatureTemplate()->Entry == 800059){
 			creature->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, creature->GetFollowAngle());
 			return true;
 		}
