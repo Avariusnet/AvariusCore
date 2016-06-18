@@ -173,7 +173,8 @@ public:
 			return false;
 		}
 
-		Player* player = player->GetSession()->GetPlayer();
+		Player* player;
+		
 		Creature* target = handler->getSelectedCreature();
 
 		if (!target)
@@ -190,7 +191,7 @@ public:
 
 		if (target){
 			target->setFaction(1);
-			target->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, target->GetFollowAngle());
+			target->GetMotionMaster()->MoveFollow(player->GetSession()->GetPlayer(), PET_FOLLOW_DIST, target->GetFollowAngle());
 			return true;
 		}
 
@@ -201,6 +202,7 @@ public:
 	static bool HandleBotStopAttackCommand(ChatHandler* handler, const char* args)
 	{
 		if (!args){
+			handler->PSendSysMessage(LANG_SELECT_CREATURE);
 			return false;
 		}
 
