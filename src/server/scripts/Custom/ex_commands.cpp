@@ -126,16 +126,18 @@ public:
 		Creature* unit = nullptr;
 		Creature* creature = handler->getSelectedCreature();
 
-		if (creature->GetCreatureTemplate()->Entry != 800059){
-			return false;
-		}
-
 		if (!creature)
 		{
 			handler->PSendSysMessage(LANG_SELECT_CREATURE);
 			handler->SetSentErrorMessage(true);
 			return false;
 		}
+
+		if (creature->GetCreatureTemplate()->Entry != 800059){
+			return false;
+		}
+
+		
 
 		if (*args)
 		{
