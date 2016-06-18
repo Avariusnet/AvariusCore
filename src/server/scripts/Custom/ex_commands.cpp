@@ -101,7 +101,7 @@ public:
 			return false;
 		}
 
-		creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), chr->GetPhaseMaskForSpawn());
+		//creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), chr->GetPhaseMaskForSpawn());
 
 		ObjectGuid::LowType db_guid = creature->GetSpawnId();
 
@@ -116,7 +116,7 @@ public:
 			return false;
 		}
 
-		sObjectMgr->AddCreatureToGrid(db_guid, sObjectMgr->GetCreatureData(db_guid));		
+		//sObjectMgr->AddCreatureToGrid(db_guid, sObjectMgr->GetCreatureData(db_guid));		
 		return true;
 	};
 
@@ -177,7 +177,7 @@ public:
 		if (!args){
 			return false;
 		}
-		
+		Player* player = player->GetSession()->GetPlayer();
 		Creature* target = handler->getSelectedCreature();
 
 		if (!target)
@@ -194,6 +194,7 @@ public:
 
 		if (target){
 			target->setFaction(1);
+			target->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, target->GetFollowAngle());
 			return true;
 		}
 
@@ -207,7 +208,7 @@ public:
 			return false;
 		}
 
-
+		Player* player = player->GetSession()->GetPlayer();
 		Creature* target = handler->getSelectedCreature();
 		if (!target)
 		{
@@ -223,6 +224,7 @@ public:
 
 		if (target){
 			target->setFaction(35);
+			target->GetMotionMaster()->MoveFollow(player, PET_FOLLOW_DIST, target->GetFollowAngle());
 			return true;
 		}
 
