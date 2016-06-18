@@ -49,18 +49,11 @@ public:
 
 	
 	//Allows members of your team, with sec > 2 to set their chars to Testing mode.
-	static bool HandleBotAddCommand(ChatHandler* handler, const char* args)
+	static bool HandleBotAddCommand(ChatHandler* handler, const char* /*args*/)
 	{
+		uint32 id = 800059;
 
-		if (!*args)
-			return false;
-
-		char* charID = handler->extractKeyFromLink((char*)args, "Hcreature_entry");
-		if (!charID)
-			return false;
-
-		uint32 id = atoi(charID);
-
+		
 		if (id != 800059){
 			return false;
 		}
@@ -101,7 +94,7 @@ public:
 			return false;
 		}
 
-		//creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), chr->GetPhaseMaskForSpawn());
+		creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), chr->GetPhaseMaskForSpawn());
 
 		ObjectGuid::LowType db_guid = creature->GetSpawnId();
 
@@ -116,7 +109,7 @@ public:
 			return false;
 		}
 
-		//sObjectMgr->AddCreatureToGrid(db_guid, sObjectMgr->GetCreatureData(db_guid));		
+		sObjectMgr->AddCreatureToGrid(db_guid, sObjectMgr->GetCreatureData(db_guid));		
 		return true;
 	};
 
@@ -179,6 +172,7 @@ public:
 		if (!args){
 			return false;
 		}
+
 		Player* player = player->GetSession()->GetPlayer();
 		Creature* target = handler->getSelectedCreature();
 
