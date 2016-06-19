@@ -246,7 +246,7 @@ public:
 	static bool HandleBotRespawnCommand(ChatHandler* handler, const char* /*args*/)
 	{
 		Player* player = handler->GetSession()->GetPlayer();
-		player->CastSpell(player->GetPet(),35141,true,NULL,NULL,player->GetGUID());
+		player->CastSpell(player->GetPet(), 982, true, NULL, NULL, player->GetGUID());
 		// accept only explicitly selected target (not implicitly self targeting case)
 		/*Creature* target = player->GetTarget() ? handler->getSelectedCreature() : nullptr;
 		if (target)
