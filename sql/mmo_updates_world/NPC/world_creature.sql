@@ -162,6 +162,14 @@ UPDATE `creature` SET `unit_flags`='8' WHERE `guid`='800055';
 /*NPC Weihnachtswichtel */
 UPDATE `creature` SET `position_x`='16227.75', `position_y`='16344.58', `position_z`='215.31', `orientation`='2.18' WHERE `guid`='800066';
 
+/*
+DELETE FROM `creature` where `guid` BETWEEN 1600024 AND 1600025;
+INSERT INTO `creature` VALUES
+('1600024', '90001', '1', '0', '0', '1', '1', '0', '0', '1652.95', '-4433', '17.4361', '1.8175', '300', '0', '0', '4274', '3994', '0', '0', '134217728', '0', '0'),
+('1600025', '90001', '0', '0', '0', '1', '1', '0', '0', '-8847.31', '632.671', '95.3331', '0.31115', '300', '0', '0', '4274', '3994', '0', '0', '134217728', '0', '0');
+
+*/
+
 /*!40000 ALTER TABLE `creature` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

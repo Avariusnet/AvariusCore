@@ -28,12 +28,6 @@ DELETE FROM gameobject WHERE `GUID` = 269631;
 DELETE FROM gameobject WHERE `GUID` = 800032;
 DELETE FROM gameobject WHERE `GUID` = 800475;
 
-/* Bosse Waffen */
-DELETE FROM `creature_equip_template` where `CreatureID` = 800010;
-REPLACE INTO `creature_equip_template` (`CreatureID`, `id`, `ItemID1`, `ItemID2`, `ItemID3`) VALUES ('800010', '1', '49623', '0', '0');
-
-DELETE FROM `creature_equip_template` where `CreatureID` = 800039;
-REPLACE INTO `creature_equip_template` (`CreatureID`, `id`, `ItemID1`, `ItemID2`, `ItemID3`) VALUES ('800039', '1', '50760', '0', '0');
 
 
 /* SINDRA GO */
@@ -42,32 +36,3 @@ DELETE FROM `gameobject` WHERE `guid` = 802292;
 INSERT INTO `gameobject` (guid, id, map, zoneId, areaId, spawnMask, phaseMask, position_x, position_y, position_z, orientation, rotation0, rotation1, rotation2, rotation3, spawntimesecs, animprogress, state, VerifiedBuild) VALUES 
 ('802291', '196485', '631', '0', '0', '15', '1', '4353.29', '2465', '203.489', '6.22878', '0', '0', '0.0272001', '-0.99963', '300', '0', '1', '0' ),
 ('802292', '196485', '631', '0', '0', '15', '1', '4355.64', '2500', '203.386', '6.22878', '0', '0', '0.0272001', '-0.99963', '300', '0', '1', '0' );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* Lucion */ 
-
-DELETE FROM `creature_equip_template` where `CreatureID` = 800055;
-REPLACE INTO `creature_equip_template` (`CreatureID`, `id`, `ItemID1`, `ItemID2`, `ItemID3`) VALUES ('800055', '1', '49623', '49623', '0');
-
-
-
-
-
-
-
-
-

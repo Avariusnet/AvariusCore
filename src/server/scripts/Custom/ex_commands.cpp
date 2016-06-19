@@ -73,7 +73,7 @@ public:
 
 		if (creatureTarget->GetCreatureTemplate()->Entry != 800059){
 			handler->PSendSysMessage("Du darfst nur den Minion zaehmen. Alles andere waere doch Betrug :)");
-			return false;
+			return true;
 		}
 
 		if (!cInfo->IsTameable(player->CanTameExoticPets()))
@@ -105,18 +105,18 @@ public:
 
 		// prepare visual effect for levelup
 		pet->SetUInt32Value(UNIT_FIELD_LEVEL, level - 1);
-
-		// add to world
-		pet->GetMap()->AddToMap(pet->ToCreature());
-
-		// visual effect for levelup
-		pet->SetUInt32Value(UNIT_FIELD_LEVEL, level);
 		pet->SetArmor(210);
 		pet->SetBonusDamage(20000);
 		pet->SetCanFly(true);
 		pet->setActive(true);
 		pet->SetCreateHealth(1500000);
 		pet->SetCreateStat(STAT_STRENGTH, 10000);
+		// add to world
+		pet->GetMap()->AddToMap(pet->ToCreature());
+
+		// visual effect for levelup
+		pet->SetUInt32Value(UNIT_FIELD_LEVEL, level);
+		
 			
 		// caster have pet now
 		player->SetMinion(pet, true);
