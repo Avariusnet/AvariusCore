@@ -129,7 +129,7 @@ public:
 	};
 
 
-	static bool HandleBotRespawnCommand(ChatHandler* /*handler*/, const char* /*args*/)
+	static bool HandleBotRespawnCommand(ChatHandler* handler, const char* /*args*/)
 	{
 		//Respawn your Pet. Only useable if Pet is dead.
 		Player* player = handler->GetSession()->GetPlayer();
@@ -145,7 +145,9 @@ public:
 		Pet* pet = player->GetPet();
 		
 		//Modify Stats of your Pet
-		pet->CreateHealth(1500000);
+		pet->SetCreateHealth(1500000);
+		pet->SetArmor(2000);
+		pet->SetBonusDamage(10000);
 		
 		
 	}

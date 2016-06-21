@@ -60,6 +60,8 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('frage', 193, 'Synt
 DELETE FROM command WHERE `name`='bot add';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bot add', 195, 'Syntax: .bot add. Fügt einen neuen Bot hinzu.'); 
 
+DELETE FROM command WHERE `name`='bot buff';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bot buff', 195, 'Syntax: .bot buff.Bufft deinen Bot.'); 
 
 DELETE FROM command WHERE `name`='bot respawn';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bot respawn', 195, 'Syntax: .bot respawn. Bringt euren Begleiter ins Leben zurück.'); 
