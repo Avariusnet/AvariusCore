@@ -30,7 +30,7 @@ public:
 		static std::vector<ChatCommand> botCommandTable =
 		{
 			{ "add", SEC_ADMINISTRATOR , false, &HandleBotAddCommand, "" },
-			/*{ "del", SEC_ADMINISTRATOR, false, &HandleBotDelCommand, "" },*/	
+			{ "buff", SEC_ADMINISTRATOR, false, &HandleBotBuffCommand, "" },	
 			{ "respawn", SEC_ADMINISTRATOR, false, &HandleBotRespawnCommand, "" },
 
 		};
@@ -126,150 +126,28 @@ public:
 
 		return true;
 
-
-
-		/*uint32 id = 800059;
-
-		if (id != 800059){
-			return false;
-		}
-
-		if (!sObjectMgr->GetCreatureTemplate(id))
-			return false;
-
-		Player* chr = handler->GetSession()->GetPlayer();
-		float x = chr->GetPositionX();
-		float y = chr->GetPositionY();
-		float z = chr->GetPositionZ();
-		float o = chr->GetOrientation();
-		Map* map = chr->GetMap();
-
-		if (Transport* trans = chr->GetTransport())
-		{
-			ObjectGuid::LowType guid = map->GenerateLowGuid<HighGuid::Unit>();
-			CreatureData& data = sObjectMgr->NewOrExistCreatureData(guid);
-			data.id = id;
-			data.phaseMask = chr->GetPhaseMaskForSpawn();
-			data.posX = chr->GetTransOffsetX();
-			data.posY = chr->GetTransOffsetY();
-			data.posZ = chr->GetTransOffsetZ();
-			data.orientation = chr->GetTransOffsetO();
-
-			Creature* creature = trans->CreateNPCPassenger(guid, &data);
-
-			creature->SaveToDB(trans->GetGOInfo()->moTransport.mapID, 1 << map->GetSpawnMode(), chr->GetPhaseMaskForSpawn());
-
-			sObjectMgr->AddCreatureToGrid(guid, &data);
-			return true;
-		}
-
-		Creature* creature = new Creature();
-		if (!creature->Create(map->GenerateLowGuid<HighGuid::Unit>(), map, chr->GetPhaseMaskForSpawn(), id, x, y, z, o))
-		{
-			delete creature;
-			return false;
-		}
-
-		creature->SaveToDB(map->GetId(), (1 << map->GetSpawnMode()), chr->GetPhaseMaskForSpawn());
-
-		ObjectGuid::LowType db_guid = creature->GetSpawnId();
-
-		// To call _LoadGoods(); _LoadQuests(); CreateTrainerSpells()
-		// current "creature" variable is deleted and created fresh new, otherwise old values might trigger asserts or cause undefined behavior
-		creature->CleanupsBeforeDelete();
-		delete creature;
-		creature = new Creature();
-		if (!creature->LoadCreatureFromDB(db_guid, map))
-		{
-			delete creature;
-			return false;
-		}
-
-		sObjectMgr->AddCreatureToGrid(db_guid, sObjectMgr->GetCreatureData(db_guid));		
-		return true; */
 	};
 
 
-	/*static bool HandleBotDelCommand(ChatHandler* handler, const char* args)
+	static bool HandleBotRespawnCommand(ChatHandler* /*handler*/, const char* /*args*/)
 	{
-		Creature* unit = nullptr;
-		Creature* creature = handler->getSelectedCreature();
-
-		if (!creature)
-		{
-			handler->PSendSysMessage(LANG_SELECT_CREATURE);
-			handler->SetSentErrorMessage(true);
-			return false;
-		}
-
-		if (creature->GetCreatureTemplate()->Entry != 800059){
-			return false;
-		}
-
-		
-
-		if (*args)
-		{
-			// number or [name] Shift-click form |color|Hcreature:creature_guid|h[name]|h|r
-			char* cId = handler->extractKeyFromLink((char*)args, "Hcreature");
-			if (!cId)
-				return false;
-
-			ObjectGuid::LowType lowguid = atoi(cId);
-			if (!lowguid)
-				return false;
-
-			if (CreatureData const* cr_data = sObjectMgr->GetCreatureData(lowguid))
-				unit = handler->GetSession()->GetPlayer()->GetMap()->GetCreature(ObjectGuid(HighGuid::Unit, cr_data->id, lowguid));
-		}
-		else
-			unit = handler->getSelectedCreature();
-
-		if (!unit || unit->IsPet() || unit->IsTotem())
-		{
-			handler->SendSysMessage(LANG_SELECT_CREATURE);
-			handler->SetSentErrorMessage(true);
-			return false;
-		}
-
-		// Delete the creature
-		unit->CombatStop();
-		unit->DeleteFromDB();
-		unit->AddObjectToRemoveList();
-
-		handler->SendSysMessage(LANG_COMMAND_DELCREATMESSAGE);
-
-		return true;
-	};*/
-
-	
-	static bool HandleBotRespawnCommand(ChatHandler* handler, const char* /*args*/)
-	{
+		//Respawn your Pet. Only useable if Pet is dead.
 		Player* player = handler->GetSession()->GetPlayer();
 		player->CastSpell(player->GetPet(), 982, true, NULL, NULL, player->GetGUID());
-		// accept only explicitly selected target (not implicitly self targeting case)
-		/*Creature* target = player->GetTarget() ? handler->getSelectedCreature() : nullptr;
-		if (target)
-		{
-			if (target->IsPet())
-			{
-				
-				handler->SendSysMessage(LANG_SELECT_CREATURE);
-				handler->SetSentErrorMessage(true);
-				return true;
-			}
-
-			if (target->isDead())
-				target->Respawn();
-			return true;
-		}
-
-		Trinity::RespawnDo u_do;
-		Trinity::WorldObjectWorker<Trinity::RespawnDo> worker(player, u_do);
-		player->VisitNearbyGridObject(player->GetGridActivationRange(), worker);
-		*/
 		return true;
-
+	}
+	
+	
+	
+	static bool HandleBotBuffCommand(ChatHandler* /*handler*/, const char* /*args*/)
+	{
+		Player* player = player->GetSession()->GetPlayer();
+		Pet* pet = player->GetPet();
+		
+		//Modify Stats of your Pet
+		pet->CreateHealth(1500000);
+		
+		
 	}
 
 		
