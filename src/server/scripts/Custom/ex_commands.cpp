@@ -148,7 +148,7 @@ public:
 		pet->SetCreateHealth(1500000);
 		pet->SetArmor(2000);
 		pet->SetBonusDamage(10000);
-		
+		return true;
 		
 	}
 
