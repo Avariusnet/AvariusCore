@@ -143,7 +143,7 @@ public:
 	{
 		Player* player = player->GetSession()->GetPlayer();
 		Pet* pet = player->GetPet();
-		
+		pet->SetLevel(250);
 		//Modify Stats of your Pet
 		pet->SetCreateHealth(1500000);
 		pet->SetArmor(2000);
