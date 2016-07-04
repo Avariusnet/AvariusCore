@@ -71,13 +71,7 @@ VALUES ( /*  ID */ 800043,
   /* Scriptname  */'');
   
 
-DELETE FROM `creature` WHERE `id` = 800043;
-REPLACE INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`MovementType`) VALUES 
-('800043','800043','0','1','1','17072','0','-795.05','1510.11','104.41','4.30','25','0','0','1000000','250000','0');
- 
-DELETE FROM `creature` WHERE `id` = 800042;
-REPLACE INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`MovementType`) VALUES 
-('800042','800042','0','1','1','17072','0','-783.38','1502.80','104.46','4.04','25','0','0','1000000','250000','0');
+
 
 DELETE FROM `npc_vendor` WHERE `entry` =800043;  
 REPLACE INTO `npc_vendor` (`entry`, `slot`, `item`, `maxcount`, `incrtime`, `ExtendedCost`) VALUES 
