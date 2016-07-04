@@ -147,7 +147,7 @@ public:
 		//Modify Stats of your Pet
 		pet->SetCreateHealth(1500000);
 		pet->SetArmor(2000);
-		pet->SetBonusDamage(10000);
+		pet->SetBonusDamage(10000000);
 		return true;
 		
 	}
