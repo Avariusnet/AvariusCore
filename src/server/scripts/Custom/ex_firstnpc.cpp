@@ -1037,8 +1037,16 @@ class npc_first_char : public CreatureScript
 					{
 						if (pPlayer->HasItemOrGemWithIdEquipped(700523, 1, 4)){
 							pPlayer->GetSession()->SendNotification("Du bist Besitzer des Wappenrockes des Wandervolkes! Ich verneige mich vor dir.");
+							pCreature->HandleEmoteCommand(EMOTE_ONESHOT_KNEEL);
 							const Quest* quest = sObjectMgr->GetQuestTemplate(999999);
-							pPlayer->AddQuestAndCheckCompletion(quest,NULL);
+							
+							if (pPlayer->GetQuestStatus(999999) == QUEST_STATE_COMPLETE || pPlayer->GetQuestStatus(999999) == QUEST_STATE_FAIL || pPlayer->GetQuestStatus(999999) == QUEST_STATUS_FAILED || pPlayer->GetQuestStatus(999999) == QUEST_STATUS_REWARDED){
+								pPlayer->GetSession()->SendNotification("Du hast die Quest bereits abgeschlossen oder sie ist noch in deinem Questlog vorhanden.");
+							}
+							else {
+								pPlayer->AddQuestAndCheckCompletion(quest, NULL);
+							}
+							
 							return true;
 						}
 						return true;
