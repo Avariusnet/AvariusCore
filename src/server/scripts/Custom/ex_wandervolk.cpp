@@ -148,10 +148,11 @@ public:
 			creature->Yell("Nun wird es ernst. Zeigt was Ihr könnt", LANG_UNIVERSAL, NULL);
 
 			if (creature->GetHealthPct() < 2){
+				const Quest* quest = sObjectMgr->GetQuestTemplate(800558);
 				creature->Yell("Ihr habt mich geschlagen. Es reicht", LANG_UNIVERSAL, NULL);
 				creature->setFaction(35);
 				pPlayer->CompleteQuest(800558);
-				pPlayer->CanRewardQuest(800558, "Kampf erfolgreich!");
+				pPlayer->CanRewardQuest(quest,false);
 			}
 
 		}break;
