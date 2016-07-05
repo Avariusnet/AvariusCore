@@ -24,6 +24,8 @@
 #include <sstream>
 #include <string>
 #include <stdlib.h>
+#include "ObjectGuid.h"
+#include "ObjectMgr.h"
 
 
 enum Belohnungen
@@ -946,7 +948,7 @@ class npc_first_char : public CreatureScript
 						if (pPlayer->GetSession()->GetSecurity() == 3){	
 							
 							pPlayer->ADD_GOSSIP_ITEM(7, "Aufwertungen einsehen", GOSSIP_SENDER_MAIN, 4);
-							pPlayer->ADD_GOSSIP_ITEM(7, "MMO Bonus", GOSSIP_SENDER_MAIN, 9504);
+							pPlayer->ADD_GOSSIP_ITEM(7, "Wandervolk", GOSSIP_SENDER_MAIN, 9504);
 						}
 
 						pPlayer->PlayerTalkClass->SendGossipMenu(907, pCreature->GetGUID());
@@ -1035,6 +1037,8 @@ class npc_first_char : public CreatureScript
 					{
 						if (pPlayer->HasItemOrGemWithIdEquipped(700523, 1, 4)){
 							pPlayer->GetSession()->SendNotification("Du bist Besitzer des Wappenrockes des Wandervolkes! Ich verneige mich vor dir.");
+							const Quest* quest = sObjectMgr->GetQuestTemplate(999999);
+							pPlayer->AddQuestAndCheckCompletion(quest,NULL);
 							return true;
 						}
 						return true;
