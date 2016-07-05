@@ -142,6 +142,7 @@ public:
 	static bool HandleBotBuffCommand(ChatHandler* /*handler*/, const char* /*args*/)
 	{
 		Player* player = player->GetSession()->GetPlayer();
+
 		Pet* pet = player->GetPet();
 		pet->SetLevel(250);
 		//Modify Stats of your Pet

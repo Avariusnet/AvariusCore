@@ -57,6 +57,7 @@ public:
                 //Port to upper position
                 pPlayer->TeleportTo(1,16220.94,16350.46,210.77,1.48);
 				pPlayer->PlayerTalkClass->SendCloseGossip();
+				pPlayer->CastSpell(pPlayer->GetSession()->GetPlayer(), 1706, true, NULL, NULL, pPlayer->GetGUID());
 				pPlayer->GetGUID();
 				return true;
 			}break;

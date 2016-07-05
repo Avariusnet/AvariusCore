@@ -182,6 +182,8 @@ UPDATE `creature_template` SET `speed_run`='2', `dmgschool`='1', `HealthModifier
 
 UPDATE `creature_template` SET `faction`='38', `npcflag`='0', `rank`='0', `unit_flags`='2', `family`='1', `type`='1', `type_flags`='1' WHERE `entry`='800059';
 
+UPDATE `creature_template` SET `HealthModifier`='1' WHERE `entry`='800033';
+
 
 /*!40000 ALTER TABLE `creature_template` ENABLE KEYS */;
 UNLOCK TABLES;
