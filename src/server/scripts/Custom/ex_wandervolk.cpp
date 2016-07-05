@@ -114,7 +114,7 @@ public:
 			pPlayer->ADD_GOSSIP_ITEM(7, "Beam mich hoch!", GOSSIP_SENDER_MAIN, 1);
 		}
 
-		if (pPlayer->hasInvolvedQuest(800558)){
+		if (pPlayer->hasQuest(800558)){
 			pPlayer->ADD_GOSSIP_ITEM(7, "Ich fordere euch heraus!", GOSSIP_SENDER_MAIN, 2);
 		}
 
