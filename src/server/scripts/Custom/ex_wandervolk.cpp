@@ -113,10 +113,10 @@ public:
 		if (status){
 			pPlayer->ADD_GOSSIP_ITEM(7, "Beam mich hoch!", GOSSIP_SENDER_MAIN, 1);
 		}
-
-		if (pPlayer->hasQuest(800558)){
-			pPlayer->ADD_GOSSIP_ITEM(7, "Ich fordere euch heraus!", GOSSIP_SENDER_MAIN, 2);
-		}
+		pPlayer->ADD_GOSSIP_ITEM(7, "Ich fordere euch heraus!", GOSSIP_SENDER_MAIN, 2);
+		
+			
+		
 
 
 		pPlayer->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
@@ -151,6 +151,7 @@ public:
 				const Quest* quest = sObjectMgr->GetQuestTemplate(800558);
 				creature->Yell("Ihr habt mich geschlagen. Es reicht", LANG_UNIVERSAL, NULL);
 				creature->setFaction(35);
+				// TODO CHECK IF PLAYER HAS QUEST
 				pPlayer->CompleteQuest(800558);
 				pPlayer->CanRewardQuest(quest,false);
 			}
