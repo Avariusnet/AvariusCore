@@ -1036,7 +1036,8 @@ class npc_first_char : public CreatureScript
 					case 9504:
 					{
 						if (pPlayer->HasItemOrGemWithIdEquipped(700523, 1, 4)){
-							pPlayer->GetSession()->SendNotification("Du bist Besitzer des Wappenrockes des Wandervolkes! Ich verneige mich vor dir.");
+							
+							pCreature->Yell("Ihr seid ein wahrhaft grosser Held", LANG_UNIVERSAL,NULL);
 							pCreature->HandleEmoteCommand(EMOTE_ONESHOT_KNEEL);
 							const Quest* quest = sObjectMgr->GetQuestTemplate(999999);
 							
