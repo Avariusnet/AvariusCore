@@ -93,11 +93,6 @@ public:
 		}
         return true;
 	}
-
-
-	
-
-
 	
 };
 
@@ -110,7 +105,7 @@ public:
 
 
 
-	bool OnGossipHello(Player *pPlayer, Creature* _creature)
+	bool OnGossipHello(Player *pPlayer, Creature* creature)
 	{
 
 		pPlayer->ADD_GOSSIP_ITEM(7, "Hallo", GOSSIP_SENDER_MAIN, 0);
@@ -119,12 +114,16 @@ public:
 			pPlayer->ADD_GOSSIP_ITEM(7, "Beam mich hoch!", GOSSIP_SENDER_MAIN, 1);
 		}
 
+		if (pPlayer->hasInvolvedQuest(800558)){
+			pPlayer->ADD_GOSSIP_ITEM(7, "Ich fordere euch heraus!", GOSSIP_SENDER_MAIN, 2);
+		}
 
-		pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+
+		pPlayer->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 		return true;
 	}
 
-	bool OnGossipSelect(Player * pPlayer, Creature * /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
+	bool OnGossipSelect(Player * pPlayer, Creature * creature, uint32 /*uiSender*/, uint32 uiAction)
 	{
 		switch (uiAction)
 		{
@@ -143,7 +142,18 @@ public:
 			pPlayer->TeleportTo(0, 3174.49, -6000.48, 208.00, 0.27);
 			return true;
 		}break;
+			
+		case 2: {
+			creature->setFaction(21);
+			creature->Yell("Nun wird es ernst. Zeigt was Ihr könnt", LANG_UNIVERSAL, NULL);
 
+			if (creature->GetHealthPct() < 2){
+				creature->Yell("Ihr habt mich geschlagen. Es reicht", LANG_UNIVERSAL, NULL);
+				creature->setFaction(35);
+			}
+
+		}break;
+	
 			return true;
 		}
 		return true;

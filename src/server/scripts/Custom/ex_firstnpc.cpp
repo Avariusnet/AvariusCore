@@ -1037,7 +1037,11 @@ class npc_first_char : public CreatureScript
 					{
 						if (pPlayer->HasItemOrGemWithIdEquipped(700523, 1, 4)){
 							
-							pCreature->Yell("Ihr seid ein wahrhaft grosser Held", LANG_UNIVERSAL,NULL);
+							std::ostringstream tt;
+							std::string playername = pPlayer->GetSession()->GetPlayerName();
+							tt << playername << ", ihr seid ein wahrhaft grosser Held! |r";
+
+							pCreature->Yell(tt.str().c_str(), LANG_UNIVERSAL ,NULL);
 							pCreature->HandleEmoteCommand(EMOTE_ONESHOT_KNEEL);
 							const Quest* quest = sObjectMgr->GetQuestTemplate(999999);
 							

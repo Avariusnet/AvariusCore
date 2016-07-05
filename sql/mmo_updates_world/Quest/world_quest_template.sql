@@ -128,6 +128,13 @@ UPDATE `quest_template` SET `LogDescription`='Hey $N, wir wollen ein bisschen Ac
 
 UPDATE `quest_template` SET `RequiredNpcOrGo2`='0', `RequiredNpcOrGoCount2`='0' WHERE `ID`='800005';
 
+
+UPDATE `quest_template` SET `StartItem`='5917' WHERE `ID`='900835';
+UPDATE `quest_template` SET `RequiredItemId3`='0', `RequiredItemCount3`='0' WHERE `ID`='900840';
+
+UPDATE `quest_template` SET `LogDescription`='Bringt mir 50 Stueck Kupferpulver.', `QuestDescription`='Hallo $N, Leandaria braucht Kupferpulver. Bitte bringt mir, als Vertretung fuer sie, 50 Stueck davon.' WHERE `ID`='900803';
+
+
 /*!40000 ALTER TABLE `quest_template` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
