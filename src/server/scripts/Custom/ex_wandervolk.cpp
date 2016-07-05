@@ -150,6 +150,8 @@ public:
 			if (creature->GetHealthPct() < 2){
 				creature->Yell("Ihr habt mich geschlagen. Es reicht", LANG_UNIVERSAL, NULL);
 				creature->setFaction(35);
+				pPlayer->CompleteQuest(800558);
+				pPlayer->CanRewardQuest(800558, "Kampf erfolgreich!");
 			}
 
 		}break;
