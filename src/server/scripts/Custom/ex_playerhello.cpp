@@ -407,16 +407,16 @@ public:
 
 		//200h
 		if (time >= 720000){
-			
-			
-			
-			//QueryResult result = CharacterDatabase.PQuery("SELECT `id`, `zeit`, `spieler`,`uid` `benutzt` FROM `lob` WHERE `zeit` = '%u' AND `uid`= '%u'", 200, player->GetGUID());
-            
-            PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_LOB);
-            stmt->setInt32(0,200);
-            stmt->setInt32(1, player->GetGUID());
-            PreparedQueryResult result = CharacterDatabase.Query(stmt);
-            
+
+
+
+
+
+			PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_LOB);
+			stmt->setInt32(0, 200);
+			stmt->setInt32(1, player->GetGUID());
+			PreparedQueryResult result = CharacterDatabase.Query(stmt);
+
 
 			if (!result){
 
@@ -429,9 +429,26 @@ public:
 				CharacterDatabase.CommitTransaction(trans);
 
 				CharacterDatabase.PExecute("INSERT INTO lob (zeit,spieler,uid,benutzt) Values ('%u','%s','%u','%u')", 200, player->GetName().c_str(), uid, 1);
-				
+
+				Item* item = Item::CreateItem(46802, 1);
+				player->GetSession()->SendNotification("Deine nachtraegliche Belohnung ist im Postfach.");
+				SQLTransaction trans = CharacterDatabase.BeginTransaction();
+				item->SaveToDB(trans);
+				MailDraft("Ein Geschenk", "Das MMOwning-Team bedankt sich fuer deine Unterstuetzung mit einer kleinen Geste. Viel Spass weiterhin auf MMOwning World.").AddItem(item)
+					.SendMailTo(trans, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
+				CharacterDatabase.CommitTransaction(trans);
+
+				PreparedStatement* inslob = CharacterDatabase.GetPreparedStatement(CHAR_INS_LOB);
+				inslob->setInt32(0, 100);
+				inslob->setString(1, player->GetName());
+				inslob->setInt32(2, uid);
+				inslob->setInt32(3, 1);
+				CharacterDatabase.Execute(inslob);
+
 			}
-		}		
+
+		}
+		
 	}
 
 };
