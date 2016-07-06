@@ -466,9 +466,12 @@ public:
 			inslob->setInt32(3, 1);
 			CharacterDatabase.Execute(inslob);
 			return;
-
 		}
 		
+		if (!ergebnis){
+			return;
+		}
+
 		if (ergebnis){
 			return;
 		}
