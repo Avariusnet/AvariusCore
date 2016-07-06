@@ -1071,17 +1071,11 @@ class npc_first_char : public CreatureScript
 
 					case 8500: {
 						if (pPlayer->GetTotalPlayedTime() > 720000){
-							
-								pPlayer->AddItem(46802, 1);
-								PreparedStatement* insert = CharacterDatabase.GetPreparedStatement(CHAR_INS_LOB);
-
-								//CHAR_INS_LOB, "INSERT INTO lob (zeit,spieler,uid,benutzt)VALUES (?,?,?,?)", CONNECTION_SYNCH);
-								insert->setInt32(0,100);
-								insert->setString(1,pPlayer->GetSession()->GetPlayerName().c_str());
-								insert->setInt32(2,pPlayer->GetGUID());
-								insert->setInt32(3,1);
-								CharacterDatabase.Execute(insert);
-								return true;
+							int32 guid = pPlayer->GetGUID();
+							pPlayer->AddItem(46802, 1);
+							PreparedStatement* insert = CharacterDatabase.GetPreparedStatement(CHAR_INS_LOB);
+							CharacterDatabase.PExecute("INSERT INTO lob (zeit,spieler,uid,benutzt) Values ('%u','%s','%u','%u')", 100, pPlayer->GetName().c_str(), guid, 1);
+							return true;
 						
 						}
 					}break;
