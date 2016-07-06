@@ -7,9 +7,10 @@ CREATE TABLE IF NOT EXISTS `antworten` (
   PRIMARY KEY (`id`)  COMMENT '');
 
 
-DELETE FROM `antworten` WHERE `id` BETWEEN 0 AND 1;
+DELETE FROM `antworten` WHERE `id` BETWEEN 0 AND 10;
   
 INSERT INTO `antworten` (`id`, `frage`, `antwort`, `belohnung`, `anzahl`) 
 VALUES 
-('0', 'Testfrage0', 'Testantwort0', '38186', '2'),
-('1', 'Testfrage1', 'Testantwort1', '38186', '2');
+('1', 'Testfrage0', 'Testantwort0', '38186', '2'),
+('2', 'Testfrage1', 'Testantwort1', '38186', '2'),
+('3', 'Testfrage1', 'Testantwort1', '38186', '2');
