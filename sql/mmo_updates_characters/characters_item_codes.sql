@@ -5,10 +5,8 @@ CREATE TABLE IF NOT EXISTS `item_codes` (
   `anzahl` INT NULL COMMENT '',
   `benutzt` INT NULL COMMENT '',
   `name` VARCHAR(45) NULL COMMENT '',
+  `benutztbar` INT NULL COMMENT '',
   PRIMARY KEY (`ID`)  COMMENT '');
-
-ALTER TABLE `item_codes` 
-ADD COLUMN `benutztbar` INT NULL COMMENT '' AFTER `name`;
 
 
 CREATE TABLE IF NOT EXISTS `item_codes_account` (

@@ -1,5 +1,5 @@
 
-CREATE TABLE `mail_external` (
+CREATE TABLE IF NOT EXISTS `mail_external` (
   `id` int(20) unsigned NOT NULL auto_increment,
   `receiver` int(20) unsigned NOT NULL,
   `subject` varchar(200) default 'Support Message',
