@@ -103,6 +103,75 @@ class leandaria : public CreatureScript
 public:
 	leandaria() : CreatureScript("leandaria") { }
 
+	struct leandariaAI : public ScriptedAI
+	{
+		leandariaAI(Creature* creature) : ScriptedAI(creature) { }
+
+		void Reset() override
+		{
+			me->setFaction(21);
+		}
+
+		void EnterCombat(Unit* /*who*/) override
+		{
+			
+			me->setFaction(35);
+			Reset();
+			me->Yell("Nun wird es ernst. Zeigt was Ihr könnt", LANG_UNIVERSAL, NULL);
+		}
+
+		void DamageTaken(Unit* attacker, uint32& damage) override
+		{
+			if (me->HealthBelowPctDamaged(2, damage))
+			{
+				
+				const Quest* quest = sObjectMgr->GetQuestTemplate(800558);
+				me->Yell("Ihr habt mich geschlagen. Es reicht", LANG_UNIVERSAL, NULL);
+				me->setFaction(35);
+				Player* player = attacker->GetAffectingPlayer();
+
+				if (player->GetQuestStatus(800558) == QUEST_STATE_COMPLETE || player->GetQuestStatus(800558) == QUEST_STATUS_REWARDED){
+					return;
+				}
+
+				if (player->GetQuestStatus(800558) == QUEST_STATUS_INCOMPLETE){
+					player->CompleteQuest(800558);
+					player->CanRewardQuest(quest, false);
+				}
+
+			}
+		}
+
+
+		void UpdateAI(uint32 diff) 
+		{
+			if (!UpdateVictim())
+				return;
+
+			_events.Update(diff);
+
+			while (uint32 eventId = _events.ExecuteEvent())
+			{
+				switch (eventId)
+				{
+					
+
+					break;
+				}
+			}
+
+			DoMeleeAttackIfReady();
+		}
+
+	private:
+		EventMap _events;
+	
+	};
+
+	CreatureAI* GetAI(Creature* creature) const 
+	{
+		return new leandariaAI(creature);
+	}
 
 
 	bool OnGossipHello(Player *pPlayer, Creature* creature)
@@ -145,26 +214,11 @@ public:
 			
 		case 2: {
 			creature->setFaction(21);
-			creature->Yell("Nun wird es ernst. Zeigt was Ihr könnt", LANG_UNIVERSAL, NULL);
+			creature->setActive(true);
+			creature->SetReactState(REACT_AGGRESSIVE);
+			
 
-			if (creature->GetHealthPct() < 2){
-				const Quest* quest = sObjectMgr->GetQuestTemplate(800558);
-				creature->Yell("Ihr habt mich geschlagen. Es reicht", LANG_UNIVERSAL, NULL);
-				creature->setFaction(35);
-
-				if (pPlayer->GetQuestStatus(800558) == QUEST_STATE_COMPLETE || pPlayer->GetQuestStatus(800558) == QUEST_STATUS_REWARDED){
-					return true;
-				}
-
-				if (pPlayer->GetQuestStatus(800558) == QUEST_STATUS_INCOMPLETE){
-					pPlayer->CompleteQuest(800558);
-					pPlayer->CanRewardQuest(quest, false);
-				}
-
-				
-
-				
-			}
+			
 
 		}break;
 	
