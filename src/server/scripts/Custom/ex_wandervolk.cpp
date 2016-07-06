@@ -151,9 +151,19 @@ public:
 				const Quest* quest = sObjectMgr->GetQuestTemplate(800558);
 				creature->Yell("Ihr habt mich geschlagen. Es reicht", LANG_UNIVERSAL, NULL);
 				creature->setFaction(35);
-				// TODO CHECK IF PLAYER HAS QUEST
-				pPlayer->CompleteQuest(800558);
-				pPlayer->CanRewardQuest(quest,false);
+
+				if (pPlayer->GetQuestRewardStatus(800558) == QUEST_STATE_COMPLETE || pPlayer->GetQuestRewardStatus(800558) == QUEST_STATUS_REWARDED){
+					return;
+				}
+
+				if (pPlayer->GetQuestStatus(800558) == QUEST_STATUS_INCOMPLETE){
+					pPlayer->CompleteQuest(800558);
+					pPlayer->CanRewardQuest(quest, false);
+				}
+
+				
+
+				
 			}
 
 		}break;
