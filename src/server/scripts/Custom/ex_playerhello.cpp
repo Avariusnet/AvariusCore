@@ -455,10 +455,10 @@ public:
 		int32 uid = field[3].GetInt32();
 		int32 benutzt = field[4].GetInt32();
 
-		std::ostringstream ss;
-		ss << id << zeit << spieler << uid << benutzt;
+		std::ostringstream yy;
+		yy << id << zeit << spieler << uid << benutzt;
 
-		player->GetSession()->SendNotification(ss.str().c_str());
+		player->GetSession()->SendNotification(yy.str().c_str());
 		return;
 		if (ergebnis){
 			return;
