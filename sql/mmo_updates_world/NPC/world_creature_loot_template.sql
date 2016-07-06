@@ -314,6 +314,27 @@ UPDATE `creature_loot_template` SET `LootMode`='5' WHERE `Entry`='800063' and`It
 REPLACE INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) 
 VALUES ('800055', '700524', '0', '100', '0', '1', '1', '1', '1');
 
+DELELTE FROM `creature_loot_template` WHERE `Entry` = 24613 AND `ITEM` = 700519;
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('24613', '700519', '0', '25', '0', '1', '0', '1', '2', 'Waffen der Unterstuetzer');
+
+DELELTE FROM `creature_loot_template` WHERE `Entry` = 25758 AND `ITEM` = 700519;
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('25758', '700519', '0', '25', '0', '1', '0', '1', '2', 'Waffen der Unterstuetzer');
+
+DELELTE FROM `creature_loot_template` WHERE `Entry` = 26482 AND `ITEM` = 700519;
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('26482', '700519', '0', '25', '0', '1', '0', '1', '2', 'Waffen der Unterstuetzer');
+
+DELELTE FROM `creature_loot_template` WHERE `Entry` = 27270 AND `ITEM` = 700519;
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('27270', '700519', '0', '25', '0', '1', '0', '1', '2', 'Waffen der Unterstuetzer');
+
+DELELTE FROM `creature_loot_template` WHERE `Entry` = 37011 AND `ITEM` = 700519;
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('37011', '700519', '0', '75', '0', '1', '0', '1', '2', 'Waffen der Unterstuetzer');
+
+DELELTE FROM `creature_loot_template` WHERE `Entry` = 36724 AND `ITEM` = 700519;
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('36724', '700519', '0', '25', '0', '1', '0', '1', '2', 'Waffen der Unterstuetzer');
+
+DELELTE FROM `creature_loot_template` WHERE `Entry` = 37012 AND `ITEM` = 700519;
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('37012', '700519', '0', '25', '0', '1', '0', '1', '2', 'Waffen der Unterstuetzer');
+
 /*!40000 ALTER TABLE `creature_loot_template` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
