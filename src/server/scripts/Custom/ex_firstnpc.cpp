@@ -1077,7 +1077,7 @@ class npc_first_char : public CreatureScript
 
 								//CHAR_INS_LOB, "INSERT INTO lob (zeit,spieler,uid,benutzt)VALUES (?,?,?,?)", CONNECTION_SYNCH);
 								insert->setInt32(0,100);
-								insert->setString(1,pPlayer->GetSession()->GetPlayerName());
+								insert->setString(1,pPlayer->GetSession()->GetPlayerName().c_str());
 								insert->setInt32(2,pPlayer->GetGUID());
 								insert->setInt32(3,1);
 								CharacterDatabase.Execute(insert);
