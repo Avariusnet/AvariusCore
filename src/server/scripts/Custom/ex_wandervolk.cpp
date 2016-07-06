@@ -113,23 +113,19 @@ public:
 		}
 
 		void EnterCombat(Unit* /*who*/) override
-		{
-			
-			me->setFaction(35);
-			Reset();
+		{		
 			me->Yell("Nun wird es ernst. Zeigt was Ihr könnt", LANG_UNIVERSAL, NULL);
 		}
 
 		void DamageTaken(Unit* attacker, uint32& damage) override
 		{
-			if (me->HealthBelowPctDamaged(2, damage))
+			if (me->HealthBelowPctDamaged(5, damage))
 			{
 				
 				const Quest* quest = sObjectMgr->GetQuestTemplate(800558);
 				me->Yell("Ihr habt mich geschlagen. Es reicht", LANG_UNIVERSAL, NULL);
 				me->setFaction(35);
-				Player* player = attacker->GetAffectingPlayer();
-
+				Player* player = player->GetSession()->GetPlayer();
 				if (player->GetQuestStatus(800558) == QUEST_STATE_COMPLETE || player->GetQuestStatus(800558) == QUEST_STATUS_REWARDED){
 					return;
 				}
