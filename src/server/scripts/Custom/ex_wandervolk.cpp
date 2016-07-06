@@ -341,15 +341,15 @@ public:
 			uint32 durchschnitt = feld[0].GetInt32();
 			pPlayer->GetSession()->SendNotification(durchschnitt);
 			
-		
-			srand(time(NULL));
-			int r = rand();
-			int fragenid = r % durchschnitt;
+			int32 min = 0;
+					
+			int32 r = min + (rand() % (int)(durchschnitt - min + 1));
 			
-			pPlayer->GetSession()->SendNotification(fragenid);
+			
+			pPlayer->GetSession()->SendNotification(r);
 
 			PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_FRAGEN);
-			stmt->setInt32(0, fragenid);
+			stmt->setInt32(0,r);
 			PreparedQueryResult result = CharacterDatabase.Query(stmt);
 
 			Field *field = result->Fetch();
@@ -365,7 +365,7 @@ public:
 
 
 			return true;
-		}
+		}break;
 
 			return true;
 		}
