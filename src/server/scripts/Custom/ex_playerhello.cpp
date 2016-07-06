@@ -441,30 +441,13 @@ public:
 
 		//QueryResult result = CharacterDatabase.PQuery("SELECT `id`, `zeit`, `spieler`,`uid` `benutzt` FROM `lob` WHERE `zeit` = '%u' AND `uid`= '%u'", 100, player->GetGUID());
         
+
         PreparedStatement* statement = CharacterDatabase.GetPreparedStatement(CHAR_SEL_LOB);
         statement->setInt32(0,100);
         statement->setInt32(1, player->GetGUID());
         PreparedQueryResult ergebnis = CharacterDatabase.Query(statement);
 		
-		//"SELECT `id`, `zeit`, `spieler`,`uid` `benutzt` FROM `lob` WHERE `zeit` = ? AND `uid`= ?"
-		
-		Field* field = ergebnis->Fetch();
-		int32 id = field[0].GetInt32();
-		int32 zeit = field[1].GetInt32();
-		std::string spieler = field[2].GetCString();
-		int32 uid = field[3].GetInt32();
-		int32 benutzt = field[4].GetInt32();
-
-		std::ostringstream yy;
-		yy << id << zeit << spieler << uid << benutzt;
-
-		player->GetSession()->SendNotification(yy.str().c_str());
-		return;
-		if (ergebnis){
-			return;
-		}
-		/*
-		 if (time >= 720000 && !ergebnis){
+		if (!ergebnis && time >= 720000){
 			uint32 uid = player->GetGUID();
 
 			Item* item = Item::CreateItem(46802, 1);
@@ -475,16 +458,22 @@ public:
 				.SendMailTo(trans, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
 			CharacterDatabase.CommitTransaction(trans);
 
-             
-             PreparedStatement* inslob = CharacterDatabase.GetPreparedStatement(CHAR_INS_LOB);
-             inslob->setInt32(0,100);
-             inslob->setString(1, player->GetName());
-             inslob->setInt32(2, uid);
-             inslob->setInt32(3, 1);
-             CharacterDatabase.Execute(inslob);
-			 return;
-             
-		}*/
+
+			PreparedStatement* inslob = CharacterDatabase.GetPreparedStatement(CHAR_INS_LOB);
+			inslob->setInt32(0, 100);
+			inslob->setString(1, player->GetName());
+			inslob->setInt32(2, uid);
+			inslob->setInt32(3, 1);
+			CharacterDatabase.Execute(inslob);
+			return;
+
+		}
+		
+		if (ergebnis){
+			return;
+		}
+		
+		
 	}
 
 };
