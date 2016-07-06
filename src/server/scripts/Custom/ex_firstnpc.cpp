@@ -959,8 +959,9 @@ class npc_first_char : public CreatureScript
 					{
                         if(pPlayer->GetSession()->IsPremium() && pPlayer->HasEnoughMoney(5000 * GOLD)){
                             
-                            pPlayer->ModifyMoney(5000*GOLD);
+                            pPlayer->ModifyMoney(-5000*GOLD);
                             gutscheineverteilen(pPlayer->GetSession()->GetPlayer());
+							return true;
                              
                         }
                         
@@ -968,6 +969,7 @@ class npc_first_char : public CreatureScript
                            
                             pPlayer->ModifyMoney(-10000 * GOLD);
                             gutscheineverteilen(pPlayer->GetSession()->GetPlayer());
+							return true;
 
 						}
 							
@@ -975,6 +977,7 @@ class npc_first_char : public CreatureScript
 							pPlayer->GetSession()->SendNotification("Du hast nicht genug Gold.");
 							ChatHandler(pPlayer->GetSession()).PSendSysMessage("[Gutschein System] Du hast nicht genug Gold. Als Besitzer eines Eliteaccounts brauchst du 5000 Gold als normaler Spieler 10.000 Gold.",
 								pPlayer->GetName());
+							return true;
 						}
 					
                     }break;
