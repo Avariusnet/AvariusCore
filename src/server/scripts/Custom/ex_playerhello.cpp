@@ -184,10 +184,7 @@ public:
 
     
     void Belohnung(Player* player, uint32 zeit, uint32 guid,uint32 money){
-    
-        
-        //QueryResult result = CharacterDatabase.PQuery("SELECT `id`, `zeit`, `spieler`,`uid` `benutzt` FROM `lob` WHERE `zeit` = '%u' AND `uid`= '%u'", zeit, player->GetGUID());
-        
+            
         PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_LOB);
         stmt->setInt32(0,zeit);
         stmt->setInt32(1, player->GetGUID());
@@ -213,12 +210,7 @@ public:
 	void OnLogin(Player * player, bool /*online*/)
 	{
 		std::ostringstream ss;
-		
-		
-		//uint32 accountid = player->GetSession()->GetAccountId();
-        //QueryResult charresult = CharacterDatabase.PQuery("Select count(guid) From characters where account = '%u'", accountid);
-        //uint32 charresultint = (*charresult)[0].GetUInt32();
-        
+		      
         
         PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_SUM_CHARS);
         stmt->setInt32(0,player->GetSession()->GetAccountId());
@@ -415,6 +407,9 @@ public:
 
 		//200h
 		if (time >= 720000){
+			
+			
+			
 			//QueryResult result = CharacterDatabase.PQuery("SELECT `id`, `zeit`, `spieler`,`uid` `benutzt` FROM `lob` WHERE `zeit` = '%u' AND `uid`= '%u'", 200, player->GetGUID());
             
             PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_LOB);
@@ -436,47 +431,7 @@ public:
 				CharacterDatabase.PExecute("INSERT INTO lob (zeit,spieler,uid,benutzt) Values ('%u','%s','%u','%u')", 200, player->GetName().c_str(), uid, 1);
 				
 			}
-		}
-
-
-		//QueryResult result = CharacterDatabase.PQuery("SELECT `id`, `zeit`, `spieler`,`uid` `benutzt` FROM `lob` WHERE `zeit` = '%u' AND `uid`= '%u'", 100, player->GetGUID());
-        
-
-        PreparedStatement* statement = CharacterDatabase.GetPreparedStatement(CHAR_SEL_LOB);
-        statement->setInt32(0,100);
-        statement->setInt32(1, player->GetGUID());
-        PreparedQueryResult ergebnis = CharacterDatabase.Query(statement);
-		
-		if (!ergebnis && time >= 720000){
-			uint32 uid = player->GetGUID();
-
-			Item* item = Item::CreateItem(46802, 1);
-			player->GetSession()->SendNotification("Deine nachtraegliche Belohnung ist im Postfach.");
-			SQLTransaction trans = CharacterDatabase.BeginTransaction();
-			item->SaveToDB(trans);
-			MailDraft("Ein Geschenk", "Das MMOwning-Team bedankt sich fuer deine Unterstuetzung mit einer kleinen Geste. Viel Spass weiterhin auf MMOwning World.").AddItem(item)
-				.SendMailTo(trans, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
-			CharacterDatabase.CommitTransaction(trans);
-
-
-			PreparedStatement* inslob = CharacterDatabase.GetPreparedStatement(CHAR_INS_LOB);
-			inslob->setInt32(0, 100);
-			inslob->setString(1, player->GetName());
-			inslob->setInt32(2, uid);
-			inslob->setInt32(3, 1);
-			CharacterDatabase.Execute(inslob);
-			return;
-		}
-		
-		if (!ergebnis){
-			return;
-		}
-
-		if (ergebnis){
-			return;
-		}
-		
-		
+		}		
 	}
 
 };
