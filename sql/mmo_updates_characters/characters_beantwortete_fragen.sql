@@ -1,4 +1,4 @@
-CREATE TABLE `beantwortete_fragen` (
+CREATE TABLE IF NOT EXISTS `beantwortete_fragen` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `accountid` INT NULL COMMENT '',
   `nr` INT NULL COMMENT '',
