@@ -142,7 +142,7 @@ public:
 
 		void Reset() override
 		{
-			me->setFaction(21);
+			
 		}
 
 		void EnterCombat(Unit* /*who*/) override
