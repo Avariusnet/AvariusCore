@@ -299,11 +299,11 @@ public:
 
 	bool OnGossipHello(Player *pPlayer, Creature* _creature)
 	{
-		bool status = pPlayer->GetQuestRewardStatus(802015);
-		if (status){
-			pPlayer->ADD_GOSSIP_ITEM(7, "Das zweite Raetsel", GOSSIP_SENDER_MAIN, 0);
-		}
+		
+		
+		pPlayer->ADD_GOSSIP_ITEM(7, "Das zweite Raetsel", GOSSIP_SENDER_MAIN, 0);
 		pPlayer->ADD_GOSSIP_ITEM(7, "Was tust du hier?", GOSSIP_SENDER_MAIN, 1);
+		pPlayer->ADD_GOSSIP_ITEM(7, "Stellt mir eine Frage!", GOSSIP_SENDER_MAIN, 1);
 		pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
 		return true;
 	}
@@ -330,6 +330,39 @@ public:
 			pPlayer->PlayerTalkClass->SendCloseGossip();
 			return true;
 		}break;
+
+		case 2: {
+
+
+			PreparedStatement* count = CharacterDatabase.GetPreparedStatement(CHAR_SEL_FRAGEN_COUNT);
+			PreparedQueryResult ergebnis = CharacterDatabase.Query(count);
+
+			Field *feld = ergebnis->Fetch();
+			uint32 durchschnitt = feld[0].GetInt32();
+
+			srand(time(NULL));
+			int r = rand() % durchschnitt;
+			pPlayer->GetSession()->SendNotification(durchschnitt);
+			pPlayer->GetSession()->SendNotification(r);
+
+			PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_FRAGEN);
+			stmt->setInt32(0, r);
+			PreparedQueryResult result = CharacterDatabase.Query(stmt);
+
+			Field *field = result->Fetch();
+			std::string frage = field[0].GetCString();
+			std::string antwort = field[1].GetCString();
+			uint32 belohnung = field[2].GetInt32();
+			uint32 anzahl = field[3].GetInt32();
+
+			std::ostringstream ss;
+			ss << "Deine Frage lautet: " << frage;
+			ChatHandler(pPlayer->GetSession()).PSendSysMessage(ss.str().c_str(),
+				pPlayer->GetName());
+
+
+			return true;
+		}
 
 			return true;
 		}
