@@ -153,8 +153,6 @@ void AddCustomScripts()
 	//wandervolk
 	AddSC_wandervolk();
 
-	//raetsel
-	//AddSC_raetsel();
 	AddSC_ex_commands();
 	//Neujahrsevent
 	AddSC_neujahrsevent();
