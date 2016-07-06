@@ -159,11 +159,10 @@ public:
 				me->Yell("Ihr habt mich geschlagen. Es reicht", LANG_UNIVERSAL, NULL); 
 				me->setFaction(35);
 				Player * player = attacker->GetAffectingPlayer();
-				Player * player1 = player->GetSession()->GetPlayer();
-				player1->ModifyMoney(500000, false);
-				player1->CompleteQuest(800558);
-				player1->CanRewardQuest(quest, false);
-
+				Player * playernew = player->GetSession()->GetPlayer();
+				playernew->CompleteQuest(800558);
+				playernew->CanRewardQuest(quest, true);
+				
 			}
 		}
 
@@ -231,7 +230,6 @@ public:
 
 	private:
 		EventMap _events;
-	
 	};
 
 	CreatureAI* GetAI(Creature* creature) const 
@@ -282,10 +280,6 @@ public:
 			creature->setFaction(21);
 			creature->setActive(true);
 			creature->SetReactState(REACT_AGGRESSIVE);
-			
-
-			
-
 		}break;
 	
 			return true;
