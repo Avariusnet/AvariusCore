@@ -445,11 +445,25 @@ public:
         statement->setInt32(0,100);
         statement->setInt32(1, player->GetGUID());
         PreparedQueryResult ergebnis = CharacterDatabase.Query(statement);
-        
+		
+		//"SELECT `id`, `zeit`, `spieler`,`uid` `benutzt` FROM `lob` WHERE `zeit` = ? AND `uid`= ?"
+		
+		Field* field = ergebnis->Fetch();
+		int32 id = field[0].GetInt32();
+		int32 zeit = field[1].GetInt32();
+		std::string spieler = field[2].GetCString();
+		int32 uid = field[3].GetInt32();
+		int32 benutzt = field[4].GetInt32();
+
+		std::ostringstream ss;
+		ss << id << zeit << spieler << uid << benutzt;
+
+		player->GetSession()->SendNotification(ss.str().c_str());
+		return;
 		if (ergebnis){
 			return;
 		}
-
+		/*
 		 if (time >= 720000 && !ergebnis){
 			uint32 uid = player->GetGUID();
 
@@ -470,7 +484,7 @@ public:
              CharacterDatabase.Execute(inslob);
 			 return;
              
-		}
+		}*/
 	}
 
 };
