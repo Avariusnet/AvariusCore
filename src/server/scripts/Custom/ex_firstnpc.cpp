@@ -1052,16 +1052,7 @@ class npc_first_char : public CreatureScript
 							tt << playername << ", ihr seid ein wahrhaft grosser Held! |r";
 
 							pCreature->Yell(tt.str().c_str(), LANG_UNIVERSAL ,NULL);
-							pCreature->HandleEmoteCommand(EMOTE_ONESHOT_KNEEL);
-							const Quest* quest = sObjectMgr->GetQuestTemplate(999999);
-							
-							if (pPlayer->GetQuestStatus(999999) == QUEST_STATE_COMPLETE || pPlayer->GetQuestStatus(999999) == QUEST_STATE_FAIL || pPlayer->GetQuestStatus(999999) == QUEST_STATUS_FAILED || pPlayer->GetQuestStatus(999999) == QUEST_STATUS_REWARDED){
-								pPlayer->GetSession()->SendNotification("Du hast die Quest bereits abgeschlossen oder sie ist noch in deinem Questlog vorhanden.");
-							}
-							else {
-								pPlayer->AddQuestAndCheckCompletion(quest, NULL);
-							}
-							
+							pCreature->HandleEmoteCommand(EMOTE_ONESHOT_KNEEL);							
 							return true;
 						}
 						return true;
@@ -1076,8 +1067,10 @@ class npc_first_char : public CreatureScript
 							PreparedStatement* insert = CharacterDatabase.GetPreparedStatement(CHAR_INS_LOB);
 							CharacterDatabase.PExecute("INSERT INTO lob (zeit,spieler,uid,benutzt) Values ('%u','%s','%u','%u')", 100, pPlayer->GetName().c_str(), guid, 1);
 							return true;
-						
 						}
+
+						pPlayer->GetSession()->SendNotification("Du hast noch keine 200h Spielzeit. Deine Spielzeit kannst du mit /played herausfinden.");
+						return true;
 					}break;
 
 
