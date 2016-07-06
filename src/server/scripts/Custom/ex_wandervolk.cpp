@@ -152,7 +152,7 @@ public:
 				creature->Yell("Ihr habt mich geschlagen. Es reicht", LANG_UNIVERSAL, NULL);
 				creature->setFaction(35);
 
-				if (pPlayer->GetQuestRewardStatus(800558) == QUEST_STATE_COMPLETE || pPlayer->GetQuestRewardStatus(800558) == QUEST_STATUS_REWARDED){
+				if (pPlayer->GetQuestStatus(800558) == QUEST_STATE_COMPLETE || pPlayer->GetQuestStatus(800558) == QUEST_STATUS_REWARDED){
 					return;
 				}
 
