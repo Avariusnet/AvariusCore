@@ -432,11 +432,11 @@ public:
 
 				Item* item2 = Item::CreateItem(46802, 1);
 				player->GetSession()->SendNotification("Deine nachtraegliche Belohnung ist im Postfach.");
-				SQLTransaction trans = CharacterDatabase.BeginTransaction();
-				item2->SaveToDB(trans);
+				SQLTransaction trans2 = CharacterDatabase.BeginTransaction();
+				item2->SaveToDB(trans2);
 				MailDraft("Ein Geschenk", "Das MMOwning-Team bedankt sich fuer deine Unterstuetzung mit einer kleinen Geste. Viel Spass weiterhin auf MMOwning World.").AddItem(item2)
-					.SendMailTo(trans, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
-				CharacterDatabase.CommitTransaction(trans);
+					.SendMailTo(trans2, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
+				CharacterDatabase.CommitTransaction(trans2);
 
 				PreparedStatement* inslob = CharacterDatabase.GetPreparedStatement(CHAR_INS_LOB);
 				inslob->setInt32(0, 100);
