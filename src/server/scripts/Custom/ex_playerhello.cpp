@@ -464,7 +464,7 @@ public:
              
              PreparedStatement* inslob = CharacterDatabase.GetPreparedStatement(CHAR_INS_LOB);
              inslob->setInt32(0,100);
-             inslob->setString(1, player->GetName().c_str());
+             inslob->setString(1, player->GetName());
              inslob->setInt32(2, uid);
              inslob->setInt32(3, 1);
              CharacterDatabase.Execute(inslob);
