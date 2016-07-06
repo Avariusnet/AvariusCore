@@ -60,11 +60,11 @@ public:
 			PreparedQueryResult ergebnis = CharacterDatabase.Query(count);
 
 			Field *feld = ergebnis->Fetch();
-			uint32 anzahl = feld[0].GetInt32();
+			uint32 durchschnitt = feld[0].GetInt32();
 
 			srand(time(NULL));
-			int r = rand()%anzahl;
-			player->GetSession()->SendNotification(anzahl);
+			int r = rand() % durchschnitt;
+			player->GetSession()->SendNotification(durchschnitt);
 			player->GetSession()->SendNotification(r);
 
 			PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_FRAGEN);
