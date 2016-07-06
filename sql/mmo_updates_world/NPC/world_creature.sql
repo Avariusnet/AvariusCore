@@ -169,8 +169,6 @@ DELETE FROM `creature` WHERE `guid` = 800102;
 INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`MovementType`) VALUES 
 ('800102','800102','0','1','1','22940','0','3188.87','-6097.92','202','3.22','21600','0','0','1000000','250000','0');
 
- 0, 3188.87 , -6097.92 , 202
-
 /*!40000 ALTER TABLE `creature` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
