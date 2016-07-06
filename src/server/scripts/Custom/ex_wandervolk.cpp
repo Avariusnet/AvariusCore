@@ -153,7 +153,7 @@ public:
 				creature->setFaction(35);
 
 				if (pPlayer->GetQuestStatus(800558) == QUEST_STATE_COMPLETE || pPlayer->GetQuestStatus(800558) == QUEST_STATUS_REWARDED){
-					return;
+					return true;
 				}
 
 				if (pPlayer->GetQuestStatus(800558) == QUEST_STATUS_INCOMPLETE){
