@@ -408,10 +408,6 @@ public:
 		//200h
 		if (time >= 720000){
 
-
-
-
-
 			PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_LOB);
 			stmt->setInt32(0, 200);
 			stmt->setInt32(1, player->GetGUID());
@@ -429,22 +425,6 @@ public:
 				CharacterDatabase.CommitTransaction(trans);
 
 				CharacterDatabase.PExecute("INSERT INTO lob (zeit,spieler,uid,benutzt) Values ('%u','%s','%u','%u')", 200, player->GetName().c_str(), uid, 1);
-
-				Item* item2 = Item::CreateItem(46802, 1);
-				player->GetSession()->SendNotification("Deine nachtraegliche Belohnung ist im Postfach.");
-				SQLTransaction trans2 = CharacterDatabase.BeginTransaction();
-				item2->SaveToDB(trans2);
-				MailDraft("Ein Geschenk", "Das MMOwning-Team bedankt sich fuer deine Unterstuetzung mit einer kleinen Geste. Viel Spass weiterhin auf MMOwning World.").AddItem(item2)
-					.SendMailTo(trans2, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
-				CharacterDatabase.CommitTransaction(trans2);
-
-				PreparedStatement* inslob = CharacterDatabase.GetPreparedStatement(CHAR_INS_LOB);
-				inslob->setInt32(0, 100);
-				inslob->setString(1, player->GetName());
-				inslob->setInt32(2, uid);
-				inslob->setInt32(3, 1);
-				CharacterDatabase.Execute(inslob);
-
 			}
 
 		}

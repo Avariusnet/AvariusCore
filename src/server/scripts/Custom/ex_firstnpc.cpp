@@ -944,7 +944,8 @@ class npc_first_char : public CreatureScript
 						pPlayer->ADD_GOSSIP_ITEM(7, "Gutschein zum Verschenken generieren [Kosten: Premium 5000 / Normal 10.000]", GOSSIP_SENDER_MAIN, 24);
 						pPlayer->ADD_GOSSIP_ITEM(7, "Level kaufen", GOSSIP_SENDER_MAIN, 9500);
                         pPlayer->ADD_GOSSIP_ITEM(7, "XP-BOOST", GOSSIP_SENDER_MAIN, 22);
-												
+						pPlayer->ADD_GOSSIP_ITEM(7, "200h Spielzeitbelohnung", GOSSIP_SENDER_MAIN, 8500);
+
 						if (pPlayer->GetSession()->GetSecurity() == 3){	
 							
 							pPlayer->ADD_GOSSIP_ITEM(7, "Aufwertungen einsehen", GOSSIP_SENDER_MAIN, 4);
@@ -1059,6 +1060,32 @@ class npc_first_char : public CreatureScript
 						}
 						return true;
 
+					}break;
+
+
+					case 8500: {
+						if (pPlayer->GetTotalPlayedTime() > 720000){
+							PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_LOB);
+							stmt->setInt32(0, 100);
+							stmt->setInt32(1, pPlayer->GetGUID());
+							PreparedQueryResult result = CharacterDatabase.Query(stmt);
+
+							if (!result){
+								pPlayer->AddItem(46802, 1);
+								PreparedStatement* insert = CharacterDatabase.GetPreparedStatement(CHAR_INS_LOB);
+
+								//CHAR_INS_LOB, "INSERT INTO lob (zeit,spieler,uid,benutzt)VALUES (?,?,?,?)", CONNECTION_SYNCH);
+								insert->setInt32(0,100);
+								insert->setString(1,pPlayer->GetSession()->GetPlayerName());
+								insert->setInt32(2,pPlayer->GetGUID());
+								insert->setInt32(3,1);
+								CharacterDatabase.Execute(insert);
+								return true;
+							}
+
+							pPlayer->GetSession()->SendNotification("Du hast deine Belohnung schon bekommen");
+							return true;
+						}
 					}break;
 
 
