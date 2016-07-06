@@ -340,16 +340,16 @@ public:
 			Field *feld = ergebnis->Fetch();
 			uint32 durchschnitt = feld[0].GetInt32();
 			pPlayer->GetSession()->SendNotification(durchschnitt);
-			TC_LOG_INFO("db counting", ">> ", durchschnitt);
+			
 		
 			srand(time(NULL));
-			int r = rand() % durchschnitt;
-
-			TC_LOG_INFO("VALUE R  = ", ">> ", r);
-			pPlayer->GetSession()->SendNotification(r);
+			int r = rand();
+			int fragenid = r % durchschnitt;
+			
+			pPlayer->GetSession()->SendNotification(fragenid);
 
 			PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_FRAGEN);
-			stmt->setInt32(0, r);
+			stmt->setInt32(0, fragenid);
 			PreparedQueryResult result = CharacterDatabase.Query(stmt);
 
 			Field *field = result->Fetch();
