@@ -335,13 +335,13 @@ public:
 		case 2: {
 
 
-			PreparedStatement* count = CharacterDatabase.GetPreparedStatement(CHAR_SEL_FRAGEN_COUNT);
+			/*PreparedStatement* count = CharacterDatabase.GetPreparedStatement(CHAR_SEL_FRAGEN_COUNT);
 			PreparedQueryResult ergebnis = CharacterDatabase.Query(count);
 
 			Field *feld = ergebnis->Fetch();
 			uint32 durchschnitt = feld[0].GetInt32();
 			pPlayer->GetSession()->SendNotification(durchschnitt);
-			
+			*/
 			PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_FRAGEN);
 			stmt->setInt32(0,1);
 			PreparedQueryResult result = CharacterDatabase.Query(stmt);
