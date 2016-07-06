@@ -147,8 +147,7 @@ public:
 
 		void EnterCombat(Unit* /*who*/) override
 		{	
-
-			me->Yell("Nun wird es ernst. Zeigt was Ihr könnt", LANG_UNIVERSAL, NULL);
+			me->Yell("Nun wird es ernst. Zeigt was Ihr koennt", LANG_UNIVERSAL, NULL);
 		}
 
 		void DamageTaken(Unit* attacker, uint32& damage) override
@@ -161,6 +160,7 @@ public:
 				me->setFaction(35);
 				Player * player = attacker->GetAffectingPlayer();
 				Player * player1 = player->GetSession()->GetPlayer();
+				player1->ModifyMoney(500000, false);
 				if (player1->GetQuestStatus(800558) == QUEST_STATE_COMPLETE || player1->GetQuestStatus(800558) == QUEST_STATUS_REWARDED){
 					return;
 				}
