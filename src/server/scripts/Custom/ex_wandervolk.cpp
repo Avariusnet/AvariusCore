@@ -156,19 +156,13 @@ public:
 			{
 				
 				const Quest* quest = sObjectMgr->GetQuestTemplate(800558);
-				me->Yell("Ihr habt mich geschlagen. Es reicht", LANG_UNIVERSAL, NULL);
+				me->Yell("Ihr habt mich geschlagen. Es reicht", LANG_UNIVERSAL, NULL); 
 				me->setFaction(35);
 				Player * player = attacker->GetAffectingPlayer();
 				Player * player1 = player->GetSession()->GetPlayer();
 				player1->ModifyMoney(500000, false);
-				if (player1->GetQuestStatus(800558) == QUEST_STATE_COMPLETE || player1->GetQuestStatus(800558) == QUEST_STATUS_REWARDED){
-					return;
-				}
-
-				if (player1->GetQuestStatus(800558) == QUEST_STATUS_INCOMPLETE){
-					player1->CompleteQuest(800558);
-					player1->CanRewardQuest(quest, false);
-				}
+				player1->CompleteQuest(800558);
+				player1->CanRewardQuest(quest, false);
 
 			}
 		}
