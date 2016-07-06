@@ -297,22 +297,6 @@ class raetsel : public CreatureScript
 public:
 	raetsel() : CreatureScript("raetsel") { }
 
-	int generaterdmint(int min, int max)
-	{
-		
-		unsigned int N = (max - min <= RAND_MAX)
-			? (max - min + 1U)       
-			: (RAND_MAX + 1U);            
-		unsigned int x = (RAND_MAX + 1U) / N;
-		unsigned int y = x * N;
-		unsigned int r;
-		do {
-			r = rand();
-		} while (r >= y);
-
-		return r / x + min;
-	}
-
 
 	bool OnGossipHello(Player *pPlayer, Creature* _creature)
 	{
@@ -359,7 +343,7 @@ public:
 			pPlayer->GetSession()->SendNotification(durchschnitt);
 			
 			PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_FRAGEN);
-			stmt->setInt32(0,generaterdmint(0,durchschnitt));
+			stmt->setInt32(0,1);
 			PreparedQueryResult result = CharacterDatabase.Query(stmt);
 
 			Field *field = result->Fetch();
