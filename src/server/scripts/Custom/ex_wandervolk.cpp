@@ -31,6 +31,39 @@ enum Phases{
 	PHASE_ONE = 1
 };
 
+enum Spells
+{
+	SPELL_POISON_NOVA = 68989,
+	SPELL_ENRAGE = 68335,
+	SPELL_TOXIC_WASTE = 69024,
+	SPELL_RAIN_OF_FIRE = 59971,
+	SPELL_FLAME_BURST = 41131,
+	SPELL_ARCANE_BOMB = 56431,
+	SPELL_MOONFIRE = 48463,
+	SPELL_SPALTEN = 56909,
+	SPELL_SARGERAS = 28342,
+	SPELL_BURN = 46218,
+	SPELL_FLAME_BREATH = 56908
+};
+
+
+enum Events
+{
+	EVENT_POISON_NOVA = 1,
+	EVENT_ENRAGE = 2,
+	EVENT_TOXIC_WASTE = 3,
+	EVENT_RAIN_OF_FIRE = 4,
+	EVENT_FLAME_BURST = 5,
+	EVENT_ARCANE_BOMB = 6,
+	EVENT_MOONFIRE = 8,
+	EVENT_SUMMONS = 9,
+	EVENT_SPALTEN = 10,
+	EVENT_BURN = 11,
+	EVENT_BREATH = 12
+
+
+};
+
 
 class wandervolk : public CreatureScript
 {
@@ -113,7 +146,8 @@ public:
 		}
 
 		void EnterCombat(Unit* /*who*/) override
-		{		
+		{	
+
 			me->Yell("Nun wird es ernst. Zeigt was Ihr könnt", LANG_UNIVERSAL, NULL);
 		}
 
@@ -125,14 +159,15 @@ public:
 				const Quest* quest = sObjectMgr->GetQuestTemplate(800558);
 				me->Yell("Ihr habt mich geschlagen. Es reicht", LANG_UNIVERSAL, NULL);
 				me->setFaction(35);
-				Player* player = player->GetSession()->GetPlayer();
-				if (player->GetQuestStatus(800558) == QUEST_STATE_COMPLETE || player->GetQuestStatus(800558) == QUEST_STATUS_REWARDED){
+				Player * player = attacker->GetAffectingPlayer();
+				Player * player1 = player->GetSession()->GetPlayer();
+				if (player1->GetQuestStatus(800558) == QUEST_STATE_COMPLETE || player1->GetQuestStatus(800558) == QUEST_STATUS_REWARDED){
 					return;
 				}
 
-				if (player->GetQuestStatus(800558) == QUEST_STATUS_INCOMPLETE){
-					player->CompleteQuest(800558);
-					player->CanRewardQuest(quest, false);
+				if (player1->GetQuestStatus(800558) == QUEST_STATUS_INCOMPLETE){
+					player1->CompleteQuest(800558);
+					player1->CanRewardQuest(quest, false);
 				}
 
 			}
@@ -150,8 +185,49 @@ public:
 			{
 				switch (eventId)
 				{
+				case EVENT_POISON_NOVA:
+					DoCastAOE(SPELL_POISON_NOVA);
+					_events.ScheduleEvent(EVENT_TOXIC_WASTE, 30000);
+					break;
+				case EVENT_TOXIC_WASTE:
+					DoCastToAllHostilePlayers(SPELL_TOXIC_WASTE);
+					_events.ScheduleEvent(EVENT_TOXIC_WASTE, 45000);
+					break;
+				case EVENT_ENRAGE:
+					DoCast(SPELL_ENRAGE);
+					break;
+				case EVENT_RAIN_OF_FIRE:
+					me->FinishSpell(CURRENT_CHANNELED_SPELL, true);
+					DoCastToAllHostilePlayers(SPELL_RAIN_OF_FIRE);
+					_events.ScheduleEvent(EVENT_RAIN_OF_FIRE, 10000);
+					break;
+				case EVENT_FLAME_BURST:
 					
+					DoCast(me, SPELL_FLAME_BURST);
+					_events.ScheduleEvent(EVENT_FLAME_BURST, 12000);
+					break;
+				case EVENT_ARCANE_BOMB:
+					
+					DoCastToAllHostilePlayers(SPELL_ARCANE_BOMB);
+					_events.ScheduleEvent(EVENT_ARCANE_BOMB, 15000);
+					break;
+				case EVENT_SPALTEN:
+					DoCastToAllHostilePlayers(SPELL_SPALTEN);
+					_events.ScheduleEvent(EVENT_SPALTEN, 30000);
+					break;
+				case EVENT_BURN:
+					DoCastVictim(SPELL_BURN);
+					_events.ScheduleEvent(EVENT_BURN, 5000);
+					break;
+				case EVENT_BREATH:
+					if (Unit* target = SelectTarget(SELECT_TARGET_TOPAGGRO, 0)){
+						DoCast(target, SPELL_FLAME_BREATH);
+					}
 
+					_events.ScheduleEvent(EVENT_BREATH, 35000);
+					break;
+
+				default:
 					break;
 				}
 			}
