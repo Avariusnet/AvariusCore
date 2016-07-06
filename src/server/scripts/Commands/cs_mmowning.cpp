@@ -178,11 +178,19 @@ public:
         
         }
         
+		PreparedStatement* highid = CharacterDatabase.GetPreparedStatement(CHAR_SEL_FRAGEN_HIGH_ID);
+		PreparedQueryResult result = CharacterDatabase.Query(highid);
+
+		Field *field = result->Fetch();
+		int32 id = field[0].GetInt32();
+
+
         PreparedStatement* insert = CharacterDatabase.GetPreparedStatement(CHAR_INS_FRAGEN);
-        insert->setString(0, frage);
-        insert->setString(1, antwort);
-        insert->setInt32(2, itemid);
-        insert->setInt32(3, intanzahl);
+		insert->setInt32(0, id+1);
+		insert->setString(1, frage);
+        insert->setString(2, antwort);
+        insert->setInt32(3, itemid);
+        insert->setInt32(4, intanzahl);
         CharacterDatabase.Execute(insert);
 		player->GetSession()->SendNotification("Frage wurde erfolgreich eingetragen");
         return true;

@@ -24,7 +24,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 
 	/* EXI CUSTOM */
 	PrepareStatement(CHAR_SEL_ANTWORTEN_NACH_ANTWORT, "SELECT `id`,`belohnung`,`anzahl` from `antworten` where `antwort` = ?", CONNECTION_SYNCH);
-	PrepareStatement(CHAR_INS_FRAGEN, "INSERT INTO antworten (frage, antwort, belohnung, anzahl) VALUES (?,?,?,?)", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_INS_FRAGEN, "INSERT INTO antworten (id,frage, antwort, belohnung, anzahl) VALUES (?,?,?,?,?)", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_SEL_FRAGEN_COUNT, "Select count(id) from `antworten`", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_SEL_BEANTWORTET, "Select `accountid`,`nr` from `beantwortete_fragen` where `accountid` = ? and `nr` = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_INS_BEANTWORTET, "Insert INTO beantwortete_fragen (accountid, nr) VALUES (?,?)", CONNECTION_ASYNC);
@@ -40,6 +40,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(CHAR_SEL_BONUS_EP, "Select `player` ,`playerid`, `start`, `ende`, `aktiv` from `bonus_ep` where `playerid` = ? and `aktiv` = 1", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_UPD_BONUS_EP, "UPDATE bonus_ep SET aktiv = 0 WHERE playerid = ? AND aktiv != 0", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_SEL_FRAGEN, "Select `frage`, `antwort`,`belohnung`, `anzahl` from antworten WHERE `id` = ?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_SEL_FRAGEN_HIGH_ID, "SELECT  max(id) FROM firstrealm_characters.antworten;", CONNECTION_SYNCH);
 	/* CUSTOM ENDE */
 
     PrepareStatement(CHAR_DEL_QUEST_POOL_SAVE, "DELETE FROM pool_quest_save WHERE pool_id = ?", CONNECTION_ASYNC);
