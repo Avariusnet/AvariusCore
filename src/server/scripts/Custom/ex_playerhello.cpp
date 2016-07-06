@@ -422,6 +422,7 @@ public:
             stmt->setInt32(1, player->GetGUID());
             PreparedQueryResult result = CharacterDatabase.Query(stmt);
             
+
 			if (!result){
 
 				Item* item = Item::CreateItem(37719, 1);
@@ -433,7 +434,7 @@ public:
 				CharacterDatabase.CommitTransaction(trans);
 
 				CharacterDatabase.PExecute("INSERT INTO lob (zeit,spieler,uid,benutzt) Values ('%u','%s','%u','%u')", 200, player->GetName().c_str(), uid, 1);
-
+				
 			}
 		}
 
@@ -445,6 +446,10 @@ public:
         statement->setInt32(1, player->GetGUID());
         PreparedQueryResult ergebnis = CharacterDatabase.Query(statement);
         
+		if (ergebnis){
+			return;
+		}
+
 		 if (time >= 720000 && !ergebnis){
 			uint32 uid = player->GetGUID();
 
@@ -463,52 +468,9 @@ public:
              inslob->setInt32(2, uid);
              inslob->setInt32(3, 1);
              CharacterDatabase.Execute(inslob);
+			 return;
              
-             
-			/*CharacterDatabase.PExecute("INSERT INTO lob (zeit,spieler,uid,benutzt) Values ('%u','%s','%u','%u')", 100, player->GetName().c_str(), uid, 1);*/
 		}
-
-
-
-
-
-
-		/*else if (player->IsGameMaster() && player->GetSession()->GetSecurity() == 2){
-			ss << "|cff54b5ffGM|r " << ChatHandler(player->GetSession()).GetNameLink() << " |cff54b5ff ist jetzt online!|r";
-			sWorld->SendServerMessage(SERVER_MSG_STRING, ss.str().c_str());
-		}
-
-		else if (player->IsGameMaster() && player->GetSession()->GetSecurity() == 3){
-			if (accountid == 52252){ //Exitare
-				ss << "|cff54b5ffMMOwning Administrator|r " << ChatHandler(player->GetSession()).GetNameLink() << " |cff54b5ff ist jetzt online!|r";
-				sWorld->SendServerMessage(SERVER_MSG_STRING, ss.str().c_str());
-			}
-
-			else if (accountid == 52806){ //Sturm
-				ss << "|cff54b5ffHead GM|r " << ChatHandler(player->GetSession()).GetNameLink() << " |cff54b5ff ist jetzt online!|r";
-				sWorld->SendServerMessage(SERVER_MSG_STRING, ss.str().c_str());
-			}
-
-			else if (accountid == 6){ //Thiemo
-				ss << "|cff54b5ffGruender|r " << ChatHandler(player->GetSession()).GetNameLink() << " |cff54b5ff ist jetzt online!|r";
-				sWorld->SendServerMessage(SERVER_MSG_STRING, ss.str().c_str());
-			}
-
-			else if (accountid == 52239){ //Pihaar
-				ss << "|cff54b5ffEntwickler|r " << ChatHandler(player->GetSession()).GetNameLink() << " |cff54b5ff ist jetzt online!|r";
-				sWorld->SendServerMessage(SERVER_MSG_STRING, ss.str().c_str());
-			}
-
-			else if (accountid == 53103){ //Rumu
-				ss << "|cff54b5ffEntwickler|r " << ChatHandler(player->GetSession()).GetNameLink() << " |cff54b5ff ist jetzt online!|r";
-				sWorld->SendServerMessage(SERVER_MSG_STRING, ss.str().c_str());
-			}
-
-			else{
-				ss << "|cff54b5ffMMOwning Teammitglied|r " << ChatHandler(player->GetSession()).GetNameLink() << " |cff54b5ff ist jetzt online!|r";
-				sWorld->SendServerMessage(SERVER_MSG_STRING, ss.str().c_str());
-			}
-		}*/
 	}
 
 };
