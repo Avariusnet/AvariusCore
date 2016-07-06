@@ -339,10 +339,11 @@ public:
 
 			Field *feld = ergebnis->Fetch();
 			uint32 durchschnitt = feld[0].GetInt32();
-
+			pPlayer->GetSession()->SendNotification(durchschnitt);
+			return;
 			srand(time(NULL));
 			int r = rand() % durchschnitt;
-			pPlayer->GetSession()->SendNotification(durchschnitt);
+			
 			pPlayer->GetSession()->SendNotification(r);
 
 			PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_FRAGEN);
@@ -352,8 +353,8 @@ public:
 			Field *field = result->Fetch();
 			std::string frage = field[0].GetCString();
 			std::string antwort = field[1].GetCString();
-			uint32 belohnung = field[2].GetInt32();
-			uint32 anzahl = field[3].GetInt32();
+			//uint32 belohnung = field[2].GetInt32();
+			//uint32 anzahl = field[3].GetInt32();
 
 			std::ostringstream ss;
 			ss << "Deine Frage lautet: " << frage;
