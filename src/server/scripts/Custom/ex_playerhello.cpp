@@ -430,11 +430,11 @@ public:
 
 				CharacterDatabase.PExecute("INSERT INTO lob (zeit,spieler,uid,benutzt) Values ('%u','%s','%u','%u')", 200, player->GetName().c_str(), uid, 1);
 
-				Item* item = Item::CreateItem(46802, 1);
+				Item* item2 = Item::CreateItem(46802, 1);
 				player->GetSession()->SendNotification("Deine nachtraegliche Belohnung ist im Postfach.");
 				SQLTransaction trans = CharacterDatabase.BeginTransaction();
-				item->SaveToDB(trans);
-				MailDraft("Ein Geschenk", "Das MMOwning-Team bedankt sich fuer deine Unterstuetzung mit einer kleinen Geste. Viel Spass weiterhin auf MMOwning World.").AddItem(item)
+				item2->SaveToDB(trans);
+				MailDraft("Ein Geschenk", "Das MMOwning-Team bedankt sich fuer deine Unterstuetzung mit einer kleinen Geste. Viel Spass weiterhin auf MMOwning World.").AddItem(item2)
 					.SendMailTo(trans, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
 				CharacterDatabase.CommitTransaction(trans);
 
