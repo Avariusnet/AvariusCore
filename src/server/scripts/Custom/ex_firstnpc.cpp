@@ -1064,7 +1064,6 @@ class npc_first_char : public CreatureScript
 						if (pPlayer->GetTotalPlayedTime() > 720000){
 							int32 guid = pPlayer->GetGUID();
 							pPlayer->AddItem(46802, 1);
-							PreparedStatement* insert = CharacterDatabase.GetPreparedStatement(CHAR_INS_LOB);
 							CharacterDatabase.PExecute("INSERT INTO lob (zeit,spieler,uid,benutzt) Values ('%u','%s','%u','%u')", 100, pPlayer->GetName().c_str(), guid, 1);
 							return true;
 						}

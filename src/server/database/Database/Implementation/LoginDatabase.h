@@ -30,6 +30,7 @@ enum LoginDatabaseStatements
     */
 	//MMO Custom start
 	LOGIN_UPD_ACCOUNT_PREMIUM,
+	LOGIN_SEL_ACCOUNT_BYID,
 	//MMO Custom end	
 
     LOGIN_SEL_REALMLIST,

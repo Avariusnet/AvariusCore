@@ -63,8 +63,36 @@ public:
 				return true;
 			}
 
+			if (result){
 
+				//SELECT guid,account,name,level,totaltime FROM characters where name = ?"
+				Field* feld = result->Fetch();
+				uint32 guid = feld[0].GetInt32();
+				uint32 account = feld[1].GetInt32();
+				std::string name = feld[2].GetCString();
+				uint32 level = feld[3].GetInt32();
+				uint32 totaltime = feld[4].GetInt32();
+				
+				PreparedStatement* getaccountnamebyid = LoginDatabase.GetPreparedStatement(LOGIN_SEL_ACCOUNT_BYID);
+				getaccountnamebyid->setInt32(0, account);
+				PreparedQueryResult ergebnis = LoginDatabase.Query(getaccountnamebyid);
 
+				if (!result){
+					player->GetSession()->SendNotification("Error");
+					return true;
+				}
+
+				Field* ergfeld = ergebnis->Fetch();
+				std::string accname = ergfeld[0].GetCString();
+				
+				uint32 spielzeit = totaltime / 60 / 60 / 24;
+
+				std::ostringstream pp;
+				pp << "Folgende Daten wurden gefunden \nGuid: " << guid << "\nAccountname: " << accname << "\nLevel: " << level << "\nSpielzeit in Tagen: " << spielzeit;
+					ChatHandler(player->GetSession()).PSendSysMessage(pp.str().c_str(),
+					player->GetName());
+					return true;
+			}
 
 
 		}break;
@@ -75,41 +103,6 @@ public:
 
 		return true;
 	}
-
-
-
-
-	struct automaticAI : public ScriptedAI
-	{
-		automaticAI(Creature* creature) : ScriptedAI(creature) { }
-
-		uint32 kills = 0;
-		void Reset() override
-		{
-			_events.Reset();
-			
-		}
-
-		
-		
-
-		void UpdateAI(uint32 diff) override
-		{
-
-			ScriptedAI::UpdateAI(diff);
-			
-		}
-
-	private:
-		EventMap _events;
-		
-	};
-
-	CreatureAI* GetAI(Creature* creature) const override
-	{
-		return new automaticAI(creature);
-	}
-
 
 
 };
