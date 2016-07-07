@@ -179,7 +179,8 @@ public:
 		case 4:{
 
 			player->PlayerTalkClass->ClearMenus();
-			player->ADD_GOSSIP_ITEM(7, "Hilfe", GOSSIP_SENDER_MAIN, 5);
+			player->ADD_GOSSIP_ITEM(7, "Hilfe", GOSSIP_SENDER_MAIN, 5); 
+			player->ADD_GOSSIP_ITEM(7, "Charaktertransfer", GOSSIP_SENDER_MAIN, 6);
 			player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 			return true;
 			
@@ -188,6 +189,13 @@ public:
 		case 5:
 		{
 			ChatHandler(player->GetSession()).PSendSysMessage("HIlfe",
+				player->GetName());
+			return true;
+		}break;
+
+		case 6:
+		{
+			ChatHandler(player->GetSession()).PSendSysMessage("Ihr braucht 5.000 Gold. Ihr muesst dann den Accountnamen eingeben, zu welchem der Charakter transferiert werden soll. Einmal bestaetigt kann die Uebertragung nicht mehr abgebrochen werden. Nachdem ihr ausgeloggt habt, ist der Charakter transferiert!",
 				player->GetName());
 			return true;
 		}break;
