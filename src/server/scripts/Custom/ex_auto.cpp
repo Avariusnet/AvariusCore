@@ -42,8 +42,8 @@ public:
 	{
 		player->ADD_GOSSIP_ITEM_EXTENDED(7, "Existiert mein Charakter noch?", GOSSIP_SENDER_MAIN, 0, "Der Name lautet: ", 0, true);
 		player->ADD_GOSSIP_ITEM_EXTENDED(7, "Ubertrage meinen Charakter auf einen anderen Account! [Unwideruflich / 5000 Gold]", GOSSIP_SENDER_MAIN, 2, "Der Accountname lautet: ", 0, true);
-		player->ADD_GOSSIP_ITEM(7, "Danke! Bring mich zurueck!", GOSSIP_SENDER_MAIN, 1);
-		player->ADD_GOSSIP_ITEM(7, "Hilfe! Es lohnt sich bei Fragen hier rein zu schauen!", GOSSIP_SENDER_MAIN, 3);
+		player->ADD_GOSSIP_ITEM(7, "Ich brauche Hilfe!", GOSSIP_SENDER_MAIN, 3);
+		player->ADD_GOSSIP_ITEM(7, "Danke! Bringt mich zurueck!", GOSSIP_SENDER_MAIN, 1);
 		player->PlayerTalkClass->SendGossipMenu(1, creature->GetGUID());
 		return true;
 	}
@@ -97,7 +97,7 @@ public:
 					player->GetName());
 					return true;
 			}
-
+			return true;
 
 		}break;
 
@@ -173,9 +173,9 @@ public:
 
 		case 3:
 		{
+			player->PlayerTalkClass->ClearMenus();
 			player->ADD_GOSSIP_ITEM(7, "Hilfe zum Accounttransfer", GOSSIP_SENDER_MAIN, 4);
 			player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
-			
 			return true;
 		}break;
 
