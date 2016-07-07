@@ -144,11 +144,12 @@ public:
 				return true;
 			}
 
-			if (charactersum = 10){
-				player->GetSession()->SendNotification("Du hast zu viele Charaktere auf deinem Account");
+			
+			if (charactersum == 10){
+				player->GetSession()->SendNotification("Du hast zu viele Charaktere auf deinem Account oder zu wenig Gold.");
 				return true;
 			}
-
+			return true;
 		}
 
 
@@ -165,10 +166,23 @@ public:
 		switch (uiAction)
 		{
 		case 1:
+		{
 			player->Recall();
 			return true;
-		}
+		}break;
 
+		case 3:
+		{
+			player->ADD_GOSSIP_ITEM(7, "´Hilfe zum Accounttransfer", GOSSIP_SENDER_MAIN, 4);
+		
+		}break;
+
+		case 4:{
+
+			ChatHandler(player->GetSession()).PSendSysMessage("Um den Charaktertransfer durchzufuehren, benoetigst du 5k Gold. Du wirst aufgefordert den Accountnamen einzugeben zu welchem der Charakter transferiert werden soll. Also nicht deinen eigenen, sondern der Zielaccount! Einmal bestaetigt kann der Transfer nicht mehr zurueckgenommen werden. Sobald du dich ausloggst ist der Charakter verschwunden und auf dem anderen Account verfügbar.",
+				player->GetName());
+		}break;
+			
 	}
 
 };
