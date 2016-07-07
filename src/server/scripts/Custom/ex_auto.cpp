@@ -174,7 +174,7 @@ public:
 		case 3:
 		{
 			player->ADD_GOSSIP_ITEM(7, "Hilfe zum Accounttransfer", GOSSIP_SENDER_MAIN, 4);
-			pPlayer->PlayerTalkClass->SendGossipMenu(907, pCreature->GetGUID());
+			player->PlayerTalkClass->SendGossipMenu(907, pCreature->GetGUID());
 			
 			return true;
 		}break;
