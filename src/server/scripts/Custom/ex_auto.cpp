@@ -174,7 +174,7 @@ public:
 		case 3:
 		{
 			player->ADD_GOSSIP_ITEM(7, "´Hilfe zum Accounttransfer", GOSSIP_SENDER_MAIN, 4);
-		
+
 		}break;
 
 		case 4:{
@@ -183,6 +183,7 @@ public:
 				player->GetName());
 		}break;
 			
+		}
 	}
 
 };
