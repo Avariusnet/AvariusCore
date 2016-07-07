@@ -168,6 +168,7 @@ public:
 
 		switch (uiAction)
 		{
+		
 		case 1:
 		{
 			player->Recall();
@@ -188,7 +189,8 @@ public:
 		}break;
 
 		case 4:{
-
+			player->GetSession()->SendNotification("4");
+			return true;
 			
 		}break;
 		
