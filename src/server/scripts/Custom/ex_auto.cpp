@@ -42,8 +42,7 @@ public:
 	{
 		player->ADD_GOSSIP_ITEM_EXTENDED(7, "Existiert mein Charakter noch?", GOSSIP_SENDER_MAIN, 0, "Der Name lautet: ", 0, true);
 		player->ADD_GOSSIP_ITEM_EXTENDED(7, "Ubertrage meinen Charakter auf einen anderen Account! [Unwideruflich / 5000 Gold]", GOSSIP_SENDER_MAIN, 2, "Der Accountname lautet: ", 0, true);
-		player->ADD_GOSSIP_ITEM(7, "Ich brauche Hilfe!", GOSSIP_SENDER_MAIN, 3);
-		player->ADD_GOSSIP_ITEM(7, "Danke! Bringt mich zurueck!", GOSSIP_SENDER_MAIN, 1);
+				player->ADD_GOSSIP_ITEM(7, "Danke! Bringt mich zurueck!", GOSSIP_SENDER_MAIN, 1);
 		player->ADD_GOSSIP_ITEM(7, "Test!", GOSSIP_SENDER_MAIN, 4);
 		player->PlayerTalkClass->SendGossipMenu(1, creature->GetGUID());
 		return true;
@@ -176,23 +175,22 @@ public:
 			return true;
 		}break;
 
-		case 3:
-		{
-			
-			ChatHandler(player->GetSession()).PSendSysMessage("Um den Charaktertransfer durchzufuehren, benoetigst du 5k Gold. Du wirst aufgefordert den Accountnamen einzugeben zu welchem der Charakter transferiert werden soll. Also nicht deinen eigenen, sondern der Zielaccount! Einmal bestaetigt kann der Transfer nicht mehr zurueckgenommen werden. Sobald du dich ausloggst ist der Charakter verschwunden und auf dem anderen Account verfügbar.",
-				player->GetName());
-			return true;
+		
+		case 4:{
 			player->PlayerTalkClass->ClearMenus();
 
-			player->ADD_GOSSIP_ITEM(7, "Zu den Features", GOSSIP_SENDER_MAIN, 4);
+			player->ADD_GOSSIP_ITEM(7, "Hilfe", GOSSIP_SENDER_MAIN, 5);
 			player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
-			return true;
-		}break;
-
-		case 4:{
 			player->GetSession()->SendNotification("4");
 			return true;
 			
+		}break;
+
+		case 5:
+		{
+			ChatHandler(player->GetSession()).PSendSysMessage("[Gutschein System] Du hast nicht genug Gold. Als Besitzer eines Eliteaccounts brauchst du 5000 Gold als normaler Spieler 10.000 Gold.",
+				player->GetName());
+			return true;
 		}break;
 		
 			return true;
