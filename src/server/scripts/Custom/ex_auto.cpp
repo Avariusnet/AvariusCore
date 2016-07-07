@@ -41,7 +41,9 @@ public:
 	bool OnGossipHello(Player* player, Creature* creature)
 	{
 		player->ADD_GOSSIP_ITEM_EXTENDED(7, "Existiert mein Charakter noch?", GOSSIP_SENDER_MAIN, 0, "Der Name lautet: ", 0, true);
-		player->ADD_GOSSIP_ITEM(7, "2ter Eintrag", GOSSIP_SENDER_MAIN, 1);
+		player->ADD_GOSSIP_ITEM_EXTENDED(7, "Ubertrage meinen Charakter auf einen anderen Account! [Unwideruflich / 5000 Gold]", GOSSIP_SENDER_MAIN, 2, "Der Accountname lautet: ", 0, true);
+		player->ADD_GOSSIP_ITEM(7, "Danke! Bring mich zurueck!", GOSSIP_SENDER_MAIN, 1);
+		player->ADD_GOSSIP_ITEM(7, "Hilfe! Es lohnt sich bei Fragen hier rein zu schauen!", GOSSIP_SENDER_MAIN, 3);
 		player->PlayerTalkClass->SendGossipMenu(1, creature->GetGUID());
 		return true;
 	}
@@ -99,6 +101,53 @@ public:
 
 		}break;
 
+
+		case 2:
+		{
+
+			std::string codes = code;
+			PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_ACCOUNT_ID_BY_NAME);
+			stmt->setString(0, codes);
+			PreparedQueryResult result = LoginDatabase.Query(stmt);
+
+			if (!result){
+				player->GetSession()->SendNotification("Account wurde nicht gefunden!");
+				return true;
+			}
+
+			Field* feld = result->Fetch();
+			uint32 accid = feld[0].GetInt32();
+
+
+			PreparedStatement* charsum = CharacterDatabase.GetPreparedStatement(CHAR_SEL_SUM_CHARS);
+			charsum->setInt32(0, accid);
+			PreparedQueryResult ergebnis = CharacterDatabase.Query(charsum);
+
+			if (!ergebnis){
+				player->GetSession()->SendNotification("Error beim Counten der Charaktere!");
+				return true;
+			}
+
+			Field* felder = ergebnis->Fetch();
+			uint32 charactersum = felder[0].GetInt32();
+
+			if (charactersum <= 9){
+				PreparedStatement* updateacc = CharacterDatabase.GetPreparedStatement(CHAR_UPD_ACCOUNT_ID);
+				updateacc->setInt32(0, accid);
+				updateacc->setInt32(1, player->GetGUID());
+				CharacterDatabase.Execute(updateacc);
+				player->ModifyMoney(-5000 * GOLD);
+				return true;
+			}
+
+			if (charactersum = 10){
+				player->GetSession()->SendNotification("Du hast zu viele Charaktere auf deinem Account");
+				return true;
+			}
+
+		}
+
+
 		return true;
 
 		}
@@ -112,7 +161,7 @@ public:
 		switch (uiAction)
 		{
 		case 1:
-			player->GetSession()->SendNotification("so ist das korrekt!");
+			player->Recall();
 			return true;
 		}
 

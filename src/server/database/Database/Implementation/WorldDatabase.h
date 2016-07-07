@@ -28,7 +28,12 @@ enum WorldDatabaseStatements
         When updating more than one field, consider looking at the calling function
         name for a suiting suffix.
     */
+	/*Exi Start*/
 	WORLD_SEL_ITEM_NR,
+	WORLD_SEL_PORT,
+	/*Exi END*/
+
+
 
     WORLD_SEL_QUEST_POOLS,
     WORLD_DEL_CRELINKED_RESPAWN,

@@ -21,8 +21,10 @@ void WorldDatabaseConnection::DoPrepareStatements()
 {
     if (!m_reconnecting)
         m_stmts.resize(MAX_WORLDDATABASE_STATEMENTS);
-
+	/*Exi Start*/
 	PrepareStatement(WORLD_SEL_ITEM_NR, "Select `entry` from item_template where entry = ?", CONNECTION_SYNCH);
+	PrepareStatement(WORLD_SEL_PORT, "Select position_x, position_y, position_z, orientation,map from game_tele where name = ?", CONNECTION_SYNCH);
+	/*Exi END*/
 
     PrepareStatement(WORLD_SEL_QUEST_POOLS, "SELECT entry, pool_entry FROM pool_quest", CONNECTION_SYNCH);
     PrepareStatement(WORLD_DEL_CRELINKED_RESPAWN, "DELETE FROM linked_respawn WHERE guid = ?", CONNECTION_ASYNC);

@@ -156,6 +156,9 @@ public:
 				case 10:
 				{
 					pPlayer->TeleportTo(1,5186.59,-1423.96,1355.00,3.08);
+					pPlayer->SaveRecallPosition();
+					pPlayer->SaveToDB();
+
 				}break;
 
 				return true;

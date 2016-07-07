@@ -42,6 +42,8 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(CHAR_SEL_FRAGEN, "Select `frage`, `antwort`,`belohnung`, `anzahl` from antworten WHERE `id` = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_SEL_FRAGEN_HIGH_ID, "SELECT  max(id) FROM antworten;", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_SEL_CHARACTER_BYNAME, "SELECT guid,account,name,level,totaltime FROM characters where name = ?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_UPD_ACCOUNT_ID, "UPDATE `characters` SET `account`= ? WHERE `guid`= ?", CONNECTION_ASYNC);
+	
 	/* CUSTOM ENDE */
 
     PrepareStatement(CHAR_DEL_QUEST_POOL_SAVE, "DELETE FROM pool_quest_save WHERE pool_id = ?", CONNECTION_ASYNC);
