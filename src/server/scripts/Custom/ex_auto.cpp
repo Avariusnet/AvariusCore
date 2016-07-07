@@ -181,7 +181,7 @@ public:
 			player->ADD_GOSSIP_ITEM(7, "Hilfe zum Accounttransfer", GOSSIP_SENDER_MAIN, 4);
 			player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 			return true;
-		}break;
+		}
 
 		case 4:{
 
