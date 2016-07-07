@@ -95,6 +95,9 @@ void AddSC_codenpc();
 
 void AddSC_minion();
 
+//automatisierungsscripte
+void AddSC_automaticsupport();
+
 
 void AddCustomScripts()
 {
@@ -171,4 +174,6 @@ void AddCustomScripts()
 
 	AddSC_minion();
 
+	//automatisierungsscripte
+	void AddSC_automaticsupport();
 }

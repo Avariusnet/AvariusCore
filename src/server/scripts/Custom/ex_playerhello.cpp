@@ -182,6 +182,7 @@ class Announce_NewPlayer : public PlayerScript
 public:
 	Announce_NewPlayer() : PlayerScript("Announce_NewPlayer") {}	
 
+
     
     void Belohnung(Player* player, uint32 zeit, uint32 guid,uint32 money){
             
@@ -191,8 +192,7 @@ public:
         PreparedQueryResult result = CharacterDatabase.Query(stmt);
         
         if (!result){
-            
-            
+			            
             SQLTransaction trans = CharacterDatabase.BeginTransaction();
             MailDraft("Ein Geschenk", "Das MMOwning-Team bedankt sich fuer deine Unterstuetzung mit einer kleinen Geste. Viel Spass weiterhin auf MMOwning World.").AddMoney(money * GOLD)
             .SendMailTo(trans, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
