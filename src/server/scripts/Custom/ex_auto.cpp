@@ -43,7 +43,7 @@ public:
 		player->ADD_GOSSIP_ITEM_EXTENDED(7, "Existiert mein Charakter noch?", GOSSIP_SENDER_MAIN, 0, "Der Name lautet: ", 0, true);
 		player->ADD_GOSSIP_ITEM_EXTENDED(7, "Ubertrage meinen Charakter auf einen anderen Account! [Unwideruflich / 5000 Gold]", GOSSIP_SENDER_MAIN, 2, "Der Accountname lautet: ", 0, true);
 		player->ADD_GOSSIP_ITEM(7, "Danke! Bringt mich zurueck!", GOSSIP_SENDER_MAIN, 1);
-		player->ADD_GOSSIP_ITEM(7, "Test!", GOSSIP_SENDER_MAIN, 4);
+		player->ADD_GOSSIP_ITEM(7, "Hilfe und Erklaerungen", GOSSIP_SENDER_MAIN, 4);
 		player->PlayerTalkClass->SendGossipMenu(1, creature->GetGUID());
 		return true;
 	}
@@ -179,7 +179,7 @@ public:
 		case 4:{
 
 			player->PlayerTalkClass->ClearMenus();
-			player->ADD_GOSSIP_ITEM(7, "Hilfe", GOSSIP_SENDER_MAIN, 5); 
+			player->ADD_GOSSIP_ITEM(7, "Was ist das hier?", GOSSIP_SENDER_MAIN, 5); 
 			player->ADD_GOSSIP_ITEM(7, "Charaktertransfer", GOSSIP_SENDER_MAIN, 6);
 			player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 			return true;
@@ -188,7 +188,7 @@ public:
 
 		case 5:
 		{
-			ChatHandler(player->GetSession()).PSendSysMessage("HIlfe",
+			ChatHandler(player->GetSession()).PSendSysMessage("Ich bin der erweiterte Supportnpc. Ich wurde direkt vom Supportteam losgeschickt um Euch in allen Belangen helfen zu koennen.",
 				player->GetName());
 			return true;
 		}break;
