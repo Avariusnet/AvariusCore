@@ -44,6 +44,7 @@ public:
 		player->ADD_GOSSIP_ITEM_EXTENDED(7, "Ubertrage meinen Charakter auf einen anderen Account! [Unwideruflich / 5000 Gold]", GOSSIP_SENDER_MAIN, 2, "Der Accountname lautet: ", 0, true);
 		player->ADD_GOSSIP_ITEM(7, "Ich brauche Hilfe!", GOSSIP_SENDER_MAIN, 3);
 		player->ADD_GOSSIP_ITEM(7, "Danke! Bringt mich zurueck!", GOSSIP_SENDER_MAIN, 1);
+		player->ADD_GOSSIP_ITEM(7, "Test!", GOSSIP_SENDER_MAIN, 4);
 		player->PlayerTalkClass->SendGossipMenu(1, creature->GetGUID());
 		return true;
 	}
