@@ -144,9 +144,12 @@ public:
 				return true;
 			}
 
-			
+			if (!player->HasEnoughMoney(5000 * GOLD)){
+				player->GetSession()->SendNotification("Du hast nicht genug Gold");
+			}
+
 			if (charactersum == 10){
-				player->GetSession()->SendNotification("Du hast zu viele Charaktere auf deinem Account oder zu wenig Gold.");
+				player->GetSession()->SendNotification("Du hast zu viele Charaktere auf deinem Account.");
 				return true;
 			}
 			return true;
@@ -173,6 +176,7 @@ public:
 
 		case 3:
 		{
+			
 			player->PlayerTalkClass->ClearMenus();
 			player->ADD_GOSSIP_ITEM(7, "Hilfe zum Accounttransfer", GOSSIP_SENDER_MAIN, 4);
 			player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
