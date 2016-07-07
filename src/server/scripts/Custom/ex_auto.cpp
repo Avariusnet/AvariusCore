@@ -82,7 +82,11 @@ public:
 					player->GetSession()->SendNotification("Error");
 					return true;
 				}
-				player->GetSession()->SendNotification(level);
+
+				std::ostringstream test;
+				test << "Level: " << level;
+
+				player->GetSession()->SendNotification(test.str().c_str());
 				Field* ergfeld = ergebnis->Fetch();
 				std::string accname = ergfeld[0].GetCString();
 				
