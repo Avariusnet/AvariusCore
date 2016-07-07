@@ -41,7 +41,7 @@ public:
 	bool OnGossipHello(Player* player, Creature* creature)
 	{
 		player->ADD_GOSSIP_ITEM_EXTENDED(7, "Existiert mein Charakter noch?", GOSSIP_SENDER_MAIN, 0, "Der Name lautet: ", 0, true);
-		player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "2ter Eintrag", GOSSIP_SENDER_MAIN, 1);
+		player->ADD_GOSSIP_ITEM(7, "2ter Eintrag", GOSSIP_SENDER_MAIN, 1);
 		player->PlayerTalkClass->SendGossipMenu(1, creature->GetGUID());
 		return true;
 	}
@@ -71,7 +71,7 @@ public:
 				uint32 guid = feld[0].GetInt32();
 				uint32 account = feld[1].GetInt32();
 				std::string name = feld[2].GetCString();
-				uint32 level = feld[3].GetInt32();
+				//uint32 level = feld[3].GetInt32();
 				uint32 totaltime = feld[4].GetInt32();
 				
 				PreparedStatement* getaccountnamebyid = LoginDatabase.GetPreparedStatement(LOGIN_SEL_ACCOUNT_BYID);
@@ -83,17 +83,14 @@ public:
 					return true;
 				}
 
-				std::ostringstream test;
-				test << "Level: " << level;
-
-				player->GetSession()->SendNotification(test.str().c_str());
+				
 				Field* ergfeld = ergebnis->Fetch();
 				std::string accname = ergfeld[0].GetCString();
-				
+				uint32 spielzeith = totaltime / 60 / 60;
 				uint32 spielzeit = totaltime / 60 / 60 / 24;
 
 				std::ostringstream pp;
-				pp << "Folgende Daten wurden gefunden \nGuid: " << guid << "\nAccountname: " << accname << "\nLevel: " << level << "\nSpielzeit in Tagen: " << spielzeit;
+				pp << "Folgende Daten wurden gefunden \nGuid: " << guid << "\nAccountname: " << accname << "\nSpielzeit in Stunden: " << spielzeith << "\nSpielzeit in Tagen: " << spielzeit;
 					ChatHandler(player->GetSession()).PSendSysMessage(pp.str().c_str(),
 					player->GetName());
 					return true;
@@ -109,6 +106,17 @@ public:
 		return true;
 	}
 
+
+	bool OnGossipSelect(Player * player, Creature * creature, uint32 /*uiSender*/, uint32 uiAction){
+
+		switch (uiAction)
+		{
+		case 1:
+			player->GetSession()->SendNotification("so ist das korrekt!");
+			return true;
+		}
+
+	}
 
 };
 
