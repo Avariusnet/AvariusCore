@@ -82,7 +82,7 @@ public:
 					player->GetSession()->SendNotification("Error");
 					return true;
 				}
-
+				player->GetSession()->SendNotification(level);
 				Field* ergfeld = ergebnis->Fetch();
 				std::string accname = ergfeld[0].GetCString();
 				
