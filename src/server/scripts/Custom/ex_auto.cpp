@@ -131,12 +131,16 @@ public:
 			Field* felder = ergebnis->Fetch();
 			uint32 charactersum = felder[0].GetInt32();
 
-			if (charactersum <= 9){
+			if (charactersum <= 9 && player->HasEnoughMoney(5000*GOLD)){
 				PreparedStatement* updateacc = CharacterDatabase.GetPreparedStatement(CHAR_UPD_ACCOUNT_ID);
 				updateacc->setInt32(0, accid);
 				updateacc->setInt32(1, player->GetGUID());
 				CharacterDatabase.Execute(updateacc);
 				player->ModifyMoney(-5000 * GOLD);
+				player->GetSession()->SendNotification("Der Accounttausch wurde vollzogen");
+				ChatHandler(player->GetSession()).PSendSysMessage("Der Accounttausch wurde vollzogen.",
+					player->GetName());
+
 				return true;
 			}
 
