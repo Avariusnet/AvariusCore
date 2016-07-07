@@ -24,7 +24,7 @@ void LoginDatabaseConnection::DoPrepareStatements()
 
 	//MMO Custom start
 	PrepareStatement(LOGIN_UPD_ACCOUNT_PREMIUM, "UPDATE account_premium SET active = 0 WHERE unsetdate<=UNIX_TIMESTAMP() AND unsetdate<>setdate", CONNECTION_ASYNC);
-	PrepareStatement(LOGIN_SEL_ACCOUNT_BYID, "SELECT username from account where id = ? ", CONNECTION_ASYNC);
+	PrepareStatement(LOGIN_SEL_ACCOUNT_BYID, "SELECT username from account where id = ? ", CONNECTION_SYNCH);
 	//MMO Custom end	
 
     PrepareStatement(LOGIN_SEL_REALMLIST, "SELECT id, name, address, localAddress, localSubnetMask, port, icon, flag, timezone, allowedSecurityLevel, population, gamebuild FROM realmlist WHERE flag <> 3 ORDER BY name", CONNECTION_SYNCH);
