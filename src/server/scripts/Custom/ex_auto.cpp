@@ -178,7 +178,8 @@ public:
 		{
 			
 			player->PlayerTalkClass->ClearMenus();
-			player->ADD_GOSSIP_ITEM(7, "Hilfe zum Accounttransfer", GOSSIP_SENDER_MAIN, 4);
+
+			player->ADD_GOSSIP_ITEM(7, "Zu den Features", GOSSIP_SENDER_MAIN, 4);
 			player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 			return true;
 		}
@@ -189,8 +190,10 @@ public:
 				player->GetName());
 			return true;
 		}break;
-			
+		
+			return true;
 		}
+		return true;
 	}
 
 };
