@@ -40,7 +40,7 @@ public:
 
 	bool OnGossipHello(Player* player, Creature* creature)
 	{
-		player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Existiert mein alter Character?", GOSSIP_SENDER_MAIN, 0);
+		player->ADD_GOSSIP_ITEM_EXTENDED(7, "Existiert mein Charakter noch?", GOSSIP_SENDER_MAIN, 0, "Der Name lautet: ", 0, true);
 		player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "2ter Eintrag", GOSSIP_SENDER_MAIN, 1);
 		player->PlayerTalkClass->SendGossipMenu(1, creature->GetGUID());
 		return true;
