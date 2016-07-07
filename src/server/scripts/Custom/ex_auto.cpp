@@ -41,6 +41,7 @@ public:
 	bool OnGossipHello(Player* player, Creature* creature)
 	{
 		player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Existiert mein alter Character?", GOSSIP_SENDER_MAIN, 0);
+		player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "2ter Eintrag", GOSSIP_SENDER_MAIN, 1);
 		player->PlayerTalkClass->SendGossipMenu(1, creature->GetGUID());
 		return true;
 	}
@@ -65,7 +66,7 @@ public:
 
 			if (result){
 
-				//SELECT guid,account,name,level,totaltime FROM characters where name = ?"
+				
 				Field* feld = result->Fetch();
 				uint32 guid = feld[0].GetInt32();
 				uint32 account = feld[1].GetInt32();

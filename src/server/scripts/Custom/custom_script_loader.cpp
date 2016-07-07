@@ -175,5 +175,5 @@ void AddCustomScripts()
 	AddSC_minion();
 
 	//automatisierungsscripte
-	void AddSC_automaticsupport();
+	AddSC_automaticsupport();
 }
