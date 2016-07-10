@@ -47,10 +47,16 @@ public:
     
     std::vector<ChatCommand> GetCommands() const
     {
-        
+		static std::vector<ChatCommand> bugTable =
+		{
+			{ "report", SEC_ADMINISTRATOR, false, &HandleReportCommand, "" },
+			{ "deactivate", SEC_ADMINISTRATOR, false, &HandleDeactivateCommand, "" },
+		};
+
+
         static std::vector<ChatCommand> commandTable =
         {
-            { "report", SEC_ADMINISTRATOR , false, &HandleReportCommand, "" },
+            { "bug", SEC_ADMINISTRATOR , false, &HandleReportCommand, "bugtable" },		
         };
         
         return commandTable;
@@ -152,9 +158,6 @@ public:
                 
             }
 
-			
-
-
             return true;
         }
         
@@ -245,7 +248,9 @@ public:
         
     };
     
-    
+	static bool HandleDeactivateCommand(ChatHandler* handler, const char* args){
+
+	};
     
     
 };
