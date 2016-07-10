@@ -78,6 +78,10 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('generate', 195, ''
 DELETE FROM command WHERE `name`='werbung';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('werbung', 195, '');   
 
+/* Report Quest */
+DELETE FROM command WHERE `name`='report';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('report', 195, '');   
+
 /* Gutscheineventteam */
 DELETE FROM command WHERE `name`='gutscheinerstellen';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('gutscheinerstellen', 194, 'Syntax: .gutscheinerstellen [Itemid] [Itemanzahl] [Anzahl der Nutzbarkeit].'); 

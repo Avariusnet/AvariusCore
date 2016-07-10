@@ -25,6 +25,7 @@ void WorldDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(WORLD_SEL_ITEM_NR, "Select `entry` from item_template where entry = ?", CONNECTION_SYNCH);
 	PrepareStatement(WORLD_SEL_PORT, "Select position_x, position_y, position_z, orientation,map from game_tele where name = ?", CONNECTION_SYNCH);
     PrepareStatement(WORLD_SEL_QUESTID_BY_NAME, "Select id from quest_template where LogTitle = ?", CONNECTION_SYNCH);
+	PrepareStatement(WORLD_SEL_QUESTNAME_BY_ID, "Select LogTitle from quest_template where id = ?", CONNECTION_SYNCH);
 	/*Exi END*/
 
     PrepareStatement(WORLD_SEL_QUEST_POOLS, "SELECT entry, pool_entry FROM pool_quest", CONNECTION_SYNCH);
