@@ -31,6 +31,7 @@ enum WorldDatabaseStatements
 	/*Exi Start*/
 	WORLD_SEL_ITEM_NR,
 	WORLD_SEL_PORT,
+    WORLD_SEL_QUESTID_BY_NAME,
 	/*Exi END*/
 
 

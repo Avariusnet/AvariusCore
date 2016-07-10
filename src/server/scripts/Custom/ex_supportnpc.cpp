@@ -49,22 +49,14 @@ public:
     
 		bool OnGossipHello(Player* player, Creature* creature)
         {
-		player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Gibt es eine Erstaustattung?", GOSSIP_SENDER_MAIN, 0);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Gibt es einen Gildentransfer?", GOSSIP_SENDER_MAIN, 7);
-		player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Wie kann ich einen GM erreichen?", GOSSIP_SENDER_MAIN, 1);
-		player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Der Questcompleter hat mir nicht alle Items zugesendet. Was tun?", GOSSIP_SENDER_MAIN, 2);
-		player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Ich habe einen Fehler gefunden. Was tun?", GOSSIP_SENDER_MAIN, 3);
-		player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Gibt es hier Crossfaction?", GOSSIP_SENDER_MAIN, 4);
-		player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Wie schreibe ich im Worldchat?", GOSSIP_SENDER_MAIN, 5);
-		player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Die Rampoquestreihe funktioniert bei mir nicht.", GOSSIP_SENDER_MAIN, 6);
-        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Wie startet der Contentpatch?", GOSSIP_SENDER_MAIN, 8);
-		player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Wo kann ich Eventquests abgeben?", GOSSIP_SENDER_MAIN, 9);
-		player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Ich brauche mehr Support!", GOSSIP_SENDER_MAIN, 10);
+        player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Hilfe fuer neue Spieler. Klick mich!", GOSSIP_SENDER_MAIN, 100);
+		player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Questhilfen", GOSSIP_SENDER_MAIN, 101);
+		player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Charakterhilfen", GOSSIP_SENDER_MAIN, 102);
 		player->PlayerTalkClass->SendGossipMenu(1, creature->GetGUID());
 		return true;
         }
 	
-		bool OnGossipSelect(Player * pPlayer, Creature * /*creature*/, uint32 /*uiSender*/, uint32 uiAction)
+		bool OnGossipSelect(Player * pPlayer, Creature * creature, uint32 /*uiSender*/, uint32 uiAction)
 		{
 			switch (uiAction)
 			{
@@ -98,11 +90,8 @@ public:
 
 				case 3:
 				{
-					pPlayer->GetGUID();
-					ChatHandler(pPlayer->GetSession()).PSendSysMessage("Hast du einen Fehler gefunden, melde dich bitte ueber den Bugtracker. Da Entwickler nicht auf dem Liveserver spielen, lesen sie keine Tickets. Im Bugtracker koennt ihr den Bearbeitungszustand eurer Tickets jederzeit nachverfolgen.", pPlayer->GetName());
-					pPlayer->PlayerTalkClass->SendCloseGossip();
-					pPlayer->GetSession()->SendAreaTriggerMessage("Melde dich am besten ueber den Bugtracker. Entwickler werden keine Tickets lesen, da sie nicht auf dem Liveserver spielen.");
-					return true;
+                    erklaerung(pPlayer->GetSession()->GetPlayer(), "Melde dich Quest über den Befehl .report [quest]. Druecke Shift + Links auf die Quest um sie einzufuegen. Bei ausreichend Meldungen wird die Quest bei eingeben des Befehls automatisch abgeschlossen.");
+					
                 }break;
 
 				case 4:
@@ -158,10 +147,52 @@ public:
 					pPlayer->TeleportTo(1,5186.59,-1423.96,1355.00,3.08);
 					pPlayer->SaveRecallPosition();
 					pPlayer->SaveToDB();
-
+                    return true;
 				}break;
+                    
+                case 100:
+                {
+                    
+                    
+                    pPlayer->PlayerTalkClass->ClearMenus();
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Gibt es eine Erstaustattung?", GOSSIP_SENDER_MAIN, 0);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Gibt es einen Gildentransfer?", GOSSIP_SENDER_MAIN, 7);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Wie kann ich einen GM erreichen?", GOSSIP_SENDER_MAIN, 1);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Ich habe einen Fehler gefunden. Was tun?", GOSSIP_SENDER_MAIN, 3);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Gibt es hier Crossfaction?", GOSSIP_SENDER_MAIN, 4);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Wie schreibe ich im Worldchat?", GOSSIP_SENDER_MAIN, 5);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Wie startet der Contentpatch?", GOSSIP_SENDER_MAIN, 8);
+                    
+                    
+                    pPlayer->PlayerTalkClass->SendGossipMenu(1, creature->GetGUID());
+                    return true;
 
-				return true;
+                }break;
+                 
+                //Questhilfen
+                case 101:
+                {
+                    pPlayer->PlayerTalkClass->ClearMenus();
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Der Questcompleter hat mir nicht alle Items zugesendet. Was tun?", GOSSIP_SENDER_MAIN, 2);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Die Rampoquestreihe funktioniert bei mir nicht.", GOSSIP_SENDER_MAIN, 6);
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Wo kann ich Eventquests abgeben?", GOSSIP_SENDER_MAIN, 9);
+                    
+                    pPlayer->PlayerTalkClass->SendGossipMenu(1, creature->GetGUID());
+                    return true;
+                }break;
+                    
+                // Charakterhilfen
+                case 102:
+                {
+                    pPlayer->PlayerTalkClass->ClearMenus();
+                    pPlayer->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Charakterhilfen! Klick mich!", GOSSIP_SENDER_MAIN, 10);
+                    pPlayer->PlayerTalkClass->SendGossipMenu(1, creature->GetGUID());
+                    return true;
+                
+                }break;
+                    
+                    
+                return true;
 			};
 			return true;
 		}

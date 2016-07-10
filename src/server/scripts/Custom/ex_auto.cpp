@@ -180,7 +180,7 @@ public:
 
 			player->PlayerTalkClass->ClearMenus();
 			player->ADD_GOSSIP_ITEM(7, "Was ist das hier?", GOSSIP_SENDER_MAIN, 5); 
-			player->ADD_GOSSIP_ITEM(7, "Charaktertransfer", GOSSIP_SENDER_MAIN, 6);
+			player->ADD_GOSSIP_ITEM(7, "Wie geht der Charaktertransfer", GOSSIP_SENDER_MAIN, 6);
 			player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 			return true;
 			

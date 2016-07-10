@@ -76,7 +76,7 @@ void AddSC_port_item();
 //wandervolk
 void AddSC_wandervolk();
 //commands
-void AddSC_ex_commands();
+void AddSC_bot_commands();
 
 //Neujahrsevent
 void AddSC_neujahrsevent();
@@ -97,6 +97,8 @@ void AddSC_minion();
 
 //automatisierungsscripte
 void AddSC_automaticsupport();
+
+void AddSC_ex_commands();
 
 
 void AddCustomScripts()
@@ -156,7 +158,7 @@ void AddCustomScripts()
 	//wandervolk
 	AddSC_wandervolk();
 
-	AddSC_ex_commands();
+	AddSC_bot_commands();
 	//Neujahrsevent
 	AddSC_neujahrsevent();
 
@@ -176,4 +178,6 @@ void AddCustomScripts()
 
 	//automatisierungsscripte
 	AddSC_automaticsupport();
+    
+    AddSC_ex_commands();
 }
