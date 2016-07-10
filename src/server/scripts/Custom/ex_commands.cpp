@@ -151,6 +151,90 @@ public:
                 return true;
                 
             }
+
+			else                                                    // item_id or [name] Shift-click form |color|Hitem:item_id:0:0:0|h[name]|h|r
+			{
+				char const* id = handler->extractKeyFromLink((char*)args, "Hquest");
+				if (!id)
+					return false;
+				questId = atoul(id);
+				int32 questid = questId;
+				PreparedStatement* selquestbyid = WorldDatabase.GetPreparedStatement(WORLD_SEL_QUESTNAME_BY_ID);
+				selquestbyid->setInt32(0, questId);
+				PreparedQueryResult resultes = WorldDatabase.Query(selquestbyid);
+
+				if (!resultes){
+					player->GetSession()->SendNotification("Keine Quest gefunden");
+					return true;
+				}
+
+				Field* questbyname = resultes->Fetch();
+				std::string questname = questbyname[0].GetCString();
+
+
+				PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
+				selreportquest->setInt32(0, questid);
+				PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
+
+				//NO Quest with Id in DB
+				if (!ergebnis){
+					PreparedStatement* insertnewquest = CharacterDatabase.GetPreparedStatement(CHAR_INS_REPORT_QUEST);
+					insertnewquest->setInt32(0, questid);
+					insertnewquest->setInt32(1, 1);
+					insertnewquest->setInt32(2, 0);
+					CharacterDatabase.Execute(insertnewquest);
+					player->GetSession()->SendNotification("Die Quest wurde erfolgreich eingetragen");
+					return true;
+				}
+
+				//FETCH DB DATA
+				Field* report_quest = ergebnis->Fetch();
+				uint32 questreportid = report_quest[0].GetInt32();
+				uint32 anzahl = report_quest[1].GetInt32();
+				uint32 aktiv = report_quest[2].GetInt32();
+
+
+				//Update anzahl, und aktiv auf 1 setzen.
+				if (anzahl == 5){
+					PreparedStatement * updatequestaktiv = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST_ACTIVE);
+					updatequestaktiv->setInt32(0, anzahl + 1);
+					updatequestaktiv->setInt32(1, 1);
+					updatequestaktiv->setInt32(2, questreportid);
+					CharacterDatabase.Execute(updatequestaktiv);
+
+
+					const Quest* quest = sObjectMgr->GetQuestTemplate(questreportid);
+					//TODO PLayer can complete and reward quest
+					player->CanCompleteQuest(questreportid);
+					player->CanRewardQuest(quest, false);
+					player->GetSession()->SendNotification("Die Quest wurde erfolgreich reported und die Quest abgeschlossen.");
+					return true;
+				}
+
+				//aktiv == 1, quest abschließen und counter um 1 erhöhen.
+				if (aktiv == 1){
+					PreparedStatement * updatequest = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST);
+					updatequest->setInt32(0, anzahl + 1);
+					updatequest->setInt32(1, questreportid);
+					CharacterDatabase.Execute(updatequest);
+					player->GetSession()->SendNotification("Die Quest wurde erfolgreich reportet und abgeschlossen.");
+					return true;
+				}
+
+
+				//weder counter == 5 noch aktiv == 1
+				PreparedStatement * updatequest = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST);
+				updatequest->setInt32(0, anzahl + 1);
+				updatequest->setInt32(1, questreportid);
+				CharacterDatabase.Execute(updatequest);
+				player->GetSession()->SendNotification("Quest erfolgreich reportet.");
+
+
+				return true;
+
+			}
+
+
             return true;
         }
         
