@@ -268,9 +268,10 @@ public:
 		if (!questid)
 			return false;
 
-		int32 anzahl = getreportedquest(questid);
-
-		chr->GetSession()->SendNotification(anzahl);
+		Field* anzahl = getreportedquest(questid);
+		uint32 anzahl1 = anzahl[0].GetInt32();
+			
+		chr->GetSession()->SendNotification(anzahl1);
 	};
     
 };
