@@ -40,7 +40,7 @@ Field* getreportedquest(int questid){
 	PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
 
 	if (!ergebnis){
-		return true;
+		throw std::exception("Error");
 	}
 
 	Field* report_quest = ergebnis->Fetch();
