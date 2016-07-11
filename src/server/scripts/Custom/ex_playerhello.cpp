@@ -174,7 +174,7 @@
 #define MSG_COLOR_YELLOW               "|cFFFFFF00"
 
 #define Servername "mmowning"
-
+#define MOTD	"Willkommen auf der AvariusCore"
 
 class Announce_NewPlayer : public PlayerScript
 {
@@ -703,7 +703,7 @@ public:
 
 	void OnStartup(){
 		std::ostringstream uu;
-		uu << "Willkommen auf MMOwning World.";
+		uu << MOTD;
 		sWorld->SetMotd(uu.str().c_str());
 		sWorld->setRate(RATE_DROP_ITEM_LEGENDARY,1);
 		sWorld->setRate(RATE_REPAIRCOST, 3);

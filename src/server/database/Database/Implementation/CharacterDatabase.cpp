@@ -44,7 +44,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(CHAR_SEL_CHARACTER_BYNAME, "SELECT guid,account,name,level,totaltime FROM characters where name = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_UPD_ACCOUNT_ID, "UPDATE `characters` SET `account`= ? WHERE `guid`= ?", CONNECTION_ASYNC);
     PrepareStatement(CHAR_INS_REPORT_QUEST, "Insert into `reported_quest` (questid, anzahl, aktiv) VALUES (?,?,?)", CONNECTION_ASYNC);
-    PrepareStatement(CHAR_SEL_REPORT_QUEST, "Select questid, anzahl,aktiv from reported_quest where questid = ?", CONNECTION_SYNCH);
+    PrepareStatement(CHAR_SEL_REPORT_QUEST, "Select questid, anzahl, aktiv from reported_quest where questid = ?", CONNECTION_SYNCH);
     PrepareStatement(CHAR_UPD_REPORT_QUEST_ACTIVE, "Update reported_quest SET anzahl = ? , aktiv = ? where questid = ?", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_UPD_REPORT_QUEST, "Update reported_quest SET anzahl = ? where questid = ?", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_UPD_REPORT_QUEST_DEACTIVATE, "Update reported_quest SET aktiv = ? where questid = ?", CONNECTION_ASYNC);
