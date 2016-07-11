@@ -173,7 +173,7 @@
 #define MSG_COLOR_WHITESMOKE           "|cFFF5F5F5"
 #define MSG_COLOR_YELLOW               "|cFFFFFF00"
 
-
+#define Servername "mmowning"
 
 
 class Announce_NewPlayer : public PlayerScript
@@ -221,9 +221,8 @@ public:
         
 		if (player->GetTotalPlayedTime() < 1 && charresultint == 1)
 		{
-			ss << "|cff54b5ffHerzlich willkommen auf MMOwning: |r " << ChatHandler(player->GetSession()).GetNameLink();
+			ss << "|cff54b5ffHerzlich willkommen auf "<< Servername << ": |r " << ChatHandler(player->GetSession()).GetNameLink();
 			sWorld->SendServerMessage(SERVER_MSG_STRING, ss.str().c_str());
-			sWorld->SendGMText(LANG_GM_BROADCAST,"Ein neuer Spieler ist auf MMO online gegangen.");
 			return;
 		}
 

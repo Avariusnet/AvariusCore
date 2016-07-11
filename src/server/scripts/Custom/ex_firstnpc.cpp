@@ -43,6 +43,32 @@ enum Belohnungen
 };
 
 
+enum Kosten
+{
+	FIXGUTSCHEIN = 5000,
+	VARGUTSCHEIN = 10000,
+	PREMIUMGUTSCHEIN = 5000,
+	BERUFKOSTEN = 3000,
+	MAXLEVEL = 5000,
+	LEVELUP1 = 1,
+	LEVELUP10 = 5,
+	LEVELUP80 = 40
+
+};
+
+enum XP{
+	
+	ONEH = 500,
+	TWOH = 800,
+	FIVEH = 1500,
+	TENH = 2000,
+	ONEDAY = 4000,
+	TWODAY = 5000,
+	FIVEDAY = 7500,
+	TENDAY = 10000
+
+};
+
 class npc_first_char : public CreatureScript
 {
 		public: npc_first_char() : CreatureScript("npc_first_char"){ }
@@ -252,7 +278,7 @@ class npc_first_char : public CreatureScript
 				
 
 				void Berufeskillen(Player* player, uint32 beruf){
-					if (player->HasSkill(beruf) && player->HasEnoughMoney(3000 * GOLD)){
+					if (player->HasSkill(beruf) && player->HasEnoughMoney(BERUFKOSTEN * GOLD)){
 						player->LearnDefaultSkill(beruf, 6);
 						//uint32 skill = player->GetSkillValue(beruf);
 						player->GetPureMaxSkillValue(beruf);
@@ -260,7 +286,7 @@ class npc_first_char : public CreatureScript
 						DBeintrag(player->GetSession()->GetPlayer(), "Berufskillen");
 						ChatHandler(player->GetSession()).PSendSysMessage("[Beruf System] Dein Beruf wurde hochgesetzt.",
 							player->GetName());
-						player->ModifyMoney(-3000 * GOLD);
+						player->ModifyMoney(-BERUFKOSTEN * GOLD);
 						player->GetSession()->SendNotification("Dein Beruf wurde hochgesetzt.");
 					}
 
@@ -681,7 +707,7 @@ class npc_first_char : public CreatureScript
 						uint32 guid = pPlayer->GetGUID();
 						uint32 acc = pPlayer->GetSession()->GetAccountId();
 
-						if (pPlayer->HasEnoughMoney(5000 * GOLD)){
+						if (pPlayer->HasEnoughMoney(MAXLEVEL * GOLD)){
 							pPlayer->GetGUID();
 							ChatHandler(pPlayer->GetSession()).PSendSysMessage("[Aufwertungs System] Deine Aufwertung wurde ausgefuehrt. Viel Spass wuenscht Exitare sowie das MMOwning-Team.",
 								pPlayer->GetName());
@@ -690,7 +716,7 @@ class npc_first_char : public CreatureScript
 							sWorld->SendGMText(LANG_GM_BROADCAST, ss.str().c_str());
 							pPlayer->TeleportTo(0, -792.84, -1607.55, 142.30, 2.33, 0);
 							pPlayer->PlayerTalkClass->SendCloseGossip();
-							pPlayer->ModifyMoney(-5000 * GOLD);
+							pPlayer->ModifyMoney(-MAXLEVEL * GOLD);
                             pPlayer->SaveRecallPosition();
 							std::string name = pPlayer->GetName();
 
@@ -851,49 +877,49 @@ class npc_first_char : public CreatureScript
                         
                     case 6000:
                     {
-                        Bonusep(pPlayer->GetSession()->GetPlayer(), 500, 3600);
+                        Bonusep(pPlayer->GetSession()->GetPlayer(), ONEH, 3600);
                     }break;
                     
                     case 6001:
                     {
-                        Bonusep(pPlayer->GetSession()->GetPlayer(), 800, 7200);
+                        Bonusep(pPlayer->GetSession()->GetPlayer(), TWOH, 7200);
                     }break;
                             
                     case 6002:
                     {
-                        Bonusep(pPlayer->GetSession()->GetPlayer(), 1500, 18000);
+                        Bonusep(pPlayer->GetSession()->GetPlayer(), FIVEH, 18000);
                     }break;
                         
                     case 6003:
                     {
-                        Bonusep(pPlayer->GetSession()->GetPlayer(), 2000, 36000);
+                        Bonusep(pPlayer->GetSession()->GetPlayer(), TENH, 36000);
                     }break;
                             
                     case 6004:
                     {
-                        Bonusep(pPlayer->GetSession()->GetPlayer(), 4000, 86400);
+                        Bonusep(pPlayer->GetSession()->GetPlayer(), ONEDAY, 86400);
                     }break;
                     
                     case 6005:
                     {
-                        Bonusep(pPlayer->GetSession()->GetPlayer(), 5000, 172800);
+                        Bonusep(pPlayer->GetSession()->GetPlayer(), TWODAY, 172800);
                     }break;
                             
                     case 6006:
                     {
-                        Bonusep(pPlayer->GetSession()->GetPlayer(), 7500, 432000);
+                        Bonusep(pPlayer->GetSession()->GetPlayer(), FIVEDAY, 432000);
                     }break;
                             
                     case 6007:
                     {
-                        Bonusep(pPlayer->GetSession()->GetPlayer(), 10000, 864000);
+                        Bonusep(pPlayer->GetSession()->GetPlayer(), TENDAY, 864000);
                     }break;
                             
                             
 					case 23:
 					{
-						if (pPlayer->HasEnoughMoney(5000 * GOLD)){
-							pPlayer->ModifyMoney(-5000 * GOLD);
+						if (pPlayer->HasEnoughMoney(FIXGUTSCHEIN * GOLD)){
+							pPlayer->ModifyMoney(-FIXGUTSCHEIN * GOLD);
 							srand(time(NULL));
 							int r = rand();
 
@@ -964,17 +990,17 @@ class npc_first_char : public CreatureScript
 
 					case 24:
 					{
-                        if(pPlayer->GetSession()->IsPremium() && pPlayer->HasEnoughMoney(5000 * GOLD)){
+                        if(pPlayer->GetSession()->IsPremium() && pPlayer->HasEnoughMoney(PREMIUMGUTSCHEIN * GOLD)){
                             
-                            pPlayer->ModifyMoney(-5000*GOLD);
+							pPlayer->ModifyMoney(-PREMIUMGUTSCHEIN*GOLD);
                             gutscheineverteilen(pPlayer->GetSession()->GetPlayer());
 							return true;
                              
                         }
                         
-						if (pPlayer->HasEnoughMoney(10000 * GOLD) && !pPlayer->GetSession()->IsPremium()){
+						if (pPlayer->HasEnoughMoney(VARGUTSCHEIN * GOLD) && !pPlayer->GetSession()->IsPremium()){
                            
-                            pPlayer->ModifyMoney(-10000 * GOLD);
+							pPlayer->ModifyMoney(-VARGUTSCHEIN * GOLD);
                             gutscheineverteilen(pPlayer->GetSession()->GetPlayer());
 							return true;
 
@@ -1015,7 +1041,7 @@ class npc_first_char : public CreatureScript
                     case 9501:
                     {
                             
-                        levelup(pPlayer, 1, 79, 1);
+                        levelup(pPlayer, LEVELUP1, 79, 1);
 						
                         return true;
                             
@@ -1025,7 +1051,7 @@ class npc_first_char : public CreatureScript
                     case 9502:
                     {
                         
-                        levelup(pPlayer, 5, 70, 10);
+                        levelup(pPlayer, LEVELUP10, 70, 10);
 						
                         return true;
                             
@@ -1037,7 +1063,7 @@ class npc_first_char : public CreatureScript
                         uint16 abstand = 80 - pPlayer->getLevel();
                         // abstand ist der abstand des Spielerlevels zu Level 80
                             
-                        levelup(pPlayer, 40, 80, abstand);
+                        levelup(pPlayer, LEVELUP80, 80, abstand);
                         return true;
                             
                     }break;

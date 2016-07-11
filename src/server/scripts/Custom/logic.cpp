@@ -34,13 +34,13 @@
 #include "logic.h"
 
 
-int getreportedquest(int questid,int x){
+Field* getreportedquest(int questid){
 	PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
 	selreportquest->setInt32(0, questid);
 	PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
 
 	if (!ergebnis){
-		return true;
+		return;
 	}
 
 	Field* report_quest = ergebnis->Fetch();
@@ -48,7 +48,5 @@ int getreportedquest(int questid,int x){
 	uint32 anzahl = report_quest[1].GetInt32();
 	uint32 aktiv = report_quest[2].GetInt32();
 
-	
-
-	return report_quest[x].GetInt32();
+	return report_quest;
 }
