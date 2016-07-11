@@ -39,10 +39,16 @@ int getreportedquest(int questid,int x){
 	selreportquest->setInt32(0, questid);
 	PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
 
+	if (!ergebnis){
+		return true;
+	}
+
 	Field* report_quest = ergebnis->Fetch();
 	uint32 questreportid = report_quest[0].GetInt32();
 	uint32 anzahl = report_quest[1].GetInt32();
 	uint32 aktiv = report_quest[2].GetInt32();
+
+	
 
 	return report_quest[x].GetInt32();
 }
