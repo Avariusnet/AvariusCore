@@ -40,7 +40,7 @@ Field* getreportedquest(int questid){
 	PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
 
 	if (!ergebnis){
-		return;
+		return true;
 	}
 
 	Field* report_quest = ergebnis->Fetch();
