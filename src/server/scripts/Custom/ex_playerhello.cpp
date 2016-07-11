@@ -711,7 +711,7 @@ public:
 		sWorld->setRate(RATE_DROP_ITEM_UNCOMMON, 3);
 		sWorld->setBoolConfig(CONFIG_ALLOW_TWO_SIDE_TRADE, true);
 		sWorld->setBoolConfig(CONFIG_ALLOW_TWO_SIDE_INTERACTION_AUCTION, true);
-		
+				
 	}
 
 };
