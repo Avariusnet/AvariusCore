@@ -31,11 +31,18 @@
 #include <sstream>
 #include <string>
 #include <stdlib.h>
+#include "logic.h"
 
 
+int getreportedquest(int questid,int x){
+	PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
+	selreportquest->setInt32(0, questid);
+	PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
 
-Field* getquestnamebyid(int questid);
-int getreportedquest(int questid, int x);
-std::string insertnewreportedquest(int questid);
-Field* setquestinaktive(int questid);
+	Field* report_quest = ergebnis->Fetch();
+	uint32 questreportid = report_quest[0].GetInt32();
+	uint32 anzahl = report_quest[1].GetInt32();
+	uint32 aktiv = report_quest[2].GetInt32();
 
+	return report_quest[x].GetInt32();
+}

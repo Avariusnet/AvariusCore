@@ -39,6 +39,7 @@
 #include <sstream>
 #include <string>
 #include <stdlib.h>
+#include "logic.h"
 
 class ex_commands : public CommandScript
 {
@@ -51,6 +52,7 @@ public:
 		{
 			{ "report", SEC_ADMINISTRATOR, false, &HandleReportCommand, "" },
 			{ "deactivate", SEC_ADMINISTRATOR, false, &HandleDeactivateCommand, "" },
+			{ "test", SEC_ADMINISTRATOR, false, &HandleDeactivateCommand, "" },
 		};
 
 
@@ -112,6 +114,9 @@ public:
                 }
                 
                 //FETCH DB DATA
+				
+
+				
                 Field* report_quest = ergebnis->Fetch();
                 uint32 questreportid = report_quest[0].GetInt32();
                 uint32 anzahl = report_quest[1].GetInt32();
@@ -252,6 +257,21 @@ public:
 
 	};
     
+	static bool HandleTestCommand(ChatHandler* handler, const char* args){
+
+		Player *chr = handler->GetSession()->GetPlayer();
+
+		char* questidstring = strtok((char*)args, " ");
+
+		uint32 questid = (uint32)atoi(questidstring);
+
+		if (!questid)
+			return false;
+
+		int32 anzahl = getreportedquest(questid, 2);
+
+		chr->GetSession()->SendNotification(anzahl);
+	};
     
 };
 

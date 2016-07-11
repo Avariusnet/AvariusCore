@@ -85,6 +85,9 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bug report', 195, 
 DELETE FROM command WHERE `name`='bug deactivate';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bug deactivate', 193, '');  
 
+DELETE FROM command WHERE `name`='bug test';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bug test', 193, '');  
+
 /* Gutscheineventteam */
 DELETE FROM command WHERE `name`='gutscheinerstellen';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('gutscheinerstellen', 194, 'Syntax: .gutscheinerstellen [Itemid] [Itemanzahl] [Anzahl der Nutzbarkeit].'); 
