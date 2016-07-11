@@ -268,7 +268,7 @@ public:
 		if (!questid)
 			return false;
 
-		int32 anzahl = getreportedquest(questid, 1);
+		int32 anzahl = getreportedquest(questid);
 
 		chr->GetSession()->SendNotification(anzahl);
 	};
