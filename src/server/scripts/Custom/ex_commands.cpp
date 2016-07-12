@@ -98,19 +98,39 @@ public:
                     return true;
                 }
                 
+				
 
 						
                 Field* questnr = result->Fetch();
                 uint32 questid = questnr[0].GetInt32();
                 
 			
+				//Check if Player has already report quest
+				PreparedStatement* checkplayerreport = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PLAYER_REPORT_QUEST);
+				checkplayerreport->setInt32(0, player->GetGUID);
+				checkplayerreport->setInt32(1, questid);
+				PreparedQueryResult checkresult = CharacterDatabase.Query(checkplayerreport);
+				
+				if (checkresult){
+					player->GetSession()->SendNotification("Du hast die Quest schon reportet");
+					return true;
+				}
+				
+
                 //CHECK IF QUEST WITH ID IS IN DB
                 PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
                 selreportquest->setInt32(0,questid);
                 PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
                 
                 //NO Quest with Id in DB
-                if(!ergebnis){
+                if(!ergebnis && !checkresult){
+					PreparedStatement* insertnewplayer = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_REPORT_QUEST);
+					insertnewplayer->setString(0, player->GetSession()->GetPlayerName());
+					insertnewplayer->setInt32(1, player->GetGUID());
+					insertnewplayer->setInt32(2, questid);
+					CharacterDatabase.Execute(insertnewplayer);
+
+
                     PreparedStatement* insertnewquest = CharacterDatabase.GetPreparedStatement(CHAR_INS_REPORT_QUEST);
 					insertnewquest->setString(0, questName);
 					insertnewquest->setInt32(1,questid);
@@ -199,9 +219,27 @@ public:
 			selreportquest->setInt32(0, questid);
 			PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
 
+			//Check if Player has already report quest
+			PreparedStatement* checkplayerreport = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PLAYER_REPORT_QUEST);
+			checkplayerreport->setInt32(0, player->GetGUID);
+			checkplayerreport->setInt32(1, questid);
+			PreparedQueryResult checkresult = CharacterDatabase.Query(checkplayerreport);
+
+			if (checkresult){
+				player->GetSession()->SendNotification("Du hast die Quest schon reportet");
+				return true;
+			}
+
 
 			//NO Quest with Id in DB
-			if (!ergebnis){
+			if (!ergebnis && !checkresult){
+				PreparedStatement* insertnewplayer = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_REPORT_QUEST);
+				insertnewplayer->setString(0, player->GetSession()->GetPlayerName());
+				insertnewplayer->setInt32(1, player->GetGUID());
+				insertnewplayer->setInt32(2, questid);
+				CharacterDatabase.Execute(insertnewplayer);
+
+
 				PreparedStatement* insertnewquest = CharacterDatabase.GetPreparedStatement(CHAR_INS_REPORT_QUEST);
 				insertnewquest->setString(0, questname);
 				insertnewquest->setInt32(1, questid);
