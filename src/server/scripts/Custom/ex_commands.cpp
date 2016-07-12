@@ -66,29 +66,7 @@ public:
 	
 	
 	
-	static bool checkplayerreport(Player* player, int questid){
 
-		PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PLAYER_REPORT_QUEST);
-		stmt->setInt32(0, player->GetGUID());
-		stmt->setInt32(1, questid);
-		PreparedQueryResult result = CharacterDatabase.Query(stmt);
-
-		if (!result){
-
-			PreparedStatement* insertnewplayer = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_REPORT_QUEST);
-			insertnewplayer->setString(0, player->GetSession()->GetPlayerName());
-			insertnewplayer->setInt32(1, player->GetGUID());
-			insertnewplayer->setInt32(2, questid);
-			CharacterDatabase.Execute(insertnewplayer);
-			player->GetSession()->SendNotification("Spieler erfolgreich eingetragen");
-			return true;
-		}
-
-		player->GetSession()->SendNotification("Du hast die Quest schon einmal reported.");
-		return false;
-
-	}
-    
     //report function. More than 5 reports makes a quest instant complete.
     static bool HandleReportCommand(ChatHandler* handler, const char* args)
     {
@@ -121,19 +99,11 @@ public:
                 }
                 
 
-				
-		
+						
                 Field* questnr = result->Fetch();
                 uint32 questid = questnr[0].GetInt32();
                 
-				PreparedStatement* insertnewplayer = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_REPORT_QUEST);
-				insertnewplayer->setString(0, player->GetSession()->GetPlayerName());
-				insertnewplayer->setInt32(1, player->GetGUID());
-				insertnewplayer->setInt32(2, questid);
-				CharacterDatabase.Execute(insertnewplayer);
-				player->GetSession()->SendNotification("Spieler erfolgreich eingetragen");
-
-
+			
                 //CHECK IF QUEST WITH ID IS IN DB
                 PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
                 selreportquest->setInt32(0,questid);
@@ -229,14 +199,6 @@ public:
 			selreportquest->setInt32(0, questid);
 			PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
 
-		
-			PreparedStatement* insertnewplayer = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_REPORT_QUEST);
-			insertnewplayer->setString(0, player->GetSession()->GetPlayerName());
-			insertnewplayer->setInt32(1, player->GetGUID());
-			insertnewplayer->setInt32(2, questid);
-			CharacterDatabase.Execute(insertnewplayer);
-
-			player->GetSession()->SendNotification("Spieler erfolgreich eingetragen");
 
 			//NO Quest with Id in DB
 			if (!ergebnis){
