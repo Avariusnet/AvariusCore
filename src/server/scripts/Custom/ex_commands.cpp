@@ -126,12 +126,7 @@ public:
                 Field* questnr = result->Fetch();
                 uint32 questid = questnr[0].GetInt32();
                 
-				bool status = checkplayerreport(player->GetSession()->GetPlayer(), questid);
-
-				if (!status){
-					return false;
-				}
-
+				
 
 
                 //CHECK IF QUEST WITH ID IS IN DB
@@ -229,12 +224,7 @@ public:
 			selreportquest->setInt32(0, questid);
 			PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
 
-			bool status = checkplayerreport(player->GetSession()->GetPlayer(), questid);
-
-			if (!status){
-				
-				return false;
-			}
+		
 
 			//NO Quest with Id in DB
 			if (!ergebnis){
