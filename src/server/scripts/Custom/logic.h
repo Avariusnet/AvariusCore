@@ -38,4 +38,4 @@ Field* getquestnamebyid(int questid);
 Field* getreportedquest(int questid);
 std::string insertnewreportedquest(int questid);
 Field* setquestinaktive(int questid);
-
+bool playeralreadyreportquest(int questid);
