@@ -66,7 +66,7 @@ public:
 	
 	
 	
-	static void checkplayerreport(Player* player, int questid){
+	static bool checkplayerreport(Player* player, int questid){
 
 		PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_QUESTID_BY_NAME);
 		stmt->setInt32(0, questid);
@@ -79,11 +79,11 @@ public:
 			insertnewquest->setInt32(1, player->GetGUID());
 			insertnewquest->setInt32(1, questid);
 			player->GetSession()->SendNotification("Spieler erfolgreich eingetragen");
-			return;
+			return true;
 		}
 
 		player->GetSession()->SendNotification("Du hast die Quest schon einmal reported.");
-		exit;
+		return false;
 
 	}
     
@@ -124,7 +124,11 @@ public:
                 Field* questnr = result->Fetch();
                 uint32 questid = questnr[0].GetInt32();
                 
-				checkplayerreport(player->GetSession()->GetPlayer(), questid);
+				bool status = checkplayerreport(player->GetSession()->GetPlayer(), questid);
+
+				if (!status){
+					return false;
+				}
 
                 //CHECK IF QUEST WITH ID IS IN DB
                 PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
@@ -220,6 +224,12 @@ public:
 			PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
 			selreportquest->setInt32(0, questid);
 			PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
+
+			bool status = checkplayerreport(player->GetSession()->GetPlayer(), questid);
+
+			if (!status){
+				return false;
+			}
 
 			//NO Quest with Id in DB
 			if (!ergebnis){

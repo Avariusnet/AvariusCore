@@ -48,7 +48,7 @@ class port_item : public ItemScript
 			return true;
 		}
 
-		void OnGossipSelect(Player* player, Item* item, uint32 /*sender*/, uint32 uiAction){
+		void OnGossipSelect(Player* player, Item* /*item*/, uint32 /*sender*/, uint32 uiAction){
 
 			switch (uiAction)
 			{
