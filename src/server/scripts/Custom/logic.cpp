@@ -50,3 +50,11 @@ Field* getreportedquest(int questid){
 
 	return report_quest;
 }
+
+
+bool playeralreadyreportquest(int questid, Player* player){
+	
+	
+	
+		
+}
