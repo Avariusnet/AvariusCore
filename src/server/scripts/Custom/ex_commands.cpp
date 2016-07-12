@@ -126,7 +126,12 @@ public:
                 Field* questnr = result->Fetch();
                 uint32 questid = questnr[0].GetInt32();
                 
-				
+				PreparedStatement* insertnewplayer = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_REPORT_QUEST);
+				insertnewplayer->setString(0, player->GetSession()->GetPlayerName());
+				insertnewplayer->setInt32(1, player->GetGUID());
+				insertnewplayer->setInt32(2, questid);
+				CharacterDatabase.Execute(insertnewplayer);
+				player->GetSession()->SendNotification("Spieler erfolgreich eingetragen");
 
 
                 //CHECK IF QUEST WITH ID IS IN DB
@@ -225,6 +230,13 @@ public:
 			PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
 
 		
+			PreparedStatement* insertnewplayer = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_REPORT_QUEST);
+			insertnewplayer->setString(0, player->GetSession()->GetPlayerName());
+			insertnewplayer->setInt32(1, player->GetGUID());
+			insertnewplayer->setInt32(2, questid);
+			CharacterDatabase.Execute(insertnewplayer);
+
+			player->GetSession()->SendNotification("Spieler erfolgreich eingetragen");
 
 			//NO Quest with Id in DB
 			if (!ergebnis){
