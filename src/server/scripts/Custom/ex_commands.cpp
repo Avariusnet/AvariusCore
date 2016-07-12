@@ -68,16 +68,16 @@ public:
 	
 	static bool checkplayerreport(Player* player, int questid){
 
-		PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_QUESTID_BY_NAME);
-		stmt->setInt32(0, questid);
+		PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PLAYER_REPORT_QUEST);
 		stmt->setInt32(0, player->GetGUID());
-		PreparedQueryResult result = WorldDatabase.Query(stmt);
+		stmt->setInt32(1, questid);
+		PreparedQueryResult result = CharacterDatabase.Query(stmt);
 
 		if (!result){
 			PreparedStatement* insertnewquest = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_REPORT_QUEST);
 			insertnewquest->setString(0, player->GetSession()->GetPlayerName());
 			insertnewquest->setInt32(1, player->GetGUID());
-			insertnewquest->setInt32(1, questid);
+			insertnewquest->setInt32(2, questid);
 			player->GetSession()->SendNotification("Spieler erfolgreich eingetragen");
 			return true;
 		}
