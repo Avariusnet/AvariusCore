@@ -48,6 +48,8 @@ void CharacterDatabaseConnection::DoPrepareStatements()
     PrepareStatement(CHAR_UPD_REPORT_QUEST_ACTIVE, "Update reported_quest SET anzahl = ? , aktiv = ? where questid = ?", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_UPD_REPORT_QUEST, "Update reported_quest SET anzahl = ? where questid = ?", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_UPD_REPORT_QUEST_DEACTIVATE, "Update reported_quest SET aktiv = ? where questid = ?", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_INS_PLAYER_REPORT_QUEST, "Insert into reported_quest_player (playername,guid, reported_quest_id) Values (?,?,?)", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_SEL_PLAYER_REPORT_QUEST, "SELECT guid from reporeted_quest_player where guid = ? and reported_quest_id = ?", CONNECTION_SYNCH);
 	/* CUSTOM ENDE */
 
     PrepareStatement(CHAR_DEL_QUEST_POOL_SAVE, "DELETE FROM pool_quest_save WHERE pool_id = ?", CONNECTION_ASYNC);

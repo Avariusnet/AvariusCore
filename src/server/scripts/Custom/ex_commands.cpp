@@ -63,12 +63,36 @@ public:
         
         return commandTable;
     }
-    
+	
+	
+	
+	static void checkplayerreport(Player* player, int questid){
+
+		PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_QUESTID_BY_NAME);
+		stmt->setInt32(0, questid);
+		stmt->setInt32(0, player->GetGUID());
+		PreparedQueryResult result = WorldDatabase.Query(stmt);
+
+		if (!result){
+			PreparedStatement* insertnewquest = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_REPORT_QUEST);
+			insertnewquest->setString(0, player->GetSession()->GetPlayerName());
+			insertnewquest->setInt32(1, player->GetGUID());
+			insertnewquest->setInt32(1, questid);
+			player->GetSession()->SendNotification("Spieler erfolgreich eingetragen");
+			return;
+		}
+
+		player->GetSession()->SendNotification("Du hast die Quest schon einmal reported.");
+		exit;
+
+	}
     
     //report function. More than 5 reports makes a quest instant complete.
     static bool HandleReportCommand(ChatHandler* handler, const char* args)
     {
         
+		
+
         Player* player = handler->GetSession()->GetPlayer();
         
         if (!*args)
@@ -94,9 +118,14 @@ public:
                     return true;
                 }
                 
+
+				
+		
                 Field* questnr = result->Fetch();
                 uint32 questid = questnr[0].GetInt32();
                 
+				checkplayerreport(player->GetSession()->GetPlayer(), questid);
+
                 //CHECK IF QUEST WITH ID IS IN DB
                 PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
                 selreportquest->setInt32(0,questid);
