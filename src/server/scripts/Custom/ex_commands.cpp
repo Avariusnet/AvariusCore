@@ -74,11 +74,16 @@ public:
 		PreparedQueryResult result = CharacterDatabase.Query(stmt);
 
 		if (!result){
-			PreparedStatement* insertnewplayer = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_REPORT_QUEST);
+
+			/*PreparedStatement* insertnewplayer = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_REPORT_QUEST);
 			insertnewplayer->setString(0, player->GetSession()->GetPlayerName());
 			insertnewplayer->setInt32(1, player->GetGUID());
 			insertnewplayer->setInt32(2, questid);
-			CharacterDatabase.Execute(insertnewplayer);
+			CharacterDatabase.Execute(insertnewplayer);*/
+
+			CharacterDatabase.PExecute("Insert into reported_quest_player(playername, guid, reported_quest_id) Values('%s' ,'%u' , '%u')", player->GetSession()->GetPlayerName(), player->GetGUID(), questid);
+			//CharacterDatabase.PExecute("INSERT INTO item_codes (code,belohnung,anzahl,benutzt,name,benutztbar) Values ('%s','%u','%u','%u','%s','%u')", grund, belohnung, anzahl, 1, player->GetName(), 1);
+
 			player->GetSession()->SendNotification("Spieler erfolgreich eingetragen");
 			return true;
 		}
