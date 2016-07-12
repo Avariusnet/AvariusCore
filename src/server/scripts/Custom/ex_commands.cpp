@@ -107,7 +107,7 @@ public:
 			
 				//Check if Player has already report quest
 				PreparedStatement* checkplayerreport = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PLAYER_REPORT_QUEST);
-				checkplayerreport->setInt32(0, player->GetGUID);
+				checkplayerreport->setInt32(0, player->GetGUID());
 				checkplayerreport->setInt32(1, questid);
 				PreparedQueryResult checkresult = CharacterDatabase.Query(checkplayerreport);
 				
