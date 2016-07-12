@@ -173,7 +173,7 @@
 #define MSG_COLOR_WHITESMOKE           "|cFFF5F5F5"
 #define MSG_COLOR_YELLOW               "|cFFFFFF00"
 
-#define Servername "mmowning"
+#define Servername "Avarius"
 #define MOTD	"Willkommen auf der AvariusCore"
 
 class Announce_NewPlayer : public PlayerScript

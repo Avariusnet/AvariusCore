@@ -105,9 +105,10 @@ public:
                 //NO Quest with Id in DB
                 if(!ergebnis){
                     PreparedStatement* insertnewquest = CharacterDatabase.GetPreparedStatement(CHAR_INS_REPORT_QUEST);
-                    insertnewquest->setInt32(0,questid);
-                    insertnewquest->setInt32(1,1);
-                    insertnewquest->setInt32(2, 0);
+					insertnewquest->setString(0, questName);
+					insertnewquest->setInt32(1,questid);
+                    insertnewquest->setInt32(2,1);
+                    insertnewquest->setInt32(3, 0);
                     CharacterDatabase.Execute(insertnewquest);
                     player->GetSession()->SendNotification("Die Quest wurde erfolgreich eingetragen");
                     return true;
@@ -194,9 +195,10 @@ public:
 			//NO Quest with Id in DB
 			if (!ergebnis){
 				PreparedStatement* insertnewquest = CharacterDatabase.GetPreparedStatement(CHAR_INS_REPORT_QUEST);
-				insertnewquest->setInt32(0, questid);
-				insertnewquest->setInt32(1, 1);
-				insertnewquest->setInt32(2, 0);
+				insertnewquest->setString(0, questname);
+				insertnewquest->setInt32(1, questid);
+				insertnewquest->setInt32(2, 1);
+				insertnewquest->setInt32(3, 0);
 				CharacterDatabase.Execute(insertnewquest);
 				player->GetSession()->SendNotification("Die Quest wurde erfolgreich eingetragen");
 				return true;
