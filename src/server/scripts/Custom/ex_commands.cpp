@@ -195,6 +195,7 @@ public:
 
 			//Player already report quest
 			player->GetSession()->SendNotification("Quest reported");
+			return true;
         }
         
         
@@ -300,9 +301,9 @@ public:
 			return true;
 			}
 
-			else{
-				player->GetSession()->SendNotification("Quest schon reported");
-			}
+			player->GetSession()->SendNotification("Quest schon reported");
+			return true;
+			
 		}
                 
         return true;
