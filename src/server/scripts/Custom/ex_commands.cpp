@@ -106,7 +106,8 @@ public:
 
 				//check if player reported quest already. if true -> return false. if false -> insert in db and report quest.	
 				PreparedStatement * selreportquestplayer = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PLAYER_REPORT_QUEST);
-				selreportquestplayer->setInt32(0, questid);
+				selreportquestplayer->setInt32(0, player->GetGUID());
+				selreportquestplayer->setInt32(1, questid);
 				PreparedQueryResult existplayer = CharacterDatabase.Query(selreportquestplayer);
 
 				if (!existplayer){
@@ -224,7 +225,8 @@ public:
 
 			//check if player reported quest already. if true -> return false. if false -> insert in db and report quest.	
 			PreparedStatement * selreportquestplayer = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PLAYER_REPORT_QUEST);
-			selreportquestplayer->setInt32(0, questid);
+			selreportquestplayer->setInt32(0, player->GetGUID());
+			selreportquestplayer->setInt32(1, questid);
 			PreparedQueryResult existplayer = CharacterDatabase.Query(selreportquestplayer);
 
 			if (!existplayer){
