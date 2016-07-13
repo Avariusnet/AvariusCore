@@ -41,6 +41,11 @@
 #include <stdlib.h>
 #include "logic.h"
 
+#define REPORT_QUEST_SUCESS "Quest erfolgreich reported"
+#define REPORT_QUEST_SUCESS_AND_COMPLETE "Quest reported und completed"
+#define REPORT_QUEST_ERROR  "Du hast die Quest schon reported"
+#define CHECK_QUEST_ERROR "Quest wurde nicht gefunden"
+
 class ex_commands : public CommandScript
 {
 public:
@@ -94,7 +99,7 @@ public:
 				PreparedQueryResult result = WorldDatabase.Query(stmt);
 
 				if (!result){
-					player->GetSession()->SendNotification("Error beim Abfragen der Quest");
+					player->GetSession()->SendNotification(CHECK_QUEST_ERROR);
 					return true;
 				}
 
@@ -120,7 +125,7 @@ public:
 					insertnewplayer->setInt32(1, player->GetGUID());
 					insertnewplayer->setInt32(2, questid);
 					CharacterDatabase.Execute(insertnewplayer);
-					player->GetSession()->SendNotification("Spieler eingetragen");
+					
 
 					//CHECK IF QUEST WITH ID IS IN DB
 					PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
@@ -136,7 +141,7 @@ public:
 					insertnewquest->setInt32(2, 1);
 					insertnewquest->setInt32(3, 0);
 					CharacterDatabase.Execute(insertnewquest);
-					player->GetSession()->SendNotification("Die Quest wurde erfolgreich eingetragen");
+					player->GetSession()->SendNotification(REPORT_QUEST_SUCESS);
 					return true;
 				}
 
@@ -163,7 +168,7 @@ public:
 					//TODO PLayer can complete and reward quest
 					player->CanCompleteQuest(questreportid);
 					player->CanRewardQuest(quest, false);
-					player->GetSession()->SendNotification("Die Quest wurde erfolgreich reported und die Quest abgeschlossen.");
+					player->GetSession()->SendNotification(REPORT_QUEST_SUCESS_AND_COMPLETE);
 					return true;
 				}
 
@@ -173,7 +178,11 @@ public:
 					updatequest->setInt32(0, anzahl + 1);
 					updatequest->setInt32(1, questreportid);
 					CharacterDatabase.Execute(updatequest);
-					player->GetSession()->SendNotification("Die Quest wurde erfolgreich reportet und abgeschlossen.");
+					player->CanCompleteQuest(questreportid);
+
+					const Quest* quest = sObjectMgr->GetQuestTemplate(questreportid);
+					player->CanRewardQuest(quest, false);
+					player->GetSession()->SendNotification(REPORT_QUEST_SUCESS_AND_COMPLETE);
 					return true;
 				}
 
@@ -183,7 +192,7 @@ public:
 				updatequest->setInt32(0, anzahl + 1);
 				updatequest->setInt32(1, questreportid);
 				CharacterDatabase.Execute(updatequest);
-				player->GetSession()->SendNotification("Quest erfolgreich reportet.");
+				player->GetSession()->SendNotification(REPORT_QUEST_SUCESS);
 
 
 				return true;
@@ -194,7 +203,7 @@ public:
 			}
 
 			//Player already report quest
-			player->GetSession()->SendNotification("Quest reported");
+			player->GetSession()->SendNotification(REPORT_QUEST_ERROR);
 			return true;
         }
         
@@ -211,7 +220,7 @@ public:
 			PreparedQueryResult resultes = WorldDatabase.Query(selquestbyid);
 
 			if (!resultes){
-				player->GetSession()->SendNotification("Keine Quest gefunden");
+				player->GetSession()->SendNotification(CHECK_QUEST_ERROR);
 				return true;
 			}
 
@@ -239,7 +248,7 @@ public:
 				insertnewplayer->setInt32(1, player->GetGUID());
 				insertnewplayer->setInt32(2, questid);
 				CharacterDatabase.Execute(insertnewplayer);
-				player->GetSession()->SendNotification("Spieler eingetragen");
+				
 
 
 				//NO Quest with Id in DB
@@ -251,7 +260,7 @@ public:
 					insertnewquest->setInt32(2, 1);
 					insertnewquest->setInt32(3, 0);
 					CharacterDatabase.Execute(insertnewquest);
-					player->GetSession()->SendNotification("Die Quest wurde erfolgreich eingetragen");
+					player->GetSession()->SendNotification(REPORT_QUEST_SUCESS);
 					return true;
 				}
 
@@ -275,7 +284,7 @@ public:
 				//TODO PLayer can complete and reward quest
 				player->CanCompleteQuest(questreportid);
 				player->CanRewardQuest(quest, false);
-				player->GetSession()->SendNotification("Die Quest wurde erfolgreich reported und die Quest abgeschlossen.");
+				player->GetSession()->SendNotification(REPORT_QUEST_SUCESS_AND_COMPLETE);
 				return true;
 			}
 
@@ -285,7 +294,11 @@ public:
 				updatequest->setInt32(0, anzahl + 1);
 				updatequest->setInt32(1, questreportid);
 				CharacterDatabase.Execute(updatequest);
-				player->GetSession()->SendNotification("Die Quest wurde erfolgreich reportet und abgeschlossen.");
+				player->CanCompleteQuest(questreportid);
+
+				const Quest* quest = sObjectMgr->GetQuestTemplate(questreportid);
+				player->CanRewardQuest(quest, false);
+				player->GetSession()->SendNotification(REPORT_QUEST_SUCESS_AND_COMPLETE);
 				return true;
 			}
 
@@ -295,13 +308,13 @@ public:
 			updatequest->setInt32(0, anzahl + 1);
 			updatequest->setInt32(1, questreportid);
 			CharacterDatabase.Execute(updatequest);
-			player->GetSession()->SendNotification("Quest erfolgreich reportet.");
+			player->GetSession()->SendNotification(REPORT_QUEST_SUCESS);
 
 
 			return true;
 			}
 
-			player->GetSession()->SendNotification("Quest schon reported");
+			player->GetSession()->SendNotification(REPORT_QUEST_ERROR);
 			return true;
 			
 		}
