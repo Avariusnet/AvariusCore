@@ -292,7 +292,7 @@ public:
 					
 
 
-				Quest const* quest = sObjectMgr->GetQuestTemplate(questid);
+				const Quest * quest = sObjectMgr->GetQuestTemplate(questid);
 
 				// If player doesn't have the quest
 				if (!quest || player->GetQuestStatus(questid) == QUEST_STATUS_NONE)
@@ -398,7 +398,7 @@ public:
 				player->CanRewardQuest(quest, false);
 
 
-				Quest const* quest = sObjectMgr->GetQuestTemplate(questid);
+				const Quest * quest = sObjectMgr->GetQuestTemplate(questid);
 
 				// If player doesn't have the quest
 				if (!quest || player->GetQuestStatus(questid) == QUEST_STATUS_NONE)
