@@ -58,7 +58,7 @@ public:
 
         static std::vector<ChatCommand> commandTable =
         {
-            { "report", SEC_ADMINISTRATOR , false, &HandleReportCommand, "" ,bugTable},		
+            { "report", SEC_ADMINISTRATOR , false, NULL, "" ,bugTable},		
         };
         
         return commandTable;
