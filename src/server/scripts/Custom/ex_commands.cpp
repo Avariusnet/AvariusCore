@@ -104,7 +104,7 @@ public:
                 Field* questnr = result->Fetch();
                 uint32 questid = questnr[0].GetInt32();
                 
-			
+		//check if player reported quest already. if true -> return false. if false -> insert in db and report quest.	
 								
 
                 //CHECK IF QUEST WITH ID IS IN DB
