@@ -50,7 +50,7 @@ public:
     {
 		static std::vector<ChatCommand> bugTable =
 		{
-			{ "report", SEC_ADMINISTRATOR, false, &HandleReportCommand, "" },
+			{ "quest", SEC_ADMINISTRATOR, false, &HandleReportQuestCommand, "" },
 			{ "deactivate", SEC_ADMINISTRATOR, false, &HandleDeactivateCommand, "" },
 			{ "test", SEC_ADMINISTRATOR, false, &HandleDeactivateCommand, "" },
 		};
@@ -58,7 +58,7 @@ public:
 
         static std::vector<ChatCommand> commandTable =
         {
-            { "bug", SEC_ADMINISTRATOR , false, &HandleReportCommand, "" ,bugTable},		
+            { "report", SEC_ADMINISTRATOR , false, &HandleReportCommand, "" ,bugTable},		
         };
         
         return commandTable;
@@ -68,7 +68,7 @@ public:
 	
 
     //report function. More than 5 reports makes a quest instant complete.
-    static bool HandleReportCommand(ChatHandler* handler, const char* args)
+	static bool HandleReportQuestCommand(ChatHandler* handler, const char* args)
     {
         
 		

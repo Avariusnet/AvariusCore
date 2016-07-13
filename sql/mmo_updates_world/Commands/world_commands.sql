@@ -79,8 +79,8 @@ DELETE FROM command WHERE `name`='werbung';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('werbung', 195, '');   
 
 /* Report Quest */
-DELETE FROM command WHERE `name`='bug report';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bug report', 195, '');   
+DELETE FROM command WHERE `name`='report quest';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('report quest', 195, '');   
 
 DELETE FROM command WHERE `name`='bug deactivate';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bug deactivate', 193, '');  
