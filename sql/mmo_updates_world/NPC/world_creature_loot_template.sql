@@ -335,6 +335,22 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `Q
 DELETE FROM `creature_loot_template` WHERE `Entry` = 37012 AND `ITEM` = 700519;
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('37012', '700519', '0', '25', '0', '1', '0', '1', '2', 'Waffen der Unterstuetzer');
 
+/*UPDATE KAYOULA LOOT TABLE */
+UPDATE  `creature_loot_template` SET `LootMode`='31' WHERE `Entry`='800037' and`Item`='38186';
+UPDATE  `creature_loot_template` SET `LootMode`='31' WHERE `Entry`='800037' and`Item`='47629';
+UPDATE  `creature_loot_template` SET `LootMode`='31' WHERE `Entry`='800037' and`Item`='47646';
+UPDATE  `creature_loot_template` SET `LootMode`='31' WHERE `Entry`='800037' and`Item`='47850';
+UPDATE  `creature_loot_template` SET `LootMode`='31' WHERE `Entry`='800037' and`Item`='47851';
+UPDATE  `creature_loot_template` SET `LootMode`='31' WHERE `Entry`='800037' and`Item`='47853';
+UPDATE  `creature_loot_template` SET `LootMode`='31' WHERE `Entry`='800037' and`Item`='47856';
+UPDATE  `creature_loot_template` SET `LootMode`='31' WHERE `Entry`='800037' and`Item`='47894';
+UPDATE  `creature_loot_template` SET `LootMode`='31' WHERE `Entry`='800037' and`Item`='47896';
+UPDATE  `creature_loot_template` SET `LootMode`='31' WHERE `Entry`='800037' and`Item`='47910';
+UPDATE  `creature_loot_template` SET `LootMode`='31' WHERE `Entry`='800037' and`Item`='49426';
+UPDATE  `creature_loot_template` SET `LootMode`='31' WHERE `Entry`='800037' and`Item`='52006';
+
+
+
 /*!40000 ALTER TABLE `creature_loot_template` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
