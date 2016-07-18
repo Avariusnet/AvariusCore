@@ -332,7 +332,7 @@ public:
     };
     
 	static bool HandleDeactivateCommand(ChatHandler* /*handler*/, const char* /*args*/){
-
+		return true;
 	};
     
 	static bool HandleTestCommand(ChatHandler* handler, const char* args){

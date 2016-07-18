@@ -56,5 +56,5 @@ bool playeralreadyreportquest(int questid, Player* player){
 	
 	
 	
-		
+	return true;
 }
