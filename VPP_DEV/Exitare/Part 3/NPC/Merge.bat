@@ -1,1 +1,0 @@
-copy *.sql ALLNPC.sql
