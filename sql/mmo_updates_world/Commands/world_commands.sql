@@ -54,7 +54,7 @@ UPDATE `command` SET `permission`='195' WHERE `name`='gm ingame';
 
 
 /* ex-commands */
-DELETE FROM command WHERE `name` = 'fragen';
+DELETE FROM command WHERE `name` = 'frage';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('frage', 193, 'Syntax: .frage [Frage] [Antwort] [Itemid] [Anzahl]');
 
 DELETE FROM command WHERE `name`='bot add';

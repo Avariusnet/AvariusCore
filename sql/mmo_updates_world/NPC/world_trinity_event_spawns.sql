@@ -1,3 +1,5 @@
+set @OGUID := 980000;
+
 DELETE FROM `gameobject` WHERE `guid` BETWEEN @OGUID+0 AND @OGUID+566;
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`,  `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES
 (@OGUID+0, 195087, 571, 1, 1, 5851.9, 765.9167, 641.0652, 2.548179, 0, 0, 0, 1, 120, 255, 1), -- 195087 (Area: 4613)
@@ -1343,6 +1345,8 @@ INSERT INTO `creature` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position
 (@CGUID+196, 34382, 0, 1, 1, -5147.535, -853.8264, 508.6631, 0.6981317, 120, 0, 0), -- 34382 (Area: 809)
 (@CGUID+197, 34383, 1, 1, 1, -977.6268, -74.53125, 19.17006, 0.2443461, 120, 0, 0), -- 34383 (Area: 5345)
 (@CGUID+198, 34382, 1, 1, 1, -978.0226, -72.64584, 19.29325, 0.4014257, 120, 0, 0); -- 34382 (Area: 5345)
+
+set @CGUID := 1900000;
 
 DELETE FROM `game_event_creature` WHERE `eventEntry`=51;
 INSERT INTO `game_event_creature` (`eventEntry`, `guid`) VALUES 
