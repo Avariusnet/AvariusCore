@@ -531,4 +531,5 @@ void AddSC_wandervolk()
 	new raetsel();
 	new indomatanpc();
 	new lucionnpc();
+	new janarius();
 }

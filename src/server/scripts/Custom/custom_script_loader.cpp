@@ -44,7 +44,7 @@ void AddSC_eventnpc();
 //bosstwo
 void AddSC_boss_two();
 //boss tyranium
-void AddSC_tyranium();
+void AddSC_therakin();
 //boss anna
 void AddSC_anna();
 //racechanger

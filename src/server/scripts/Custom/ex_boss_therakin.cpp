@@ -64,14 +64,14 @@ enum Texts
 uint32 kills = 0;
 
 
-class tyranium : public CreatureScript
+class therakin : public CreatureScript
 {
 public:
-	tyranium() : CreatureScript("tyranium") { }
+	therakin() : CreatureScript("tyranium") { }
 
-	struct tyraniumAI : public ScriptedAI
+	struct therakinAI : public ScriptedAI
 	{
-		tyraniumAI(Creature* creature) : ScriptedAI(creature), Summons(me) { }
+		therakinAI(Creature* creature) : ScriptedAI(creature), Summons(me) { }
 		uint32 armor = 0;
 		void Reset() override
 		{
@@ -257,7 +257,7 @@ public:
 
 	CreatureAI* GetAI(Creature* creature) const override
 	{
-		return new tyraniumAI(creature);
+		return new therakinAI(creature);
 	}
 
 
@@ -265,14 +265,14 @@ public:
 };
 
 
-class tyraniumadd : public CreatureScript
+class therakinadd : public CreatureScript
 {
-public: tyraniumadd() : CreatureScript("tyraniumadd") { }
+public: therakinadd() : CreatureScript("therakinadd") { }
 
 
-		struct tyraniumaddAI : public ScriptedAI
+		struct therakinaddAI : public ScriptedAI
 		{
-			tyraniumaddAI(Creature* creature) : ScriptedAI(creature), Summons(me) { }
+			therakinaddAI(Creature* creature) : ScriptedAI(creature), Summons(me) { }
 			bool deathstate = false;
 			void Reset() override
 			{
@@ -359,14 +359,14 @@ public: tyraniumadd() : CreatureScript("tyraniumadd") { }
 
 		CreatureAI* GetAI(Creature* creature) const override
 		{
-			return new tyraniumaddAI(creature);
+			return new therakinaddAI(creature);
 		}
 
 };
 
 
-void AddSC_tyranium()
+void AddSC_therakin()
 {
-	new tyranium();
-	new tyraniumadd();
+	new therakin();
+	new therakinadd();
 }

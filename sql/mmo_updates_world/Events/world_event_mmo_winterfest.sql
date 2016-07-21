@@ -31,7 +31,7 @@ INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `size`,
     VALUES (@newGameobjectEntry, 5, 1569, 'Log2', 0.68, 2, 1, 0);
 	/* Portal einbauen über WORKBENCH */
 
-DELETE FROM `gameobject` WHERE @startGameobjectGuid BETWEEN @startGameobjectGuid + 1 AND @startGameobjectGuid + 5417;
+DELETE FROM `gameobject` WHERE @startGameobjectGuid BETWEEN @startGameobjectGuid  AND @startGameobjectGuid + 5417;
 INSERT INTO `gameobject` (`guid`, `id`, `map`, `spawnMask`, `phaseMask`, `position_x`, `position_y`, `position_z`, `orientation`, `rotation0`, `rotation1`, `rotation2`, `rotation3`, `spawntimesecs`, `animprogress`, `state`) VALUES
     ((@startGameobjectGuid + 1), 180373, 1, 1, 1, 16252, 16330.8, 177.923, 1.89674, 0, 0, 0.812467, 0.583008, 300, 0, 1),
     ((@startGameobjectGuid + 2), 180373, 1, 1, 1, 16253.9, 16360.7, 177.942, 0.39663, 0, 0, 0.197018, 0.9804, 300, 0, 1),
@@ -10872,5 +10872,6 @@ INSERT INTO `game_event_gameobject` (`eventEntry`, `guid`) VALUES
     (@eventId, (@startGameobjectGuid + 5417));
 
 DELETE FROM `game_event_creature` WHERE `eventEntry` = 70;
+DELETE FROM `game_event_creature` where `eventEntry` = 70 AND `guid` between 800065 AND 800066;
 INSERT INTO `game_event_creature` (`eventEntry`, `guid`) VALUES ('70', '800065');
 INSERT INTO `game_event_creature` (`eventEntry`, `guid`) VALUES ('70', '800066');
