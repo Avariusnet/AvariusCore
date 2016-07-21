@@ -43,8 +43,8 @@ void AddSC_seruc();
 void AddSC_eventnpc();
 //bosstwo
 void AddSC_boss_two();
-//boss tyranium
-void AddSC_therakin();
+//boss eonar
+void AddSC_eonar();
 //boss anna
 void AddSC_anna();
 //racechanger
@@ -125,8 +125,8 @@ void AddCustomScripts()
 	AddSC_eventnpc();
 	//bosstwo
 	AddSC_boss_two();
-	//boss tyranium
-	AddSC_tyranium();
+	//boss eonar
+	AddSC_eonar();
 	//bawz anna
 	AddSC_anna();
 	//racechanger

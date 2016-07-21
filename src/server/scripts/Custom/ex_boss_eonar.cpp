@@ -64,14 +64,14 @@ enum Texts
 uint32 kills = 0;
 
 
-class therakin : public CreatureScript
+class eonar : public CreatureScript
 {
 public:
-	therakin() : CreatureScript("tyranium") { }
+	eonar() : CreatureScript("eonar") { }
 
-	struct therakinAI : public ScriptedAI
+	struct eonarAI : public ScriptedAI
 	{
-		therakinAI(Creature* creature) : ScriptedAI(creature), Summons(me) { }
+		eonarAI(Creature* creature) : ScriptedAI(creature), Summons(me) { }
 		uint32 armor = 0;
 		void Reset() override
 		{
@@ -186,7 +186,7 @@ public:
 				{
 
 				case EVENT_SUMMONS:
-					Talk(SAY_HELP);
+					
 					me->SummonCreature(NPC_ADD, me->GetPositionX() + 5, me->GetPositionY() + 5, me->GetPositionZ(), 0, TEMPSUMMON_TIMED_OR_CORPSE_DESPAWN, 60000);
 					_events.ScheduleEvent(EVENT_SUMMONS, 30000);
 					break;
@@ -198,7 +198,7 @@ public:
 					_events.ScheduleEvent(EVENT_BRAIN_LINK_DAMAGE, 8000);
 					break;
 				case EVENT_MANA_DESTRUCTION:
-					Talk(SAY_RANDOM);
+					
 					DoCastVictim(SPELL_MANA_DESTRUCTION);
 					_events.ScheduleEvent(EVENT_MANA_DESTRUCTION, 1000);
 					break;
@@ -207,7 +207,7 @@ public:
 					_events.ScheduleEvent(EVENT_CRYSTAL_CHAINS, 30000);
 					break;
 				case EVENT_NECROTIC_POISON:
-					Talk(SAY_BERSERK);
+					
 					DoCast(me->GetVictim(), SPELL_NECROTIC_POISON);
 					_events.ScheduleEvent(EVENT_NECROTIC_POISON, 120000);
 					break;
@@ -257,7 +257,7 @@ public:
 
 	CreatureAI* GetAI(Creature* creature) const override
 	{
-		return new therakinAI(creature);
+		return new eonarAI(creature);
 	}
 
 
@@ -265,14 +265,14 @@ public:
 };
 
 
-class therakinadd : public CreatureScript
+class eonaradd : public CreatureScript
 {
-public: therakinadd() : CreatureScript("therakinadd") { }
+public: eonaradd() : CreatureScript("eonaradd") { }
 
 
-		struct therakinaddAI : public ScriptedAI
+		struct eonaraddAI : public ScriptedAI
 		{
-			therakinaddAI(Creature* creature) : ScriptedAI(creature), Summons(me) { }
+			eonaraddAI(Creature* creature) : ScriptedAI(creature), Summons(me) { }
 			bool deathstate = false;
 			void Reset() override
 			{
@@ -359,14 +359,14 @@ public: therakinadd() : CreatureScript("therakinadd") { }
 
 		CreatureAI* GetAI(Creature* creature) const override
 		{
-			return new therakinaddAI(creature);
+			return new eonaraddAI(creature);
 		}
 
 };
 
 
-void AddSC_therakin()
+void AddSC_eonar()
 {
-	new therakin();
-	new therakinadd();
+	new eonar();
+	new eonaradd();
 }
