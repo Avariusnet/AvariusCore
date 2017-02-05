@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -82,19 +82,19 @@ void LFGMgr::_SaveToDB(ObjectGuid guid, uint32 db_guid)
     if (!guid.IsGroup())
         return;
 
+    SQLTransaction trans = CharacterDatabase.BeginTransaction();
+
     PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_LFG_DATA);
-
     stmt->setUInt32(0, db_guid);
-
-    CharacterDatabase.Execute(stmt);
+    trans->Append(stmt);
 
     stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_LFG_DATA);
     stmt->setUInt32(0, db_guid);
-
     stmt->setUInt32(1, GetDungeon(guid));
     stmt->setUInt32(2, GetState(guid));
+    trans->Append(stmt);
 
-    CharacterDatabase.Execute(stmt);
+    CharacterDatabase.CommitTransaction(trans);
 }
 
 /// Load rewards for completing dungeons
@@ -1605,6 +1605,8 @@ LfgLockMap const LFGMgr::GetLockedDungeons(ObjectGuid guid)
             lockData = LFG_LOCKSTATUS_INSUFFICIENT_EXPANSION;
         else if (DisableMgr::IsDisabledFor(DISABLE_TYPE_MAP, dungeon->map, player))
             lockData = LFG_LOCKSTATUS_RAID_LOCKED;
+        else if (DisableMgr::IsDisabledFor(DISABLE_TYPE_LFG_MAP, dungeon->map, player))
+            lockData = LFG_LOCKSTATUS_RAID_LOCKED;
         else if (dungeon->difficulty > DUNGEON_DIFFICULTY_NORMAL && player->GetBoundInstance(dungeon->map, Difficulty(dungeon->difficulty)))
             lockData = LFG_LOCKSTATUS_RAID_LOCKED;
         else if (dungeon->minlevel > level)
@@ -1827,7 +1829,7 @@ bool LFGMgr::HasIgnore(ObjectGuid guid1, ObjectGuid guid2)
 {
     Player* plr1 = ObjectAccessor::FindConnectedPlayer(guid1);
     Player* plr2 = ObjectAccessor::FindConnectedPlayer(guid2);
-    return plr1 && plr2 && (plr1->GetSocial()->HasIgnore(guid2.GetCounter()) || plr2->GetSocial()->HasIgnore(guid1.GetCounter()));
+    return plr1 && plr2 && (plr1->GetSocial()->HasIgnore(guid2) || plr2->GetSocial()->HasIgnore(guid1));
 }
 
 void LFGMgr::SendLfgRoleChosen(ObjectGuid guid, ObjectGuid pguid, uint8 roles)
@@ -1904,8 +1906,16 @@ bool LFGMgr::AllQueued(GuidList const& check)
         return false;
 
     for (GuidList::const_iterator it = check.begin(); it != check.end(); ++it)
-        if (GetState(*it) != LFG_STATE_QUEUED)
+    {
+        LfgState state = GetState(*it);
+        if (state != LFG_STATE_QUEUED)
+        {
+            if (state != LFG_STATE_PROPOSAL)
+                TC_LOG_DEBUG("lfg.allqueued", "Unexpected state found while trying to form new group. Guid: %s, State: %s", (*it).ToString().c_str(), GetStateString(state).c_str());
+
             return false;
+        }
+    }
     return true;
 }
 

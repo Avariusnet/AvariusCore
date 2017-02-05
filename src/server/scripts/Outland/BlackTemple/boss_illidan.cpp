@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -473,12 +473,11 @@ class boss_illidan_stormrage : public CreatureScript
 public:
     boss_illidan_stormrage() : CreatureScript("boss_illidan_stormrage") { }
 
-    struct boss_illidan_stormrageAI : public ScriptedAI
+    struct boss_illidan_stormrageAI : public BossAI
     {
-        boss_illidan_stormrageAI(Creature* creature) : ScriptedAI(creature), Summons(me)
+        boss_illidan_stormrageAI(Creature* creature) : BossAI(creature, DATA_ILLIDAN_STORMRAGE)
         {
             Initialize();
-            instance = creature->GetInstanceScript();
             DoCast(me, SPELL_DUAL_WIELD, true);
         }
 
@@ -519,7 +518,7 @@ public:
                     EnterPhase(PHASE_FLIGHT_SEQUENCE);
                 }
             }
-            Summons.Despawn(summon);
+            summons.Despawn(summon);
         }
 
         void MovementInform(uint32 /*MovementType*/, uint32 /*Data*/) override
@@ -540,8 +539,7 @@ public:
         void EnterCombat(Unit* /*who*/) override
         {
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_IMMUNE_TO_PC);
-            me->setActive(true);
-            DoZoneInCombat();
+            _EnterCombat();
         }
 
         void AttackStart(Unit* who) override
@@ -562,10 +560,7 @@ public:
         {
             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NOT_SELECTABLE);
 
-            instance->SetBossState(DATA_ILLIDAN_STORMRAGE, DONE);
-
-            for (uint8 i = DATA_GO_ILLIDAN_DOOR_R; i < DATA_GO_ILLIDAN_DOOR_L + 1; ++i)
-                instance->HandleGameObject(instance->GetGuidData(i), true);
+            _JustDied();
         }
 
         void KilledUnit(Unit* victim) override
@@ -592,7 +587,7 @@ public:
                     SetEquipmentSlots(false, EQUIP_ID_MAIN_HAND, EQUIP_UNEQUIP, EQUIP_NO_CHANGE);
                 else
                     SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_ID_OFF_HAND, EQUIP_NO_CHANGE);
-                me->SetByteValue(UNIT_FIELD_BYTES_2, 0, SHEATH_STATE_MELEE);
+                me->SetSheath(SHEATH_STATE_MELEE);
             }
         }
 
@@ -880,7 +875,7 @@ public:
                 case 10: // attack
                     DoResetThreat();
                     me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE + UNIT_FLAG_NOT_SELECTABLE);
-                    me->SetByteValue(UNIT_FIELD_BYTES_2, 0, SHEATH_STATE_MELEE);
+                    me->SetSheath(SHEATH_STATE_MELEE);
                     EnterPhase(PHASE_NORMAL_2);
                     break;
                 default:
@@ -904,7 +899,7 @@ public:
             {
                 // Requip warglaives if needed
                 SetEquipmentSlots(false, EQUIP_ID_MAIN_HAND, EQUIP_ID_OFF_HAND, EQUIP_NO_CHANGE);
-                me->SetByteValue(UNIT_FIELD_BYTES_2, 0, SHEATH_STATE_MELEE);
+                me->SetSheath(SHEATH_STATE_MELEE);
             }
             else
             {
@@ -1129,7 +1124,6 @@ public:
         uint32 Timer[EVENT_ENRAGE + 1];
         PhaseIllidan Phase;
     private:
-        InstanceScript* instance;
         EventIllidan Event;
         uint32 TalkCount;
         uint32 TransformCount;
@@ -1138,7 +1132,6 @@ public:
         ObjectGuid MaievGUID;
         ObjectGuid FlameGUID[2];
         ObjectGuid GlaiveGUID[2];
-        SummonList Summons;
     };
 
     CreatureAI* GetAI(Creature* creature) const override
@@ -1415,28 +1408,18 @@ public:
 
             IllidanGUID = instance->GetGuidData(DATA_ILLIDAN_STORMRAGE);
             GateGUID = instance->GetGuidData(DATA_GO_ILLIDAN_GATE);
-            DoorGUID[0] = instance->GetGuidData(DATA_GO_ILLIDAN_DOOR_R);
-            DoorGUID[1] = instance->GetGuidData(DATA_GO_ILLIDAN_DOOR_L);
 
             if (JustCreated) // close all doors at create
-            {
                 instance->HandleGameObject(GateGUID, false);
-
-                for (uint8 i = 0; i < 2; ++i)
-                    instance->HandleGameObject(DoorGUID[i], false);
-            }
             else // open all doors, raid wiped
             {
                 instance->HandleGameObject(GateGUID, true);
                 WalkCount = 1; // skip first wp
-
-                for (uint8 i = 0; i < 2; ++i)
-                    instance->HandleGameObject(DoorGUID[i], true);
             }
 
             KillAllElites();
 
-            me->SetUInt32Value(UNIT_NPC_FLAGS, 0); // Database sometimes has strange values..
+            me->SetUInt32Value(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_NONE); // Database sometimes has strange values..
             me->SetFlag(UNIT_NPC_FLAGS, UNIT_NPC_FLAG_GOSSIP);
             me->setActive(false);
             me->SetVisible(false);
@@ -1483,9 +1466,6 @@ public:
 
         void BeginTalk()
         {
-            instance->SetBossState(DATA_ILLIDAN_STORMRAGE, IN_PROGRESS);
-            for (uint8 i = 0; i < 2; ++i)
-                instance->HandleGameObject(DoorGUID[i], false);
             if (Creature* illidan = ObjectAccessor::GetCreature(*me, IllidanGUID))
             {
                 illidan->RemoveAurasDueToSpell(SPELL_KNEEL);
@@ -1677,10 +1657,6 @@ public:
         {
             switch (WalkCount)
             {
-            case 6:
-                for (uint8 i = 0; i < 2; ++i)
-                    instance->HandleGameObject(DoorGUID[i], true);
-                break;
             case 8:
                 if (Phase == PHASE_WALK)
                     EnterPhase(PHASE_TALK);
@@ -1785,7 +1761,7 @@ public:
 
         void sGossipSelect(Player* player, uint32 /*menuId*/, uint32 /*gossipListId*/) override
         {
-            player->CLOSE_GOSSIP_MENU();
+            CloseGossipMenuFor(player);
             EnterPhase(PHASE_CHANNEL);
         }
 
@@ -1798,7 +1774,6 @@ public:
         ObjectGuid ChannelGUID;
         ObjectGuid SpiritGUID[2];
         ObjectGuid GateGUID;
-        ObjectGuid DoorGUID[2];
         uint32 ChannelCount;
         uint32 WalkCount;
         uint32 TalkCount;
@@ -1813,7 +1788,7 @@ public:
 
 void boss_illidan_stormrage::boss_illidan_stormrageAI::Reset()
 {
-    instance->SetBossState(DATA_ILLIDAN_STORMRAGE, NOT_STARTED);
+    _Reset();
 
     if (Creature* akama = ObjectAccessor::GetCreature(*me, AkamaGUID))
     {
@@ -1832,12 +1807,11 @@ void boss_illidan_stormrage::boss_illidan_stormrageAI::Reset()
     SetEquipmentSlots(false, EQUIP_UNEQUIP, EQUIP_UNEQUIP, EQUIP_NO_CHANGE);
     me->SetDisableGravity(false);
     me->setActive(false);
-    Summons.DespawnAll();
 }
 
 void boss_illidan_stormrage::boss_illidan_stormrageAI::JustSummoned(Creature* summon)
 {
-    Summons.Summon(summon);
+    summons.Summon(summon);
     switch (summon->GetEntry())
     {
     case PARASITIC_SHADOWFIEND:
@@ -1892,7 +1866,7 @@ void boss_illidan_stormrage::boss_illidan_stormrageAI::HandleTalkSequence()
     case 8:
         // Equip our warglaives!
         SetEquipmentSlots(false, EQUIP_ID_MAIN_HAND, EQUIP_ID_OFF_HAND, EQUIP_NO_CHANGE);
-        me->SetByteValue(UNIT_FIELD_BYTES_2, 0, SHEATH_STATE_MELEE);
+        me->SetSheath(SHEATH_STATE_MELEE);
         me->SetWalk(false);
         break;
     case 9:
@@ -1930,7 +1904,7 @@ void boss_illidan_stormrage::boss_illidan_stormrageAI::HandleTalkSequence()
         break;
     case 15:
         DoCast(me, SPELL_DEATH); // Animate his kneeling + stun him
-        Summons.DespawnAll();
+        summons.DespawnAll();
         break;
     case 17:
         if (Creature* akama = ObjectAccessor::GetCreature(*me, AkamaGUID))

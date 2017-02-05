@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -83,16 +83,10 @@
 #  define ATTR_NORETURN __attribute__((__noreturn__))
 #  define ATTR_PRINTF(F, V) __attribute__ ((__format__ (__printf__, F, V)))
 #  define ATTR_DEPRECATED __attribute__((__deprecated__))
-#  define TRINITY_CONSTEXPR constexpr
 #else //COMPILER != COMPILER_GNU
 #  define ATTR_NORETURN
 #  define ATTR_PRINTF(F, V)
 #  define ATTR_DEPRECATED
-#if _MSC_VER >= 1900
-#  define TRINITY_CONSTEXPR constexpr
-#else
-#  define TRINITY_CONSTEXPR
-#endif
 #endif //COMPILER == COMPILER_GNU
 
 #ifdef TRINITY_API_USE_DYNAMIC_LINKING

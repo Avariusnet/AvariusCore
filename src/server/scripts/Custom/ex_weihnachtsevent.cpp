@@ -10,7 +10,6 @@
 #include "Field.h"
 #include "GameEventMgr.h"
 #include "Item.h"
-#include "ItemPrototype.h"
 #include "Language.h"
 #include "Log.h"
 #include "ObjectGuid.h"
@@ -37,12 +36,12 @@ public:
       
         bool status = pPlayer->GetQuestRewardStatus(900001);
         if (status){
-            pPlayer->ADD_GOSSIP_ITEM(7, "Teleportiert mich nach oben.", GOSSIP_SENDER_MAIN, 0);
+			pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Teleportiert mich nach oben.", GOSSIP_SENDER_MAIN, 0, "", 0, false);
         }
 
-		pPlayer->ADD_GOSSIP_ITEM(7, "Was bin ich?", GOSSIP_SENDER_MAIN, 1);
-		pPlayer->ADD_GOSSIP_ITEM(7, "Gibt es eine Moeglichkeit einen Port zu nehmen?", GOSSIP_SENDER_MAIN, 2);
-		pPlayer->ADD_GOSSIP_ITEM(7, "Gebt Ihr mir die Weihnachtsquest?", GOSSIP_SENDER_MAIN, 3);
+		pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Was bin ich?", GOSSIP_SENDER_MAIN, 1,"",0, false);
+		pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Gibt es eine Moeglichkeit einen Port zu nehmen?", GOSSIP_SENDER_MAIN, 2, "", 0, false);
+		pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Gebt Ihr mir die Weihnachtsquest?", GOSSIP_SENDER_MAIN, 3, "", 0, false);
         
 		pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
 		return true;

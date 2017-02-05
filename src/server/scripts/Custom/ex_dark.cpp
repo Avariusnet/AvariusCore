@@ -16,8 +16,8 @@ public: dark() : CreatureScript("dark"){ }
 		{
             Group* group = pPlayer->GetGroup();
             if(group){
-                pPlayer->ADD_GOSSIP_ITEM(7, "Unterstuetzt mich, Prinz! [4 Abzeichen]", GOSSIP_SENDER_MAIN, 0);
-                pPlayer->ADD_GOSSIP_ITEM(7, "Zeigt mir wo der Prinz haust.", GOSSIP_SENDER_MAIN, 1);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Unterstuetzt mich, Prinz! [4 Abzeichen]", GOSSIP_SENDER_MAIN, 0,"",0,false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Zeigt mir wo der Prinz haust.", GOSSIP_SENDER_MAIN, 1, "", 0, false);
             }
 
 			if(!group){

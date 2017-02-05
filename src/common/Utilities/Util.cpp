@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -30,7 +30,7 @@
   #include <arpa/inet.h>
 #endif
 
-Tokenizer::Tokenizer(const std::string &src, const char sep, uint32 vectorReserve)
+Tokenizer::Tokenizer(const std::string &src, const char sep, uint32 vectorReserve /*= 0*/, bool keepEmptyStrings /*= true*/)
 {
     m_str = new char[src.length() + 1];
     memcpy(m_str, src.c_str(), src.length() + 1);
@@ -45,9 +45,10 @@ Tokenizer::Tokenizer(const std::string &src, const char sep, uint32 vectorReserv
     {
         if (*posnew == sep)
         {
-            m_storage.push_back(posold);
-            posold = posnew + 1;
+            if (keepEmptyStrings || posold != posnew)
+                m_storage.push_back(posold);
 
+            posold = posnew + 1;
             *posnew = '\0';
         }
         else if (*posnew == '\0')

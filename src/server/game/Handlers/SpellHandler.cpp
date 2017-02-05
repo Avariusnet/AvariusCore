@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -31,6 +31,7 @@
 #include "SpellAuraEffects.h"
 #include "Player.h"
 #include "Config.h"
+#include "QueryCallback.h"
 
 void WorldSession::HandleClientCastFlags(WorldPacket& recvPacket, uint8 castFlags, SpellCastTargets& targets)
 {
@@ -61,7 +62,7 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
     Player* pUser = _player;
 
     // ignore for remote control state
-    if (pUser->m_mover != pUser)
+    if (pUser->m_unitMovedByMe != pUser)
         return;
 
     uint8 bagIndex, slot, castFlags;
@@ -115,14 +116,14 @@ void WorldSession::HandleUseItemOpcode(WorldPacket& recvPacket)
     }
 
     // only allow conjured consumable, bandage, poisons (all should have the 2^21 item flag set in DB)
-    if (proto->Class == ITEM_CLASS_CONSUMABLE && !(proto->Flags & ITEM_PROTO_FLAG_USEABLE_IN_ARENA) && pUser->InArena())
+    if (proto->Class == ITEM_CLASS_CONSUMABLE && !(proto->Flags & ITEM_FLAG_IGNORE_DEFAULT_ARENA_RESTRICTIONS) && pUser->InArena())
     {
         pUser->SendEquipError(EQUIP_ERR_NOT_DURING_ARENA_MATCH, pItem, NULL);
         return;
     }
 
     // don't allow items banned in arena
-    if (proto->Flags & ITEM_PROTO_FLAG_NOT_USEABLE_IN_ARENA && pUser->InArena())
+    if ((proto->Flags & ITEM_FLAG_NOT_USEABLE_IN_ARENA) && pUser->InArena())
     {
         pUser->SendEquipError(EQUIP_ERR_NOT_DURING_ARENA_MATCH, pItem, NULL);
         return;
@@ -169,38 +170,44 @@ void WorldSession::HandleOpenItemOpcode(WorldPacket& recvPacket)
 {
     TC_LOG_DEBUG("network", "WORLD: CMSG_OPEN_ITEM packet, data length = %i", (uint32)recvPacket.size());
 
-    Player* pUser = _player;
+    Player* player = GetPlayer();
 
     // ignore for remote control state
-    if (pUser->m_mover != pUser)
+    if (player->m_unitMovedByMe != player)
         return;
 
-    uint8 bagIndex, slot;
+    // additional check, client outputs message on its own
+    if (!player->IsAlive())
+    {
+        player->SendEquipError(EQUIP_ERR_YOU_ARE_DEAD, nullptr, nullptr);
+        return;
+    }
 
+    uint8 bagIndex, slot;
     recvPacket >> bagIndex >> slot;
 
     TC_LOG_INFO("network", "bagIndex: %u, slot: %u", bagIndex, slot);
 
-    Item* item = pUser->GetItemByPos(bagIndex, slot);
+    Item* item = player->GetItemByPos(bagIndex, slot);
     if (!item)
     {
-        pUser->SendEquipError(EQUIP_ERR_ITEM_NOT_FOUND, NULL, NULL);
+        player->SendEquipError(EQUIP_ERR_ITEM_NOT_FOUND, nullptr, nullptr);
         return;
     }
 
     ItemTemplate const* proto = item->GetTemplate();
     if (!proto)
     {
-        pUser->SendEquipError(EQUIP_ERR_ITEM_NOT_FOUND, item, NULL);
+        player->SendEquipError(EQUIP_ERR_ITEM_NOT_FOUND, item, nullptr);
         return;
     }
 
     // Verify that the bag is an actual bag or wrapped item that can be used "normally"
-    if (!(proto->Flags & ITEM_PROTO_FLAG_HAS_LOOT) && !item->HasFlag(ITEM_FIELD_FLAGS, ITEM_FLAG_WRAPPED))
+    if (!(proto->Flags & ITEM_FLAG_HAS_LOOT) && !item->HasFlag(ITEM_FIELD_FLAGS, ITEM_FIELD_FLAG_WRAPPED))
     {
-        pUser->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, item, NULL);
-        TC_LOG_ERROR("network", "Possible hacking attempt: Player %s [guid: %u] tried to open item [guid: %u, entry: %u] which is not openable!",
-                pUser->GetName().c_str(), pUser->GetGUID().GetCounter(), item->GetGUID().GetCounter(), proto->ItemId);
+        player->SendEquipError(EQUIP_ERR_CANT_DO_RIGHT_NOW, item, NULL);
+        TC_LOG_ERROR("entities.player.cheat", "Possible hacking attempt: Player %s [guid: %u] tried to open item [guid: %u, entry: %u] which is not openable!",
+            player->GetName().c_str(), player->GetGUID().GetCounter(), item->GetGUID().GetCounter(), proto->ItemId);
         return;
     }
 
@@ -212,7 +219,7 @@ void WorldSession::HandleOpenItemOpcode(WorldPacket& recvPacket)
 
         if (!lockInfo)
         {
-            pUser->SendEquipError(EQUIP_ERR_ITEM_LOCKED, item, NULL);
+            player->SendEquipError(EQUIP_ERR_ITEM_LOCKED, item, nullptr);
             TC_LOG_ERROR("network", "WORLD::OpenItem: item [guid = %u] has an unknown lockId: %u!", item->GetGUID().GetCounter(), lockId);
             return;
         }
@@ -220,45 +227,59 @@ void WorldSession::HandleOpenItemOpcode(WorldPacket& recvPacket)
         // was not unlocked yet
         if (item->IsLocked())
         {
-            pUser->SendEquipError(EQUIP_ERR_ITEM_LOCKED, item, NULL);
+            player->SendEquipError(EQUIP_ERR_ITEM_LOCKED, item, nullptr);
             return;
         }
     }
 
-    if (item->HasFlag(ITEM_FIELD_FLAGS, ITEM_FLAG_WRAPPED))// wrapped?
+    if (item->HasFlag(ITEM_FIELD_FLAGS, ITEM_FIELD_FLAG_WRAPPED))// wrapped?
     {
         PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHARACTER_GIFT_BY_ITEM);
-
         stmt->setUInt32(0, item->GetGUID().GetCounter());
-
-        PreparedQueryResult result = CharacterDatabase.Query(stmt);
-
-        if (result)
-        {
-            Field* fields = result->Fetch();
-            uint32 entry = fields[0].GetUInt32();
-            uint32 flags = fields[1].GetUInt32();
-
-            item->SetGuidValue(ITEM_FIELD_GIFTCREATOR, ObjectGuid::Empty);
-            item->SetEntry(entry);
-            item->SetUInt32Value(ITEM_FIELD_FLAGS, flags);
-            item->SetState(ITEM_CHANGED, pUser);
-        }
-        else
-        {
-            TC_LOG_ERROR("network", "Wrapped item %u don't have record in character_gifts table and will deleted", item->GetGUID().GetCounter());
-            pUser->DestroyItem(item->GetBagSlot(), item->GetSlot(), true);
-            return;
-        }
-
-        stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_GIFT);
-
-        stmt->setUInt32(0, item->GetGUID().GetCounter());
-
-        CharacterDatabase.Execute(stmt);
+        _queryProcessor.AddQuery(CharacterDatabase.AsyncQuery(stmt)
+            .WithPreparedCallback(std::bind(&WorldSession::HandleOpenWrappedItemCallback, this, item->GetPos(), item->GetGUID(), std::placeholders::_1)));
     }
     else
-        pUser->SendLoot(item->GetGUID(), LOOT_CORPSE);
+        player->SendLoot(item->GetGUID(), LOOT_CORPSE);
+}
+
+void WorldSession::HandleOpenWrappedItemCallback(uint16 pos, ObjectGuid itemGuid, PreparedQueryResult result)
+{
+    if (!GetPlayer())
+        return;
+
+    Item* item = GetPlayer()->GetItemByPos(pos);
+    if (!item)
+        return;
+
+    if (item->GetGUID() != itemGuid || !item->HasFlag(ITEM_FIELD_FLAGS, ITEM_FIELD_FLAG_WRAPPED)) // during getting result, gift was swapped with another item
+        return;
+
+    if (!result)
+    {
+        TC_LOG_ERROR("network", "Wrapped item %u don't have record in character_gifts table and will deleted", itemGuid.GetCounter());
+        GetPlayer()->DestroyItem(item->GetBagSlot(), item->GetSlot(), true);
+        return;
+    }
+
+    SQLTransaction trans = CharacterDatabase.BeginTransaction();
+
+    Field* fields = result->Fetch();
+    uint32 entry = fields[0].GetUInt32();
+    uint32 flags = fields[1].GetUInt32();
+
+    item->SetGuidValue(ITEM_FIELD_GIFTCREATOR, ObjectGuid::Empty);
+    item->SetEntry(entry);
+    item->SetUInt32Value(ITEM_FIELD_FLAGS, flags);
+    item->SetState(ITEM_CHANGED, GetPlayer());
+
+    GetPlayer()->SaveInventoryAndGoldToDB(trans);
+
+    PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_GIFT);
+    stmt->setUInt32(0, itemGuid.GetCounter());
+    trans->Append(stmt);
+
+    CharacterDatabase.CommitTransaction(trans);
 }
 
 void WorldSession::HandleGameObjectUseOpcode(WorldPacket& recvData)
@@ -271,8 +292,8 @@ void WorldSession::HandleGameObjectUseOpcode(WorldPacket& recvData)
     if (GameObject* obj = GetPlayer()->GetGameObjectIfCanInteractWith(guid))
     {
         // ignore for remote control state
-        if (GetPlayer()->m_mover != GetPlayer())
-            if (!(GetPlayer()->IsOnVehicle(GetPlayer()->m_mover) || GetPlayer()->IsMounted()) && !obj->GetGOInfo()->IsUsableMounted())
+        if (GetPlayer()->m_unitMovedByMe != GetPlayer())
+            if (!(GetPlayer()->IsOnVehicle(GetPlayer()->m_unitMovedByMe) || GetPlayer()->IsMounted()) && !obj->GetGOInfo()->IsUsableMounted())
                 return;
 
         obj->Use(GetPlayer());
@@ -287,7 +308,7 @@ void WorldSession::HandleGameobjectReportUse(WorldPacket& recvPacket)
     TC_LOG_DEBUG("network", "WORLD: Recvd CMSG_GAMEOBJ_REPORT_USE Message [%s]", guid.ToString().c_str());
 
     // ignore for remote control state
-    if (_player->m_mover != _player)
+    if (_player->m_unitMovedByMe != _player)
         return;
 
     if (GameObject* go = GetPlayer()->GetGameObjectIfCanInteractWith(guid))
@@ -308,7 +329,7 @@ void WorldSession::HandleCastSpellOpcode(WorldPacket& recvPacket)
     TC_LOG_DEBUG("network", "WORLD: got cast spell packet, castCount: %u, spellId: %u, castFlags: %u, data length = %u", castCount, spellId, castFlags, (uint32)recvPacket.size());
 
     // ignore for remote control state (for player case)
-    Unit* mover = _player->m_mover;
+    Unit* mover = _player->m_unitMovedByMe;
     if (mover != _player && mover->GetTypeId() == TYPEID_PLAYER)
     {
         recvPacket.rfinish(); // prevent spam at ignore packet
@@ -500,7 +521,7 @@ void WorldSession::HandleCancelChanneling(WorldPacket& recvData)
     recvData.read_skip<uint32>();                          // spellid, not used
 
     // ignore for remote control state (for player case)
-    Unit* mover = _player->m_mover;
+    Unit* mover = _player->m_unitMovedByMe;
     if (mover != _player && mover->GetTypeId() == TYPEID_PLAYER)
         return;
 
@@ -510,7 +531,7 @@ void WorldSession::HandleCancelChanneling(WorldPacket& recvData)
 void WorldSession::HandleTotemDestroyed(WorldPacket& recvPacket)
 {
     // ignore for remote control state
-    if (_player->m_mover != _player)
+    if (_player->m_unitMovedByMe != _player)
         return;
 
     uint8 slotId;

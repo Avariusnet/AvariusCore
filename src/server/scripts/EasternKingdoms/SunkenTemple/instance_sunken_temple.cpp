@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -176,14 +176,14 @@ public:
 
         void UseStatue(GameObject* go)
         {
-            go->SummonGameObject(GO_ATALAI_LIGHT1, go->GetPositionX(), go->GetPositionY(), go->GetPositionZ(), 0, 0, 0, 0, 0, 0);
+            go->SummonGameObject(GO_ATALAI_LIGHT1, *go, G3D::Quat(), 0);
             go->SetUInt32Value(GAMEOBJECT_FLAGS, 4);
         }
 
         void UseLastStatue(GameObject* go)
         {
             for (uint8 i = 0; i < nStatues; ++i)
-                go->SummonGameObject(GO_ATALAI_LIGHT2, statuePositions[i].GetPositionX(), statuePositions[i].GetPositionY(), statuePositions[i].GetPositionZ(), statuePositions[i].GetOrientation(), 0, 0, 0, 0, 0);
+                go->SummonGameObject(GO_ATALAI_LIGHT2, statuePositions[i], G3D::Quat(), 0);
 
             go->SummonCreature(NPC_ATALALARION, atalalarianPos, TEMPSUMMON_CORPSE_TIMED_DESPAWN, 7200);
         }

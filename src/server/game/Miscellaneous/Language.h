@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -78,7 +78,7 @@ enum TrinityStrings
     LANG_UNKNOWN                        = 45,
     LANG_ERROR                          = 46,
     LANG_NON_EXIST_CHARACTER            = 47,
-    LANG_FRIEND_IGNORE_UNKNOWN          = 48,
+    // unused                           = 48,
     LANG_LEVEL_MINREQUIRED              = 49,
     LANG_LEVEL_MINREQUIRED_AND_ITEM     = 50,
     LANG_NPC_TAINER_HELLO               = 51,
@@ -114,7 +114,10 @@ enum TrinityStrings
     LANG_PVPSTATS_DISABLED              = 81,
     LANG_COMMAND_NEARGRAVEYARD          = 82,
     LANG_COMMAND_NEARGRAVEYARD_NOTFOUND = 83,
-    // Free 84 - 95
+    LANG_GOINFO_SIZE                    = 84,
+    LANG_GOINFO_ADDON                   = 85,
+    LANG_GOINFO_MODEL                   = 86,
+    // Free 87 - 95
 
 
     LANG_GUILD_RENAME_ALREADY_EXISTS    = 96,
@@ -865,7 +868,7 @@ enum TrinityStrings
     LANG_ACCOUNT_NOT_DELETED_SQL_ERROR  = 1002,
     LANG_ACCOUNT_NOT_DELETED            = 1003,
     LANG_ACCOUNT_CREATED                = 1004,
-    LANG_ACCOUNT_TOO_LONG               = 1005,
+    LANG_ACCOUNT_NAME_TOO_LONG          = 1005,
     LANG_ACCOUNT_ALREADY_EXIST          = 1006,
     LANG_ACCOUNT_NOT_CREATED_SQL_ERROR  = 1007,
     LANG_ACCOUNT_NOT_CREATED            = 1008,
@@ -889,9 +892,14 @@ enum TrinityStrings
     LANG_CHARACTER_DELETED_LIST_LINE_CHAT = 1026,
     LANG_SQLDRIVER_QUERY_LOGGING_ENABLED  = 1027,
     LANG_SQLDRIVER_QUERY_LOGGING_DISABLED = 1028,
-    LANG_ACCOUNT_INVALID_BNET_NAME      = 1029, // 6.x ONLY
-    LANG_ACCOUNT_USE_BNET_COMMANDS      = 1030, // 6.x enum value name but different text in DB
-    // Room for more level 4              1031-1099 not used
+    LANG_ACCOUNT_INVALID_BNET_NAME      = 1029, // master branch ONLY
+    LANG_ACCOUNT_USE_BNET_COMMANDS      = 1030, // master branch enum value name but different text in DB
+    LANG_ACCOUNT_PASS_TOO_LONG          = 1031, // master branch ONLY
+    LANG_ACCOUNT_CREATED_BNET_WITH_GAME = 1032, // master branch ONLY
+    LANG_ACCOUNT_CREATED_BNET           = 1033, // master branch ONLY
+    LANG_ACCOUNT_BNET_LIST_HEADER       = 1034, // master branch ONLY
+    LANG_ACCOUNT_BNET_LIST_NO_ACCOUNTS  = 1035, // master branch ONLY
+    // Room for more level 4              1036-1099 not used
 
     // Level 3 (continue)
     LANG_ACCOUNT_SETADDON               = 1100,
@@ -978,7 +986,8 @@ enum TrinityStrings
     LANG_GUILD_INFO_BANK_GOLD           = 1181,
     LANG_GUILD_INFO_MOTD                = 1182,
     LANG_GUILD_INFO_EXTRA_INFO          = 1183,
-    // Room for more level 3              1184-1198 not used
+    LANG_CHANGEACCOUNT_SUCCESS          = 1184,             // log
+    // Room for more level 3              1185-1198 not used
 
     // Debug commands
     LANG_DO_NOT_USE_6X_DEBUG_AREATRIGGER_LEFT = 1999,
@@ -1217,24 +1226,7 @@ enum TrinityStrings
     LANG_INSTANCE_BIND_MISMATCH                   = 11014,
     LANG_CREATURE_NOT_AI_ENABLED                  = 11015,
     LANG_SELECT_PLAYER_OR_PET                     = 11016,
-
-	//MMO Custom start
-	LANG_LOTTERY_ANNOUNCE = 11005,
-	LANG_LOTTERY_ANNOUNCE_JACKPOT = 11006,
-	LANG_LOTTERY_ANNOUNCE_JACKPOT_M_PLAYERS = 11007,
-	VIP_CANT_DO = 11778,
-	VIP_CANT_DO_2 = 11779,
-	VIP_DONT_HAVE = 11780,
-	VIP_COMMANDS = 11781,
-	LANG_FAKE_DND = 12003,
-
-	LANG_SPEC_FORBID = 11610,
-	LANG_SPEC_NOT_ON_ARENA = 11611,
-	LANG_SPEC_ON_ARENA_OR_BG = 11612,
-	LANG_SPEC_ALREADY_SPECTATOR = 11613,
-	LANG_SPEC_DISABLED = 11614,
-	LANG_SPEC_CAN_NOT_CHAT = 11615,
-	//MMO Custom end				
-
+    LANG_SHUTDOWN_DELAYED                         = 11017,
+    LANG_SHUTDOWN_CANCELLED                       = 11018
 };
 #endif

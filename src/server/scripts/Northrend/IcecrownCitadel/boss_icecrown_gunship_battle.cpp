@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -1721,10 +1721,7 @@ class npc_gunship_mage : public CreatureScript
                 me->SetReactState(REACT_PASSIVE);
             }
 
-            void EnterEvadeMode(EvadeReason why) override
-            {
-                ScriptedAI::EnterEvadeMode(why);
-            }
+            void EnterEvadeMode(EvadeReason /*why*/) override { }
 
             void MovementInform(uint32 type, uint32 pointId) override
             {

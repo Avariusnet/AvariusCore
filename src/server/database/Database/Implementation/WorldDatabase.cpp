@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -21,10 +21,12 @@ void WorldDatabaseConnection::DoPrepareStatements()
 {
     if (!m_reconnecting)
         m_stmts.resize(MAX_WORLDDATABASE_STATEMENTS);
+
+
 	/*Exi Start*/
 	PrepareStatement(WORLD_SEL_ITEM_NR, "Select `entry` from item_template where entry = ?", CONNECTION_SYNCH);
 	PrepareStatement(WORLD_SEL_PORT, "Select position_x, position_y, position_z, orientation,map from game_tele where name = ?", CONNECTION_SYNCH);
-    PrepareStatement(WORLD_SEL_QUESTID_BY_NAME, "Select id from quest_template where LogTitle = ?", CONNECTION_SYNCH);
+	PrepareStatement(WORLD_SEL_QUESTID_BY_NAME, "Select id from quest_template where LogTitle = ?", CONNECTION_SYNCH);
 	PrepareStatement(WORLD_SEL_QUESTNAME_BY_ID, "Select LogTitle from quest_template where id = ?", CONNECTION_SYNCH);
 	/*Exi END*/
 

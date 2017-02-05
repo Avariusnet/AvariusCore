@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -28,10 +28,10 @@ enum LoginDatabaseStatements
         When updating more than one field, consider looking at the calling function
         name for a suiting suffix.
     */
-	//MMO Custom start
-	LOGIN_UPD_ACCOUNT_PREMIUM,
+
+	/*Custom Start*/
 	LOGIN_SEL_ACCOUNT_BYID,
-	//MMO Custom end	
+	/*Custom End*/
 
     LOGIN_SEL_REALMLIST,
     LOGIN_DEL_EXPIRED_IP_BANS,
@@ -117,6 +117,7 @@ enum LoginDatabaseStatements
 
     LOGIN_INS_ACCOUNT_MUTE,
     LOGIN_SEL_ACCOUNT_MUTE_INFO,
+    LOGIN_DEL_ACCOUNT_MUTED,
     MAX_LOGINDATABASE_STATEMENTS
 };
 

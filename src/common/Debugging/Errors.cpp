@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -90,7 +90,7 @@ void Warning(char const* file, int line, char const* function, char const* messa
 
 void Abort(char const* file, int line, char const* function)
 {
-    fprintf(stderr, "\n%s:%i in %s ABORTED\n",
+    fprintf(stderr, "\n%s:%i in %s ABORTED.\n",
                    file, line, function);
     *((volatile int*)NULL) = 0;
     exit(1);

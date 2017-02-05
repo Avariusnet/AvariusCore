@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -752,7 +752,7 @@ void WorldSession::HandleTurnInPetitionOpcode(WorldPacket& recvData)
     }
     else
     {
-        TC_LOG_ERROR("network", "Player %s (guid: %u) tried to turn in petition (%s) that is not present in the database", _player->GetName().c_str(), _player->GetGUID().GetCounter(), petitionGuid.ToString().c_str());
+        TC_LOG_ERROR("entities.player.cheat", "Player %s (guid: %u) tried to turn in petition (%s) that is not present in the database", _player->GetName().c_str(), _player->GetGUID().GetCounter(), petitionGuid.ToString().c_str());
         return;
     }
 
@@ -849,12 +849,18 @@ void WorldSession::HandleTurnInPetitionOpcode(WorldPacket& recvData)
 
         Guild::SendCommandResult(this, GUILD_COMMAND_CREATE, ERR_GUILD_COMMAND_SUCCESS, name);
 
-        // Add members from signatures
-        for (uint8 i = 0; i < signatures; ++i)
         {
-            Field* fields = result->Fetch();
-            guild->AddMember(ObjectGuid(HighGuid::Player, fields[0].GetUInt32()));
-            result->NextRow();
+            SQLTransaction trans = CharacterDatabase.BeginTransaction();
+
+            // Add members from signatures
+            for (uint8 i = 0; i < signatures; ++i)
+            {
+                Field* fields = result->Fetch();
+                guild->AddMember(trans, ObjectGuid(HighGuid::Player, fields[0].GetUInt32()));
+                result->NextRow();
+            }
+
+            CharacterDatabase.CommitTransaction(trans);
         }
     }
     else

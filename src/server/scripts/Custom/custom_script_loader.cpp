@@ -21,14 +21,14 @@
 // The name of this function should match:
 // void Add${NameOfDirectory}Scripts()
 
+//eventnpc
+void AddSC_eventnpc();
+//autobalancer
 //Load MMO Commands
-void AddSC_mmowning_commandscript();
+void AddSC_custom_commandscript();
 //Load MMO Elite Commands
-void AddSC_vip_commandscript();
+//void AddSC_vip_commandscript();
 //VIP NPC
-void AddSC_npc_vip();
-//TeleNPC2
-void AddSC_npc_teleport();
 // Fake Players
 //void AddSC_fake_commandscript();
 // WorldChat
@@ -39,8 +39,6 @@ void AddSC_custom_CongratsOnLevel();
 void AddSC_npcfirstchar();
 //porter
 void AddSC_seruc();
-//eventnpc
-void AddSC_eventnpc();
 //bosstwo
 void AddSC_boss_two();
 //boss eonar
@@ -68,15 +66,12 @@ void AddSC_lighthardmode();
 //dark2
 void AddSC_dark2();
 //playerhello
-void AddSC_Announce_NewPlayer();
+void AddSC_mixed_scripts();
 //halloween
 void AddSC_halloween();
-//portitem
-void AddSC_port_item();
+
 //wandervolk
 void AddSC_wandervolk();
-//commands
-void AddSC_bot_commands();
 
 //Neujahrsevent
 void AddSC_neujahrsevent();
@@ -93,24 +88,28 @@ void AddSC_inselnpc();
 //codenpc
 void AddSC_codenpc();
 
-void AddSC_minion();
-
 //automatisierungsscripte
 void AddSC_automaticsupport();
 
-void AddSC_ex_commands();
+//Quest report commands
+void AddSC_ex_reportcommands();
+
+//Exis Testcommands
+void AddSC_ex_testcommands();
+
+//Custom XP COmmands
+void AddSC_ex_customxpcommands();
+
 
 
 void AddCustomScripts()
 {
+		//eventnpc
+	AddSC_eventnpc();
 	//Load MMO Commands
-	AddSC_mmowning_commandscript();
+	AddSC_custom_commandscript();
 	//Load MMO Elite Commands
-	AddSC_vip_commandscript();
-	//VIP NPC
-	AddSC_npc_vip();
-	// TeleNPC2
-	AddSC_npc_teleport();
+	//AddSC_vip_commandscript();
 	// Fake Players
 	//AddSC_fake_commandscript();
 	//WorldChat
@@ -121,8 +120,6 @@ void AddCustomScripts()
 	AddSC_npcfirstchar();
 	//porter
 	AddSC_seruc();
-	//eventnpc
-	AddSC_eventnpc();
 	//bosstwo
 	AddSC_boss_two();
 	//boss eonar
@@ -150,15 +147,14 @@ void AddCustomScripts()
 	//dark2
 	AddSC_dark2();
 	//helloplayer
-	AddSC_Announce_NewPlayer();
+	AddSC_mixed_scripts();
 	//halloween
 	AddSC_halloween();
-	//portitem
-	AddSC_port_item();
+
 	//wandervolk
 	AddSC_wandervolk();
 
-	AddSC_bot_commands();
+
 	//Neujahrsevent
 	AddSC_neujahrsevent();
 
@@ -174,10 +170,14 @@ void AddCustomScripts()
 	//codenpc
 	AddSC_codenpc();
 
-	AddSC_minion();
-
 	//automatisierungsscripte
 	AddSC_automaticsupport();
     
-    AddSC_ex_commands();
+    AddSC_ex_reportcommands();
+
+	AddSC_ex_testcommands();
+
+	AddSC_ex_customxpcommands();
+
+
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -152,6 +152,7 @@ enum AuctionBotConfigUInt32Values
     CONFIG_AHBOT_CLASS_RANDOMSTACKRATIO_KEY,
     CONFIG_AHBOT_CLASS_RANDOMSTACKRATIO_MISC,
     CONFIG_AHBOT_CLASS_RANDOMSTACKRATIO_GLYPH,
+    CONFIG_AHBOT_ACCOUNT_ID,
     CONFIG_UINT32_AHBOT_UINT32_COUNT
 };
 
@@ -192,6 +193,8 @@ enum AuctionBotConfigBoolValues
 enum AuctionBotConfigFloatValues
 {
     CONFIG_AHBOT_BUYER_CHANCE_FACTOR,
+    CONFIG_AHBOT_BIDPRICE_MIN,
+    CONFIG_AHBOT_BIDPRICE_MAX,
     CONFIG_AHBOT_FLOAT_COUNT
 };
 
@@ -224,6 +227,9 @@ public:
 
     uint32 GetItemPerCycleBoost() const { return _itemsPerCycleBoost; }
     uint32 GetItemPerCycleNormal() const { return _itemsPerCycleNormal; }
+    uint32 GetRandChar() const;
+    uint32 GetRandCharExclude(uint32 exclude) const;
+    bool IsBotChar(uint32 characterID) const;
     void Reload() { GetConfigFromFile(); }
 
     static char const* GetHouseTypeName(AuctionHouseType houseType);
@@ -231,6 +237,7 @@ public:
 private:
     std::string _AHBotIncludes;
     std::string _AHBotExcludes;
+    std::vector<uint32> _AHBotCharacters;
     uint32 _itemsPerCycleBoost;
     uint32 _itemsPerCycleNormal;
 

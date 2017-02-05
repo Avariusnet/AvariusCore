@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -43,7 +43,7 @@ void WorldSession::HandleGuildCreateOpcode(WorldPacket& recvPacket)
     std::string name;
     recvPacket >> name;
 
-    TC_LOG_ERROR("guild", "CMSG_GUILD_CREATE: Possible hacking-attempt: %s tried to create a guild [Name: %s] using cheats", GetPlayerInfo().c_str(), name.c_str());
+    TC_LOG_ERROR("entities.player.cheat", "CMSG_GUILD_CREATE: Possible hacking-attempt: %s tried to create a guild [Name: %s] using cheats", GetPlayerInfo().c_str(), name.c_str());
 }
 
 void WorldSession::HandleGuildInviteOpcode(WorldPacket& recvPacket)

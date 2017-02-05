@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2006-2010 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -34,7 +34,7 @@ enum Yells
     SAY_AGGRO               = 1,
     EMOTE_SUBMERGE          = 2,
     EMOTE_BURROWER          = 3,
-    SAY_EMERGE              = 4,
+    EMOTE_EMERGE            = 4,
     SAY_LEECHING_SWARM      = 5,
     EMOTE_LEECHING_SWARM    = 6,
     SAY_KILL_PLAYER         = 7,
@@ -292,10 +292,10 @@ class boss_anubarak_trial : public CreatureScript
                 if (!UpdateVictim())
                     return;
 
+                events.Update(diff);
+
                 if (me->HasUnitState(UNIT_STATE_CASTING))
                     return;
-
-                events.Update(diff);
 
                 while (uint32 eventId = events.ExecuteEvent())
                 {
@@ -365,6 +365,7 @@ class boss_anubarak_trial : public CreatureScript
                             me->RemoveAurasDueToSpell(SPELL_SUBMERGE_ANUBARAK);
                             me->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE | UNIT_FLAG_NOT_SELECTABLE);
                             DoCast(me, SPELL_EMERGE_ANUBARAK);
+                            Talk(EMOTE_EMERGE);
                             events.SetPhase(PHASE_MELEE);
                             events.ScheduleEvent(EVENT_FREEZE_SLASH, 15*IN_MILLISECONDS, 0, PHASE_MELEE);
                             events.ScheduleEvent(EVENT_PENETRATING_COLD, 20*IN_MILLISECONDS, PHASE_MELEE);
@@ -402,6 +403,8 @@ class boss_anubarak_trial : public CreatureScript
                             break;
                     }
 
+                    if (me->HasUnitState(UNIT_STATE_CASTING))
+                        return;
                 }
 
                 if (HealthBelowPct(30) && events.IsInPhase(PHASE_MELEE) && !_reachedPhase3)

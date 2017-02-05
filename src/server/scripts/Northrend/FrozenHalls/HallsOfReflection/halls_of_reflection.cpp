@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -349,7 +349,7 @@ class npc_jaina_or_sylvanas_intro_hor : public CreatureScript
             if (InstanceScript* instance = creature->GetInstanceScript())
                 if (instance->GetData(DATA_QUEL_DELAR_EVENT) == IN_PROGRESS || instance->GetData(DATA_QUEL_DELAR_EVENT) == SPECIAL)
                 {
-                    player->PlayerTalkClass->ClearMenus();
+                    ClearGossipMenuFor(player);
                     return true;
                 }
 
@@ -366,7 +366,7 @@ class npc_jaina_or_sylvanas_intro_hor : public CreatureScript
 
             void sGossipSelect(Player* player, uint32 /*menuId*/, uint32 gossipListId) override
             {
-                player->PlayerTalkClass->ClearMenus();
+                ClearGossipMenuFor(player);
 
                 switch (gossipListId)
                 {
@@ -860,7 +860,7 @@ class npc_jaina_or_sylvanas_escape_hor : public CreatureScript
 
             void sGossipSelect(Player* player, uint32 /*menuId*/, uint32 gossipListId) override
             {
-                player->PlayerTalkClass->ClearMenus();
+                ClearGossipMenuFor(player);
 
                 switch (gossipListId)
                 {

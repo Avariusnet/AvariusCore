@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -47,6 +47,11 @@ bool PetAI::_needToStop()
     // This is needed for charmed creatures, as once their target was reset other effects can trigger threat
     if (me->IsCharmed() && me->GetVictim() == me->GetCharmer())
         return true;
+
+    // dont allow pets to follow targets far away from owner
+    if (Unit* owner = me->GetCharmerOrOwner())
+        if (owner->GetExactDist(me) >= (owner->GetVisibilityRange()-10.0f))
+            return true;
 
     return !me->IsValidAttackTarget(me->GetVictim());
 }
@@ -134,7 +139,6 @@ void PetAI::UpdateAI(uint32 diff)
     // Autocast (cast only in combat or persistent spells in any state)
     if (!me->HasUnitState(UNIT_STATE_CASTING))
     {
-        typedef std::vector<std::pair<Unit*, Spell*> > TargetSpellList;
         TargetSpellList targetSpellStore;
 
         for (uint8 i = 0; i < me->GetPetAutoSpellSize(); ++i)
@@ -222,7 +226,7 @@ void PetAI::UpdateAI(uint32 diff)
             }
         }
 
-        //found units to cast on to
+        // found units to cast on to
         if (!targetSpellStore.empty())
         {
             TargetSpellList::iterator it = targetSpellStore.begin();
@@ -462,7 +466,7 @@ void PetAI::DoAttack(Unit* target, bool chase)
             ClearCharmInfoFlags();
             me->GetCharmInfo()->SetIsCommandAttack(oldCmdAttack); // For passive pets commanded to attack so they will use spells
             me->GetMotionMaster()->Clear();
-            me->GetMotionMaster()->MoveChase(target);
+            me->GetMotionMaster()->MoveChase(target, me->GetPetChaseDistance());
         }
         else // (Stay && ((Aggressive || Defensive) && In Melee Range)))
         {

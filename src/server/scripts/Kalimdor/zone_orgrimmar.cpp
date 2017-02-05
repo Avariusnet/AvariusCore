@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -32,6 +32,8 @@ EndContentData */
 #include "ScriptedCreature.h"
 #include "ScriptedGossip.h"
 #include "Player.h"
+#include "Cell.h"
+#include "CellImpl.h"
 #include "GridNotifiers.h"
 
 /*######
@@ -176,35 +178,35 @@ public:
 
     bool OnGossipSelect(Player* player, Creature* creature, uint32 /*sender*/, uint32 action) override
     {
-        player->PlayerTalkClass->ClearMenus();
+        ClearGossipMenuFor(player);
         switch (action)
         {
             case GOSSIP_ACTION_INFO_DEF+1:
-                player->ADD_GOSSIP_ITEM_DB(OPTION_WHAT_DISCOVERIES, GOSSIP_MENU_OPTION_ID_ALL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
-                player->SEND_GOSSIP_MENU(GOSSIP_THE_SHATTERED_HAND, creature->GetGUID());
+                AddGossipItemFor(player, OPTION_WHAT_DISCOVERIES, GOSSIP_MENU_OPTION_ID_ALL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+2);
+                SendGossipMenuFor(player, GOSSIP_THE_SHATTERED_HAND, creature->GetGUID());
                 break;
             case GOSSIP_ACTION_INFO_DEF+2:
-                player->ADD_GOSSIP_ITEM_DB(OPTION_USURPER, GOSSIP_MENU_OPTION_ID_ALL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
-                player->SEND_GOSSIP_MENU(GOSSIP_IT_WOULD_APPEAR_AS, creature->GetGUID());
+                AddGossipItemFor(player, OPTION_USURPER, GOSSIP_MENU_OPTION_ID_ALL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+3);
+                SendGossipMenuFor(player, GOSSIP_IT_WOULD_APPEAR_AS, creature->GetGUID());
                 break;
             case GOSSIP_ACTION_INFO_DEF+3:
-                player->ADD_GOSSIP_ITEM_DB(OPTION_WITH_ALL_DUE_RESPECT, GOSSIP_MENU_OPTION_ID_ALL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
-                player->SEND_GOSSIP_MENU(GOSSIP_THE_BROOD_MOTHER, creature->GetGUID());
+                AddGossipItemFor(player, OPTION_WITH_ALL_DUE_RESPECT, GOSSIP_MENU_OPTION_ID_ALL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+4);
+                SendGossipMenuFor(player, GOSSIP_THE_BROOD_MOTHER, creature->GetGUID());
                 break;
             case GOSSIP_ACTION_INFO_DEF+4:
-                player->ADD_GOSSIP_ITEM_DB(OPTION_I_I_DID_NOT_THINK_OF, GOSSIP_MENU_OPTION_ID_ALL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
-                player->SEND_GOSSIP_MENU(GOSSIP_SO_MUCH_TO_LEARN, creature->GetGUID());
+                AddGossipItemFor(player, OPTION_I_I_DID_NOT_THINK_OF, GOSSIP_MENU_OPTION_ID_ALL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+5);
+                SendGossipMenuFor(player, GOSSIP_SO_MUCH_TO_LEARN, creature->GetGUID());
                 break;
             case GOSSIP_ACTION_INFO_DEF+5:
-                player->ADD_GOSSIP_ITEM_DB(OPTION_I_LIVE_ONLY_TO_SERVE, GOSSIP_MENU_OPTION_ID_ALL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
-                player->SEND_GOSSIP_MENU(GOSSIP_I_DO_NOT_FAULT_YOU, creature->GetGUID());
+                AddGossipItemFor(player, OPTION_I_LIVE_ONLY_TO_SERVE, GOSSIP_MENU_OPTION_ID_ALL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+6);
+                SendGossipMenuFor(player, GOSSIP_I_DO_NOT_FAULT_YOU, creature->GetGUID());
                 break;
             case GOSSIP_ACTION_INFO_DEF+6:
-                player->ADD_GOSSIP_ITEM_DB(OPTION_OF_COURSE_WARCHIEF, GOSSIP_MENU_OPTION_ID_ALL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+7);
-                player->SEND_GOSSIP_MENU(GOSSIP_NOW_PAY_ATTENTION, creature->GetGUID());
+                AddGossipItemFor(player, OPTION_OF_COURSE_WARCHIEF, GOSSIP_MENU_OPTION_ID_ALL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+7);
+                SendGossipMenuFor(player, GOSSIP_NOW_PAY_ATTENTION, creature->GetGUID());
                 break;
             case GOSSIP_ACTION_INFO_DEF+7:
-                player->CLOSE_GOSSIP_MENU();
+                CloseGossipMenuFor(player);
                 player->AreaExploredOrEventHappens(QUEST_WHAT_THE_WIND_CARRIES);
                 break;
         }
@@ -217,9 +219,9 @@ public:
             player->PrepareQuestMenu(creature->GetGUID());
 
         if (player->GetQuestStatus(QUEST_WHAT_THE_WIND_CARRIES) == QUEST_STATUS_INCOMPLETE)
-            player->ADD_GOSSIP_ITEM_DB(OPTION_PLEASE_SHARE_YOUR, GOSSIP_MENU_OPTION_ID_ALL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
+            AddGossipItemFor(player, OPTION_PLEASE_SHARE_YOUR, GOSSIP_MENU_OPTION_ID_ALL, GOSSIP_SENDER_MAIN, GOSSIP_ACTION_INFO_DEF+1);
 
-        player->SEND_GOSSIP_MENU(GOSSIP_MEMBERS_OF_THE_HORDE, creature->GetGUID());
+        SendGossipMenuFor(player, GOSSIP_MEMBERS_OF_THE_HORDE, creature->GetGUID());
         return true;
     }
 
@@ -348,7 +350,7 @@ public:
             }
         }
 
-        void UpdateAI(uint32 diff) override 
+        void UpdateAI(uint32 diff) override
         {
             events.Update(diff);
 
@@ -361,7 +363,7 @@ public:
                         me->GetMotionMaster()->MoveIdle();
                         if (Creature* gryshka = ObjectAccessor::GetCreature(*me, gryshkaGUID))
                         {
-                            me->SetFacingTo(me->GetAngle(gryshka->GetPositionX(), gryshka->GetPositionY()));
+                            me->SetFacingToObject(gryshka);
                             gryshka->AI()->Talk(SAY_GRYSHKA_1);
                         }
                         events.ScheduleEvent(EVENT_SCENE_2, 4500);
@@ -528,7 +530,7 @@ enum HeraldTalk
 
     SAY_SYLVANAS_0              = 0, // Lady Proudmoore, the Warchief speaks the truth. This subterfuge was set in motion by Varimathras and Grand Apothecary Putress. It was not the Horde's doing.
     SAY_SYLVANAS_1              = 1, // As the combined Horde and Alliance forces began their assault upon the Wrath Gate, an uprising broke out in the Undercity. Varimathras and hordes of his demonic brethren attacked. Hundreds of my people were slain in the coup. I barely managed to escape with my life.
-    
+
     SAY_JAINA_0                 = 0, // Thrall, what has happened? The King is preparing for war...
     SAY_JAINA_1                 = 1, // I will deliver this information to King Wrynn, Thrall, but...
     SAY_JAINA_2                 = 2, // Bolvar was like a brother to him. In the King's absence, Bolvar kept the Alliance united. He found strength for our people in our darkest hours. He watched over Anduin, raising him as his own.
@@ -629,7 +631,7 @@ public:
 
                 if (Creature* jaina = me->SummonCreature(NPC_JAINA_PROUDMOORE, PortalSpawnPosition))
                 {
-                    me->SetFacingTo(me->GetAngle(jaina->GetPositionX(), jaina->GetPositionY()));
+                    me->SetFacingToObject(jaina);
                     jainaGUID = jaina->GetGUID();
                     jaina->CastSpell(jaina, SPELL_JAINA_SPAWNIN);
                 }
@@ -687,7 +689,7 @@ public:
                     case EVENT_HERALD_SCENE2:
                         Talk(SAY_THRALL_1);
                         if (Creature* jaina = ObjectAccessor::GetCreature(*me, jainaGUID))
-                            me->SetFacingTo(me->GetAngle(jaina->GetPositionX(), jaina->GetPositionY()));
+                            me->SetFacingToObject(jaina);
                         events.ScheduleEvent(EVENT_HERALD_SCENE3, 3500);
                         break;
                     case EVENT_HERALD_SCENE3:

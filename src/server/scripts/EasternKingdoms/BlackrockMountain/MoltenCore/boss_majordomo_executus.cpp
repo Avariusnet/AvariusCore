@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -148,6 +148,9 @@ class boss_majordomo : public CreatureScript
                             default:
                                 break;
                         }
+
+                        if (me->HasUnitState(UNIT_STATE_CASTING))
+                            return;
                     }
 
                     DoMeleeAttackIfReady();
@@ -197,7 +200,7 @@ class boss_majordomo : public CreatureScript
             {
                 if (menuId == MENU_OPTION_YOU_CHALLENGED_US && gossipListId == OPTION_ID_YOU_CHALLENGED_US)
                 {
-                    player->CLOSE_GOSSIP_MENU();
+                    CloseGossipMenuFor(player);
                     DoAction(ACTION_START_RAGNAROS);
                 }
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -70,6 +70,9 @@ enum MiscCreatures
     NPC_SHADIKITH_THE_GLIDER        = 16180,
     NPC_TERESTIAN_ILLHOOF           = 15688,
     NPC_MOROES                      = 15687,
+    NPC_ATTUMEN_UNMOUNTED           = 15550,
+    NPC_ATTUMEN_MOUNTED             = 16152,
+    NPC_MIDNIGHT                    = 16151,
 
     // Trash
     NPC_COLDMIST_WIDOW              = 16171,

@@ -14,8 +14,8 @@ public: dark2() : CreatureScript("dark2"){ }
 
 		bool OnGossipHello(Player *pPlayer, Creature* _creature)
 		{
-			pPlayer->ADD_GOSSIP_ITEM(7, "Ich fordere euren Bruder heraus!", GOSSIP_SENDER_MAIN, 0);
-			pPlayer->ADD_GOSSIP_ITEM(7, "Ich fordere euren Bruder heraus! [Hardmode]", GOSSIP_SENDER_MAIN, 1);
+			pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Ich fordere euren Bruder heraus!", GOSSIP_SENDER_MAIN, 0, "", 0, false);
+			pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Ich fordere euren Bruder heraus! [Hardmode]", GOSSIP_SENDER_MAIN, 1, "", 0, false);
 			pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
 			return true;
 		}

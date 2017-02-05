@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -64,7 +64,7 @@ class npc_beaten_corpse : public CreatureScript
             {
                 if (menuId == GOSSIP_MENU_OPTION_INSPECT_BODY && gossipListId == GOSSIP_OPTION_ID_BEATEN_CORPSE)
                 {
-                    player->CLOSE_GOSSIP_MENU();
+                    CloseGossipMenuFor(player);
                     player->TalkedToCreature(me->GetEntry(), me->GetGUID());
                 }
             }

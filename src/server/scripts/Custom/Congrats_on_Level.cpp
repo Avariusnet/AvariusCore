@@ -36,94 +36,125 @@ So if you wanted to offer 100 gold, a pet cat (pet carrier, black tabby) and a p
 You must do this for each level you want to have give rewards. At this time, since items are automatically added, the player loses the reward(s) if
 their bags are full.
 */
-
+#include "AccountMgr.h"
+#include "time.h"
+#include <stdio.h>
+#include "Bag.h"
+#include "Common.h"
+#include "Config.h"
+#include "DatabaseEnv.h"
+#include "DBCStructure.h"
+#include "Define.h"
+#include "Field.h"
+#include "GameEventMgr.h"
+#include "Item.h"
+#include "Language.h"
+#include "Log.h"
+#include "ObjectGuid.h"
+#include "ObjectMgr.h"
+#include "Player.h"
+#include "QueryResult.h"
 #include "ScriptMgr.h"
+#include "SharedDefines.h"
+#include "Transaction.h"
+#include "WorldSession.h"
+#include <sstream>
+#include <string>
+#include <stdlib.h>
+#include "ObjectGuid.h"
+#include "ObjectMgr.h"
+
 
 class custom_CongratsOnLevel : public PlayerScript
 {
 public:
     custom_CongratsOnLevel() : PlayerScript("custom_CongratsOnLevel") { }
 
-    void OnLevelChanged(Player* player, uint8 newLevel)
-    {
-        uint32 money /*item, item2, spell*/;
+	void OnLevelChanged(Player* player, uint8 newLevel)
+	{
+		uint32 money /*item, item2, spell*/;
 
-        switch(++newLevel)
-        {
-            case 10:
-		//1G
-        money = 1;
-        //item = ITEMID;
-        //item2 = ITEMID2;
-        //spell = SPELLID;
+		
+		if (sConfigMgr->GetBoolDefault("Congrats.Level", true)) {
+			switch (++newLevel)
+			{
+			case 10:
+				//1G
+				money = 1;
+				//item = ITEMID;
+				//item2 = ITEMID2;
+				//spell = SPELLID;
 
-        break;
-            case 20:
-		//10G
-        money = 10;
-        //item = ITEMID;
-        //item2 = ITEMID2;
-        //spell = SPELLID;
-        break;
-            case 30:
-		//25G
-        money = 25;
-        //item = ITEMID;
-        //item2 = ITEMID2;
-        //spell = SPELLID;
-        break;
-            case 40:
-		//50G
-        money = 50;
-        //item = ITEMID;
-        //item2 = ITEMID2;
-        //spell = SPELLID;
-        break;
-            case 50:
-		//100G
-        money = 100;
-        //item = ITEMID;
-        //item2 = ITEMID2;
-        //spell = SPELLID;
-        break;
-            case 60:
-		//200G
-		money = 200;
-        //item = ITEMID;
-        //item2 = ITEMID2;
-        //spell = SPELLID;
-        break;
-            case 70:
-		//500G
-        money = 500;
-        //item = ITEMID;
-        //item2 = ITEMID2;
-        //spell = SPELLID;
-        break;
-            case 80:
-		//1000G
-        money = 1000;			
-        //item = ITEMID;
-        //item2 = ITEMID2;
-        //spell = SPELLID;
-        break;
-            default:
-        return;
-        }
+				break;
+			case 20:
+				//10G
+				money = 10;
+				//item = ITEMID;
+				//item2 = ITEMID2;
+				//spell = SPELLID;
+				break;
+			case 30:
+				//25G
+				money = 25;
+				//item = ITEMID;
+				//item2 = ITEMID2;
+				//spell = SPELLID;
+				break;
+			case 40:
+				//50G
+				money = 50;
+				//item = ITEMID;
+				//item2 = ITEMID2;
+				//spell = SPELLID;
+				break;
+			case 50:
+				//100G
+				money = 100;
+				//item = ITEMID;
+				//item2 = ITEMID2;
+				//spell = SPELLID;
+				break;
+			case 60:
+				//200G
+				money = 200;
+				//item = ITEMID;
+				//item2 = ITEMID2;
+				//spell = SPELLID;
+				break;
+			case 70:
+				//500G
+				money = 500;
+				//item = ITEMID;
+				//item2 = ITEMID2;
+				//spell = SPELLID;
+				break;
+			case 80:
+				//1000G
+				money = 1000;
+				//item = ITEMID;
+				//item2 = ITEMID2;
+				//spell = SPELLID;
+				break;
+			default:
+				return;
+			}
 
-        std::ostringstream ss;
-        ss << "|cffFF0000[MMOwning]|r Gratuliert " << player->GetName() << " zum Level " << (uint32)newLevel;
-        sWorld->SendServerMessage(SERVER_MSG_STRING, ss.str().c_str());
+			std::ostringstream ss;
+			ss << "|cffFF0000[MMOwning]|r Gratuliert " << player->GetName() << " zum Level " << (uint32)newLevel;
+			sWorld->SendServerMessage(SERVER_MSG_STRING, ss.str().c_str());
 
-        std::ostringstream ss2;
-        //ss2 << "Du wurdest mit " << money << " gold und Items belohnt!";
-		ss2 << "Du wurdest mit " << money << " Gold belohnt!";
-        player->GetSession()->SendNotification(ss2.str().c_str());
-        player->ModifyMoney(money*GOLD);
-		//player->AddItem(item, 1);
-        //player->AddItem(item2, 1);
-		//player->learnSpell(spell, false);
-    }
+			std::ostringstream ss2;
+			//ss2 << "Du wurdest mit " << money << " gold und Items belohnt!";
+			ss2 << "Du wurdest mit " << money << " Gold belohnt!";
+			player->GetSession()->SendNotification(ss2.str().c_str());
+			player->ModifyMoney(money*GOLD);
+			//player->AddItem(item, 1);
+			//player->AddItem(item2, 1);
+			//player->learnSpell(spell, false);
+		}
+	}
+
+       
 };
 
 void AddSC_custom_CongratsOnLevel()

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -83,7 +83,7 @@ public:
 
         if (type == 2 || type == 3 || type == 5 )
         {
-            if (Player::GetArenaTeamIdFromDB(target->GetGUID(), type) != 0)
+            if (Player::GetArenaTeamIdFromCharacterInfo(target->GetGUID(), type) != 0)
             {
                 handler->PSendSysMessage(LANG_ARENA_ERROR_SIZE, target->GetName().c_str());
                 handler->SetSentErrorMessage(true);

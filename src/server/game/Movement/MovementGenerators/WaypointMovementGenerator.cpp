@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -96,6 +96,10 @@ void WaypointMovementGenerator<Creature>::OnArrived(Creature* creature)
 bool WaypointMovementGenerator<Creature>::StartMove(Creature* creature)
 {
     if (!i_path || i_path->empty())
+        return false;
+
+    // Dont allow dead creatures to move
+    if (!creature->IsAlive())
         return false;
 
     if (Stopped())

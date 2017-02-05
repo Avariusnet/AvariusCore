@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -55,6 +55,7 @@ class BattlegroundMap;
 class InstanceMap;
 class Transport;
 namespace Trinity { struct ObjectUpdater; }
+namespace VMAP { enum class ModelIgnoreFlags : uint32; }
 
 struct ScriptAction
 {
@@ -496,7 +497,7 @@ class TC_GAME_API Map : public GridRefManager<NGridType>
 
         float GetWaterOrGroundLevel(uint32 phasemask, float x, float y, float z, float* ground = NULL, bool swim = false) const;
         float GetHeight(uint32 phasemask, float x, float y, float z, bool vmap = true, float maxSearchDist = DEFAULT_HEIGHT_SEARCH) const;
-        bool isInLineOfSight(float x1, float y1, float z1, float x2, float y2, float z2, uint32 phasemask) const;
+        bool isInLineOfSight(float x1, float y1, float z1, float x2, float y2, float z2, uint32 phasemask, VMAP::ModelIgnoreFlags ignoreFlags) const;
         void Balance() { _dynamicTree.balance(); }
         void RemoveGameObjectModel(const GameObjectModel& model) { _dynamicTree.remove(model); }
         void InsertGameObjectModel(const GameObjectModel& model) { _dynamicTree.insert(model); }
@@ -768,7 +769,8 @@ class TC_GAME_API InstanceMap : public Map
         bool Reset(uint8 method);
         uint32 GetScriptId() const { return i_script_id; }
         InstanceScript* GetInstanceScript() { return i_data; }
-        void PermBindAllPlayers(Player* source);
+        InstanceScript const* GetInstanceScript() const { return i_data; }
+        void PermBindAllPlayers();
         void UnloadAll() override;
         EnterState CannotEnter(Player* player) override;
         void SendResetWarnings(uint32 timeLeft) const;

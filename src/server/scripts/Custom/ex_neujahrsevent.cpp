@@ -10,7 +10,6 @@
 #include "Field.h"
 #include "GameEventMgr.h"
 #include "Item.h"
-#include "ItemPrototype.h"
 #include "Language.h"
 #include "Log.h"
 #include "ObjectGuid.h"
@@ -32,14 +31,14 @@ public:
 
 	bool OnGossipHello(Player* player, Creature* creature)
 	{
-		player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Was bin ich?", GOSSIP_SENDER_MAIN, 0);
+		player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,GOSSIP_ICON_CHAT, "Was bin ich?", GOSSIP_SENDER_MAIN, 0, "", 0, false);
 		
 		if (player->GetQuestRewardStatus(900100) == true){
-			player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Bring mich zum Labyrintheingang.", GOSSIP_SENDER_MAIN, 1);
+			player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,GOSSIP_ICON_CHAT, "Bring mich zum Labyrintheingang.", GOSSIP_SENDER_MAIN, 1, "", 0, false);
 		}
 
 		if (player->GetQuestRewardStatus(900101) == true){
-			player->ADD_GOSSIP_ITEM(GOSSIP_ICON_CHAT, "Bring mich zum Labyrinthausgang.", GOSSIP_SENDER_MAIN, 2);
+			player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,GOSSIP_ICON_CHAT, "Bring mich zum Labyrinthausgang.", GOSSIP_SENDER_MAIN, 2,"",0,false);
 		}
 
 		player->PlayerTalkClass->SendGossipMenu(1, creature->GetGUID());

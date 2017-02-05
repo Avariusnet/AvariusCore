@@ -10,7 +10,6 @@
 #include "Field.h"
 #include "GameEventMgr.h"
 #include "Item.h"
-#include "ItemPrototype.h"
 #include "Language.h"
 #include "Log.h"
 #include "ObjectGuid.h"
@@ -73,14 +72,22 @@ public:
 
 	bool OnGossipHello(Player *pPlayer, Creature* _creature)
 	{
-		bool status = pPlayer->GetQuestRewardStatus(900801);
-		if (status){
-			pPlayer->ADD_GOSSIP_ITEM(7, "Bring mich zum Wandervolk!", GOSSIP_SENDER_MAIN, 0);
+		if (sConfigMgr->GetBoolDefault("Wander.Volk", true)) {
+			bool status = pPlayer->GetQuestRewardStatus(900801);
+			if (status) {
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Bring me up to Wandervolk!", GOSSIP_SENDER_MAIN, 0, "", 0, false);
+			}
+
+			pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Who are you?", GOSSIP_SENDER_MAIN, 1, "", 0, false);
+			pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+			return true;
 		}
 		
-		pPlayer->ADD_GOSSIP_ITEM(7, "Wer bist du?", GOSSIP_SENDER_MAIN, 1);
-		pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
-		return true;
+		else {
+			_creature->SetPhaseMask(2, true);
+			pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+			return true;
+		}
 	}
 
 	bool OnGossipSelect(Player * pPlayer, Creature * /*pCreature*/, uint32 /*uiSender*/, uint32 uiAction)
@@ -238,21 +245,21 @@ public:
 	}
 
 
-	bool OnGossipHello(Player *pPlayer, Creature* creature)
+	bool OnGossipHello(Player *player, Creature* creature)
 	{
 
-		pPlayer->ADD_GOSSIP_ITEM(7, "Hallo", GOSSIP_SENDER_MAIN, 0);
-		bool status = pPlayer->GetQuestRewardStatus(900810);
+		player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Hi", GOSSIP_SENDER_MAIN, 0,"",0,false);
+		bool status = player->GetQuestRewardStatus(900810);
 		if (status){
-			pPlayer->ADD_GOSSIP_ITEM(7, "Beam mich hoch!", GOSSIP_SENDER_MAIN, 1);
+			player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Beam mich hoch!", GOSSIP_SENDER_MAIN, 1, "", 0, false);
 		}
-		pPlayer->ADD_GOSSIP_ITEM(7, "Ich fordere euch heraus!", GOSSIP_SENDER_MAIN, 2);
+		player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "I challenge you!", GOSSIP_SENDER_MAIN, 2, "", 0, false);
 		
 			
 		
 
 
-		pPlayer->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
+		player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 		return true;
 	}
 
@@ -318,9 +325,9 @@ public:
 	{
 		
 		
-		pPlayer->ADD_GOSSIP_ITEM(7, "Das zweite Raetsel", GOSSIP_SENDER_MAIN, 0);
-		pPlayer->ADD_GOSSIP_ITEM(7, "Was tust du hier?", GOSSIP_SENDER_MAIN, 1);
-		pPlayer->ADD_GOSSIP_ITEM(7, "Stellt mir eine Frage!", GOSSIP_SENDER_MAIN, 2);
+		pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Das zweite Raetsel", GOSSIP_SENDER_MAIN, 0, "", 0, false);
+		pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Was tust du hier?", GOSSIP_SENDER_MAIN, 1, "", 0, false);
+		pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Stellt mir eine Frage!", GOSSIP_SENDER_MAIN, 2, "", 0, false);
 		pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
 		return true;
 	}

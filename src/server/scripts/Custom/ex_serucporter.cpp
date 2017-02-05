@@ -15,7 +15,6 @@
 #include "Field.h"
 #include "GameEventMgr.h"
 #include "Item.h"
-#include "ItemPrototype.h"
 #include "Language.h"
 #include "Log.h"
 #include "ObjectGuid.h"
@@ -30,6 +29,9 @@
 #include <string>
 #include <stdlib.h>
 
+#define LESSMONEY "Not enough money!"
+
+
 class seruc : public CreatureScript
 {
 public: seruc() : CreatureScript("seruc"){ }
@@ -38,14 +40,22 @@ public: seruc() : CreatureScript("seruc"){ }
 
 		bool OnGossipHello(Player *pPlayer, Creature* _creature)
 		{
-			pPlayer->ADD_GOSSIP_ITEM(7, "Raid: Der Fall des verlorenen Herrschers", GOSSIP_SENDER_MAIN, 0);
-			pPlayer->ADD_GOSSIP_ITEM(7, "Instanz", GOSSIP_SENDER_MAIN, 13);
-			pPlayer->ADD_GOSSIP_ITEM(7, "Teleport zum PVP Areal", GOSSIP_SENDER_MAIN, 1);
-			pPlayer->ADD_GOSSIP_ITEM(7, "Teleport zur Insel ", GOSSIP_SENDER_MAIN, 2);
-			pPlayer->ADD_GOSSIP_ITEM(7, "Teleport zu Klee ", GOSSIP_SENDER_MAIN, 3);
-			pPlayer->ADD_GOSSIP_ITEM(7, "MMOwning Worldbosse", GOSSIP_SENDER_MAIN, 15);
-			pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
-			return true;
+			if (sConfigMgr->GetBoolDefault("Teleport.NPC", true)) {
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Raid: Fallen Hero", GOSSIP_SENDER_MAIN, 0, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Instance", GOSSIP_SENDER_MAIN, 13, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Teleport to PVP Areal", GOSSIP_SENDER_MAIN, 1, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Teleport to Isle of Freedom ", GOSSIP_SENDER_MAIN, 2, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Teleport to Klee ", GOSSIP_SENDER_MAIN, 3, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Worldbosses", GOSSIP_SENDER_MAIN, 15, "", 0, false);
+				pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+				return true;
+			}
+			
+			else {
+				_creature->SetPhaseMask(2, true);
+				pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+				return true;	
+			}
 		}
 
 
@@ -78,22 +88,22 @@ public: seruc() : CreatureScript("seruc"){ }
 				
 
 				pPlayer->PlayerTalkClass->ClearMenus();
-				pPlayer->ADD_GOSSIP_ITEM(7, "Was sind die MMO Bosse?", GOSSIP_SENDER_MAIN, 17);
-				pPlayer->ADD_GOSSIP_ITEM(7, "Boss: Orrig [5-10 Spieler] ", GOSSIP_SENDER_MAIN, 4);
-				pPlayer->ADD_GOSSIP_ITEM(7, "Boss: Exitares Schatten [7-15 Spieler] Nicht empfohlen!", GOSSIP_SENDER_MAIN, 5);
-				pPlayer->ADD_GOSSIP_ITEM(7, "Boss: Die gequaelte Seele [5-15 Spieler]", GOSSIP_SENDER_MAIN, 6);
-				pPlayer->ADD_GOSSIP_ITEM(7, "Boss: Kayoula [25-40 Spieler]", GOSSIP_SENDER_MAIN, 7);
-				pPlayer->ADD_GOSSIP_ITEM(7, "Boss: Therakin [10-15 Spieler] Rework!", GOSSIP_SENDER_MAIN, 8);
-				pPlayer->ADD_GOSSIP_ITEM(7, "Boss: Arcturus [5-10 Spieler] ", GOSSIP_SENDER_MAIN, 9);
-				pPlayer->ADD_GOSSIP_ITEM(7, "Boss: Moon [25-40 Spieler]", GOSSIP_SENDER_MAIN, 10);
-				pPlayer->ADD_GOSSIP_ITEM(7, "Boss: Maltyriun [5-10 Spieler]", GOSSIP_SENDER_MAIN, 11);
-				pPlayer->ADD_GOSSIP_ITEM(7, "Boss: LORDofDOOM [7-15 Spieler]", GOSSIP_SENDER_MAIN, 12);
-				pPlayer->ADD_GOSSIP_ITEM(7, "Boss: Eonar [8-15 Spieler] Rework!", GOSSIP_SENDER_MAIN, 14);
-				pPlayer->ADD_GOSSIP_ITEM(7, "Boss: Tolreos [8-15 Spieler] Rework!", GOSSIP_SENDER_MAIN, 16);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Tell me more about the Worldbosses!", GOSSIP_SENDER_MAIN, 17, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Boss: Orrig [5-10 Players] ", GOSSIP_SENDER_MAIN, 4, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Boss: Exitares Shadow [7-15 Players] Not recommended!", GOSSIP_SENDER_MAIN, 5, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Boss: Die gequaelte Seele [5-15 Players]", GOSSIP_SENDER_MAIN, 6, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Boss: Kayoula [25-40 Players]", GOSSIP_SENDER_MAIN, 7, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Boss: Therakin [10-15 Players] Rework!", GOSSIP_SENDER_MAIN, 8, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Boss: Arcturus [5-10 Players] ", GOSSIP_SENDER_MAIN, 9, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Boss: Moon [25-40 Players]", GOSSIP_SENDER_MAIN, 10, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Boss: Maltyriun [5-10 Players]", GOSSIP_SENDER_MAIN, 11, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Boss: LORDofDOOM [7-15 Players]", GOSSIP_SENDER_MAIN, 12, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Boss: Eonar [8-15 Players] Rework!", GOSSIP_SENDER_MAIN, 14, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Boss: Tolreos [8-15 Players] Rework!", GOSSIP_SENDER_MAIN, 16, "", 0, false);
 
 				if (pPlayer->GetSession()->GetSecurity() >= 2){
-					pPlayer->ADD_GOSSIP_ITEM(7, "Boss: Anna [Testphase]", GOSSIP_SENDER_MAIN, 17);
-					pPlayer->ADD_GOSSIP_ITEM(7, "Boss: Galadriel", GOSSIP_SENDER_MAIN, 18);
+					pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Boss: Anna [Testphase]", GOSSIP_SENDER_MAIN, 17, "", 0, false);
+					pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Boss: Galadriel", GOSSIP_SENDER_MAIN, 18, "", 0, false);
 				}
 
 				pPlayer->PlayerTalkClass->SendGossipMenu(907, pCreature->GetGUID());
@@ -109,7 +119,7 @@ public: seruc() : CreatureScript("seruc"){ }
 				}
 				else {
 					pPlayer->GetGUID();
-					ChatHandler(pPlayer->GetSession()).PSendSysMessage("Du hast zu wenig Gold um dich zu porten!", pPlayer->GetName());
+					ChatHandler(pPlayer->GetSession()).PSendSysMessage(LESSMONEY, pPlayer->GetName());
 					pPlayer->PlayerTalkClass->SendCloseGossip();
 					return true;
 				}
@@ -128,7 +138,7 @@ public: seruc() : CreatureScript("seruc"){ }
 
 					else {
 						pPlayer->GetGUID();
-						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Du hast zu wenig Gold um dich zu porten!", pPlayer->GetName());
+						ChatHandler(pPlayer->GetSession()).PSendSysMessage(LESSMONEY, pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
 						return true;
 					}
@@ -146,7 +156,7 @@ public: seruc() : CreatureScript("seruc"){ }
 
 					else {
 						pPlayer->GetGUID();
-						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Du hast zu wenig Gold um dich zu porten!", pPlayer->GetName());
+						ChatHandler(pPlayer->GetSession()).PSendSysMessage(LESSMONEY, pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
 						return true;
 					}
@@ -166,7 +176,7 @@ public: seruc() : CreatureScript("seruc"){ }
 
 					else {
 						pPlayer->GetGUID();
-						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Du hast zu wenig Gold um dich zu porten!", pPlayer->GetName());
+						ChatHandler(pPlayer->GetSession()).PSendSysMessage(LESSMONEY, pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
 						return true;
 					}
@@ -187,7 +197,7 @@ public: seruc() : CreatureScript("seruc"){ }
 
 					else {
 						pPlayer->GetGUID();
-						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Du hast zu wenig Gold um dich zu porten!", pPlayer->GetName());
+						ChatHandler(pPlayer->GetSession()).PSendSysMessage(LESSMONEY, pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
 						return true;
 					}
@@ -208,7 +218,7 @@ public: seruc() : CreatureScript("seruc"){ }
 
 					else {
 						pPlayer->GetGUID();
-						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Du hast zu wenig Gold um dich zu porten!", pPlayer->GetName());
+						ChatHandler(pPlayer->GetSession()).PSendSysMessage(LESSMONEY, pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
 						return true;
 					}
@@ -226,7 +236,7 @@ public: seruc() : CreatureScript("seruc"){ }
 
 					else {
 						pPlayer->GetGUID();
-						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Du hast zu wenig Gold um dich zu porten!", pPlayer->GetName());
+						ChatHandler(pPlayer->GetSession()).PSendSysMessage(LESSMONEY, pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
 						return true;
 					}
@@ -245,7 +255,7 @@ public: seruc() : CreatureScript("seruc"){ }
 
 					else {
 						pPlayer->GetGUID();
-						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Du hast zu wenig Gold um dich zu porten!", pPlayer->GetName());
+						ChatHandler(pPlayer->GetSession()).PSendSysMessage(LESSMONEY, pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
 						return true;
 					}
@@ -264,7 +274,7 @@ public: seruc() : CreatureScript("seruc"){ }
 
 					else {
 						pPlayer->GetGUID();
-						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Du hast zu wenig Gold um dich zu porten!", pPlayer->GetName());
+						ChatHandler(pPlayer->GetSession()).PSendSysMessage(LESSMONEY, pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
 						return true;
 					}
@@ -283,7 +293,7 @@ public: seruc() : CreatureScript("seruc"){ }
 
 					else {
 						pPlayer->GetGUID();
-						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Du hast zu wenig Gold um dich zu porten!", pPlayer->GetName());
+						ChatHandler(pPlayer->GetSession()).PSendSysMessage(LESSMONEY, pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
 						return true;
 					}
@@ -300,7 +310,7 @@ public: seruc() : CreatureScript("seruc"){ }
 
 					else {
 						pPlayer->GetGUID();
-						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Du hast zu wenig Gold um dich zu porten!", pPlayer->GetName());
+						ChatHandler(pPlayer->GetSession()).PSendSysMessage(LESSMONEY, pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
 						return true;
 					}
@@ -320,7 +330,7 @@ public: seruc() : CreatureScript("seruc"){ }
 
 					else {
 						pPlayer->GetGUID();
-						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Du hast zu wenig Gold um dich zu porten!", pPlayer->GetName());
+						ChatHandler(pPlayer->GetSession()).PSendSysMessage(LESSMONEY, pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
 						return true;
 					}
@@ -353,7 +363,7 @@ public: seruc() : CreatureScript("seruc"){ }
 
 					else {
 						pPlayer->GetGUID();
-						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Du hast zu wenig Gold um dich zu porten!", pPlayer->GetName());
+						ChatHandler(pPlayer->GetSession()).PSendSysMessage(LESSMONEY, pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
 						return true;
 					}
@@ -370,7 +380,7 @@ public: seruc() : CreatureScript("seruc"){ }
 
 					else {
 						pPlayer->GetGUID();
-						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Du hast zu wenig Gold um dich zu porten!", pPlayer->GetName());
+						ChatHandler(pPlayer->GetSession()).PSendSysMessage(LESSMONEY, pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
 						return true;
 					}

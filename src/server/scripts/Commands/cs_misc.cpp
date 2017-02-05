@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -165,24 +165,54 @@ public:
 
     static bool HandleGPSCommand(ChatHandler* handler, char const* args)
     {
-        WorldObject* object = NULL;
+        WorldObject* object = nullptr;
         if (*args)
         {
-            ObjectGuid guid = handler->extractGuidFromLink((char*)args);
-            if (guid)
-                object = (WorldObject*)ObjectAccessor::GetObjectByTypeMask(*handler->GetSession()->GetPlayer(), guid, TYPEMASK_UNIT | TYPEMASK_GAMEOBJECT);
-
-            if (!object)
-            {
-                handler->SendSysMessage(LANG_PLAYER_NOT_FOUND);
-                handler->SetSentErrorMessage(true);
+            HighGuid guidHigh;
+            ObjectGuid::LowType guidLow = handler->extractLowGuidFromLink((char*)args, guidHigh);
+            if (!guidLow)
                 return false;
+            switch (guidHigh)
+            {
+                case HighGuid::Player:
+                {
+                    object = sObjectMgr->GetPlayerByLowGUID(guidLow);
+                    if (!object)
+                    {
+                        handler->SendSysMessage(LANG_PLAYER_NOT_FOUND);
+                        handler->SetSentErrorMessage(true);
+                    }
+                    break;
+                }
+                case HighGuid::Unit:
+                {
+                    object = handler->GetCreatureFromPlayerMapByDbGuid(guidLow);
+                    if (!object)
+                    {
+                        handler->SendSysMessage(LANG_COMMAND_NOCREATUREFOUND);
+                        handler->SetSentErrorMessage(true);
+                    }
+                    break;
+                }
+                case HighGuid::GameObject:
+                {
+                    object = handler->GetObjectFromPlayerMapByDbGuid(guidLow);
+                    if (!object)
+                    {
+                        handler->SendSysMessage(LANG_COMMAND_NOGAMEOBJECTFOUND);
+                        handler->SetSentErrorMessage(true);
+                    }
+                    break;
+                }
+                default:
+                    return false;
             }
+            if (!object)
+                return false;
         }
         else
         {
             object = handler->getSelectedUnit();
-
             if (!object)
             {
                 handler->SendSysMessage(LANG_SELECT_CHAR_OR_CREATURE);
@@ -703,7 +733,7 @@ public:
 
     static bool HandleCooldownCommand(ChatHandler* handler, char const* args)
     {
-        Player* target = handler->getSelectedPlayerOrSelf();
+        Unit* target = handler->getSelectedUnit();
         if (!target)
         {
             handler->SendSysMessage(LANG_PLAYER_NOT_FOUND);
@@ -711,7 +741,14 @@ public:
             return false;
         }
 
-        std::string nameLink = handler->GetNameLink(target);
+        Player* owner = target->GetCharmerOrOwnerPlayerOrPlayerItself();
+        if (!owner)
+        {
+            owner = handler->GetSession()->GetPlayer();
+            target = owner;
+        }
+
+        std::string nameLink = handler->GetNameLink(owner);
 
         if (!*args)
         {
@@ -728,39 +765,68 @@ public:
             SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spellIid);
             if (!spellInfo)
             {
-                handler->PSendSysMessage(LANG_UNKNOWN_SPELL, target == handler->GetSession()->GetPlayer() ? handler->GetTrinityString(LANG_YOU) : nameLink.c_str());
+                handler->PSendSysMessage(LANG_UNKNOWN_SPELL, owner == handler->GetSession()->GetPlayer() ? handler->GetTrinityString(LANG_YOU) : nameLink.c_str());
                 handler->SetSentErrorMessage(true);
                 return false;
             }
 
             target->GetSpellHistory()->ResetCooldown(spellIid, true);
-            handler->PSendSysMessage(LANG_REMOVE_COOLDOWN, spellIid, target == handler->GetSession()->GetPlayer() ? handler->GetTrinityString(LANG_YOU) : nameLink.c_str());
+            handler->PSendSysMessage(LANG_REMOVE_COOLDOWN, spellIid, owner == handler->GetSession()->GetPlayer() ? handler->GetTrinityString(LANG_YOU) : nameLink.c_str());
         }
         return true;
     }
 
     static bool HandleGetDistanceCommand(ChatHandler* handler, char const* args)
     {
-        WorldObject* obj = NULL;
-
+        WorldObject* object = nullptr;
         if (*args)
         {
-            ObjectGuid guid = handler->extractGuidFromLink((char*)args);
-            if (guid)
-                obj = (WorldObject*)ObjectAccessor::GetObjectByTypeMask(*handler->GetSession()->GetPlayer(), guid, TYPEMASK_UNIT|TYPEMASK_GAMEOBJECT);
-
-            if (!obj)
-            {
-                handler->SendSysMessage(LANG_PLAYER_NOT_FOUND);
-                handler->SetSentErrorMessage(true);
+            HighGuid guidHigh;
+            ObjectGuid::LowType guidLow = handler->extractLowGuidFromLink((char*)args, guidHigh);
+            if (!guidLow)
                 return false;
+            switch (guidHigh)
+            {
+                case HighGuid::Player:
+                {
+                    object = sObjectMgr->GetPlayerByLowGUID(guidLow);
+                    if (!object)
+                    {
+                        handler->SendSysMessage(LANG_PLAYER_NOT_FOUND);
+                        handler->SetSentErrorMessage(true);
+                    }
+                    break;
+                }
+                case HighGuid::Unit:
+                {
+                    object = handler->GetCreatureFromPlayerMapByDbGuid(guidLow);
+                    if (!object)
+                    {
+                        handler->SendSysMessage(LANG_COMMAND_NOCREATUREFOUND);
+                        handler->SetSentErrorMessage(true);
+                    }
+                    break;
+                }
+                case HighGuid::GameObject:
+                {
+                    object = handler->GetObjectFromPlayerMapByDbGuid(guidLow);
+                    if (!object)
+                    {
+                        handler->SendSysMessage(LANG_COMMAND_NOGAMEOBJECTFOUND);
+                        handler->SetSentErrorMessage(true);
+                    }
+                    break;
+                }
+                default:
+                    return false;
             }
+            if (!object)
+                return false;
         }
         else
         {
-            obj = handler->getSelectedUnit();
-
-            if (!obj)
+            object = handler->getSelectedUnit();
+            if (!object)
             {
                 handler->SendSysMessage(LANG_SELECT_CHAR_OR_CREATURE);
                 handler->SetSentErrorMessage(true);
@@ -768,7 +834,7 @@ public:
             }
         }
 
-        handler->PSendSysMessage(LANG_DISTANCE, handler->GetSession()->GetPlayer()->GetDistance(obj), handler->GetSession()->GetPlayer()->GetDistance2d(obj), handler->GetSession()->GetPlayer()->GetExactDist(obj), handler->GetSession()->GetPlayer()->GetExactDist2d(obj));
+        handler->PSendSysMessage(LANG_DISTANCE, handler->GetSession()->GetPlayer()->GetDistance(object), handler->GetSession()->GetPlayer()->GetDistance2d(object), handler->GetSession()->GetPlayer()->GetExactDist(object), handler->GetSession()->GetPlayer()->GetExactDist2d(object));
         return true;
     }
     // Teleport player to last position
@@ -2124,17 +2190,9 @@ public:
         }
         return true;
     }
-    /*
-    ComeToMe command REQUIRED for 3rd party scripting library to have access to PointMovementGenerator
-    Without this function 3rd party scripting library will get linking errors (unresolved external)
-    when attempting to use the PointMovementGenerator
-    */
-    static bool HandleComeToMeCommand(ChatHandler* handler, char const* args)
-    {
-        char const* newFlagStr = strtok((char*)args, " ");
-        if (!newFlagStr)
-            return false;
 
+    static bool HandleComeToMeCommand(ChatHandler* handler, char const* /*args*/)
+    {
         Creature* caster = handler->getSelectedCreature();
         if (!caster)
         {
@@ -2167,8 +2225,8 @@ public:
                 return false;
             }
 
-            int32 guid = atoi(guidStr);
-            if (!guid)
+            ObjectGuid::LowType guidLow = atoul(guidStr);
+            if (!guidLow)
             {
                 handler->SendSysMessage(LANG_BAD_VALUE);
                 handler->SetSentErrorMessage(true);
@@ -2193,14 +2251,10 @@ public:
 
             if (Player* player = handler->GetSession()->GetPlayer())
             {
-                GameObject* go = NULL;
-
-                if (GameObjectData const* goData = sObjectMgr->GetGOData(guid))
-                    go = handler->GetObjectGlobalyWithGuidOrNearWithDbGuid(guid, goData->id);
-
+                GameObject* go = handler->GetObjectFromPlayerMapByDbGuid(guidLow);
                 if (!go)
                 {
-                    handler->PSendSysMessage(LANG_COMMAND_OBJNOTFOUND, guid);
+                    handler->PSendSysMessage(LANG_COMMAND_OBJNOTFOUND, guidLow);
                     handler->SetSentErrorMessage(true);
                     return false;
                 }
@@ -2213,7 +2267,7 @@ public:
                 }
 
                 go->ModifyHealth(-damage, player);
-                handler->PSendSysMessage(LANG_GAMEOBJECT_DAMAGED, go->GetName().c_str(), guid, -damage, go->GetGOValue()->Building.Health);
+                handler->PSendSysMessage(LANG_GAMEOBJECT_DAMAGED, go->GetName().c_str(), guidLow, -damage, go->GetGOValue()->Building.Health);
             }
 
             return true;
@@ -2269,19 +2323,20 @@ public:
         // melee damage by specific school
         if (!spellStr)
         {
-            uint32 absorb = 0;
-            uint32 resist = 0;
+            Player* attacker = handler->GetSession()->GetPlayer();
+            DamageInfo dmgInfo(attacker, target, damage, nullptr, schoolmask, SPELL_DIRECT_DAMAGE, BASE_ATTACK);
+            attacker->CalcAbsorbResist(dmgInfo);
 
-            handler->GetSession()->GetPlayer()->CalcAbsorbResist(target, schoolmask, SPELL_DIRECT_DAMAGE, damage, &absorb, &resist);
-
-            if (damage <= absorb + resist)
+            if (!dmgInfo.GetDamage())
                 return true;
 
-            damage -= absorb + resist;
+            damage = dmgInfo.GetDamage();
 
-            handler->GetSession()->GetPlayer()->DealDamageMods(target, damage, &absorb);
-            handler->GetSession()->GetPlayer()->DealDamage(target, damage, NULL, DIRECT_DAMAGE, schoolmask, NULL, false);
-            handler->GetSession()->GetPlayer()->SendAttackStateUpdate (HITINFO_AFFECTS_VICTIM, target, 1, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
+            uint32 absorb = dmgInfo.GetAbsorb();
+            uint32 resist = dmgInfo.GetResist();
+            attacker->DealDamageMods(target, damage, &absorb);
+            attacker->DealDamage(target, damage, nullptr, DIRECT_DAMAGE, schoolmask, nullptr, false);
+            attacker->SendAttackStateUpdate(HITINFO_AFFECTS_VICTIM, target, 0, schoolmask, damage, absorb, resist, VICTIMSTATE_HIT, 0);
             return true;
         }
 
@@ -2289,10 +2344,22 @@ public:
 
         // number or [name] Shift-click form |color|Hspell:spell_id|h[name]|h|r or Htalent form
         uint32 spellid = handler->extractSpellIdFromLink((char*)args);
-        if (!spellid || !sSpellMgr->GetSpellInfo(spellid))
+        if (!spellid)
             return false;
 
-        handler->GetSession()->GetPlayer()->SpellNonMeleeDamageLog(target, spellid, damage);
+        SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(spellid);
+        if (!spellInfo)
+            return false;
+
+        Player* attacker = handler->GetSession()->GetPlayer();
+        SpellNonMeleeDamage dmgInfo(attacker, target, spellid, spellInfo->GetSchoolMask());
+        damage = attacker->SpellDamageBonusDone(target, spellInfo, damage, SPELL_DIRECT_DAMAGE);
+        damage = target->SpellDamageBonusTaken(attacker, spellInfo, damage, SPELL_DIRECT_DAMAGE);
+
+        attacker->CalculateSpellDamageTaken(&dmgInfo, damage, spellInfo);
+        attacker->DealDamageMods(dmgInfo.target, dmgInfo.damage, &dmgInfo.absorb);
+        attacker->SendSpellNonMeleeDamageLog(&dmgInfo);
+        attacker->DealSpellDamage(&dmgInfo, true);
         return true;
     }
 
@@ -2483,22 +2550,16 @@ public:
             if (targetName)
             {
                 // Check for offline players
-                PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHAR_GUID_BY_NAME);
-                stmt->setString(0, name);
-                PreparedQueryResult result = CharacterDatabase.Query(stmt);
-
-                if (!result)
+                ObjectGuid guid = sWorld->GetCharacterGuidByName(name);
+                if (guid.IsEmpty())
                 {
                     handler->SendSysMessage(LANG_COMMAND_FREEZE_WRONG);
                     return true;
                 }
 
                 // If player found: delete his freeze aura
-                Field* fields = result->Fetch();
-                ObjectGuid::LowType lowGuid = fields[0].GetUInt32();
-
-                stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_CHAR_AURA_FROZEN);
-                stmt->setUInt32(0, lowGuid);
+                PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_CHAR_AURA_FROZEN);
+                stmt->setUInt32(0, guid.GetCounter());
                 CharacterDatabase.Execute(stmt);
 
                 handler->PSendSysMessage(LANG_COMMAND_UNFREEZE, name.c_str());

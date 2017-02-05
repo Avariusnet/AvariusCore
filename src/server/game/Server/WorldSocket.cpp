@@ -1,24 +1,25 @@
 /*
-* Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
-* Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
-*
-* This program is free software; you can redistribute it and/or modify it
-* under the terms of the GNU General Public License as published by the
-* Free Software Foundation; either version 2 of the License, or (at your
-* option) any later version.
-*
-* This program is distributed in the hope that it will be useful, but WITHOUT
-* ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-* FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
-* more details.
-*
-* You should have received a copy of the GNU General Public License along
-* with this program. If not, see <http://www.gnu.org/licenses/>.
-*/
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ *
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
+ *
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "WorldSocket.h"
 #include "BigNumber.h"
 #include "Opcodes.h"
+#include "QueryCallback.h"
 #include "ScriptMgr.h"
 #include "SHA1.h"
 #include "PacketLog.h"
@@ -51,8 +52,7 @@ void WorldSocket::Start()
     stmt->setString(0, ip_address);
     stmt->setUInt32(1, inet_addr(ip_address.c_str()));
 
-    _queryCallback = std::bind(&WorldSocket::CheckIpCallback, this, std::placeholders::_1);
-    _queryFuture = LoginDatabase.AsyncQuery(stmt);
+    _queryProcessor.AddQuery(LoginDatabase.AsyncQuery(stmt).WithPreparedCallback(std::bind(&WorldSocket::CheckIpCallback, this, std::placeholders::_1)));
 }
 
 void WorldSocket::CheckIpCallback(PreparedQueryResult result)
@@ -125,12 +125,7 @@ bool WorldSocket::Update()
     if (!BaseSocket::Update())
         return false;
 
-    if (_queryFuture.valid() && _queryFuture.wait_for(std::chrono::seconds(0)) == std::future_status::ready)
-    {
-        auto callback = _queryCallback;
-        _queryCallback = nullptr;
-        callback(_queryFuture.get());
-    }
+    _queryProcessor.ProcessReadyQueries();
 
     return true;
 }
@@ -311,8 +306,7 @@ struct AccountInfo
 WorldSocket::ReadDataHandlerResult WorldSocket::ReadDataHandler()
 {
     ClientPktHeader* header = reinterpret_cast<ClientPktHeader*>(_headerBuffer.GetReadPointer());
-
-    uint16 opcode = uint16(header->cmd);
+    OpcodeClient opcode = static_cast<OpcodeClient>(header->cmd);
 
     WorldPacket packet(opcode, std::move(_packetBuffer));
 
@@ -324,9 +318,20 @@ WorldSocket::ReadDataHandlerResult WorldSocket::ReadDataHandler()
     switch (opcode)
     {
         case CMSG_PING:
+        {
             LogOpcodeText(opcode, sessionGuard);
-            return HandlePing(packet) ? ReadDataHandlerResult::Ok : ReadDataHandlerResult::Error;
+            try
+            {
+                return HandlePing(packet) ? ReadDataHandlerResult::Ok : ReadDataHandlerResult::Error;
+            }
+            catch (ByteBufferPositionException const&)
+            {
+            }
+            TC_LOG_ERROR("network", "WorldSocket::ReadDataHandler(): client %s sent malformed CMSG_PING", GetRemoteIpAddress().to_string().c_str());
+            return ReadDataHandlerResult::Error;
+        }
         case CMSG_AUTH_SESSION:
+        {
             LogOpcodeText(opcode, sessionGuard);
             if (_authed)
             {
@@ -336,8 +341,17 @@ WorldSocket::ReadDataHandlerResult WorldSocket::ReadDataHandler()
                 return ReadDataHandlerResult::Error;
             }
 
-            HandleAuthSession(packet);
-            return ReadDataHandlerResult::WaitingForQuery;
+            try
+            {
+                HandleAuthSession(packet);
+                return ReadDataHandlerResult::WaitingForQuery;
+            }
+            catch (ByteBufferPositionException const&)
+            {
+            }
+            TC_LOG_ERROR("network", "WorldSocket::ReadDataHandler(): client %s sent malformed CMSG_AUTH_SESSION", GetRemoteIpAddress().to_string().c_str());
+            return ReadDataHandlerResult::Error;
+        }
         case CMSG_KEEP_ALIVE:
             LogOpcodeText(opcode, sessionGuard);
             break;
@@ -353,6 +367,13 @@ WorldSocket::ReadDataHandlerResult WorldSocket::ReadDataHandler()
                 return ReadDataHandlerResult::Error;
             }
 
+            OpcodeHandler const* handler = opcodeTable[opcode];
+            if (!handler)
+            {
+                TC_LOG_ERROR("network.opcode", "No defined handler for opcode %s sent by %s", GetOpcodeNameForLogging(static_cast<OpcodeClient>(packet.GetOpcode())).c_str(), _worldSession->GetPlayerInfo().c_str());
+                break;
+            }
+
             // Our Idle timer will reset on any non PING opcodes.
             // Catches people idling on the login screen and any lingering ingame connections.
             _worldSession->ResetTimeOutTime();
@@ -366,7 +387,7 @@ WorldSocket::ReadDataHandlerResult WorldSocket::ReadDataHandler()
     return ReadDataHandlerResult::Ok;
 }
 
-void WorldSocket::LogOpcodeText(uint16 opcode, std::unique_lock<std::mutex> const& guard) const
+void WorldSocket::LogOpcodeText(OpcodeClient opcode, std::unique_lock<std::mutex> const& guard) const
 {
     if (!guard)
     {
@@ -381,7 +402,7 @@ void WorldSocket::LogOpcodeText(uint16 opcode, std::unique_lock<std::mutex> cons
 
 void WorldSocket::SendPacketAndLogOpcode(WorldPacket const& packet)
 {
-    TC_LOG_TRACE("network.opcode", "S->C: %s %s", GetRemoteIpAddress().to_string().c_str(), GetOpcodeNameForLogging(packet.GetOpcode()).c_str());
+    TC_LOG_TRACE("network.opcode", "S->C: %s %s", GetRemoteIpAddress().to_string().c_str(), GetOpcodeNameForLogging(static_cast<OpcodeServer>(packet.GetOpcode())).c_str());
     SendPacket(packet);
 }
 
@@ -418,8 +439,7 @@ void WorldSocket::HandleAuthSession(WorldPacket& recvPacket)
     stmt->setInt32(0, int32(realm.Id.Realm));
     stmt->setString(1, authSession->Account);
 
-    _queryCallback = std::bind(&WorldSocket::HandleAuthSessionCallback, this, authSession, std::placeholders::_1);
-    _queryFuture = LoginDatabase.AsyncQuery(stmt);
+    _queryProcessor.AddQuery(LoginDatabase.AsyncQuery(stmt).WithPreparedCallback(std::bind(&WorldSocket::HandleAuthSessionCallback, this, authSession, std::placeholders::_1)));
 }
 
 void WorldSocket::HandleAuthSessionCallback(std::shared_ptr<AuthSession> authSession, PreparedQueryResult result)
@@ -577,8 +597,7 @@ void WorldSocket::HandleAuthSessionCallback(std::shared_ptr<AuthSession> authSes
     if (wardenActive)
         _worldSession->InitWarden(&account.SessionKey, account.OS);
 
-    _queryCallback = std::bind(&WorldSocket::LoadSessionPermissionsCallback, this, std::placeholders::_1);
-    _queryFuture = _worldSession->LoadPermissionsAsync();
+    _queryProcessor.AddQuery(_worldSession->LoadPermissionsAsync().WithPreparedCallback(std::bind(&WorldSocket::LoadSessionPermissionsCallback, this, std::placeholders::_1)));
     AsyncRead();
 }
 

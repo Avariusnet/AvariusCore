@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -47,6 +47,7 @@ template<>
 struct ContainerMapList<TypeNull>                /* nothing is in type null */
 {
 };
+
 template<class H, class T>
 struct ContainerMapList<TypeList<H, T> >
 {
@@ -70,23 +71,6 @@ struct ContainerUnorderedMap<TypeList<H, T>, KEY_TYPE>
 {
     ContainerUnorderedMap<H, KEY_TYPE> _elements;
     ContainerUnorderedMap<T, KEY_TYPE> _TailElements;
-};
-
-/*
- * @class ContainerList is a simple list of different types of elements
- *
- */
-template<class OBJECT> struct ContainerList
-{
-    OBJECT _element;
-};
-
-/* TypeNull is underfined */
-template<> struct ContainerList<TypeNull> { };
-template<class H, class T> struct ContainerList<TypeList<H, T> >
-{
-    ContainerList<H> _elements;
-    ContainerMapList<T> _TailElements;
 };
 
 #include "TypeContainerFunctions.h"
@@ -157,4 +141,3 @@ private:
 };
 
 #endif
-

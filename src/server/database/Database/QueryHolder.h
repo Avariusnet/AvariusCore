@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -28,7 +28,7 @@ class TC_DATABASE_API SQLQueryHolder
         std::vector<SQLResultPair> m_queries;
     public:
         SQLQueryHolder() { }
-        ~SQLQueryHolder();
+        virtual ~SQLQueryHolder();
         bool SetQuery(size_t index, const char* sql);
         template<typename Format, typename... Args>
         bool SetPQuery(size_t index, Format&& sql, Args&&... args)

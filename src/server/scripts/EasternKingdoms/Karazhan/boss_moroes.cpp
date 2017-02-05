@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -298,7 +298,7 @@ public:
                 if (Blind_Timer <= diff)
                 {
                     std::list<Unit*> targets;
-                    SelectTargetList(targets, 5, SELECT_TARGET_RANDOM, me->GetMeleeReach()*5, true);
+                    SelectTargetList(targets, 5, SELECT_TARGET_RANDOM, me->GetCombatReach()*5, true);
                     for (std::list<Unit*>::const_iterator i = targets.begin(); i != targets.end(); ++i)
                         if (!me->IsWithinMeleeRange(*i))
                         {

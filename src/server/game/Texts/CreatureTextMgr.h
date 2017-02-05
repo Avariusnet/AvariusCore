@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -141,7 +141,6 @@ class CreatureTextLocalizer
             {
                 messageTemplate = new WorldPacket();
                 whisperGUIDpos = _builder(messageTemplate, loc_idx);
-                ASSERT(messageTemplate->GetOpcode() != MSG_NULL_ACTION);
                 _packetCache[loc_idx] = new std::pair<WorldPacket*, size_t>(messageTemplate, whisperGUIDpos);
             }
             else

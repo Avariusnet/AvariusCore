@@ -16,7 +16,6 @@
 #include "Field.h"
 #include "GameEventMgr.h"
 #include "Item.h"
-#include "ItemPrototype.h"
 #include "Language.h"
 #include "Log.h"
 #include "ObjectGuid.h"
@@ -40,20 +39,25 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 
 		bool OnGossipHello(Player *pPlayer, Creature* _creature)
 		{
-			
-			
-			pPlayer->ADD_GOSSIP_ITEM(7, "Was tut dieser NPC?", GOSSIP_SENDER_MAIN, 0);
-			pPlayer->ADD_GOSSIP_ITEM(7, "MMOwning Weihnachtsevent", GOSSIP_SENDER_MAIN, 1);
-			pPlayer->ADD_GOSSIP_ITEM(7, "MMOwning Halloweenevent", GOSSIP_SENDER_MAIN, 2);
-			pPlayer->ADD_GOSSIP_ITEM(7, "Das Wandervolk", GOSSIP_SENDER_MAIN, 3);
-			pPlayer->ADD_GOSSIP_ITEM(7, "Jumpevent", GOSSIP_SENDER_MAIN, 4);
-			pPlayer->ADD_GOSSIP_ITEM(7, "Das Portal", GOSSIP_SENDER_MAIN, 5);
-			pPlayer->ADD_GOSSIP_ITEM(7, "Neujahrsevent", GOSSIP_SENDER_MAIN, 6);
-			pPlayer->ADD_GOSSIP_ITEM(7, "Chopperrennen", GOSSIP_SENDER_MAIN, 7);
-			pPlayer->ADD_GOSSIP_ITEM(7, "MMOwning Worldevent", GOSSIP_SENDER_MAIN, 8);
+			if (sConfigMgr->GetBoolDefault("Event.NPC", true)) {
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Who I am?", GOSSIP_SENDER_MAIN, 0, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Weihnachtsevent", GOSSIP_SENDER_MAIN, 1, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Halloweenevent", GOSSIP_SENDER_MAIN, 2, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Das Wandervolk", GOSSIP_SENDER_MAIN, 3, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Jumpevent", GOSSIP_SENDER_MAIN, 4, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Das Portal", GOSSIP_SENDER_MAIN, 5, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Neujahrsevent", GOSSIP_SENDER_MAIN, 6, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Chopperrennen", GOSSIP_SENDER_MAIN, 7, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Worldevent", GOSSIP_SENDER_MAIN, 8, "", 0, false);
 
-			pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
-			return true;
+				pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+				return true;
+			}
+
+			else {
+				pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+				return true;
+			}
 		}
 			
 
@@ -71,7 +75,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 					bool active = ae.find(70) != ae.end();
 					if (active == true){
 						pPlayer->GetGUID();
-						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Viel Spass beim Weihnachtsevent wuenscht dir Exitare und das gesammte MMOwning Team. Der Eventbeginn ist in Dalaran bei Bitty Frostschleuder.",
+						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Viel Spass beim Weihnachtsevent wuenscht dir Exitare und das gesammte Team. Der Eventbeginn ist in Dalaran bei Bitty Frostschleuder.",
 							pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
 						pPlayer->TeleportTo(1, 16226.21, 16256.77, 13.19, 1.65);
@@ -95,7 +99,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 						
 				case 0: {
 					pPlayer->GetGUID();
-					ChatHandler(pPlayer->GetSession()).PSendSysMessage("Dieser NPC zeigt die MMOwning Events an. Mit einem Klick auf das entsprechende Event bekommst du entweder eine Erklaerung, oder wirst bei aktivem Event direkt dorthin geportet. ",
+					ChatHandler(pPlayer->GetSession()).PSendSysMessage("Dieser NPC zeigt die Events an. Mit einem Klick auf das entsprechende Event bekommst du entweder eine Erklaerung, oder wirst bei aktivem Event direkt dorthin geportet. ",
 						pPlayer->GetName());
 					pPlayer->PlayerTalkClass->SendCloseGossip();
 					return true;
@@ -109,7 +113,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 					if (active == true){
 						pPlayer->GetGUID();
 						pPlayer->TeleportTo(0, -9739.81, 2162.37, 9.36, 5.72);
-						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Viel Spass beim Halloweenevent wuenscht dir Exitare und das gesammte MMOwning Team.",
+						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Viel Spass beim Halloweenevent wuenscht dir Exitare und das gesammte Team.",
 							pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
 						return true;

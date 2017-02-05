@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -151,8 +151,7 @@ inline void KillRewarder::_RewardXP(Player* player, float rate)
     if (xp)
     {
         // 4.2.2. Apply auras modifying rewarded XP (SPELL_AURA_MOD_XP_PCT).
-        for (auto const& aura : player->GetAuraEffectsByType(SPELL_AURA_MOD_XP_PCT))
-            AddPct(xp, aura->GetAmount());
+        xp *= player->GetTotalAuraMultiplier(SPELL_AURA_MOD_XP_PCT);
 
         // 4.2.3. Give XP to player.
         player->GiveXP(xp, _victim, _groupRate);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -52,7 +52,7 @@ public:
     typedef StorageType::const_reference const_reference;
 
 public:
-    Tokenizer(const std::string &src, char const sep, uint32 vectorReserve = 0);
+    Tokenizer(const std::string &src, char const sep, uint32 vectorReserve = 0, bool keepEmptyStrings = true);
     ~Tokenizer() { delete[] m_str; }
 
     const_iterator begin() const { return m_storage.begin(); }
@@ -112,8 +112,10 @@ inline T RoundToInterval(T& num, T floor, T ceil)
 
 // UTF8 handling
 TC_COMMON_API bool Utf8toWStr(const std::string& utf8str, std::wstring& wstr);
+
 // in wsize==max size of buffer, out wsize==real string size
 TC_COMMON_API bool Utf8toWStr(char const* utf8str, size_t csize, wchar_t* wstr, size_t& wsize);
+
 inline bool Utf8toWStr(const std::string& utf8str, wchar_t* wstr, size_t& wsize)
 {
     return Utf8toWStr(utf8str.c_str(), utf8str.size(), wstr, wsize);
@@ -123,7 +125,8 @@ TC_COMMON_API bool WStrToUtf8(std::wstring const& wstr, std::string& utf8str);
 // size==real string size
 TC_COMMON_API bool WStrToUtf8(wchar_t* wstr, size_t size, std::string& utf8str);
 
-TC_COMMON_API size_t utf8length(std::string& utf8str);                    // set string to "" if invalid utf8 sequence
+// set string to "" if invalid utf8 sequence
+TC_COMMON_API size_t utf8length(std::string& utf8str);
 TC_COMMON_API void utf8truncate(std::string& utf8str, size_t len);
 
 inline bool isBasicLatinCharacter(wchar_t wchar)
@@ -324,37 +327,39 @@ TC_COMMON_API bool StringToBool(std::string const& str);
 
 // simple class for not-modifyable list
 template <typename T>
-class HookList
+class HookList final
 {
-    typedef typename std::list<T>::iterator ListIterator;
     private:
-        typename std::list<T> m_list;
+        typedef std::vector<T> ContainerType;
+
+        ContainerType _container;
+
     public:
-        HookList<T> & operator+=(T t)
+        typedef typename ContainerType::iterator iterator;
+
+        HookList<T>& operator+=(T&& t)
         {
-            m_list.push_back(t);
+            _container.push_back(std::move(t));
             return *this;
         }
-        HookList<T> & operator-=(T t)
+
+        size_t size() const
         {
-            m_list.remove(t);
-            return *this;
+            return _container.size();
         }
-        size_t size()
+
+        iterator begin()
         {
-            return m_list.size();
+            return _container.begin();
         }
-        ListIterator begin()
+
+        iterator end()
         {
-            return m_list.begin();
-        }
-        ListIterator end()
-        {
-            return m_list.end();
+            return _container.end();
         }
 };
 
-class flag96
+class TC_COMMON_API flag96
 {
 private:
     uint32 part[3];

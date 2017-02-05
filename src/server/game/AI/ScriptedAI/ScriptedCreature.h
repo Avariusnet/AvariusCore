@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2016 TrinityCore <http://www.trinitycore.org/>
+ * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
  * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -87,6 +87,12 @@ public:
     size_type size() const
     {
         return storage_.size();
+    }
+
+    // Clear the underlying storage. This does NOT despawn the creatures - use DespawnAll for that!
+    void clear()
+    {
+        storage_.clear();
     }
 
     void Summon(Creature const* summon) { storage_.push_back(summon->GetGUID()); }
@@ -235,6 +241,9 @@ struct TC_GAME_API ScriptedAI : public CreatureAI
     //Returns friendly unit with the most amount of hp missing from max hp
     Unit* DoSelectLowestHpFriendly(float range, uint32 minHPDiff = 1);
 
+    //Returns friendly unit with hp pct below specified and with specified entry
+    Unit* DoSelectBelowHpPctFriendlyWithEntry(uint32 entry, float range, uint8 hpPct = 1, bool excludeSelf = true);
+
     //Returns a list of friendly CC'd units within range
     std::list<Creature*> DoFindFriendlyCC(float range);
 
@@ -367,7 +376,8 @@ class TC_GAME_API BossAI : public ScriptedAI
         void _EnterCombat();
         void _JustDied();
         void _JustReachedHome() { me->setActive(false); }
-        void _DespawnAtEvade(uint32 delayToRespawn = 30,  Creature* who = nullptr);
+        void _DespawnAtEvade(uint32 delayToRespawn = 30, Creature* who = nullptr);
+        void _DespawnAtEvade(Seconds const& time, Creature* who = nullptr) { _DespawnAtEvade(uint32(time.count()), who); }
 
         void TeleportCheaters();
 
@@ -410,10 +420,32 @@ class TC_GAME_API WorldBossAI : public ScriptedAI
 };
 
 // SD2 grid searchers.
-TC_GAME_API Creature* GetClosestCreatureWithEntry(WorldObject* source, uint32 entry, float maxSearchRange, bool alive = true);
-TC_GAME_API GameObject* GetClosestGameObjectWithEntry(WorldObject* source, uint32 entry, float maxSearchRange);
-TC_GAME_API void GetCreatureListWithEntryInGrid(std::list<Creature*>& list, WorldObject* source, uint32 entry, float maxSearchRange);
-TC_GAME_API void GetGameObjectListWithEntryInGrid(std::list<GameObject*>& list, WorldObject* source, uint32 entry, float maxSearchRange);
-TC_GAME_API void GetPlayerListInGrid(std::list<Player*>& list, WorldObject* source, float maxSearchRange);
+inline Creature* GetClosestCreatureWithEntry(WorldObject* source, uint32 entry, float maxSearchRange, bool alive = true)
+{
+    return source->FindNearestCreature(entry, maxSearchRange, alive);
+}
+
+inline GameObject* GetClosestGameObjectWithEntry(WorldObject* source, uint32 entry, float maxSearchRange)
+{
+    return source->FindNearestGameObject(entry, maxSearchRange);
+}
+
+template <typename Container>
+inline void GetCreatureListWithEntryInGrid(Container& container, WorldObject* source, uint32 entry, float maxSearchRange)
+{
+    source->GetCreatureListWithEntryInGrid(container, entry, maxSearchRange);
+}
+
+template <typename Container>
+inline void GetGameObjectListWithEntryInGrid(Container& container, WorldObject* source, uint32 entry, float maxSearchRange)
+{
+    source->GetGameObjectListWithEntryInGrid(container, entry, maxSearchRange);
+}
+
+template <typename Container>
+inline void GetPlayerListInGrid(Container& container, WorldObject* source, float maxSearchRange)
+{
+    source->GetPlayerListInGrid(container, maxSearchRange);
+}
 
 #endif // SCRIPTEDCREATURE_H_
