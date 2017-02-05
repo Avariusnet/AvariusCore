@@ -1,4 +1,5 @@
 #include "Custom\Logic\CustomXP.h"
+#include "Custom\Logic\ReportSystem.h"
 
 
 #ifndef _CUSTOMCHARACTERSYSTEM_H
@@ -12,13 +13,12 @@ public:
 	std::string getAccountName(int accountid);
 	
 	CustomXP* CustomXP;
-	
+	ReportSystem * ReportSystem;
 	
 	int getGuildLeader(int guildid);
 	PreparedQueryResult getCharacterByName(std::string charactername);
 	PreparedQueryResult getAccountbyID(int accountid);
-	void setBossKillCounter(int counter, int bossid);
-	int getBossKillCounter(int bossid);
+	
 
 
 };

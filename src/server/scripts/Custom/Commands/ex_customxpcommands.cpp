@@ -1,5 +1,5 @@
 #include "Config.h"
-#include "Custom\Logic\CustomXP.h"
+#include "Custom\Logic\CustomCharacterSystem.h"
 
 class ex_customxpcommands : public CommandScript
 {
@@ -25,14 +25,14 @@ public:
 		if (sConfigMgr->GetBoolDefault("Custom.XP", 1)) {
 
 
-			CustomXP * customxp;
+			CustomCharacterSystem * CharacterSystem;
 			Player* player = handler->GetSession()->GetPlayer();
 
 			char* px = strtok((char*)args, " ");
 
 			if (!px) {
 				handler->PSendSysMessage("##########################################################");
-				handler->PSendSysMessage("Your XP Multiplier is currently: %u", customxp->getCustomXPValue(player->GetGUID()));
+				handler->PSendSysMessage("Your XP Multiplier is currently: %u", CharacterSystem->CustomXP->getCustomXPValue(player->GetGUID());
 				handler->PSendSysMessage("To change your Multiplier just type '.xprate 2' for a 2x Multifplier.");
 				handler->PSendSysMessage("Valid Values are between 1 and 5.");
 				handler->PSendSysMessage("Have Fun with it, %s.", player->GetSession()->GetPlayerName());
@@ -49,7 +49,7 @@ public:
 			}
 
 
-			std::string charactername = customxp->getCustomXPExntry(player->GetGUID());
+			std::string charactername = CharacterSystem->CustomXP->getCustomXPExntry(player->GetGUID());
 			if (player->GetSession()->GetSecurity() <= 2) {
 				handler->PSendSysMessage("Debug: XPValue: %s", charactername);
 				handler->PSendSysMessage("Debug: GUID: %u", player->GetGUID());
@@ -57,13 +57,13 @@ public:
 
 
 			if (charactername == "0") {
-				customxp->setCustomXPEntry(player->GetSession()->GetPlayerName(), player->GetGUID(), newxpvalue);
+				CharacterSystem->CustomXP->setCustomXPEntry(player->GetSession()->GetPlayerName(), player->GetGUID(), newxpvalue);
 				handler->PSendSysMessage("Your XP Multiplier is set to %u", newxpvalue);
 				return true;
 			}
 
 
-			customxp->updateCustomXPEntry(newxpvalue, player->GetGUID());
+			CharacterSystem->CustomXP->updateCustomXPEntry(newxpvalue, player->GetGUID());
 			handler->PSendSysMessage("Your XP Multiplier is set to %u", newxpvalue);
 			return true;
 		}

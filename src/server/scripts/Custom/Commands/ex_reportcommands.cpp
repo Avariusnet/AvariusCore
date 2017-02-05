@@ -178,8 +178,8 @@ public:
 	{
 
 		if (sConfigMgr->GetBoolDefault("Quest.Report", true)) {
-			ReportSystem* reportsystem;
-			CustomWorldSystem* worldsystem;
+			CustomCharacterSystem* CharacterSystem;
+			CustomWorldSystem* WorldSystem;
 			Player* player = handler->GetSession()->GetPlayer();
 
 			if (args == "") {
@@ -195,14 +195,14 @@ public:
 				return false;
 			int questid = atoul(id);
 
-			bool playerhasreported = reportsystem->checkIfPlayerHasAlreadyReportedQuest(player->GetSession()->GetAccountId(),questid);
+			bool playerhasreported = CharacterSystem->ReportSystem->checkIfPlayerHasAlreadyReportedQuest(player->GetSession()->GetAccountId(),questid);
 
 			if (playerhasreported) {
 				handler->PSendSysMessage(REPORT_QUEST_ERROR);
 				return true;
 			}
 
-			bool questisalreadyreported = reportsystem->checkIfQuestIsAlreadyReported(questid);
+			bool questisalreadyreported = CharacterSystem->ReportSystem->checkIfQuestIsAlreadyReported(questid);
 
 			if (questisalreadyreported) {
 
