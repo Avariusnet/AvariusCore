@@ -35,7 +35,7 @@ public:
 			if (!px) {
 				handler->PSendSysMessage("##########################################################");
 				handler->PSendSysMessage("Your XP Multiplier is currently: %u", playerxp);
-				handler->PSendSysMessage("To change your Multiplier just type '.xprate 2' for a 2x Multifplier.");
+				handler->PSendSysMessage("To change your Multiplier just type '.xprate 2' for a 2x Multiplier.");
 				handler->PSendSysMessage("Valid Values are between 1 and 5.");
 				handler->PSendSysMessage("Have Fun with it, %s.", player->GetSession()->GetPlayerName());
 				handler->PSendSysMessage("##########################################################");

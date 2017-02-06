@@ -45,7 +45,6 @@
 #include "Player.h"
 #include "ReputationMgr.h"
 #include "ScriptMgr.h"
-
 #include <Custom/Logic/CustomCharacterSystem.h>
 #include <Custom/Logic/ReportSystem.h>
 #include <Custom/Logic/CustomWorldSystem.h>
@@ -200,14 +199,14 @@ public:
 				
 			int questid = atoul(id);
 
-			if (player->GetSession()->GetSecurity() == 3) {
+			if (player->GetSession()->GetSecurity() <= 2) {
 				handler->PSendSysMessage("QuestID : %u", questid);
 			}
 
 			//check if Playeraccount already reported Quest. If yes return true 
 			bool playerhasreported = reportSystem->checkIfPlayerHasAlreadyReportedQuest(player->GetSession()->GetAccountId(), questid);
 
-			if (player->GetSession()->GetSecurity() == 3) {
+			if (player->GetSession()->GetSecurity() <= 2) {
 				handler->PSendSysMessage("PlayerHasReported: %s", playerhasreported);
 			}
 
@@ -221,7 +220,7 @@ public:
 
 			if (questisalreadyreported) {
 			
-				if (player->GetSession()->GetSecurity() == 3) {
+				if (player->GetSession()->GetSecurity() <= 2) {
 					handler->PSendSysMessage("QuestisalreadyReported : %s", questisalreadyreported);
 				}
 
@@ -288,277 +287,6 @@ public:
 
 		return true;
 
-
-	/*	if (sConfigMgr->GetBoolDefault("Quest.Report", true)) {
-			Player* player = handler->GetSession()->GetPlayer();
-
-
-
-			std::string eingabe = std::string((char*)args);
-
-			if (eingabe == "")
-			{
-				player->GetSession()->SendNotification("Without entering a valid Quest, the command cannot be executed! Syntax: .report quest [Shift-click on Questname]!");
-				return true;
-			}
-
-			if (!*args)
-				return false;
-
-			uint32 questId = 0;
-
-			if (args[0] == '[')                                        // [name] manual form
-			{
-				char const* questNameStr = strtok((char*)args, "]");
-
-				if (questNameStr && questNameStr[0])
-				{
-					std::string questName = questNameStr + 1;
-					WorldDatabase.EscapeString(questName);
-
-					PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_QUESTID_BY_NAME);
-					stmt->setString(0, questName);
-					PreparedQueryResult result = WorldDatabase.Query(stmt);
-
-					if (!result) {
-						player->GetSession()->SendNotification(CHECK_QUEST_ERROR);
-						return true;
-					}
-
-
-
-
-					Field* questnr = result->Fetch();
-					uint32 questid = questnr[0].GetInt32();
-
-					//check if player reported quest already. if true -> return false. if false -> insert in db and report quest.	
-					PreparedStatement * selreportquestplayer = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PLAYER_REPORT_QUEST);
-					selreportquestplayer->setInt32(0, player->GetGUID());
-					selreportquestplayer->setInt32(1, questid);
-					PreparedQueryResult existplayer = CharacterDatabase.Query(selreportquestplayer);
-
-					if (!existplayer) {
-
-
-						//Insert player in reported_quest_player db
-
-						if (player->GetGuildId() != NULL) {
-							PreparedStatement* insertnewplayer = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_REPORT_QUEST);
-							insertnewplayer->setString(0, player->GetSession()->GetPlayerName());
-							insertnewplayer->setString(1, player->GetGuildName());
-							insertnewplayer->setInt32(2, player->GetGUID());
-							insertnewplayer->setInt32(3, questid);
-							CharacterDatabase.Execute(insertnewplayer);
-						}
-
-
-						PreparedStatement* insertnewplayer = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_REPORT_QUEST);
-						insertnewplayer->setString(0, player->GetSession()->GetPlayerName());
-						insertnewplayer->setString(1, "none");
-						insertnewplayer->setInt32(2, player->GetGUID());
-						insertnewplayer->setInt32(3, questid);
-						CharacterDatabase.Execute(insertnewplayer);
-
-
-						//CHECK IF QUEST WITH ID IS IN DB
-						PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
-						selreportquest->setInt32(0, questid);
-						PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
-
-						//NO Quest with Id in DB
-						if (!ergebnis) {
-
-							PreparedStatement* insertnewquest = CharacterDatabase.GetPreparedStatement(CHAR_INS_REPORT_QUEST);
-							insertnewquest->setString(0, questName);
-							insertnewquest->setInt32(1, questid);
-							insertnewquest->setInt32(2, 1);
-							insertnewquest->setInt32(3, 0);
-							CharacterDatabase.Execute(insertnewquest);
-							player->GetSession()->SendNotification(REPORT_QUEST_SUCESS);
-							return true;
-						}
-
-						//FETCH DB DATA
-
-
-
-						Field* report_quest = ergebnis->Fetch();
-						uint32 questreportid = report_quest[0].GetInt32();
-						uint32 anzahl = report_quest[1].GetInt32();
-						uint32 aktiv = report_quest[2].GetInt32();
-
-
-						//Update anzahl, und aktiv auf 1 setzen.
-						if (anzahl == 5) {
-							PreparedStatement * updatequestaktiv = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST_ACTIVE);
-							updatequestaktiv->setInt32(0, anzahl + 1);
-							updatequestaktiv->setInt32(1, 1);
-							updatequestaktiv->setInt32(2, questreportid);
-							CharacterDatabase.Execute(updatequestaktiv);
-							completeQuest(questreportid, handler, player);
-							player->GetSession()->SendNotification(REPORT_QUEST_SUCESS_AND_COMPLETE);
-							return true;
-						}
-
-						//aktiv == 1, quest abschließen und counter um 1 erhöhen.
-						if (aktiv == 1) {
-							PreparedStatement * updatequest = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST);
-							updatequest->setInt32(0, anzahl + 1);
-							updatequest->setInt32(1, questreportid);
-							CharacterDatabase.Execute(updatequest);
-							completeQuest(questreportid, handler, player);
-							player->GetSession()->SendNotification(REPORT_QUEST_SUCESS_AND_COMPLETE);
-							return true;
-						}
-
-
-						//weder counter == 5 noch aktiv == 1
-						PreparedStatement * updatequest = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST);
-						updatequest->setInt32(0, anzahl + 1);
-						updatequest->setInt32(1, questreportid);
-						CharacterDatabase.Execute(updatequest);
-						player->GetSession()->SendNotification(REPORT_QUEST_SUCESS);
-
-
-						return true;
-
-					}
-
-					return true;
-				}
-
-				//Player already report quest
-				player->GetSession()->SendNotification(REPORT_QUEST_ERROR);
-				return true;
-			}
-
-
-			else                                                    // item_id or [name] Shift-click form |color|Hitem:item_id:0:0:0|h[name]|h|r
-			{
-				char const* id = handler->extractKeyFromLink((char*)args, "Hquest");
-				if (!id)
-					return false;
-				questId = atoul(id);
-				int32 questid = questId;
-				PreparedStatement* selquestbyid = WorldDatabase.GetPreparedStatement(WORLD_SEL_QUESTNAME_BY_ID);
-				selquestbyid->setInt32(0, questId);
-				PreparedQueryResult resultes = WorldDatabase.Query(selquestbyid);
-
-				if (!resultes) {
-					player->GetSession()->SendNotification(CHECK_QUEST_ERROR);
-					return true;
-				}
-
-				Field* questbyname = resultes->Fetch();
-				std::string questname = questbyname[0].GetCString();
-
-
-				PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
-				selreportquest->setInt32(0, questid);
-				PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
-
-
-				//check if player reported quest already. if true -> return false. if false -> insert in db and report quest.	
-				PreparedStatement * selreportquestplayer = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PLAYER_REPORT_QUEST);
-				selreportquestplayer->setInt32(0, player->GetGUID());
-				selreportquestplayer->setInt32(1, questid);
-				PreparedQueryResult existplayer = CharacterDatabase.Query(selreportquestplayer);
-
-				if (!existplayer) {
-
-
-					//Insert player in reported_quest_player db
-					//Insert into reported_quest_player (playername,guildname,guid, reported_quest_id) Values (?,?,?,?)
-					if (player->GetGuildId() != NULL) {
-						PreparedStatement* insertnewplayer = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_REPORT_QUEST);
-						insertnewplayer->setString(0, player->GetSession()->GetPlayerName());
-						insertnewplayer->setString(1, player->GetGuildName());
-						insertnewplayer->setInt32(2, player->GetGUID());
-						insertnewplayer->setInt32(3, questid);
-						CharacterDatabase.Execute(insertnewplayer);
-					}
-
-
-					PreparedStatement* insertnewplayer = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_REPORT_QUEST);
-					insertnewplayer->setString(0, player->GetSession()->GetPlayerName());
-					insertnewplayer->setString(1, "none");
-					insertnewplayer->setInt32(2, player->GetGUID());
-					insertnewplayer->setInt32(3, questid);
-					CharacterDatabase.Execute(insertnewplayer);
-
-
-
-					//NO Quest with Id in DB
-					if (!ergebnis) {
-
-						PreparedStatement* insertnewquest = CharacterDatabase.GetPreparedStatement(CHAR_INS_REPORT_QUEST);
-						insertnewquest->setString(0, questname);
-						insertnewquest->setInt32(1, questid);
-						insertnewquest->setInt32(2, 1);
-						insertnewquest->setInt32(3, 0);
-						CharacterDatabase.Execute(insertnewquest);
-						player->GetSession()->SendNotification(REPORT_QUEST_SUCESS);
-						return true;
-					}
-
-					//FETCH DB DATA
-					Field* report_quest = ergebnis->Fetch();
-					uint32 questreportid = report_quest[0].GetInt32();
-					uint32 anzahl = report_quest[1].GetInt32();
-					uint32 aktiv = report_quest[2].GetInt32();
-
-
-					//Update anzahl, und aktiv auf 1 setzen.
-					if (anzahl == 5) {
-						PreparedStatement * updatequestaktiv = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST_ACTIVE);
-						updatequestaktiv->setInt32(0, anzahl + 1);
-						updatequestaktiv->setInt32(1, 1);
-						updatequestaktiv->setInt32(2, questreportid);
-						CharacterDatabase.Execute(updatequestaktiv);
-						completeQuest(questreportid, handler, player);
-						player->GetSession()->SendNotification(REPORT_QUEST_SUCESS_AND_COMPLETE);
-
-						return true;
-					}
-
-					//aktiv == 1, quest abschließen und counter um 1 erhöhen.
-					if (aktiv == 1) {
-						PreparedStatement * updatequest = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST);
-						updatequest->setInt32(0, anzahl + 1);
-						updatequest->setInt32(1, questreportid);
-						CharacterDatabase.Execute(updatequest);
-						completeQuest(questreportid, handler, player);
-						player->GetSession()->SendNotification(REPORT_QUEST_SUCESS_AND_COMPLETE);
-
-						return true;
-					}
-
-
-					//weder counter == 5 noch aktiv == 1
-					PreparedStatement * updatequest = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST);
-					updatequest->setInt32(0, anzahl + 1);
-					updatequest->setInt32(1, questreportid);
-					CharacterDatabase.Execute(updatequest);
-					player->GetSession()->SendNotification(REPORT_QUEST_SUCESS);
-
-
-					return true;
-				}
-
-				player->GetSession()->SendNotification(REPORT_QUEST_ERROR);
-				return true;
-
-			}
-
-			return true;
-		}
-
-
-		else {
-			return true;
-		}
-		*/
-
 	};
 
 	static bool HandleDeactivateCommand(ChatHandler* handler, const char* args) {
@@ -621,14 +349,7 @@ public:
 						std::string accountname = customcharactersystem->getAccountName(accountid);
 						gmlogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, accountid, "Report deactivate");
 
-						/*PreparedStatement * insertgmaction = CharacterDatabase.GetPreparedStatement(CHAR_INS_GM_ACTION);
-						insertgmaction->setString(0, player->GetSession()->GetPlayerName());
-						insertgmaction->setInt32(1, player->GetGUID());
-						insertgmaction->setString(2, accountname);
-						insertgmaction->setInt32(3, player->GetSession()->GetAccountId());
-						insertgmaction->setString(4, "Activate Quest");
-						CharacterDatabase.Execute(insertgmaction);*/
-
+					
 						// Update collum aktiv to 0!
 						PreparedStatement * updatequestactivate = CharacterDatabase.GetPreparedStatement(CHAR_UDP_REPORT_QUEST_ACTIVATE);
 						updatequestactivate->setInt32(0, 0);
@@ -668,13 +389,6 @@ public:
 					int32 accountid = customcharactersystem->getAccountID(player->GetSession()->GetPlayerName());
 					std::string accountname = customcharactersystem->getAccountName(accountid);
 
-					/*PreparedStatement * insertgmaction = CharacterDatabase.GetPreparedStatement(CHAR_INS_GM_ACTION);
-					insertgmaction->setString(0, player->GetSession()->GetPlayerName());
-					insertgmaction->setInt32(1, player->GetGUID());
-					insertgmaction->setString(2, accountname);
-					insertgmaction->setInt32(3, player->GetSession()->GetAccountId());
-					insertgmaction->setString(4, "Activate Quest");
-					CharacterDatabase.Execute(insertgmaction);*/
 
 					gmlogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, accountid, "Report deactivate");
 

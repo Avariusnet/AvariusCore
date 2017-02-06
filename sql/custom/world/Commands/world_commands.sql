@@ -75,7 +75,7 @@ DELETE FROM command WHERE `name`='coupon reedem';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('coupon reedem', 195, 'Syntax: .coupon reedem [Your RedeemCore].');   
 
 DELETE FROM command WHERE `name`='coupon generate';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('coupon generate', 195, 'Generate a new coupun. .coupon generate');   
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('coupon generate', 195, 'Generate a new coupun. .coupon generate [ITEMID] [ITEMQuantity] [How often should the Code be used]');   
 
 /* Fremdwerbung */
 DELETE FROM command WHERE `name`='werbung';
