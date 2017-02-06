@@ -129,7 +129,7 @@ public:
 			if (me->HealthBelowPctDamaged(75, damage) && _events.IsInPhase(PHASE_ONE))
 			{
 				me->Yell("Euer kleines Herz wird still fuer Stunden! So wird man Euch fuer Tod befinden.", LANG_UNIVERSAL, nullptr);
-				me->SetCurrentEquipmentId(2214);
+				//me->SetCurrentEquipmentId(2214);
 				me->SetObjectScale(2);
 				_events.SetPhase(PHASE_TWO);
 				_events.ScheduleEvent(EVENT_EARTH, 10000);

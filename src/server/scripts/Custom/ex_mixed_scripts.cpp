@@ -545,8 +545,6 @@ public:
 					date.day_of_week() == boost::date_time::Wednesday || date.day_of_week() == boost::date_time::Thursday)
 				{
 					if (player->getLevel() < 80) {
-						int xpvalue = customxp->getCustomXPValue(player->GetGUID());
-						amount = amount;
 						return;
 					}
 					return;
@@ -554,7 +552,6 @@ public:
 
 
 				else {
-					amount = amount;
 					return;
 				}
 			}

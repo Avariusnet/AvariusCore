@@ -70,7 +70,7 @@ public:
 	}
 
 
-	static bool HandleLogicIDTest(ChatHandler* handler, const char* args) {
+	static bool HandleLogicIDTest(ChatHandler* handler, const char* /*args*/) {
 		Player* player = handler->GetSession()->GetPlayer();
 		CustomCharacterSystem* CharacterSystem;
 		

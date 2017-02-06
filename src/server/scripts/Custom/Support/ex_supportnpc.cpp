@@ -38,7 +38,7 @@ public:
         
 			ChatHandler(player->GetSession()).PSendSysMessage(hilfe.c_str(), player->GetName());
 			player->PlayerTalkClass->SendCloseGossip();
-			player->GetSession()->SendAreaTriggerMessage(hilfe.c_str());
+			player->GetSession()->SendAreaTriggerMessage("%s",hilfe);
 			return;
         
 		}

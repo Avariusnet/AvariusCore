@@ -40,11 +40,11 @@ public:
 			Frostshock_Timer = 8000;
 			Chill_Timer = 3000;
 		}
-		void EnterCombat(Unit * /*who*/)
+		void EnterCombat(Unit * /*who*/) override
 		{
 			percentPassed = 1;
 		}
-		void JustDied(Unit* )
+		void JustDied(Unit* ) override
 		{
 			char msg[250];
 			snprintf(msg, 250, "|cffff0000[Event System]|r Die |cff00ccff Allianz|r hat das Event gewonnen!");  

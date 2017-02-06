@@ -942,7 +942,7 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 
 			case 32:
 			{
-				uint32 gildenid = player->GetGuildId();
+				//uint32 gildenid = player->GetGuildId();
 				// Stormwind Cut-Throat Alley -> direkt in SW...
 				//Gildenhauszuordnung(gildenid, 32, 10, 30, player->GetSession()->GetPlayer());
 				player->PlayerTalkClass->SendCloseGossip();

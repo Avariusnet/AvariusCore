@@ -54,14 +54,14 @@ public:
 			uint32 belohnung = felder[1].GetUInt32();
 			uint32 anzahl = felder[2].GetUInt32();
 
-			PreparedStatement* check = CharacterDatabase.GetPreparedStatement(CHAR_SEL_BEANTWORTET);
+			/*PreparedStatement* check = CharacterDatabase.GetPreparedStatement(CHAR_SEL_BEANTWORTET);
 			check->setInt32(0, player->GetSession()->GetAccountId());
 			check->setInt32(1, questionid);
-			PreparedQueryResult result = CharacterDatabase.Query(check);
+			PreparedQueryResult result = CharacterDatabase.Query(check);*/
 
 			bool playerHasAlreadyAnswerQuestion = CharacterSystem->hasPlayerAlreadyAnswertheQuestion(player->GetSession()->GetAccountId(), questionid);
 
-			if (result){
+			if (playerHasAlreadyAnswerQuestion){
 				player->GetSession()->SendNotification(ANSWER_ALREADY_ANSWERED);
 				return;
 			}
