@@ -49,6 +49,7 @@
 #include "Custom\Logic\CustomCharacterSystem.h"
 #include "Custom\Logic\ReportSystem.h"
 #include "Custom\Logic\CustomWorldSystem.h"
+#include <Custom/Logic/GMLogic.h>
 
 
 #define REPORT_QUEST_SUCESS "Quest erfolgreich reported"
