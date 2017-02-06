@@ -85,11 +85,11 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('werbung', 195, '')
 DELETE FROM command WHERE `name`='report quest';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('report quest', 195, '');   
 
-DELETE FROM command WHERE `name`='bug deactivate';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bug deactivate', 193, '');  
+DELETE FROM command WHERE `name`='report deactivate';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('report deactivate', 193, '');  
 
-DELETE FROM command WHERE `name`='bug test';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bug test', 193, '');  
+DELETE FROM command WHERE `name`='report activate';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('report activate', 193, '');  
 
 /* Gutscheineventteam */
 DELETE FROM command WHERE `name`='gutscheinerstellen';
