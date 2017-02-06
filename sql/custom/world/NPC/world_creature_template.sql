@@ -184,6 +184,9 @@ UPDATE `creature_template` SET `faction`='38', `npcflag`='0', `rank`='0', `unit_
 
 UPDATE `creature_template` SET `HealthModifier`='1' WHERE `entry`='800033';
 
+/* Rename von PvP Verkaeufer*/
+UPDATE `creature_template` SET `subname`='Verkaeufer von veralteten Teilen' WHERE `entry`='800019';
+
 
 /*!40000 ALTER TABLE `creature_template` ENABLE KEYS */;
 UNLOCK TABLES;
