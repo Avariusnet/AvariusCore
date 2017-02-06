@@ -68,11 +68,14 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bot respawn', 195,
 
 
 /* ITEM CODE BEFEHL */
-DELETE FROM command WHERE `name`='gutschein';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('gutschein', 195, 'Syntax: .gutschein [Euer Gutscheincode].');   
+DELETE FROM command WHERE `name`='coupon';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('coupon', 195, '');  
 
-DELETE FROM command WHERE `name`='generate';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('generate', 195, '');   
+DELETE FROM command WHERE `name`='coupon reedem';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('coupon reedem', 195, 'Syntax: .coupon reedem [Your RedeemCore].');   
+
+DELETE FROM command WHERE `name`='coupon generate';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('coupon generate', 195, 'Generate a new coupun. .coupon generate');   
 
 /* Fremdwerbung */
 DELETE FROM command WHERE `name`='werbung';

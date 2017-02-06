@@ -21,6 +21,8 @@
 // The name of this function should match:
 // void Add${NameOfDirectory}Scripts()
 
+//Coupon 
+void AddSC_coupon();
 //eventnpc
 void AddSC_eventnpc();
 //autobalancer
@@ -104,6 +106,9 @@ void AddSC_ex_customxpcommands();
 
 void AddCustomScripts()
 {
+	//Coupon
+	AddSC_coupon();
+
 		//eventnpc
 	AddSC_eventnpc();
 	//Load MMO Commands

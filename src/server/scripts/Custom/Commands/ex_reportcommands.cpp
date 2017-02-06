@@ -604,7 +604,7 @@ public:
 					Field* questnr = result->Fetch();
 					uint32 questid = questnr[0].GetInt32();
 
-					//TODO Check if Quest is reported!
+					
 
 					PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
 					selreportquest->setInt32(0, questid);
