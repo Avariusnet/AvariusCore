@@ -17,7 +17,60 @@ PreparedQueryResult CustomCharacterSystem::getAccountbyID(int accountid)
 
 }
 
+PreparedQueryResult CustomCharacterSystem::getAntwortbyPlayerAntwort(std::string answer)
+{
 
+	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_ANTWORTEN_NACH_ANTWORT);
+	stmt->setString(0, answer);
+	PreparedQueryResult ergebnis = CharacterDatabase.Query(stmt);
+	
+	if (!ergebnis) {
+		return NULL;
+	}
+
+	return ergebnis;
+}
+
+bool CustomCharacterSystem::hasPlayerAlreadyAnswertheQuestion(int accountid, int questionnumber)
+{
+	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_BEANTWORTET);
+	stmt->setInt32(0, accountid);
+	stmt->setInt32(1, questionnumber);
+	PreparedQueryResult result = CharacterDatabase.Query(stmt);
+
+	if (!result) {
+		return false;
+	}
+
+	return true;
+}
+
+void CustomCharacterSystem::addNewPlayerAnsweredQuestion(int accountid, int questionnumber)
+{
+	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_BEANTWORTET);
+	stmt->setInt32(0, accountid);
+	stmt->setInt32(1, questionnumber);
+	CharacterDatabase.Execute(stmt);
+
+}
+
+
+
+void CustomCharacterSystem::sendPlayerMail(int itemid, int quantity,std::string title, std::string message, Player * player)
+{
+	ChatHandler * handler;
+	Item* item = Item::CreateItem(itemid, quantity);
+	SQLTransaction trans = CharacterDatabase.BeginTransaction();
+	item->SaveToDB(trans);
+	MailDraft(title, message).AddItem(item)
+		.SendMailTo(trans, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
+	CharacterDatabase.CommitTransaction(trans);
+	handler->PSendSysMessage("##########################################################");
+	handler->PSendSysMessage("Your Answer is correct and your Goodie will be send to you by Mail.");
+	handler->PSendSysMessage("This may take a while.");
+	handler->PSendSysMessage("##########################################################");
+
+}
 
 // Return AccountID with known Charactername. Value = 0 NO ACCOUNT FOUND,  ID != 0 ACCOUNT ID FOUND! 
 //RETURN VALUE IS ACCOUNTID

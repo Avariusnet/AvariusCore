@@ -9,13 +9,17 @@
 class CustomCharacterSystem {
 public:
 
+	void sendPlayerMail(int itemid, int quantity,std::string title, std::string message, Player* player);
+
 	int getAccountID(std::string charactername);
 	std::string getAccountName(int accountid);	
 	int getGuildLeader(int guildid);
 	PreparedQueryResult getCharacterByName(std::string charactername);
 	PreparedQueryResult getAccountbyID(int accountid);
 	
-
+	PreparedQueryResult getAntwortbyPlayerAntwort(std::string answer);
+	bool hasPlayerAlreadyAnswertheQuestion(int accountid, int questionnumber);
+	void addNewPlayerAnsweredQuestion(int accountid, int questionnumber);
 
 };
 
