@@ -1,5 +1,5 @@
-#include "CustomXP.h"
-#include "Custom\Logic\CustomCharacterSystem.h"
+#include <Custom/Logic/CustomXP.h>
+#include <Custom/Logic/CustomCharacterSystem.h>
 
 
 

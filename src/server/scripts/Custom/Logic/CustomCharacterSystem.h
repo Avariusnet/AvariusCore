@@ -1,5 +1,5 @@
-#include "Custom\Logic\CustomXP.h"
-#include "Custom\Logic\ReportSystem.h"
+#include <Custom/Logic/CustomXP.h>
+#include <Custom/Logic/ReportSystem.h>
 
 
 #ifndef _CUSTOMCHARACTERSYSTEM_H

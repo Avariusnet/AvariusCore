@@ -30,7 +30,7 @@
 #include "ArenaTeam.h"
 #include "ArenaScore.h"
 #include "ArenaTeamMgr.h"
-#include "Custom\Logic\CustomXP.h"
+#include <Custom/Logic/CustomXP.h>
 
 
 #define MSG_COLOR_ALICEBLUE            "|cFFF0F8FF"
