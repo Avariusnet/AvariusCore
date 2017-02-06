@@ -889,7 +889,7 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 
 			case 26:
 			{
-				uint32 gildenid = player->GetGuildId();
+				
 
 				// Wetlands mountain camp -> würde ich nicht verwenden!!! (oder für eine 1-Mann Gilde *gg*)
 				//Gildenhauszuordnung(gildenid, 26, 10, 20, player->GetSession()->GetPlayer());
@@ -916,7 +916,7 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 
 			case 29:
 			{
-				uint32 gildenid = player->GetGuildId();
+				
 				// Karazhan Smiley -> würde ich nicht verwenden -> Man versperrt damit den mit Absicht verbauten Weg von Blizz!!!
 				//Gildenhauszuordnung(gildenid, 29, 10, 30, player->GetSession()->GetPlayer());
 				player->PlayerTalkClass->SendCloseGossip();
@@ -934,7 +934,7 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 
 			case 31:
 			{
-				uint32 gildenid = player->GetGuildId();
+				
 				// Undercity Top Tier -> bitte nicht verwenden, ich wüsste nicht wie man das sichern sollte + von außen sieht man rein!
 				//Gildenhauszuordnung(gildenid, 31, 25, 40, player->GetSession()->GetPlayer());
 				player->PlayerTalkClass->SendCloseGossip();
@@ -966,7 +966,7 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 
 			case 35:
 			{
-				uint32 gildenid = player->GetGuildId();
+				
 				// Outland Nagrand: Challes Home for Little Tykes -> NICHT verwenden, QUEST Gebiet!!!
 				//Gildenhauszuordnung(gildenid, 35, 25, 40, player->GetSession()->GetPlayer());
 				player->PlayerTalkClass->SendCloseGossip();
@@ -990,7 +990,7 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 
 			case 38:
 			{
-				uint32 gildenid = player->GetGuildId();
+			
 				// Troll Village in mountains 2 (Darkshore) -> Ist schon oben verwendet! Troll Dorf!
 				//Gildenhauszuordnung(gildenid, 38, 40, 50, player->GetSession()->GetPlayer());
 				player->PlayerTalkClass->SendCloseGossip();

@@ -22,7 +22,7 @@ public:
 		return new horde_bossAI(pCreature);
 	}
 
-	struct horde_bossAI : public ScriptedAI
+	struct horde_bossAI : public ScriptedAI 
 	{
 		horde_bossAI(Creature *c) : ScriptedAI(c){}
 
@@ -32,7 +32,7 @@ public:
 		int phase;
 		int percentPassed;
 
-		void Reset()
+		void Reset() override
 		{
 			me->SetHealth(me->GetMaxHealth());
 			phase = 1;

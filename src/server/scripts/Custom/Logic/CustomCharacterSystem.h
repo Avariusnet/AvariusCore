@@ -21,6 +21,9 @@ public:
 	bool hasPlayerAlreadyAnswertheQuestion(int accountid, int questionnumber);
 	void addNewPlayerAnsweredQuestion(int accountid, int questionnumber);
 
+
+	st
+
 };
 
 

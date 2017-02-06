@@ -109,7 +109,7 @@ public:
 			me->SetReactState(REACT_DEFENSIVE);
 			_events.Reset();
 			Summons.DespawnAll();
-			me->SetCurrentEquipmentId(2193);
+			//me->SetCurrentEquipmentId(2193);
 		}
 
 		void EnterCombat(Unit*) override

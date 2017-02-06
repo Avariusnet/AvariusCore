@@ -24,10 +24,10 @@
 #include <string>
 #include <stdlib.h>
 
-#include <Custom\Logic\CustomCharacterSystem.h>
+#include <Custom/Logic/CustomCharacterSystem.h>
 
 #define ANSWER_NOT_CORRECT "Your Answer is not correct! Try it again!"
-#define ANSWER_ALREADY_ANSWERED "You´ve already answered this Question!"
+#define ANSWER_ALREADY_ANSWERED "You have already answered this Question!"
 
 class codenpc : public CreatureScript
 {

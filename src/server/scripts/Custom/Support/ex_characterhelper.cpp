@@ -32,7 +32,7 @@
 #define NOCHARACTERFOUND "No Character in DB!"
 #define NOACCOUNTFOUND "No Account in DB!"
 #define NOTENOUGHMONEY "Not enough Money!"
-#define TOOMANYCHARACTER "You´ve already 10 Characters"
+#define TOOMANYCHARACTER "You have already 10 Characters"
 
 
 class automatic : public CreatureScript
