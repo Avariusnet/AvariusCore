@@ -37,9 +37,9 @@
 #include "Player.h"
 #include "ReputationMgr.h"
 #include "ScriptMgr.h"
-#include "Custom\Logic\CustomCharacterSystem.h"
-#include "Custom\Logic\ReportSystem.h"
-#include "Custom\Logic\GMLogic.h"
+#include "Custom/Logic/CustomCharacterSystem.h"
+#include "Custom/Logic/ReportSystem.h"
+#include "Custom/Logic/GMLogic.h"
 
 class ex_testcommands : public CommandScript
 {
@@ -72,9 +72,9 @@ public:
 
 	static bool HandleLogicIDTest(ChatHandler* handler, const char* args) {
 		Player* player = handler->GetSession()->GetPlayer();
-		CustomCharacterSystem* customcharactersystem;
+		CustomCharacterSystem* CharacterSystem;
 		
-		int32 accountid = customcharactersystem->getAccountID(player->GetSession()->GetPlayerName());
+		int32 accountid = CharacterSystem->getAccountID(player->GetSession()->GetPlayerName());
 		
 		std::ostringstream ss;
 		ss << "Die AccountId dieses Accounts ist:" << accountid;
@@ -85,10 +85,10 @@ public:
 
 	static bool HandleLogicNameTest(ChatHandler* handler, const char* args) {
 		Player* player = handler->GetSession()->GetPlayer();
-		CustomCharacterSystem* customcharactersystem;
+		CustomCharacterSystem* CharacterSystem;
 
-		int32 accountid = customcharactersystem->getAccountID(player->GetSession()->GetPlayerName());
-		std::string accountname = customcharactersystem->getAccountName(accountid);
+		int32 accountid = CharacterSystem->getAccountID(player->GetSession()->GetPlayerName());
+		std::string accountname = CharacterSystem->getAccountName(accountid);
 
 		std::ostringstream ss;
 		ss << "Die AccountId dieses Accounts ist:" << accountid << ". Der Name ist: " << accountname;
@@ -100,9 +100,8 @@ public:
 
 	static bool HandleLogicReportTest(ChatHandler* handler, const char* args) {
 		Player* player = handler->GetSession()->GetPlayer();
-		CustomCharacterSystem* customcharactersystem;
-		ReportSystem* reportsystem;
-		
+		CustomCharacterSystem* CharacterSystem;
+		ReportSystem * reportSystem;
 		
 
 		std::string eingabe = std::string((char*)args);
@@ -119,7 +118,7 @@ public:
 
 		uint32 questid = (uint32)atoi(px);
 
-		bool isreported = reportsystem->isAlreadyReported(questid);
+		bool isreported = reportSystem->checkIfQuestIsAlreadyReported(questid);
 
 		std::ostringstream ss;
 		ss << "Der Befehl hat den return wert: " << isreported;

@@ -7,7 +7,6 @@ public:
 
 	void addGMLog(std::string charactername, int characterid, std::string accountname, int accountid, std::string action);
 
-
 };
 
 

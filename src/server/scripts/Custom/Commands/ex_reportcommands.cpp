@@ -178,8 +178,9 @@ public:
 	{
 
 		if (sConfigMgr->GetBoolDefault("Quest.Report", true)) {
-			CustomCharacterSystem* CharacterSystem;
-			CustomWorldSystem* WorldSystem;
+			ReportSystem * reportSystem = 0;
+			CustomCharacterSystem* CharacterSystem = 0;
+			CustomWorldSystem* WorldSystem = 0;
 			Player* player = handler->GetSession()->GetPlayer();
 
 			if (args == "") {
@@ -191,21 +192,91 @@ public:
 			std::string eingabe = std::string((char*)args);
 
 			char const* id = handler->extractKeyFromLink((char*)args, "Hquest");
-			if (!id)
-				return false;
+			if (!id) {
+				player->GetSession()->SendNotification("Without entering a valid Quest, the command cannot be executed! Syntax: .report quest [Shift-click on Questname]!");
+				return true;
+			}
+				
 			int questid = atoul(id);
 
-			bool playerhasreported = CharacterSystem->ReportSystem->checkIfPlayerHasAlreadyReportedQuest(player->GetSession()->GetAccountId(),questid);
+			if (player->GetSession()->GetSecurity() == 3) {
+				handler->PSendSysMessage("QuestID : %u", questid);
+			}
+
+			//check if Playeraccount already reported Quest. If yes return true 
+			bool playerhasreported = reportSystem->checkIfPlayerHasAlreadyReportedQuest(player->GetSession()->GetAccountId(), questid);
+
+			if (player->GetSession()->GetSecurity() == 3) {
+				handler->PSendSysMessage("PlayerHasReported: %s", playerhasreported);
+			}
 
 			if (playerhasreported) {
 				handler->PSendSysMessage(REPORT_QUEST_ERROR);
 				return true;
 			}
 
-			bool questisalreadyreported = CharacterSystem->ReportSystem->checkIfQuestIsAlreadyReported(questid);
+			//check if quest is already reported or not.
+			bool questisalreadyreported = reportSystem->checkIfQuestIsAlreadyReported(questid);
 
 			if (questisalreadyreported) {
+			
+				if (player->GetSession()->GetSecurity() == 3) {
+					handler->PSendSysMessage("QuestisalreadyReported : %s", questisalreadyreported);
+				}
 
+				PreparedQueryResult ergebnis = reportSystem->getReportedQuestDetails(questid);
+
+				Field* report_quest = ergebnis->Fetch();
+				uint32 questreportid = report_quest[0].GetInt32();
+				uint32 anzahl = report_quest[1].GetInt32();
+				uint32 aktiv = report_quest[2].GetInt32();
+
+				//if quantity == 5 , set quest to autocomplete
+				if (anzahl == 5) {
+					if (player->GetGuildId() != NULL) {
+						reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), player->GetGuildName(), player->GetGUID(), player->GetSession()->GetAccountId(), questid);
+						reportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
+						reportSystem->setQuestCompleteActive(1, questid);
+						return true;
+					}
+
+					reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null" , player->GetGUID(), player->GetSession()->GetAccountId(), questid);
+					reportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
+					reportSystem->setQuestCompleteActive(1, questid);
+					return true;
+					
+				}
+
+				//if quest active, complete quest
+				if (aktiv == 1) {
+					reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null", player->GetGUID(), player->GetSession()->GetAccountId(), questid);
+					reportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
+					completeQuest(questreportid, handler, player);
+					return true;
+				}
+
+				//Quest acitve != 0 and quantity < 5
+				reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null", player->GetGUID(), player->GetSession()->GetAccountId(), questid);
+				reportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
+				handler->PSendSysMessage(REPORT_QUEST_SUCESS);
+				return true;
+
+			}
+
+
+
+			else {
+				std::string questname = WorldSystem->getQuestNamebyID(questid);
+				reportSystem->addNewQuestReportInDB(questname,questid,1,0);
+				if (player->GetGuildId() != NULL) {
+					reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), player->GetGuildName(), player->GetGUID(), player->GetSession()->GetAccountId(), questid);
+					handler->PSendSysMessage(REPORT_QUEST_SUCESS);
+					return true;
+				}
+
+				reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null", player->GetGUID(), player->GetSession()->GetAccountId(), questid);
+				handler->PSendSysMessage(REPORT_QUEST_SUCESS);
+				return true;
 			}
 
 			
@@ -214,6 +285,7 @@ public:
 
 		}
 
+		return true;
 
 
 	/*	if (sConfigMgr->GetBoolDefault("Quest.Report", true)) {

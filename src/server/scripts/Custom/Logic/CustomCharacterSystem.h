@@ -10,11 +10,7 @@ class CustomCharacterSystem {
 public:
 
 	int getAccountID(std::string charactername);
-	std::string getAccountName(int accountid);
-	
-	CustomXP* CustomXP;
-	ReportSystem * ReportSystem;
-	
+	std::string getAccountName(int accountid);	
 	int getGuildLeader(int guildid);
 	PreparedQueryResult getCharacterByName(std::string charactername);
 	PreparedQueryResult getAccountbyID(int accountid);

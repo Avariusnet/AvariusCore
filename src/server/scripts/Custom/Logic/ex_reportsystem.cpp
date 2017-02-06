@@ -1,4 +1,4 @@
-#include "Custom\Logic\ReportSystem.h"
+#include "ReportSystem.h"
 
 
 
@@ -20,33 +20,67 @@ bool ReportSystem::checkIfPlayerHasAlreadyReportedQuest(int accountid, int quest
 
 void ReportSystem::addNewPlayerReportInDB(std::string playername, std::string guildname, int guid, int accountid, int questid)
 {
+
+	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_REPORT_QUEST);
+	stmt->setString(0, playername);
+	stmt->setString(1, guildname);
+	stmt->setInt32(2, guid);
+	stmt->setInt32(3, accountid);
+	stmt->setInt32(4, questid);
+	CharacterDatabase.Execute(stmt);
+
 }
 
 
 
 void ReportSystem::addNewQuestReportInDB(std::string questname, int questid, int quantity, int active)
 {
+
+	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_REPORT_QUEST);
+	stmt->setString(0, questname);
+	stmt->setInt32(1, questid);
+	stmt->setInt32(2, quantity);
+	stmt->setInt32(3, active);
+	CharacterDatabase.Execute(stmt);
 }
+
+
 
 //Update quantity of a speicifc questid
 void ReportSystem::UpdateQuantityQuestReportInDB(int quantity, int questid)
 {
 
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST);
-	stmt->setInt32(0, quantity + 1);
+	stmt->setInt32(0, quantity);
 	stmt->setInt32(1, questid);
 	CharacterDatabase.Execute(stmt);
 }
 
+
 //Activate or Deactivate a reported Quest with specific questid
-void ReportSystem::setQuestCompleteActive(int quantity,int active, int questid)
+void ReportSystem::setQuestCompleteActive(int active, int questid)
 {
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST_ACTIVE);
-	stmt->setInt32(0, quantity + 1);
 	stmt->setInt32(1, active);
 	stmt->setInt32(2, questid);
 	CharacterDatabase.Execute(stmt);
 }
+
+//Get Questdetails about a specific reported quest.
+PreparedQueryResult ReportSystem::getReportedQuestDetails(int questid)
+{
+	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
+	stmt->setInt32(0, questid);
+	PreparedQueryResult ergebnis = CharacterDatabase.Query(stmt);
+
+	
+	if (!ergebnis) {
+		return nullptr;
+	}
+
+	return ergebnis;
+}
+
 
 
 
