@@ -145,8 +145,8 @@ public:
 
 			std::ostringstream ss2;
 			//ss2 << "Du wurdest mit " << money << " gold und Items belohnt!";
-			ss2 << "Du wurdest mit " << money << " Gold belohnt!";
-			player->GetSession()->SendNotification(ss2.str().c_str());
+			//ss2 << "Du wurdest mit " << money << " Gold belohnt!";
+			//player->GetSession()->SendNotification(ss2.str().c_str());
 			player->ModifyMoney(money*GOLD);
 			//player->AddItem(item, 1);
 			//player->AddItem(item2, 1);

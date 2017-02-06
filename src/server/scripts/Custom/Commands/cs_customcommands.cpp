@@ -108,9 +108,11 @@ public:
 
 			else {
 				handler->PSendSysMessage("You are not at Level 80");
+				return true;
 			}
 			return true;
 		}
+		return true;
 	}
 
 

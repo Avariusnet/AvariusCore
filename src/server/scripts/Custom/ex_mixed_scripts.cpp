@@ -528,8 +528,7 @@ public:
 				{
 
 					if (player->getLevel() < 80) {
-						int xpvalue = customxp->getCustomXPValue(player->GetGUID());
-
+					
 						amount = amount * xpweekendrate;
 						ChatHandler(player->GetSession()).PSendSysMessage("XP Weekend actice. You get: %u", amount,
 							player->GetName());

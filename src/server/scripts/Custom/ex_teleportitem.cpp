@@ -40,7 +40,7 @@ class port_item : public ItemScript
 	public:
 		port_item() : ItemScript("teleportitem"){}
 
-		bool Onuse(Player * player, Item * item, SpellCastTargets const& /*targets*/)
+		bool Onuse(Player * /*player*/, Item * /*item*/, SpellCastTargets const& /*targets*/)
 		{
 			//player->ADD_GOSSIP_ITEM(7, "Teleportiert mich zu den Sammlern!", GOSSIP_SENDER_MAIN, 0);
 			//player->SEND_GOSSIP_MENU(1, item->GetGUID());

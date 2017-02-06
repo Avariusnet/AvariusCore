@@ -76,10 +76,8 @@ public:
 		
 		int32 accountid = CharacterSystem->getAccountID(player->GetSession()->GetPlayerName());
 		
-		std::ostringstream ss;
-		ss << "Die AccountId dieses Accounts ist:" << accountid;
-
-		player->GetSession()->SendAreaTriggerMessage(ss.str().c_str());
+	
+		player->GetSession()->SendAreaTriggerMessage("Die AccountId dieses Accounts ist: %u", accountid);
 		return true;
 	}
 
@@ -90,10 +88,9 @@ public:
 		int32 accountid = CharacterSystem->getAccountID(player->GetSession()->GetPlayerName());
 		std::string accountname = CharacterSystem->getAccountName(accountid);
 
-		std::ostringstream ss;
-		ss << "Die AccountId dieses Accounts ist:" << accountid << ". Der Name ist: " << accountname;
+	
 
-		player->GetSession()->SendAreaTriggerMessage(ss.str().c_str());
+		player->GetSession()->SendAreaTriggerMessage("AccountId ist: %u und der Name ist %s",accountid,accountname);
 		return true;
 	}
 

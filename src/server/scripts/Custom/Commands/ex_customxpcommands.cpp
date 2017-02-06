@@ -24,7 +24,6 @@ public:
 	static bool HandleXPRate(ChatHandler* handler, const char* args) {
 		if (sConfigMgr->GetBoolDefault("Custom.XP", 1)) {
 			CustomXP *CustomXP = 0;
-			ReportSystem * ReportSystem = 0;
 			CustomCharacterSystem * CharacterSystem = 0;
 			Player* player = handler->GetSession()->GetPlayer();
 

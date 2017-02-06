@@ -67,6 +67,14 @@ public:
 			}
 
 			CharacterSystem->addNewPlayerAnsweredQuestion(player->GetSession()->GetAccountId(), questionid);
+			ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+				player->GetName());
+			ChatHandler(player->GetSession()).PSendSysMessage("Your Answer is correct and your Goodie will be send to you by Mail.",
+				player->GetName());
+			ChatHandler(player->GetSession()).PSendSysMessage("This may take a while.",
+				player->GetName());
+			ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+				player->GetName());
 			CharacterSystem->sendPlayerMail(belohnung, anzahl, "Congratulation", "Congratulation. Here is your Goodie for the correct Answer!", player->GetSession()->GetPlayer());
 			
 			return;
@@ -100,7 +108,7 @@ public:
                     }
                     
 					Belohnung(player->GetSession()->GetPlayer(), codes);
-                  
+					return true;
                     
                 
                 }break;

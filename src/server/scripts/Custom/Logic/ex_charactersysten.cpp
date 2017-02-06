@@ -58,18 +58,14 @@ void CustomCharacterSystem::addNewPlayerAnsweredQuestion(int accountid, int ques
 
 void CustomCharacterSystem::sendPlayerMail(int itemid, int quantity,std::string title, std::string message, Player * player)
 {
-	ChatHandler * handler;
+	
 	Item* item = Item::CreateItem(itemid, quantity);
 	SQLTransaction trans = CharacterDatabase.BeginTransaction();
 	item->SaveToDB(trans);
 	MailDraft(title, message).AddItem(item)
 		.SendMailTo(trans, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
 	CharacterDatabase.CommitTransaction(trans);
-	handler->PSendSysMessage("##########################################################");
-	handler->PSendSysMessage("Your Answer is correct and your Goodie will be send to you by Mail.");
-	handler->PSendSysMessage("This may take a while.");
-	handler->PSendSysMessage("##########################################################");
-
+	
 }
 
 // Return AccountID with known Charactername. Value = 0 NO ACCOUNT FOUND,  ID != 0 ACCOUNT ID FOUND! 

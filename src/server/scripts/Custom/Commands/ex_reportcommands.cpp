@@ -183,13 +183,13 @@ public:
 			CustomWorldSystem* WorldSystem = 0;
 			Player* player = handler->GetSession()->GetPlayer();
 
-			if (args == "") {
+			
+			std::string eingabe = std::string((char*)args);
+
+			if (eingabe == "") {
 				player->GetSession()->SendNotification("Without entering a valid Quest, the command cannot be executed! Syntax: .report quest [Shift-click on Questname]!");
 				return true;
 			}
-
-			
-			std::string eingabe = std::string((char*)args);
 
 			char const* id = handler->extractKeyFromLink((char*)args, "Hquest");
 			if (!id) {
