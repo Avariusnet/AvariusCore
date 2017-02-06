@@ -22,8 +22,6 @@ public:
 	void addNewPlayerAnsweredQuestion(int accountid, int questionnumber);
 
 
-	st
-
 };
 
 
