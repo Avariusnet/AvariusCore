@@ -1,5 +1,5 @@
 #include "Config.h"
-#include "Custom\Logic\CustomCharacterSystem.h"
+#include <Custom\Logic\CustomCharacterSystem.h>
 
 class ex_customxpcommands : public CommandScript
 {

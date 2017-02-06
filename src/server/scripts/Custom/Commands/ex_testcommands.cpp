@@ -37,9 +37,9 @@
 #include "Player.h"
 #include "ReputationMgr.h"
 #include "ScriptMgr.h"
-#include "Custom/Logic/CustomCharacterSystem.h"
-#include "Custom/Logic/ReportSystem.h"
-#include "Custom/Logic/GMLogic.h"
+#include <Custom/Logic/CustomCharacterSystem.h>
+#include <Custom/Logic/ReportSystem.h>
+#include <Custom/Logic/GMLogic.h>
 
 class ex_testcommands : public CommandScript
 {
