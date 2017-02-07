@@ -449,9 +449,10 @@ public:
     
 	void OnGiveXP(Player* player, uint32& amount, Unit* /*victim*/)
 	{
-		CustomXP * customxp;
+		CustomXP * customxp = 0;
 		
-		int xpvalue = customxp->getCustomXPValue(player->GetGUID());
+		int xpvalue = 0;
+		xpvalue = customxp->getCustomXPValue(player->GetGUID());
 
 		//Custom XP is on, check if double xp is on.
 		if (sConfigMgr->GetBoolDefault("Custom.XP", 1)) {

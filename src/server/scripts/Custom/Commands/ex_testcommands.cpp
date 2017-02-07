@@ -57,6 +57,7 @@ public:
 			{ "report", SEC_ADMINISTRATOR , false, &HandleLogicReportTest, "" },
 			{ "gmlog", SEC_ADMINISTRATOR , false, &HandleLogicGMLogTest, "" },
 			{ "name", SEC_ADMINISTRATOR, false, &HandleLogicNameTest, "" },
+			{ "gildenid", SEC_ADMINISTRATOR, false, &HandleLogicGildenIDTest, "" },
 
 		};
 
@@ -70,9 +71,20 @@ public:
 	}
 
 
+	static bool HandleLogicGildenIDTest(ChatHandler* handler, const char* args) {
+		Player* player = handler->GetSession()->GetPlayer();
+		
+		int gildenid = 0;
+		gildenid = player->GetGuildId();
+
+		player->GetSession()->SendAreaTriggerMessage("Gildenid ist %u", gildenid);
+		return true;
+	}
+
+
 	static bool HandleLogicIDTest(ChatHandler* handler, const char* /*args*/) {
 		Player* player = handler->GetSession()->GetPlayer();
-		CustomCharacterSystem* CharacterSystem;
+		CustomCharacterSystem* CharacterSystem = 0;
 		
 		int32 accountid = CharacterSystem->getAccountID(player->GetSession()->GetPlayerName());
 		
@@ -83,7 +95,7 @@ public:
 
 	static bool HandleLogicNameTest(ChatHandler* handler, const char* args) {
 		Player* player = handler->GetSession()->GetPlayer();
-		CustomCharacterSystem* CharacterSystem;
+		CustomCharacterSystem* CharacterSystem = 0;
 
 		int32 accountid = CharacterSystem->getAccountID(player->GetSession()->GetPlayerName());
 		std::string accountname = CharacterSystem->getAccountName(accountid);
@@ -97,8 +109,8 @@ public:
 
 	static bool HandleLogicReportTest(ChatHandler* handler, const char* args) {
 		Player* player = handler->GetSession()->GetPlayer();
-		CustomCharacterSystem* CharacterSystem;
-		ReportSystem * reportSystem;
+		CustomCharacterSystem* CharacterSystem = 0;
+		ReportSystem * reportSystem = 0;
 		
 
 		std::string eingabe = std::string((char*)args);
@@ -125,8 +137,8 @@ public:
 	}
 
 	static bool HandleLogicGMLogTest(ChatHandler* handler, const char* args) {
-		GMLogic* gmlogic;
-		CustomCharacterSystem* customcharactersystem;
+		GMLogic* gmlogic = 0;
+		CustomCharacterSystem* customcharactersystem =0;
 		Player* player = handler->GetSession()->GetPlayer();
 		int32 accountid = customcharactersystem->getAccountID(player->GetSession()->GetPlayerName());
 		std::string accountname = customcharactersystem->getAccountName(accountid);

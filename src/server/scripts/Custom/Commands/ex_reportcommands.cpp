@@ -52,7 +52,7 @@
 
 
 #define REPORT_QUEST_SUCESS "Quest erfolgreich reported"
-#define REPORT_QUEST_SUCESS_AND_COMPLETE "Quest reported und completed"
+#define REPORT_QUEST_SUCESS_AND_COMPLETE "Quest reported and completed"
 #define REPORT_QUEST_ERROR  "Du hast die Quest schon reported"
 #define CHECK_QUEST_ERROR "Quest wurde nicht gefunden"
 #define REPORT_ACTIVATE "Quest sucessfully activated"
@@ -233,7 +233,7 @@ public:
 
 				//if quantity == 5 , set quest to autocomplete
 				if (anzahl == 5) {
-					if (player->GetGuildId() != NULL) {
+					if (player->GetGuildId() != 0) {
 						reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), player->GetGuildName(), player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 						reportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
 						reportSystem->setQuestCompleteActive(1, questid);
@@ -252,6 +252,7 @@ public:
 					reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null", player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 					reportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
 					completeQuest(questreportid, handler, player);
+					handler->PSendSysMessage(REPORT_QUEST_SUCESS_AND_COMPLETE);
 					return true;
 				}
 
@@ -268,14 +269,20 @@ public:
 			else {
 				std::string questname = WorldSystem->getQuestNamebyID(questid);
 				reportSystem->addNewQuestReportInDB(questname,questid,1,0);
-				if (player->GetGuildId() != NULL) {
+				if (player->GetGuildId() != 0) {
 					reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), player->GetGuildName(), player->GetGUID(), player->GetSession()->GetAccountId(), questid);
-					handler->PSendSysMessage(REPORT_QUEST_SUCESS);
+					handler->PSendSysMessage("##########################################################");
+					handler->PSendSysMessage(REPORT_QUEST_SUCESS);				
+					handler->PSendSysMessage("##########################################################");
+					player->GetSession()->SendAreaTriggerMessage(REPORT_QUEST_SUCESS);
 					return true;
 				}
 
 				reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null", player->GetGUID(), player->GetSession()->GetAccountId(), questid);
+				handler->PSendSysMessage("##########################################################");
 				handler->PSendSysMessage(REPORT_QUEST_SUCESS);
+				handler->PSendSysMessage("##########################################################");
+				player->GetSession()->SendAreaTriggerMessage(REPORT_QUEST_SUCESS);
 				return true;
 			}
 
