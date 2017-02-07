@@ -23,11 +23,11 @@
 
 enum CharacterDatabaseStatements
 {
-    /*  Naming standard for defines:
-        {DB}_{SEL/INS/UPD/DEL/REP}_{Summary of data changed}
-        When updating more than one field, consider looking at the calling function
-        name for a suiting suffix.
-    */
+	/*  Naming standard for defines:
+		{DB}_{SEL/INS/UPD/DEL/REP}_{Summary of data changed}
+		When updating more than one field, consider looking at the calling function
+		name for a suiting suffix.
+	*/
 
 	/* Exi Custom */
 	CHAR_SEL_ANTWORTEN_NACH_ANTWORT,
@@ -75,6 +75,17 @@ enum CharacterDatabaseStatements
 
 	//Guild 
 	CHAR_SEL_GUILD_LEADER,
+
+	//FORBIDDEN QUEST OR ITEM
+	CHAR_SEL_QUEST_FROM_FORBIDDEN_TABLE,
+	CHAR_SEL_ITEM_FROM_FORBIDDEN_TABLE,
+	CHAR_INS_ITEM_IN_FORBIDDEN_TABLE,
+	CHAR_INS_QUEST_IN_FORBIDDEN_TABLE,
+
+	//GM REPORTS
+	CHAR_INS_GM_ACTION_PLAYER_COUNT,
+	CHAR_SEL_GM_ACTION_PLAYER_COUNT,
+	CHAR_UPD_GM_ACTION_PLAYER_COUNT,
 
 	/*CUSTOM ENDE */
 

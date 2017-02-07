@@ -21,6 +21,8 @@
 // The name of this function should match:
 // void Add${NameOfDirectory}Scripts()
 
+void AddSC_boss_galadriel();
+
 //Coupon 
 void AddSC_coupon();
 //eventnpc
@@ -106,6 +108,9 @@ void AddSC_ex_customxpcommands();
 
 void AddCustomScripts()
 {
+	
+	AddSC_boss_galadriel();
+
 	//Coupon
 	AddSC_coupon();
 

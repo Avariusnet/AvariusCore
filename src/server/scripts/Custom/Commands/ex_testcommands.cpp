@@ -58,6 +58,7 @@ public:
 			{ "gmlog", SEC_ADMINISTRATOR , false, &HandleLogicGMLogTest, "" },
 			{ "name", SEC_ADMINISTRATOR, false, &HandleLogicNameTest, "" },
 			{ "gildenid", SEC_ADMINISTRATOR, false, &HandleLogicGildenIDTest, "" },
+			{ "time", SEC_ADMINISTRATOR, false, &HandleLogicTimeTest, "" },
 
 		};
 
@@ -70,8 +71,17 @@ public:
 		return commandTable;
 	}
 
+	static bool HandleLogicTimeTest(ChatHandler* handler, const char* /*args*/) {
+		Player* player = handler->GetSession()->GetPlayer();
 
-	static bool HandleLogicGildenIDTest(ChatHandler* handler, const char* args) {
+		int gildenid = 0;
+		gildenid = player->GetGuildId();
+
+		player->GetSession()->SendAreaTriggerMessage("Gildenid ist %u", gildenid);
+		return true;
+	}
+
+	static bool HandleLogicGildenIDTest(ChatHandler* handler, const char* /*args*/) {
 		Player* player = handler->GetSession()->GetPlayer();
 		
 		int gildenid = 0;

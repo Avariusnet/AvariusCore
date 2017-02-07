@@ -32,10 +32,14 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(CHAR_INS_LOB, "INSERT INTO lob (zeit,spieler,uid,benutzt)VALUES (?,?,?,?)", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_INS_FIRSTLOG, "INSERT INTO firstnpc_log (grund,spieler, guid) VALUES (?,?,?)", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_INS_EVENTLOG, "INSERT INTO eventteamlog (player,guid, itemid,gutscheincode,anzahl) VALUES (?,?,?,?,?)", CONNECTION_ASYNC);
-	PrepareStatement(CHAR_INS_ITEMCODE, "INSERT INTO `item_codes` (code,belohnung,anzahl,benutzt,name,benutztbar) VALUES (?,?,?,?,?,?)", CONNECTION_ASYNC);
-	PrepareStatement(CHAR_INS_NOPLAYERITEMCODE, "INSERT INTO `item_codes` (code,belohnung,anzahl,benutzt,benutztbar) VALUES (?,?,?,?,?)", CONNECTION_ASYNC);
+	
+	
+
+	//Item Codes
 	PrepareStatement(CHAR_SEL_ITEMCODEGES, "SELECT `code`, `belohnung`, `anzahl`, `benutzt`, `benutztbar` FROM `item_codes` WHERE `code` = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_INS_ITEMCODEACCOUNT, "INSERT INTO item_codes_account (name,accid,code) Values(?,?,?)", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_INS_ITEMCODE, "INSERT INTO `item_codes` (code,belohnung,anzahl,benutzt,name,benutztbar) VALUES (?,?,?,?,?,?)", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_INS_NOPLAYERITEMCODE, "INSERT INTO `item_codes` (code,belohnung,anzahl,benutzt,benutztbar) VALUES (?,?,?,?,?)", CONNECTION_ASYNC);
 
 	//BONUS EP
 	PrepareStatement(CHAR_INS_BONUS_EP, "Insert into bonus_ep (player, playerid,start, ende, aktiv) Values (?,?,?,?,?)", CONNECTION_ASYNC);
@@ -71,6 +75,16 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(CHAR_SEL_GUILD_LEADER, "Select leaderguid from `guild` where `guildid` = ?", CONNECTION_SYNCH);
 
 
+	//FORBIDDEN QUEST OR ID
+	PrepareStatement(CHAR_SEL_QUEST_FROM_FORBIDDEN_TABLE, "Select questid from forbidden_quest_or_item  where questid = ?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_SEL_ITEM_FROM_FORBIDDEN_TABLE, "Select itemid from forbidden_quest_or_item  where itemid = ?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_INS_QUEST_IN_FORBIDDEN_TABLE, "INSERT into forbidden_quest_or_item (questid) VALUES (?)", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_INS_ITEM_IN_FORBIDDEN_TABLE, "INSERT into forbidden_quest_or_item (itemid) VALUES (?)", CONNECTION_ASYNC);
+
+	//GM REPORTS
+	PrepareStatement(CHAR_INS_GM_ACTION_PLAYER_COUNT, "Insert into gm_actions_player_count (accountid, counter) VALUES (?,?)", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_SEL_GM_ACTION_PLAYER_COUNT, "Select id,accountid, counter from gm_actions_player_count where accountid = ?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_UPD_GM_ACTION_PLAYER_COUNT, "Update gm_actions_player_count set counter = ? where id = ?", CONNECTION_ASYNC);
 
 	/* CUSTOM ENDE */
 

@@ -115,3 +115,5 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('logic name', 193, 
 DELETE FROM command WHERE `name`='logic gildenid';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('logic gildenid', 193, ''); 
 
+DELETE FROM command WHERE `name`='logic time';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('logic time', 193, ''); 

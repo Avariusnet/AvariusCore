@@ -21,14 +21,17 @@
 #include "ObjectMgr.h"
 #include "Chat.h"
 #include "SocialMgr.h"
+#include <Custom/Logic/CustomWorldSystem.h>
+#include <Custom/Logic/CustomCouponSystem.h>
+#include <Custom/Logic/GMLogic.h>
+#include <Custom/Logic/CustomCharacterSystem.h>
 
 
 
-
-class coupun : public CommandScript
+class coupon : public CommandScript
 {
 public:
-	coupun() : CommandScript("coupun") { }
+	coupon() : CommandScript("coupon") { }
 
 	std::vector<ChatCommand> GetCommands()  const override
 	{
@@ -36,10 +39,7 @@ public:
 		static std::vector<ChatCommand> coupontable =
 		{
 
-
 			{ "reedem", SEC_PLAYER, false, &HandleGutscheinCommand, "" },
-
-
 			{ "generate", SEC_ADMINISTRATOR, false, &HandlegutscheinerstellenCommand, "" }
 
 		};
@@ -55,21 +55,31 @@ public:
 
 
 
-
+	
 
 	//Gibt dem Eventteam die Moeglichkeit Gutscheine fuer Spieler zu erstellen.
 	static bool HandlegutscheinerstellenCommand(ChatHandler* handler, const char* args)
 	{
-
+		CustomWorldSystem * WorldSystem = 0;
+		CustomCouponSystem * CouponSystem = 0;
+		GMLogic * GmLogic = 0;
+		CustomCharacterSystem * CharacterSystem = 0;
 		Player* player = handler->GetSession()->GetPlayer();
 
-		char* itemid = strtok((char*)args, " ");
-		if (!itemid) {
+
+		char* itemchar = strtok((char*)args, " ");
+		if (!itemchar) {
 			player->GetSession()->SendNotification("Ohne ItemID geht das leider nicht!");
 			return false;
 		}
 
-		uint32 item = atoi((char*)itemid);
+		uint32 itemid = atoi((char*)itemchar);
+		bool itemexist = WorldSystem->doesItemExistinDB(itemid);
+
+		if (!itemexist) {
+			player->GetSession()->SendNotification("Item not in DB!");
+			return true;
+		}
 
 		char* itemanzahl = strtok(NULL, " ");
 		if (!itemanzahl || !atoi(itemanzahl)) {
@@ -85,7 +95,60 @@ public:
 		}
 
 
+		uint32 quantity = atoi((char*)itemanzahl);
+		uint32 codeuseable = atoi((char*)anzahlnutzer);
 
+	
+		bool checkifitemisforbidden = CharacterSystem->checkIfItemisForbidden(itemid);
+
+		if (checkifitemisforbidden) {
+
+			std::string accountname = "";
+			accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+			GmLogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), " Try to generate a forbidden Coupon code");
+			
+
+			PreparedQueryResult result = GmLogic->selectGMPlayerCount(player->GetSession()->GetAccountId());
+			if (result == NULL) {
+				handler->PSendSysMessage("Debug: Result  = NULL reached!");
+				GmLogic->addGMPlayerCount(player->GetSession()->GetAccountId());
+				return true;
+			}
+
+			Field* fields = result->Fetch();
+			int32 id = fields[0].GetInt32();
+			int32 accountid = fields[1].GetInt32();
+			int32 counter = fields[2].GetInt32();
+			
+			int newcounter = 0;
+			newcounter = counter + 1;
+			if (player->GetSession()->GetSecurity() >= 2) {
+				handler->PSendSysMessage("Debug: ID: %u", id);
+				handler->PSendSysMessage("Debug: AccountID: %u",accountid);
+				handler->PSendSysMessage("Debug: Counter: %u", counter);
+				handler->PSendSysMessage("Debug: Counter + 1: %u", newcounter);
+			}
+
+			GmLogic->updateGMPlayerCount(newcounter, id);
+
+			handler->PSendSysMessage("##########################################################");
+			handler->PSendSysMessage("Warning: GM should be a supporter not a cheater!");
+			handler->PSendSysMessage("This incident has been logged in DB.");
+			handler->PSendSysMessage("##########################################################");
+			return true;
+		}
+
+
+		std::string couponcode = "";
+		couponcode = CouponSystem->createNewCouponCode();
+		CouponSystem->insertNewCouponCodeinDB(couponcode, itemid, quantity, 0, codeuseable);
+		handler->PSendSysMessage("##########################################################");
+		handler->PSendSysMessage("The generated couponcode is: %s", couponcode);
+		handler->PSendSysMessage("The ItemID is: %u", itemid);
+		handler->PSendSysMessage("##########################################################");
+
+		return true;
+		/*
 		PreparedStatement * itemquery = WorldDatabase.GetPreparedStatement(WORLD_SEL_ITEM_NR);
 		itemquery->setUInt32(0, item);
 		PreparedQueryResult ergebnis = WorldDatabase.Query(itemquery);
@@ -144,8 +207,7 @@ public:
 		std::string str(10, 0);
 		std::generate_n(str.begin(), 10, randchar);
 
-		/*CharacterDatabase.PExecute("INSERT INTO `item_codes` (code,belohnung,anzahl,benutzt,benutztbar) Values ('%s','%u','%u','%u','%u')", str, item, anzahlint, 0,1);*/
-
+		
 		PreparedStatement * inscode = CharacterDatabase.GetPreparedStatement(CHAR_INS_NOPLAYERITEMCODE);
 		inscode->setString(0, str);
 		inscode->setUInt32(1, item);
@@ -175,10 +237,7 @@ public:
 
 
 
-		/*CharacterDatabase.PExecute("INSERT INTO firstnpc_log "
-		"(grund,spieler, guid)"
-		"VALUES ('%s', '%s', '%u')",
-		"Eventteamgutschein", player->GetSession()->GetPlayerName(),player->GetGUID()); */
+
 
 		PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_FIRSTLOG);
 		stmt->setString(0, "Eventteamgutschein");
@@ -194,12 +253,9 @@ public:
 		eventlog->setUInt32(4, anzahlint);
 		CharacterDatabase.Execute(eventlog);
 
-		/*CharacterDatabase.PExecute("INSERT INTO eventteamlog "
-		"(player,guid, itemid,gutscheincode,anzahl)"
-		"VALUES ('%s', '%u', '%u', '%s','%u')",
-		player->GetSession()->GetPlayerName(),player->GetGUID(),item,str,anzahlint); */
 
-		return true;
+
+		return true; */
 
 	};
 
@@ -315,5 +371,5 @@ public:
 	
 void AddSC_coupon()
 {
-	new coupun();
+	new coupon();
 }

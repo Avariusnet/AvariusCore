@@ -75,7 +75,7 @@ public:
 				player->GetName());
 			ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 				player->GetName());
-			CharacterSystem->sendPlayerMail(belohnung, anzahl, "Congratulation", "Congratulation. Here is your Goodie for the correct Answer!", player->GetSession()->GetPlayer());
+			CharacterSystem->sendPlayerMailwithItem(belohnung, anzahl, "Congratulation", "Congratulation. Here is your Goodie for the correct Answer!", player->GetSession()->GetPlayer());
 			
 			return;
 		}

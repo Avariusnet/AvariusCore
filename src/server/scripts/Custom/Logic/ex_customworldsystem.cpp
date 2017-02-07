@@ -40,6 +40,19 @@ int CustomWorldSystem::getQuestIDbyName(std::string questname)
 	return questid;
 }
 
+bool CustomWorldSystem::doesItemExistinDB(int itemid)
+{
+	PreparedStatement * itemquery = WorldDatabase.GetPreparedStatement(WORLD_SEL_ITEM_NR);
+	itemquery->setUInt32(0, itemid);
+	PreparedQueryResult ergebnis = WorldDatabase.Query(itemquery);
+
+	if (!ergebnis) {
+		return false;
+	}
+	
+	return true;
+}
+
 
 
 

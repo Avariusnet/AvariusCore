@@ -13,6 +13,7 @@ public:
 	int getBossKillCounter(int bossid);
 	std::string getQuestNamebyID(int questid);
 	int getQuestIDbyName(std::string questname);
+	bool doesItemExistinDB(int itemid);
 };
 
 

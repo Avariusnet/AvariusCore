@@ -54,9 +54,47 @@ void CustomCharacterSystem::addNewPlayerAnsweredQuestion(int accountid, int ques
 
 }
 
+void CustomCharacterSystem::insertQuestIntoForbiddenTable(int questid)
+{
+	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_QUEST_IN_FORBIDDEN_TABLE);
+	stmt->setInt32(0, questid);
+	CharacterDatabase.Execute(stmt);
+}
+
+void CustomCharacterSystem::insertItemIntoForbiddenTable(int itemid)
+{
+	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_ITEM_IN_FORBIDDEN_TABLE);
+	stmt->setInt32(0, itemid);
+	CharacterDatabase.Execute(stmt);
+}
+
+bool CustomCharacterSystem::checkIfQuestisForbidden(int questid)
+{
+	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_QUEST_FROM_FORBIDDEN_TABLE);
+	stmt->setInt32(0, questid);
+	PreparedQueryResult result = CharacterDatabase.Query(stmt);
+
+	if (!result) {
+		return false;
+	}
+	return true;
+}
+
+bool CustomCharacterSystem::checkIfItemisForbidden(int itemid)
+{
+	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_ITEM_FROM_FORBIDDEN_TABLE);
+	stmt->setInt32(0, itemid);
+	PreparedQueryResult result = CharacterDatabase.Query(stmt);
+
+	if (!result) {
+		return false;
+	}
+	return true;
+}
 
 
-void CustomCharacterSystem::sendPlayerMail(int itemid, int quantity,std::string title, std::string message, Player * player)
+
+void CustomCharacterSystem::sendPlayerMailwithItem(int itemid, int quantity,std::string title, std::string message, Player * player)
 {
 	
 	Item* item = Item::CreateItem(itemid, quantity);

@@ -6,6 +6,9 @@ class GMLogic {
 public:
 
 	void addGMLog(std::string charactername, int characterid, std::string accountname, int accountid, std::string action);
+	void addGMPlayerCount(int accountid);
+	void updateGMPlayerCount(int counter, int accountid);
+	PreparedQueryResult selectGMPlayerCount(int accountid);
 
 };
 

@@ -9,7 +9,7 @@
 class CustomCharacterSystem {
 public:
 
-	void sendPlayerMail(int itemid, int quantity,std::string title, std::string message, Player* player);
+	void sendPlayerMailwithItem(int itemid, int quantity,std::string title, std::string message, Player* player);
 
 	int getAccountID(std::string charactername);
 	std::string getAccountName(int accountid);	
@@ -21,7 +21,10 @@ public:
 	bool hasPlayerAlreadyAnswertheQuestion(int accountid, int questionnumber);
 	void addNewPlayerAnsweredQuestion(int accountid, int questionnumber);
 
-
+	void insertQuestIntoForbiddenTable(int questid);
+	void insertItemIntoForbiddenTable(int itemid);
+	bool checkIfQuestisForbidden(int questid);
+	bool checkIfItemisForbidden(int itemid);
 };
 
 

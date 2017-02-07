@@ -179,8 +179,7 @@ public:
 
 		if (sConfigMgr->GetBoolDefault("Quest.Report", true)) {
 			ReportSystem * reportSystem = 0;
-			CustomCharacterSystem* CharacterSystem = 0;
-			CustomWorldSystem* WorldSystem = 0;
+			CustomWorldSystem * WorldSystem = 0;
 			Player* player = handler->GetSession()->GetPlayer();
 
 			
@@ -211,7 +210,9 @@ public:
 			}
 
 			if (playerhasreported) {
+				handler->PSendSysMessage("##########################################################");
 				handler->PSendSysMessage(REPORT_QUEST_ERROR);
+				handler->PSendSysMessage("##########################################################");
 				return true;
 			}
 
@@ -272,7 +273,9 @@ public:
 				if (player->GetGuildId() != 0) {
 					reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), player->GetGuildName(), player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 					handler->PSendSysMessage("##########################################################");
-					handler->PSendSysMessage(REPORT_QUEST_SUCESS);				
+					handler->PSendSysMessage(REPORT_QUEST_SUCESS);	
+					handler->PSendSysMessage("QuestID: %u", questid);
+					handler->PSendSysMessage("Questname: %s", questname);
 					handler->PSendSysMessage("##########################################################");
 					player->GetSession()->SendAreaTriggerMessage(REPORT_QUEST_SUCESS);
 					return true;
@@ -281,6 +284,8 @@ public:
 				reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null", player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 				handler->PSendSysMessage("##########################################################");
 				handler->PSendSysMessage(REPORT_QUEST_SUCESS);
+				handler->PSendSysMessage("QuestID: %u", questid);
+				handler->PSendSysMessage("Questname: %s", questname);
 				handler->PSendSysMessage("##########################################################");
 				player->GetSession()->SendAreaTriggerMessage(REPORT_QUEST_SUCESS);
 				return true;
@@ -299,8 +304,8 @@ public:
 	static bool HandleDeactivateCommand(ChatHandler* handler, const char* args) {
 		if (sConfigMgr->GetBoolDefault("Quest.Report", true)) {
 			Player* player = handler->GetSession()->GetPlayer();
-			GMLogic* gmlogic;
-			CustomCharacterSystem * customcharactersystem;
+			GMLogic* gmlogic = 0;
+			CustomCharacterSystem * customcharactersystem = 0;
 
 			std::string eingabe = std::string((char*)args);
 
@@ -424,8 +429,8 @@ public:
 
 		if (sConfigMgr->GetBoolDefault("Quest.Report", true)) {
 			Player* player = handler->GetSession()->GetPlayer();
-			GMLogic* gmlogic;
-			CustomCharacterSystem * customcharactersystem;
+			GMLogic* gmlogic = 0;
+			CustomCharacterSystem * customcharactersystem = 0;
 
 			std::string eingabe = std::string((char*)args);
 
