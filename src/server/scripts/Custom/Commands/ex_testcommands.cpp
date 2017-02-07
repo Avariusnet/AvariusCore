@@ -38,8 +38,8 @@
 #include "ReputationMgr.h"
 #include "ScriptMgr.h"
 #include <Custom/Logic/CustomCharacterSystem.h>
-#include <Custom/Logic/ReportSystem.h>
-#include <Custom/Logic/GMLogic.h>
+#include <Custom/Logic/CustomReportSystem.h>
+#include <Custom/Logic/CustomGMLogic.h>
 
 class ex_testcommands : public CommandScript
 {
@@ -112,7 +112,7 @@ public:
 
 	
 
-		player->GetSession()->SendAreaTriggerMessage("AccountId ist: %u und der Name ist %s",accountid,accountname);
+		handler->PSendSysMessage("AccountId ist: %u und der Name ist %s",accountid,accountname);
 		return true;
 	}
 
@@ -120,7 +120,7 @@ public:
 	static bool HandleLogicReportTest(ChatHandler* handler, const char* args) {
 		Player* player = handler->GetSession()->GetPlayer();
 		CustomCharacterSystem* CharacterSystem = 0;
-		ReportSystem * reportSystem = 0;
+		CustomReportSystem * reportSystem = 0;
 		
 
 		std::string eingabe = std::string((char*)args);
@@ -147,7 +147,7 @@ public:
 	}
 
 	static bool HandleLogicGMLogTest(ChatHandler* handler, const char* args) {
-		GMLogic* gmlogic = 0;
+		CustomGMLogic* gmlogic = 0;
 		CustomCharacterSystem* customcharactersystem =0;
 		Player* player = handler->GetSession()->GetPlayer();
 		int32 accountid = customcharactersystem->getAccountID(player->GetSession()->GetPlayerName());

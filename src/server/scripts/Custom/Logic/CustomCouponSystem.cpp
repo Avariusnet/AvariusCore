@@ -10,7 +10,7 @@ void CustomCouponSystem::insertNewCouponCodeinDB(std::string code, int itemid, i
 	stmt->setString(0, code);
 	stmt->setUInt32(1, itemid);
 	stmt->setUInt32(2, quantity);
-	stmt->setUInt32(3, 0);
+	stmt->setUInt32(3, used);
 	stmt->setUInt32(4, useablequantity);
 	CharacterDatabase.Execute(stmt);
 

@@ -3,7 +3,7 @@
 #define _REPORTSYSTEM_H
 
 
-class ReportSystem {
+class CustomReportSystem {
 public:
 
 

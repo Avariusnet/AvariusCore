@@ -1,4 +1,4 @@
-#include <Custom/Logic/GMLogic.h>
+#include <Custom/Logic/CustomGMLogic.h>
 
 
 
@@ -6,7 +6,7 @@
 
 
 //Insert a GM Log action, to control your GM´s. No Return Value. Log is found in Character DB , Tablename: "gm_action"
-void GMLogic::addGMLog(std::string charactername, int characterid, std::string accountname, int accountid, std::string action) {
+void CustomGMLogic::addGMLog(std::string charactername, int characterid, std::string accountname, int accountid, std::string action) {
 
 
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_GM_ACTION);
@@ -18,7 +18,7 @@ void GMLogic::addGMLog(std::string charactername, int characterid, std::string a
 	CharacterDatabase.Execute(stmt);
 }
 
-void GMLogic::addGMPlayerCount(int accountid)
+void CustomGMLogic::addGMPlayerCount(int accountid)
 {
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_GM_ACTION_PLAYER_COUNT);
 	stmt->setInt32(0, accountid);
@@ -26,7 +26,7 @@ void GMLogic::addGMPlayerCount(int accountid)
 	CharacterDatabase.Execute(stmt);
 }
 
-void GMLogic::updateGMPlayerCount(int counter, int accountid)
+void CustomGMLogic::updateGMPlayerCount(int counter, int accountid)
 {
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_GM_ACTION_PLAYER_COUNT);
 	stmt->setInt32(0, counter);
@@ -34,7 +34,7 @@ void GMLogic::updateGMPlayerCount(int counter, int accountid)
 	CharacterDatabase.Execute(stmt);
 }
 
-PreparedQueryResult GMLogic::selectGMPlayerCount(int accountid)
+PreparedQueryResult CustomGMLogic::selectGMPlayerCount(int accountid)
 {
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_GM_ACTION_PLAYER_COUNT);
 	stmt->setInt32(0, accountid);

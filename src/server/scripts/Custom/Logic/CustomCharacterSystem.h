@@ -1,5 +1,5 @@
 #include <Custom/Logic/CustomXP.h>
-#include <Custom/Logic/ReportSystem.h>
+#include <Custom/Logic/CustomReportSystem.h>
 
 
 #ifndef _CUSTOMCHARACTERSYSTEM_H

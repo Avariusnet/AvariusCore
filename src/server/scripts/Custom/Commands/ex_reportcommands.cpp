@@ -46,9 +46,9 @@
 #include "ReputationMgr.h"
 #include "ScriptMgr.h"
 #include <Custom/Logic/CustomCharacterSystem.h>
-#include <Custom/Logic/ReportSystem.h>
+#include <Custom/Logic/CustomReportSystem.h>
 #include <Custom/Logic/CustomWorldSystem.h>
-#include <Custom/Logic/GMLogic.h>
+#include <Custom/Logic/CustomGMLogic.h>
 
 
 #define REPORT_QUEST_SUCESS "Quest erfolgreich reported"
@@ -178,7 +178,7 @@ public:
 	{
 
 		if (sConfigMgr->GetBoolDefault("Quest.Report", true)) {
-			ReportSystem * reportSystem = 0;
+			CustomReportSystem * reportSystem = 0;
 			CustomWorldSystem * WorldSystem = 0;
 			Player* player = handler->GetSession()->GetPlayer();
 
@@ -304,7 +304,7 @@ public:
 	static bool HandleDeactivateCommand(ChatHandler* handler, const char* args) {
 		if (sConfigMgr->GetBoolDefault("Quest.Report", true)) {
 			Player* player = handler->GetSession()->GetPlayer();
-			GMLogic* gmlogic = 0;
+			CustomGMLogic* gmlogic = 0;
 			CustomCharacterSystem * customcharactersystem = 0;
 
 			std::string eingabe = std::string((char*)args);
@@ -429,7 +429,7 @@ public:
 
 		if (sConfigMgr->GetBoolDefault("Quest.Report", true)) {
 			Player* player = handler->GetSession()->GetPlayer();
-			GMLogic* gmlogic = 0;
+			CustomGMLogic* gmlogic = 0;
 			CustomCharacterSystem * customcharactersystem = 0;
 
 			std::string eingabe = std::string((char*)args);

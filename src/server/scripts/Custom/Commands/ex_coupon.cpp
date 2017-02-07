@@ -23,7 +23,7 @@
 #include "SocialMgr.h"
 #include <Custom/Logic/CustomWorldSystem.h>
 #include <Custom/Logic/CustomCouponSystem.h>
-#include <Custom/Logic/GMLogic.h>
+#include <Custom/Logic/CustomGMLogic.h>
 #include <Custom/Logic/CustomCharacterSystem.h>
 
 
@@ -62,7 +62,7 @@ public:
 	{
 		CustomWorldSystem * WorldSystem = 0;
 		CustomCouponSystem * CouponSystem = 0;
-		GMLogic * GmLogic = 0;
+		CustomGMLogic * GmLogic = 0;
 		CustomCharacterSystem * CharacterSystem = 0;
 		Player* player = handler->GetSession()->GetPlayer();
 

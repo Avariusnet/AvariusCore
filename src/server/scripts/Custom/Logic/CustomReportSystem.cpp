@@ -1,9 +1,9 @@
-#include "ReportSystem.h"
+#include "CustomReportSystem.h"
 
 
 
 
-bool ReportSystem::checkIfPlayerHasAlreadyReportedQuest(int accountid, int questid)
+bool CustomReportSystem::checkIfPlayerHasAlreadyReportedQuest(int accountid, int questid)
 {
 
 	PreparedStatement * selreportquestplayer = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PLAYER_REPORT_QUEST);
@@ -18,7 +18,7 @@ bool ReportSystem::checkIfPlayerHasAlreadyReportedQuest(int accountid, int quest
 	return 	true;
 }
 
-void ReportSystem::addNewPlayerReportInDB(std::string playername, std::string guildname, int guid, int accountid, int questid)
+void CustomReportSystem::addNewPlayerReportInDB(std::string playername, std::string guildname, int guid, int accountid, int questid)
 {
 
 	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_REPORT_QUEST);
@@ -33,7 +33,7 @@ void ReportSystem::addNewPlayerReportInDB(std::string playername, std::string gu
 
 
 
-void ReportSystem::addNewQuestReportInDB(std::string questname, int questid, int quantity, int active)
+void CustomReportSystem::addNewQuestReportInDB(std::string questname, int questid, int quantity, int active)
 {
 
 	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_REPORT_QUEST);
@@ -47,7 +47,7 @@ void ReportSystem::addNewQuestReportInDB(std::string questname, int questid, int
 
 
 //Update quantity of a speicifc questid
-void ReportSystem::UpdateQuantityQuestReportInDB(int quantity, int questid)
+void CustomReportSystem::UpdateQuantityQuestReportInDB(int quantity, int questid)
 {
 
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST);
@@ -58,7 +58,7 @@ void ReportSystem::UpdateQuantityQuestReportInDB(int quantity, int questid)
 
 
 //Activate or Deactivate a reported Quest with specific questid
-void ReportSystem::setQuestCompleteActive(int active, int questid)
+void CustomReportSystem::setQuestCompleteActive(int active, int questid)
 {
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST_ACTIVE);
 	stmt->setInt32(1, active);
@@ -67,7 +67,7 @@ void ReportSystem::setQuestCompleteActive(int active, int questid)
 }
 
 //Get Questdetails about a specific reported quest.
-PreparedQueryResult ReportSystem::getReportedQuestDetails(int questid)
+PreparedQueryResult CustomReportSystem::getReportedQuestDetails(int questid)
 {
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
 	stmt->setInt32(0, questid);
@@ -86,7 +86,7 @@ PreparedQueryResult ReportSystem::getReportedQuestDetails(int questid)
 
 //Returns if a Quest was already reported or not. If 0 = quest wasn´t reported. 1 = quest is already reported.
 //RETURN VALUE IS BOOLEAN
-bool ReportSystem::checkIfQuestIsAlreadyReported(int questid) {
+bool CustomReportSystem::checkIfQuestIsAlreadyReported(int questid) {
 	PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
 	selreportquest->setInt32(0, questid);
 	PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);

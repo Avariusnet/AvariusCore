@@ -31,6 +31,8 @@
 #include "ArenaScore.h"
 #include "ArenaTeamMgr.h"
 #include <Custom/Logic/CustomXP.h>
+#include <Custom/Logic/CustomGMLogic.h>
+#include <Custom/Logic/CustomCharacterSystem.h>
 
 
 #define MSG_COLOR_ALICEBLUE            "|cFFF0F8FF"
@@ -441,6 +443,50 @@ public:
 };
 
 
+class Logoutcheck : public PlayerScript
+{
+public:
+	Logoutcheck() : PlayerScript("Logoutcheck"){}
+
+
+	void OnLogout(Player* player) {
+		CustomGMLogic * GMLogic = 0;
+		CustomCharacterSystem * CharacterSystem = 0;
+		if (sConfigMgr->GetBoolDefault("GM.Security", 1)) {
+			if (player->GetSession()->GetSecurity() > 0) {
+				PreparedQueryResult result = GMLogic->selectGMPlayerCount(player->GetSession()->GetAccountId());
+
+				Field * ergebnis = result->Fetch();
+				int accountid = ergebnis[1].GetInt32();
+				int counter = ergebnis[2].GetInt32();
+
+				int maxcount = 0;
+
+				maxcount = sConfigMgr->GetIntDefault("GM.Security.Number", 50);
+				if (counter >= maxcount) {
+					std::string accountname = "";
+					accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+					sWorld->BanAccount(BAN_ACCOUNT, accountname, 0, "To many bad Decisions", "AvariusCore");
+					std::ostringstream ss;
+					std::ostringstream tt;
+					std::ostringstream uu;
+					ss << "Gamemaster " << player->GetSession()->GetPlayerName() << " has been banned by Core.";
+					tt << "Reason: To many Failures with Cheating Commands. This is a friedly Reminder for the whole Team.";
+					uu << "Read and unterstand the Rules of your Server!";
+					sWorld->SendGMText(LANG_GM_BROADCAST, ss.str().c_str());
+					sWorld->SendGMText(LANG_GM_BROADCAST, tt.str().c_str());
+					sWorld->SendGMText(LANG_GM_BROADCAST, uu.str().c_str());
+					return;
+				}
+				return;
+			}
+			return;
+		}
+		return;
+	}
+
+};
+
 
 class DoupleXP : public PlayerScript
 {
@@ -692,5 +738,6 @@ void AddSC_mixed_scripts()
 	new DoupleXP();
 	new Shutdown();
 	new DuelLog();
+	new Logoutcheck();
 	new GMIsland();
 }
