@@ -14,6 +14,7 @@ public:
 	std::string getQuestNamebyID(int questid);
 	int getQuestIDbyName(std::string questname);
 	bool doesItemExistinDB(int itemid);
+	std::string getItemNamebyItemId(int itemid);
 };
 
 

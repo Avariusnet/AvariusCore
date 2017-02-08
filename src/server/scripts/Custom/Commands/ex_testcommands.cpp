@@ -103,7 +103,7 @@ public:
 		return true;
 	}
 
-	static bool HandleLogicNameTest(ChatHandler* handler, const char* args) {
+	static bool HandleLogicNameTest(ChatHandler* handler, const char* /*args*/) {
 		Player* player = handler->GetSession()->GetPlayer();
 		CustomCharacterSystem* CharacterSystem = 0;
 

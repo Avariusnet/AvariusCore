@@ -10,6 +10,7 @@ public:
 	void updateGMPlayerCount(int counter, int accountid);
 	PreparedQueryResult selectGMPlayerCount(int accountid);
 
+
 };
 
 

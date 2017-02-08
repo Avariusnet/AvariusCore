@@ -36,10 +36,11 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	
 
 	//Item Codes
-	PrepareStatement(CHAR_SEL_ITEMCODEGES, "SELECT `code`, `belohnung`, `anzahl`, `benutzt`, `benutztbar` FROM `item_codes` WHERE `code` = ?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_SEL_ITEMCODE, "SELECT `code`, `belohnung`, `anzahl`, `benutzt`, `benutztbar` FROM `item_codes` WHERE `code` = ?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_INS_ITEMCODE, "INSERT INTO `item_codes` (code,belohnung,anzahl,benutzt,benutztbar) VALUES (?,?,?,?,?)", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_INS_ITEMCODEACCOUNT, "INSERT INTO item_codes_account (name,accid,code) Values(?,?,?)", CONNECTION_ASYNC);
-	PrepareStatement(CHAR_INS_ITEMCODE, "INSERT INTO `item_codes` (code,belohnung,anzahl,benutzt,name,benutztbar) VALUES (?,?,?,?,?,?)", CONNECTION_ASYNC);
-	PrepareStatement(CHAR_INS_NOPLAYERITEMCODE, "INSERT INTO `item_codes` (code,belohnung,anzahl,benutzt,benutztbar) VALUES (?,?,?,?,?)", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_SEL_ITEMCODEACCOUNT, "SELECT accid, code from item_codes_account where code = ? and accid = ?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_UPD_ITEMCODEUSED, "UPDATE item_codes SET benutzt = ? WHERE code = ?", CONNECTION_ASYNC);
 
 	//BONUS EP
 	PrepareStatement(CHAR_INS_BONUS_EP, "Insert into bonus_ep (player, playerid,start, ende, aktiv) Values (?,?,?,?,?)", CONNECTION_ASYNC);

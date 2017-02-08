@@ -104,10 +104,12 @@ void AddSC_ex_testcommands();
 //Custom XP COmmands
 void AddSC_ex_customxpcommands();
 
+void AddSC_port_item();
 
 
 void AddCustomScripts()
 {
+	AddSC_port_item();
 	
 	AddSC_boss_galadriel();
 

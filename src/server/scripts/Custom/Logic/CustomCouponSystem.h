@@ -16,6 +16,9 @@ public:
 	 std::string createNewCouponCode();
 	 void insertNewPlayerUsedCode(std::string charactername, int accountid, std::string couponcode);
 	 PreparedQueryResult getRequestedCodeData(std::string couponcode);
+	 bool hasPlayeralreadyUsedCode(std::string couponcode, int accountid);
+	 bool isItemCodeStillValid(std::string couponcode);
+	 void updateCouponCodeUsed(int used, std::string couponcode);
 	
 	
 };

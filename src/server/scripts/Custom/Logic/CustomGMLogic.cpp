@@ -47,3 +47,4 @@ PreparedQueryResult CustomGMLogic::selectGMPlayerCount(int accountid)
 
 	return result;
 }
+

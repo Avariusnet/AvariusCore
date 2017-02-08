@@ -65,7 +65,7 @@ public:
 		CustomGMLogic * GmLogic = 0;
 		CustomCharacterSystem * CharacterSystem = 0;
 		Player* player = handler->GetSession()->GetPlayer();
-
+		TC_LOG_INFO("custom.coupon", "Generating Coupon!");
 
 		char* itemchar = strtok((char*)args, " ");
 		if (!itemchar) {
@@ -121,19 +121,18 @@ public:
 			int32 counter = fields[2].GetInt32();
 			
 			int newcounter = 0;
-			newcounter = counter + 1;
-			if (player->GetSession()->GetSecurity() >= 2) {
-				handler->PSendSysMessage("Debug: ID: %u", id);
-				handler->PSendSysMessage("Debug: AccountID: %u",accountid);
-				handler->PSendSysMessage("Debug: Counter: %u", counter);
-				handler->PSendSysMessage("Debug: Counter + 1: %u", newcounter);
-			}
+			newcounter = counter + 1;	
+
+			TC_LOG_INFO("custom.coupon", "Debug: ID: %u", id);
+			TC_LOG_INFO("custom.coupon", "Debug: AccountID: %u", accountid);
+			TC_LOG_INFO("custom.coupon", "Debug: Counter: %u", counter);
+			TC_LOG_INFO("custom.coupon", "Debug: Counter + 1: %u", newcounter);
 
 			GmLogic->updateGMPlayerCount(newcounter, id);
-
 			handler->PSendSysMessage("##########################################################");
 			handler->PSendSysMessage("Warning: GM should be a supporter not a cheater!");
 			handler->PSendSysMessage("This incident has been logged in DB.");
+			handler->PSendSysMessage("This is your %s Incident. Beware!",newcounter);
 			handler->PSendSysMessage("##########################################################");
 			return true;
 		}
@@ -141,121 +140,18 @@ public:
 
 		std::string couponcode = "";
 		couponcode = CouponSystem->createNewCouponCode();
+		std::string itemname = "";
+		itemname = WorldSystem->getItemNamebyItemId(itemid);
+
 		CouponSystem->insertNewCouponCodeinDB(couponcode, itemid, quantity, 0, codeuseable);
 		handler->PSendSysMessage("##########################################################");
 		handler->PSendSysMessage("The generated couponcode is: %s", couponcode);
 		handler->PSendSysMessage("The ItemID is: %u", itemid);
+		handler->PSendSysMessage("The Item Name is: %s", itemname);
+		handler->PSendSysMessage("Coupon Useable: %u", codeuseable);
 		handler->PSendSysMessage("##########################################################");
 
 		return true;
-		/*
-		PreparedStatement * itemquery = WorldDatabase.GetPreparedStatement(WORLD_SEL_ITEM_NR);
-		itemquery->setUInt32(0, item);
-		PreparedQueryResult ergebnis = WorldDatabase.Query(itemquery);
-
-
-		if (!ergebnis) {
-			player->GetSession()->SendNotification("Item existiert nicht");
-			return true;
-		}
-
-
-		uint32 anzahlint = atoi((char*)itemanzahl);
-		uint32 codebenutztbar = atoi((char*)anzahlnutzer);
-		//uint32 item = atoi((char*)args);
-
-
-		if (!item)
-		{
-			player->GetSession()->SendNotification("Ohne Itemid geht das leider nicht!");
-			return true;
-		}
-
-		if (!itemanzahl)
-		{
-			player->GetSession()->SendNotification("Ohne Anzahl geht das leider nicht!");
-			return true;
-		}
-
-		if (!anzahlnutzer) {
-			player->GetSession()->SendNotification("Ohne Anzahl der Nutzung geht das leider nicht!");
-			return true;
-		}
-
-
-		if (item == 49623) {
-			player->GetSession()->SendNotification("Schattengram als Belohnung zu generieren ist verboten, wird geloggt und Exitare informiert.");
-			CharacterDatabase.PExecute("INSERT INTO eventteamlog "
-				"(player,guid, itemid,gutscheincode,anzahl)"
-				"VALUES ('%s', '%u', '%u', '%s','%u')",
-				player->GetSession()->GetPlayerName(), player->GetGUID(), item, "Schattemgram", 0);
-			return true;
-		}
-
-
-
-
-		auto randchar = []() -> char
-		{
-			const char charset[] =
-				"0123456789"
-				"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-				"abcdefghijklmnopqrstuvwxyz";
-			const size_t max_index = (sizeof(charset) - 1);
-			return charset[rand() % max_index];
-		};
-		std::string str(10, 0);
-		std::generate_n(str.begin(), 10, randchar);
-
-		
-		PreparedStatement * inscode = CharacterDatabase.GetPreparedStatement(CHAR_INS_NOPLAYERITEMCODE);
-		inscode->setString(0, str);
-		inscode->setUInt32(1, item);
-		inscode->setUInt32(2, anzahlint);
-		inscode->setUInt32(3, 0);
-		inscode->setUInt32(4, codebenutztbar);
-		CharacterDatabase.Execute(inscode);
-
-
-		std::ostringstream ss;
-		std::ostringstream tt;
-
-
-		QueryResult itemsql = WorldDatabase.PQuery("SELECT `name` FROM `item_template` WHERE `entry` = '%u'", item);
-		Field *fields = itemsql->Fetch();
-		std::string itemname = fields[0].GetCString();
-
-		ss << "Der Code fuer das Item: " << itemname << " mit der Anzahl " << anzahlint << " lautet " << str << " . Wir wuenschen dir weiterhin viel Spass auf MMOwning. Dein MMOwning-Team";
-		player->GetSession()->SendNotification("Dein Code wurde generiert und dir zugesendet.");
-
-		tt << str << " ist der generierte Gutscheincode fuer das Item " << itemname << " mit der Itemanzahl " << anzahlint << ". Der Code kann " << codebenutztbar << " benutzt werden.";
-		handler->PSendSysMessage(tt.str().c_str(), player->GetName());
-		SQLTransaction trans = CharacterDatabase.BeginTransaction();
-		MailDraft("Dein Gutscheincode", ss.str().c_str())
-			.SendMailTo(trans, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
-		CharacterDatabase.CommitTransaction(trans);
-
-
-
-
-
-		PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_FIRSTLOG);
-		stmt->setString(0, "Eventteamgutschein");
-		stmt->setString(1, player->GetSession()->GetPlayerName());
-		stmt->setUInt32(2, player->GetGUID());
-		CharacterDatabase.Execute(stmt);
-
-		PreparedStatement* eventlog = CharacterDatabase.GetPreparedStatement(CHAR_INS_EVENTLOG);
-		eventlog->setString(0, player->GetSession()->GetPlayerName());
-		eventlog->setUInt32(1, player->GetGUID());
-		eventlog->setUInt32(2, item);
-		eventlog->setString(3, str);
-		eventlog->setUInt32(4, anzahlint);
-		CharacterDatabase.Execute(eventlog);
-
-
-
-		return true; */
 
 	};
 
@@ -263,22 +159,95 @@ public:
 
 	static bool HandleGutscheinCommand(ChatHandler* handler, const char* args)
 	{
+
+		CustomWorldSystem * WorldSystem = 0;
+		CustomCouponSystem * CouponSystem = 0;
+		CustomGMLogic * GmLogic = 0;
+		CustomCharacterSystem * CharacterSystem = 0;
+
 		Player *player = handler->GetSession()->GetPlayer();
 
-		std::string itemCode = std::string((char*)args);
+		std::string couponCode = std::string((char*)args);
 
-		if (itemCode == "")
+		if (couponCode == "")
 		{
-			player->GetSession()->SendNotification("Ohne Code geht das leider nicht!");
+			player->GetSession()->SendNotification("Without Code we can´t send you a Reward!");
 			return true;
 		}
 
-		if (itemCode == "GOLD") {
+		if (couponCode == "GOLD") {
 			return true;
 		}
 
 
+		//Check if Code does exist and is still valid!
+		bool couponCodeStillValid = false;
+		couponCodeStillValid = CouponSystem->isItemCodeStillValid(couponCode);
+		/*if (couponCodeStillValid == NULL) {
+			if (player->GetSession()->GetSecurity() >= 2) {
+				handler->PSendSysMessage("Debug: Couponstillvalidvalue: %s", couponCodeStillValid);
+			}
+			handler->PSendSysMessage("##########################################################");
+			handler->PSendSysMessage("Coupon does not exist in DB.");
+			handler->PSendSysMessage("Couponcode: %s", couponCode);
+			handler->PSendSysMessage("Please enter a valid Code!");
+			handler->PSendSysMessage("##########################################################");
+			return true;
+		}*/
 
+		if (!couponCodeStillValid) {
+			if (player->GetSession()->GetSecurity() >= 2) {
+				handler->PSendSysMessage("Debug: Couponstillvalidvalue: %s", couponCodeStillValid);
+			}
+			handler->PSendSysMessage("##########################################################");
+			handler->PSendSysMessage("Couponcode has reached maximum uses!");
+			handler->PSendSysMessage("Couponcode: %s", couponCode);
+			handler->PSendSysMessage("Sorry for that!");
+			handler->PSendSysMessage("##########################################################");
+			return true;
+		}
+
+
+		//Check if Player used Code already
+		//"SELECT accid, code from item_codes_account where code = ? and accid = ?"
+		bool hasPlayeralreadyUsedCode = false;
+		hasPlayeralreadyUsedCode = CouponSystem->hasPlayeralreadyUsedCode(couponCode,player->GetSession()->GetAccountId());
+		if (player->GetSession()->GetSecurity() >= 2) {
+			handler->PSendSysMessage("Debug: HasPLayerUsedcode %s", hasPlayeralreadyUsedCode);
+			handler->PSendSysMessage("Debug: Couponcode %s", couponCode);
+			handler->PSendSysMessage("Debug: AccountID %u", player->GetSession()->GetAccountId());
+		}
+
+		if (hasPlayeralreadyUsedCode) {
+			handler->PSendSysMessage("##########################################################");
+			handler->PSendSysMessage("You have already used this Coupon: %s", couponCode);
+			handler->PSendSysMessage("##########################################################");
+			return true;
+		}
+
+
+		PreparedQueryResult result = CouponSystem->getRequestedCodeData(couponCode);
+		
+		Field* fields = result->Fetch();
+		std::string code = fields[0].GetCString();
+		uint32 belohnung = fields[1].GetUInt32();
+		uint32 anzahl = fields[2].GetUInt32();
+		uint8 benutzt = fields[3].GetUInt8();
+		uint32 benutztbar = fields[4].GetUInt32();
+		TC_LOG_INFO("custom.coupon", "Debug: Couponcode %s was used by Player %s", couponCode, player->GetSession()->GetPlayerName());
+		CouponSystem->updateCouponCodeUsed(benutzt + 1, couponCode);
+		CouponSystem->insertNewPlayerUsedCode(player->GetSession()->GetPlayerName(), player->GetSession()->GetAccountId(), couponCode);
+		CharacterSystem->sendPlayerMailwithItem(belohnung, anzahl, "Congratulation", "Your Couponcode was valid. Here is your Reward! Kind Regards your Serverteam.", player->GetSession()->GetPlayer());
+		handler->PSendSysMessage("##########################################################");
+		handler->PSendSysMessage("Congratulation %s", player->GetSession()->GetPlayerName());
+		handler->PSendSysMessage("Your Couponcode %s was valid!", couponCode);
+		handler->PSendSysMessage("Please check your Mails");
+		handler->PSendSysMessage("##########################################################");
+
+		return true;
+
+	}
+		/*
 		PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_ITEMCODEGES);
 		stmt->setString(0, itemCode);
 		PreparedQueryResult result = CharacterDatabase.Query(stmt);
@@ -364,7 +333,7 @@ public:
 		}
 		return true;
 	};
-
+	*/
 
 };
 

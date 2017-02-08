@@ -457,11 +457,9 @@ public:
 				PreparedQueryResult result = GMLogic->selectGMPlayerCount(player->GetSession()->GetAccountId());
 
 				Field * ergebnis = result->Fetch();
-				int accountid = ergebnis[1].GetInt32();
 				int counter = ergebnis[2].GetInt32();
 
 				int maxcount = 0;
-
 				maxcount = sConfigMgr->GetIntDefault("GM.Security.Number", 50);
 				if (counter >= maxcount) {
 					std::string accountname = "";
