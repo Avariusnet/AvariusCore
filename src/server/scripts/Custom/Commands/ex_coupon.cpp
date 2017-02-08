@@ -132,7 +132,7 @@ public:
 			handler->PSendSysMessage("##########################################################");
 			handler->PSendSysMessage("Warning: GM should be a supporter not a cheater!");
 			handler->PSendSysMessage("This incident has been logged in DB.");
-			handler->PSendSysMessage("This is your %s Incident. Beware!",newcounter);
+			handler->PSendSysMessage("This is your %u Incident. Beware!",newcounter);
 			handler->PSendSysMessage("##########################################################");
 			return true;
 		}
