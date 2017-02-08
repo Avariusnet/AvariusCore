@@ -53,9 +53,8 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(CHAR_SEL_CHARACTER_BYNAME, "SELECT guid,account,name,level,totaltime FROM characters where name = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_UPD_ACCOUNT_ID, "UPDATE `characters` SET `account`= ? WHERE `guid`= ?", CONNECTION_ASYNC);
 
-	//GMLOG
-	PrepareStatement(CHAR_INS_GM_ACTION, "INSERT INTO gm_actions (charactername,characterID, accountname, accountID, action_done) VALUES (?,?,?,?,?)", CONNECTION_ASYNC);
-
+	//PLayerlog
+	PrepareStatement(CHAR_INS_PLAYERLOG, "INSERT INTO playerlog (charactername,guid,accountname,accountid,action_done,actiondate) VALUES(?,?,?,?,?, UNIX_TIMESTAMP())", CONNECTION_ASYNC);
 
 	//REPORT QUEST SYSTEM
 	PrepareStatement(CHAR_INS_REPORT_QUEST, "Insert into `reported_quest` (questname, questid, anzahl, aktiv) VALUES (?,?,?,?)", CONNECTION_ASYNC);
@@ -83,6 +82,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(CHAR_INS_ITEM_IN_FORBIDDEN_TABLE, "INSERT into forbidden_quest_or_item (itemid) VALUES (?)", CONNECTION_ASYNC);
 
 	//GM REPORTS
+	PrepareStatement(CHAR_INS_GM_ACTION, "INSERT INTO gm_actions (charactername,characterID, accountname, accountID, action_done) VALUES (?,?,?,?,?)", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_INS_GM_ACTION_PLAYER_COUNT, "Insert into gm_actions_player_count (accountid, counter) VALUES (?,?)", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_SEL_GM_ACTION_PLAYER_COUNT, "Select id,accountid, counter from gm_actions_player_count where accountid = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_UPD_GM_ACTION_PLAYER_COUNT, "Update gm_actions_player_count set counter = ? where id = ?", CONNECTION_ASYNC);

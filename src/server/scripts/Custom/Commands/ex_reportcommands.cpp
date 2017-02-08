@@ -49,6 +49,7 @@
 #include <Custom/Logic/CustomReportSystem.h>
 #include <Custom/Logic/CustomWorldSystem.h>
 #include <Custom/Logic/CustomGMLogic.h>
+#include <Custom/Logic/CustomPlayerLog.h>
 
 
 #define REPORT_QUEST_SUCESS "Quest erfolgreich reported"
@@ -180,18 +181,28 @@ public:
 		if (sConfigMgr->GetBoolDefault("Quest.Report", true)) {
 			CustomReportSystem * reportSystem = 0;
 			CustomWorldSystem * WorldSystem = 0;
+			CustomCharacterSystem * CharacterSystem = 0;
+			CustomPlayerLog * PlayerLog = 0;
 			Player* player = handler->GetSession()->GetPlayer();
 
 			
 			std::string eingabe = std::string((char*)args);
 
 			if (eingabe == "") {
+				handler->PSendSysMessage("##########################################################");
+				handler->PSendSysMessage("Without entering a valid Quest, the command cannot be executed!");
+				handler->PSendSysMessage("Syntax: .report quest [Shift-click on Questname]");
+				handler->PSendSysMessage("##########################################################");
 				player->GetSession()->SendNotification("Without entering a valid Quest, the command cannot be executed! Syntax: .report quest [Shift-click on Questname]!");
 				return true;
 			}
 
 			char const* id = handler->extractKeyFromLink((char*)args, "Hquest");
 			if (!id) {
+				handler->PSendSysMessage("##########################################################");
+				handler->PSendSysMessage("Without entering a valid Quest, the command cannot be executed!");
+				handler->PSendSysMessage("Syntax: .report quest [Shift-click on Questname]");
+				handler->PSendSysMessage("##########################################################");
 				player->GetSession()->SendNotification("Without entering a valid Quest, the command cannot be executed! Syntax: .report quest [Shift-click on Questname]!");
 				return true;
 			}
@@ -235,12 +246,18 @@ public:
 				//if quantity == 5 , set quest to autocomplete
 				if (anzahl == 5) {
 					if (player->GetGuildId() != 0) {
+						std::string accountname = "";
+						accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+						PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Quest reported");
 						reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), player->GetGuildName(), player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 						reportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
 						reportSystem->setQuestCompleteActive(1, questid);
 						return true;
 					}
 
+					std::string accountname = "";
+					accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+					PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Quest reported");
 					reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null" , player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 					reportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
 					reportSystem->setQuestCompleteActive(1, questid);
@@ -250,6 +267,9 @@ public:
 
 				//if quest active, complete quest
 				if (aktiv == 1) {
+					std::string accountname = "";
+					accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+					PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Quest reported");
 					reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null", player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 					reportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
 					completeQuest(questreportid, handler, player);
@@ -258,6 +278,9 @@ public:
 				}
 
 				//Quest acitve != 0 and quantity < 5
+				std::string accountname = "";
+				accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+				PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Quest reported");
 				reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null", player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 				reportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
 				handler->PSendSysMessage(REPORT_QUEST_SUCESS);
@@ -271,6 +294,9 @@ public:
 				std::string questname = WorldSystem->getQuestNamebyID(questid);
 				reportSystem->addNewQuestReportInDB(questname,questid,1,0);
 				if (player->GetGuildId() != 0) {
+					std::string accountname = "";
+					accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+					PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Quest reported");
 					reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), player->GetGuildName(), player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 					handler->PSendSysMessage("##########################################################");
 					handler->PSendSysMessage(REPORT_QUEST_SUCESS);	
@@ -281,6 +307,9 @@ public:
 					return true;
 				}
 
+				std::string accountname = "";
+				accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+				PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Quest reported");
 				reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null", player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 				handler->PSendSysMessage("##########################################################");
 				handler->PSendSysMessage(REPORT_QUEST_SUCESS);

@@ -78,7 +78,7 @@ bool CustomCouponSystem::isItemCodeStillValid(std::string couponcode)
 	PreparedQueryResult result = CharacterDatabase.Query(stmt);
 
 	if (!result) {
-		return NULL;
+		return false;
 	}
 
 	Field* ergebnis = result->Fetch();

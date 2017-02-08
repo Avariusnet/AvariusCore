@@ -4328,7 +4328,7 @@ GM.Security.Number = 50
 # 
 
 
-First.Ausstattung = 0
+NPC.Exaltor = 0
 Race.Change = 1
 GMIsland.Protection = 1
 Playtime.Goodies = 0

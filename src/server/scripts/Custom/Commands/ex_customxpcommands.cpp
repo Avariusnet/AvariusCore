@@ -1,5 +1,6 @@
 #include "Config.h"
 #include <Custom/Logic/CustomCharacterSystem.h>
+#include <Custom/Logic/CustomPlayerLog.h>
 
 class ex_customxpcommands : public CommandScript
 {
@@ -24,6 +25,8 @@ public:
 	static bool HandleXPRate(ChatHandler* handler, const char* args) {
 		if (sConfigMgr->GetBoolDefault("Custom.XP", 1)) {
 			CustomXP *CustomXP = 0;
+			CustomCharacterSystem* CharacterSystem = 0;
+			CustomPlayerLog * PlayerLog = 0;
 			Player* player = handler->GetSession()->GetPlayer();
 
 			char* px = strtok((char*)args, " ");
@@ -31,6 +34,9 @@ public:
 			int playerxp = CustomXP->getCustomXPValue(player->GetGUID());
 
 			if (!px) {
+				std::string accountname = "";
+				accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+				PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Show XP Rate");
 				handler->PSendSysMessage("##########################################################");
 				handler->PSendSysMessage("Your XP Multiplier is currently: %u", playerxp);
 				handler->PSendSysMessage("To change your Multiplier just type '.xprate 2' for a 2x Multiplier.");
@@ -57,14 +63,23 @@ public:
 
 
 			if (charactername == "0") {
+				std::string accountname = "";
+				accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+				PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Change XP Rate");
 				CustomXP->setCustomXPEntry(player->GetSession()->GetPlayerName(), player->GetGUID(), newxpvalue);
+				handler->PSendSysMessage("##########################################################");
 				handler->PSendSysMessage("Your XP Multiplier is set to %u", newxpvalue);
+				handler->PSendSysMessage("##########################################################");
 				return true;
 			}
 
-
+			std::string accountname = "";
+			accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+			PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Change XP Rate");
 			CustomXP->updateCustomXPEntry(newxpvalue, player->GetGUID());
+			handler->PSendSysMessage("##########################################################");
 			handler->PSendSysMessage("Your XP Multiplier is set to %u", newxpvalue);
+			handler->PSendSysMessage("##########################################################");
 			return true;
 		}
 

@@ -25,7 +25,7 @@
 #include <Custom/Logic/CustomCouponSystem.h>
 #include <Custom/Logic/CustomGMLogic.h>
 #include <Custom/Logic/CustomCharacterSystem.h>
-
+#include <Custom/Logic/CustomPlayerLog.h>
 
 
 class coupon : public CommandScript
@@ -62,7 +62,7 @@ public:
 	{
 		CustomWorldSystem * WorldSystem = 0;
 		CustomCouponSystem * CouponSystem = 0;
-		CustomGMLogic * GmLogic = 0;
+		CustomGMLogic * GMLogic = 0;
 		CustomCharacterSystem * CharacterSystem = 0;
 		Player* player = handler->GetSession()->GetPlayer();
 		TC_LOG_INFO("custom.coupon", "Generating Coupon!");
@@ -105,13 +105,13 @@ public:
 
 			std::string accountname = "";
 			accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-			GmLogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), " Try to generate a forbidden Coupon code");
+			GMLogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), " Try to generate a forbidden Coupon code");
 			
 
-			PreparedQueryResult result = GmLogic->selectGMPlayerCount(player->GetSession()->GetAccountId());
+			PreparedQueryResult result = GMLogic->selectGMPlayerCount(player->GetSession()->GetAccountId());
 			if (result == NULL) {
 				handler->PSendSysMessage("Debug: Result  = NULL reached!");
-				GmLogic->addGMPlayerCount(player->GetSession()->GetAccountId());
+				GMLogic->addGMPlayerCount(player->GetSession()->GetAccountId());
 				return true;
 			}
 
@@ -128,7 +128,7 @@ public:
 			TC_LOG_INFO("custom.coupon", "Debug: Counter: %u", counter);
 			TC_LOG_INFO("custom.coupon", "Debug: Counter + 1: %u", newcounter);
 
-			GmLogic->updateGMPlayerCount(newcounter, id);
+			GMLogic->updateGMPlayerCount(newcounter, id);
 			handler->PSendSysMessage("##########################################################");
 			handler->PSendSysMessage("Warning: GM should be a supporter not a cheater!");
 			handler->PSendSysMessage("This incident has been logged in DB.");
@@ -142,7 +142,7 @@ public:
 		couponcode = CouponSystem->createNewCouponCode();
 		std::string itemname = "";
 		itemname = WorldSystem->getItemNamebyItemId(itemid);
-
+		
 		CouponSystem->insertNewCouponCodeinDB(couponcode, itemid, quantity, 0, codeuseable);
 		handler->PSendSysMessage("##########################################################");
 		handler->PSendSysMessage("The generated couponcode is: %s", couponcode);
@@ -164,6 +164,7 @@ public:
 		CustomCouponSystem * CouponSystem = 0;
 		CustomGMLogic * GmLogic = 0;
 		CustomCharacterSystem * CharacterSystem = 0;
+		CustomPlayerLog* PlayerLog = 0;
 
 		Player *player = handler->GetSession()->GetPlayer();
 
@@ -171,7 +172,7 @@ public:
 
 		if (couponCode == "")
 		{
-			player->GetSession()->SendNotification("Without Code we can´t send you a Reward!");
+			player->GetSession()->SendNotification("Without Code we cannot send you a Reward!");
 			return true;
 		}
 
@@ -183,26 +184,17 @@ public:
 		//Check if Code does exist and is still valid!
 		bool couponCodeStillValid = false;
 		couponCodeStillValid = CouponSystem->isItemCodeStillValid(couponCode);
-		/*if (couponCodeStillValid == NULL) {
-			if (player->GetSession()->GetSecurity() >= 2) {
-				handler->PSendSysMessage("Debug: Couponstillvalidvalue: %s", couponCodeStillValid);
-			}
-			handler->PSendSysMessage("##########################################################");
-			handler->PSendSysMessage("Coupon does not exist in DB.");
-			handler->PSendSysMessage("Couponcode: %s", couponCode);
-			handler->PSendSysMessage("Please enter a valid Code!");
-			handler->PSendSysMessage("##########################################################");
-			return true;
-		}*/
+	
 
 		if (!couponCodeStillValid) {
 			if (player->GetSession()->GetSecurity() >= 2) {
 				handler->PSendSysMessage("Debug: Couponstillvalidvalue: %s", couponCodeStillValid);
 			}
 			handler->PSendSysMessage("##########################################################");
-			handler->PSendSysMessage("Couponcode has reached maximum uses!");
+			handler->PSendSysMessage("Couponcode is invalid or has reached maximum uses!");
 			handler->PSendSysMessage("Couponcode: %s", couponCode);
-			handler->PSendSysMessage("Sorry for that!");
+			handler->PSendSysMessage("Please check your Couponcode.");
+			handler->PSendSysMessage("If you type the correct Couponcode the Couponcodecharges are empty! Sorry for that!");
 			handler->PSendSysMessage("##########################################################");
 			return true;
 		}
@@ -244,96 +236,13 @@ public:
 		handler->PSendSysMessage("Please check your Mails");
 		handler->PSendSysMessage("##########################################################");
 
+		std::string accountname = "";
+		accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+		PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Coupon reedem.");
+
 		return true;
 
 	}
-		/*
-		PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_ITEMCODEGES);
-		stmt->setString(0, itemCode);
-		PreparedQueryResult result = CharacterDatabase.Query(stmt);
-
-		//QueryResult result = CharacterDatabase.PQuery("SELECT `code`, `belohnung`, `anzahl`, `benutzt`, `benutztbar` FROM `item_codes` WHERE `code` = '%s'", itemCode);
-
-
-		if (result)
-		{
-
-			Field* fields = result->Fetch();
-			std::string code = fields[0].GetCString();
-			uint32 belohnung = fields[1].GetUInt32();
-			uint32 anzahl = fields[2].GetUInt32();
-			uint8 benutzt = fields[3].GetUInt8();
-			uint32 benutztbar = fields[4].GetUInt32();
-
-			QueryResult accvorhanden = CharacterDatabase.PQuery("SELECT `accid`,`code` FROM `item_codes_account` WHERE `accid` = '%u' AND code = '%s' ", player->GetSession()->GetAccountId(), code);
-
-			if (!accvorhanden) {
-				QueryResult itemid = WorldDatabase.PQuery("SELECT `entry` FROM `item_template` WHERE `entry` = '%u'", belohnung);
-
-				if (!itemid) {
-					player->GetSession()->SendNotification("Das Item scheint nicht zu existieren. Der Code wird daher abgelehnt");
-					return true;
-				}
-
-
-
-				if (benutzt < benutztbar)
-				{
-					benutzt++;
-					Item* item = Item::CreateItem(belohnung, anzahl);
-					player->GetSession()->SendNotification("Dein Code wurde akzeptiert!");
-					SQLTransaction trans = CharacterDatabase.BeginTransaction();
-					item->SaveToDB(trans);
-					MailDraft("Dein Gutscheincode", "Dein Code wurde erfolgreich eingeloest. Wir wuenschen dir weiterhin viel Spass auf MMOwning. Dein MMOwning-Team").AddItem(item)
-						.SendMailTo(trans, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
-					CharacterDatabase.CommitTransaction(trans);
-
-					CharacterDatabase.PExecute("UPDATE item_codes SET name = '%s' WHERE code = '%s'", player->GetName().c_str(), itemCode);
-					CharacterDatabase.PExecute("UPDATE item_codes SET benutzt = '%u' WHERE code = '%s'", benutzt, itemCode);
-
-					PreparedStatement* itemcodeaccount = CharacterDatabase.GetPreparedStatement(CHAR_INS_ITEMCODEACCOUNT);
-					itemcodeaccount->setString(0, player->GetSession()->GetPlayerName());
-					itemcodeaccount->setUInt32(1, player->GetSession()->GetAccountId());
-					itemcodeaccount->setString(2, itemCode);
-					CharacterDatabase.Execute(itemcodeaccount);
-
-					//CharacterDatabase.PExecute("INSERT INTO item_codes_account (name,accid,code) Values('%s','%u','%s')", player->GetSession()->GetPlayerName(), player->GetSession()->GetAccountId(), itemCode);
-
-					char msg[250];
-					snprintf(msg, 250, "Dein Code wurde akzeptiert.");
-					ChatHandler(player->GetSession()).PSendSysMessage(msg,
-						player->GetName());
-					return true;
-
-				}
-				else {
-					char msg[250];
-					snprintf(msg, 250, "Der Code hat keine weitere Aufladung und wird daher abgelehnt.");
-					ChatHandler(player->GetSession()).PSendSysMessage(msg,
-						player->GetName());
-					return true;
-				}
-			}
-
-			else {
-				char msg[250];
-				snprintf(msg, 250, "Du hast den Code bereits verwendet.");
-				ChatHandler(player->GetSession()).PSendSysMessage(msg,
-					player->GetName());
-				return true;
-
-			}
-		}
-		else {
-			char msg[250];
-			snprintf(msg, 250, "Der eingegebene Code exisitert nicht.");
-			ChatHandler(player->GetSession()).PSendSysMessage(msg,
-				player->GetName());
-			return true;
-		}
-		return true;
-	};
-	*/
 
 };
 

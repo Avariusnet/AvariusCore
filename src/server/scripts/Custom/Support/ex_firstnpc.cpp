@@ -302,7 +302,7 @@ class npc_first_char : public CreatureScript
 
 				bool OnGossipHello(Player *player, Creature* _creature)
 				{
-					if (sConfigMgr->GetBoolDefault("First.Ausstattung", true)) {
+					if (sConfigMgr->GetBoolDefault("NPC.Exaltor", true)) {
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Informationen und Hilfe", GOSSIP_SENDER_MAIN, 0, "", 0, false);
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Firstausstattung beantragen", GOSSIP_SENDER_MAIN, 1, "", 0, false);
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Gildenaufwertung 10er", GOSSIP_SENDER_MAIN, 2, "", 0, false);

@@ -1,5 +1,5 @@
 #include <Custom/Logic/CustomCharacterSystem.h>
-
+#include <Custom/Logic/CustomPlayerLog.h>
 
 
 //Get Account By specific ID. If Result = NULL not Account with specific ID was found. All other is positive Result!
@@ -90,6 +90,26 @@ bool CustomCharacterSystem::checkIfItemisForbidden(int itemid)
 		return false;
 	}
 	return true;
+}
+
+bool CustomCharacterSystem::setProfessionSkill(Player * player, uint32 profession, int professioncost)
+{
+	CustomPlayerLog * PlayerLog = 0;
+
+
+	player->LearnDefaultSkill(profession, 6);
+	//uint32 skill = player->GetSkillValue(beruf);
+	player->GetPureMaxSkillValue(profession);
+	player->SetSkill(profession, player->GetSkillStep(profession), 450, 450);
+	std::string accountname = "";
+	accountname = CustomCharacterSystem::getAccountName(player->GetSession()->GetAccountId());
+	PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Profession skilled");
+	ChatHandler(player->GetSession()).PSendSysMessage("[Profession System] Your Profession was skilled to 450.",
+		player->GetName());
+	player->ModifyMoney(-professioncost * GOLD);
+	return true;
+	
+
 }
 
 

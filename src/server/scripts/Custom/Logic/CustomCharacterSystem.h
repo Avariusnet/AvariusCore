@@ -11,6 +11,7 @@ public:
 
 	void sendPlayerMailwithItem(int itemid, int quantity,std::string title, std::string message, Player* player);
 
+	//CharacterFunctions
 	int getAccountID(std::string charactername);
 	std::string getAccountName(int accountid);	
 	int getGuildLeader(int guildid);
@@ -25,6 +26,12 @@ public:
 	void insertItemIntoForbiddenTable(int itemid);
 	bool checkIfQuestisForbidden(int questid);
 	bool checkIfItemisForbidden(int itemid);
+
+	bool setProfessionSkill(Player* player, uint32 profession, int professioncost);
+
+
+		
+
 };
 
 
