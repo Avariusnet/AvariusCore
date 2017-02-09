@@ -27,7 +27,9 @@
 #include <sstream>
 #include <string>
 #include <stdlib.h>
-
+#include <Custom/Logic/CustomGMLogic.h>
+#include <Custom/Logic/CustomCharacterSystem.h>
+#include <Custom/Logic/CustomPlayerLog.h>
 
 #define NOCHARACTERFOUND "No Character in DB!"
 #define NOACCOUNTFOUND "No Account in DB!"
@@ -46,6 +48,7 @@ public:
 		if (sConfigMgr->GetBoolDefault("Characterhelper.NPC", true)) {
 			player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Does my Character exist?", GOSSIP_SENDER_MAIN, 0, "Your Charactername: ", 0, true);
 			player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Transfer my Character to another Account! [Unremovable / 5k Gold]", GOSSIP_SENDER_MAIN, 2, "Targetaccount Name: ", 0, true);
+			player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Give me another First Character! [Unremovable]", GOSSIP_SENDER_MAIN, 3, "Are you sure? Please enter your Charactername: ", 0, true);
 			player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Thx! Bring me back!", GOSSIP_SENDER_MAIN, 1, "", 0, false);
 			player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Help me!", GOSSIP_SENDER_MAIN, 4, "", 0, false);
 			player->PlayerTalkClass->SendGossipMenu(1, creature->GetGUID());
@@ -60,7 +63,7 @@ public:
 	
 	}
 
-	bool OnGossipSelectCode(Player * player, Creature* /*creature*/, uint32 /*sender*/, uint32 action, const char* code){
+	bool OnGossipSelectCode(Player * player, Creature* creature, uint32 /*sender*/, uint32 action, const char* code){
 
 		switch (action){
 
@@ -116,7 +119,8 @@ public:
 
 		case 2:
 		{
-
+			
+			CustomGMLogic * GMLogic = 0;
 			std::string codes = code;
 			PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_ACCOUNT_ID_BY_NAME);
 			stmt->setString(0, codes);
@@ -142,6 +146,46 @@ public:
 
 			Field* felder = ergebnis->Fetch();
 			uint32 charactersum = felder[0].GetInt32();
+			
+			if (player->GetSession()->GetSecurity() > 0) {
+				PreparedQueryResult result = GMLogic->selectGMPlayerCount(player->GetSession()->GetAccountId());
+				if (result == NULL) {
+					GMLogic->addGMPlayerCount(player->GetSession()->GetAccountId());
+					ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+						player->GetName());
+					ChatHandler(player->GetSession()).PSendSysMessage("Warning: GM should be a supporter not a cheater!",
+						player->GetName());
+					ChatHandler(player->GetSession()).PSendSysMessage("This incident has been logged in DB.",
+						player->GetName());
+					ChatHandler(player->GetSession()).PSendSysMessage("This is your first Incident. Beware!",
+						player->GetName());
+					ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+						player->GetName());
+					return true;
+				}
+
+				Field* fields = result->Fetch();
+				int32 id = fields[0].GetInt32();
+				int32 accountid = fields[1].GetInt32();
+				int32 counter = fields[2].GetInt32();
+
+				int newcounter = 0;
+				newcounter = counter + 1;
+
+
+				GMLogic->updateGMPlayerCount(newcounter, id);
+				ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+					player->GetName());
+				ChatHandler(player->GetSession()).PSendSysMessage("Warning: GM should be a supporter not a cheater!",
+					player->GetName());
+				ChatHandler(player->GetSession()).PSendSysMessage("This incident has been logged in DB.",
+					player->GetName());
+				ChatHandler(player->GetSession()).PSendSysMessage("This is your %u Incident. Beware!", newcounter,
+					player->GetName());
+				ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+					player->GetName());
+				return true;
+			}
 
 			if (charactersum <= 9 && player->HasEnoughMoney(5000*GOLD)){
 				PreparedStatement* updateacc = CharacterDatabase.GetPreparedStatement(CHAR_UPD_ACCOUNT_ID);
@@ -165,7 +209,34 @@ public:
 				return true;
 			}
 			return true;
-		}
+		}break;
+
+		case 3: 
+		{
+			CustomPlayerLog * PlayerLog = 0;
+			CustomCharacterSystem * CharacterSystem = 0;
+			std::string codes = code;
+
+			if (codes != player->GetSession()->GetPlayerName()) {
+				creature->Say("Can´t you spell your Charactername right? Try again please.", LANG_UNIVERSAL, nullptr);
+				ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+					player->GetName());
+				ChatHandler(player->GetSession()).PSendSysMessage("Please try it again. You spelled your Charactername wrong!",
+					player->GetName());
+				ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+					player->GetName());
+				return true;
+			}
+
+			bool hasPlayeralreadyAFirstCharacter = CharacterSystem->hasPlayerAlreadyAFirstChar(player->GetSession()->GetAccountId(), "FirstCharacter");
+			if (!hasPlayeralreadyAFirstCharacter) {
+				creature->Say("There is no First Character on your Account! So do not try this again please!", LANG_UNIVERSAL, nullptr);
+				return true;
+			}
+
+
+
+		}break;
 
 
 		return true;

@@ -52,7 +52,7 @@ public:
 			if (sConfigMgr->GetBoolDefault("Support.NPC", true)) {
 				player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, GOSSIP_ICON_CHAT, "Help for new Players!", GOSSIP_SENDER_MAIN, 100, "", 0, false);
 				player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, GOSSIP_ICON_CHAT, "Questhelper", GOSSIP_SENDER_MAIN, 101, "", 0, false);
-				player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, GOSSIP_ICON_CHAT, "Characterhelper", GOSSIP_SENDER_MAIN, 102, "", 0, false);
+				player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, GOSSIP_ICON_CHAT, "Character Tools", GOSSIP_SENDER_MAIN, 102, "", 0, false);
 				player->PlayerTalkClass->SendGossipMenu(1, creature->GetGUID());
 				return true;
 			}

@@ -3,8 +3,8 @@
 DELETE FROM command WHERE `name`='mall';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('mall', 195, 'Syntax: .mall Teleportiert dich in die Hauptstadt deine Fraktion und belebt dich dort wieder, wenn du tot bist (Kann nicht im Kampf, Flug oder auf einem Mount verwendet werden)');
 
-DELETE FROM command WHERE `name`='dala';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('dala', 195, 'Syntax: .dala Teleportiert dich nach Dalaran und belebt dich dort wieder, wenn du tot bist (Kann nicht im Kampf, Flug oder auf einem Mount verwendet werden)');
+DELETE FROM command WHERE `name`='dalaran';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('dalaran', 195, '');
 
 
 DELETE FROM command WHERE `name`='quest';
@@ -71,8 +71,8 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bot respawn', 195,
 DELETE FROM command WHERE `name`='coupon';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('coupon', 195, '');  
 
-DELETE FROM command WHERE `name`='coupon reedem';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('coupon reedem', 195, 'Syntax: .coupon reedem [Your RedeemCore].');   
+DELETE FROM command WHERE `name`='coupon redeem';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('coupon redeem', 195, 'Syntax: .coupon reedem [Your RedeemCore].');   
 
 DELETE FROM command WHERE `name`='coupon generate';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('coupon generate', 195, 'Generate a new coupun. .coupon generate [ITEMID] [ITEMQuantity] [How often should the Code be used]');   

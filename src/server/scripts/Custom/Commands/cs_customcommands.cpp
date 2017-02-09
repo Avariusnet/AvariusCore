@@ -37,7 +37,11 @@
 #include "ObjectMgr.h"
 #include "Chat.h"
 #include "SocialMgr.h"
-
+#include <Custom/Logic/CustomCouponSystem.h>
+#include <Custom/Logic/CustomCharacterSystem.h>
+#include <Custom/Logic/CustomGMLogic.h>
+#include <Custom/Logic/CustomWorldSystem.h>
+#include <Custom/Logic/CustomPlayerLog.h>
 
 
 
@@ -59,7 +63,7 @@ public:
 			//Mall Teleporter
 			//{ "mall", SEC_PLAYER, false, &HandleMallCommand, "" },
 			//Dalaran Teleporter
-			{ "dala", SEC_PLAYER, false, &HandleDalaCommand, "" },
+			{ "dalaran", SEC_PLAYER, false, &HandleDalaCommand, "" },
 			//Buffer
 			//{ "buffs", SEC_PLAYER, false, &HandleBuffsCommand, ""},
 			//GuildHouse Tele
@@ -162,6 +166,9 @@ public:
     //Erstellt neue Fragen in der DB
     static bool HandleFragenCommand(ChatHandler* handler, const char* args)
     {
+		CustomCharacterSystem * CharacterSystem = 0;
+		CustomGMLogic * GMLogic = 0;
+		CustomWorldSystem * WorldSystem = 0;
         Player* player = handler->GetSession()->GetPlayer();
         
         char* frage = strtok((char*)args, " ");
@@ -192,40 +199,77 @@ public:
         uint32 intanzahl = atoi((char*)anzahl);
         uint32 itemid = atoi((char*)belohnung);
         
-        PreparedStatement * itemquery = WorldDatabase.GetPreparedStatement(WORLD_SEL_ITEM_NR);
+		bool existItem = false;
+		existItem = WorldSystem->doesItemExistinDB(itemid);
+
+        /*PreparedStatement * itemquery = WorldDatabase.GetPreparedStatement(WORLD_SEL_ITEM_NR);
         itemquery->setUInt32(0,itemid);
-        PreparedQueryResult ergebnis = WorldDatabase.Query(itemquery);
+        PreparedQueryResult ergebnis = WorldDatabase.Query(itemquery); */
         
         
-        if(!ergebnis){
-            player->GetSession()->SendNotification("Item existiert nicht.");
+        if(!existItem){
+			handler->PSendSysMessage("##########################################################");
+			handler->PSendSysMessage("Item does not exist in DB!");
+			handler->PSendSysMessage("ItemID: %u", itemid);
+			handler->PSendSysMessage("##########################################################");
             return true;
         }
         
-        if(itemid == 49623){
-            player->GetSession()->SendNotification("Schattengram als Belohnung zu generieren ist verboten, wird geloggt und Exitare informiert.");
-            CharacterDatabase.PExecute("INSERT INTO eventteamlog "
-                                       "(player,guid, itemid,gutscheincode,anzahl)"
-                                       "VALUES ('%s', '%u', '%u', '%s','%u')",
-                                       player->GetSession()->GetPlayerName(),player->GetGUID(),belohnung,"Schattemgram",0);
+		bool checkifItemIsForbidden = false;
+		checkifItemIsForbidden = CharacterSystem->checkIfItemisForbidden(itemid);
+		
+		if (checkifItemIsForbidden) {
+			std::string accountname = "";
+			accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+			GMLogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), " Try to generate a forbidden Coupon code");
+
+
+			PreparedQueryResult result = GMLogic->selectGMPlayerCount(player->GetSession()->GetAccountId());
+			if (result == NULL) {
+				handler->PSendSysMessage("Debug: Result  = NULL reached!");
+				GMLogic->addGMPlayerCount(player->GetSession()->GetAccountId());
+				handler->PSendSysMessage("##########################################################");
+				handler->PSendSysMessage("Warning: GM should be a supporter not a cheater!");
+				handler->PSendSysMessage("This incident has been logged in DB.");
+				handler->PSendSysMessage("This is your 1 Incident. Beware!");
+				handler->PSendSysMessage("##########################################################");
+				return true;
+			}
+
+			Field* fields = result->Fetch();
+			int32 id = fields[0].GetInt32();
+			int32 accountid = fields[1].GetInt32();
+			int32 counter = fields[2].GetInt32();
+
+			int newcounter = 0;
+			newcounter = counter + 1;
+
+
+			GMLogic->updateGMPlayerCount(newcounter, id);
+			handler->PSendSysMessage("##########################################################");
+			handler->PSendSysMessage("Warning: GM should be a supporter not a cheater!");
+			handler->PSendSysMessage("This incident has been logged in DB.");
+			handler->PSendSysMessage("This is your %u Incident. Beware!", newcounter);
+			handler->PSendSysMessage("##########################################################");
+			return true;
+		}
         
-        }
-        
-		PreparedStatement* highid = CharacterDatabase.GetPreparedStatement(CHAR_SEL_FRAGEN_HIGH_ID);
-		PreparedQueryResult result = CharacterDatabase.Query(highid);
-
-		Field *field = result->Fetch();
-		int32 id = field[0].GetInt32();
-
-
+		
         PreparedStatement* insert = CharacterDatabase.GetPreparedStatement(CHAR_INS_FRAGEN);
-		insert->setInt32(0, id+1);
-		insert->setString(1, frage);
-        insert->setString(2, antwort);
-        insert->setInt32(3, itemid);
-        insert->setInt32(4, intanzahl);
+		insert->setString(0, frage);
+        insert->setString(1, antwort);
+        insert->setInt32(2, itemid);
+        insert->setInt32(3, intanzahl);
         CharacterDatabase.Execute(insert);
 		player->GetSession()->SendNotification("Frage wurde erfolgreich eingetragen");
+		std::string itemname = "";
+		itemname = WorldSystem->getItemNamebyItemId(itemid);
+		handler->PSendSysMessage("##########################################################");
+		handler->PSendSysMessage("Sucess! Question is now in DB!");
+		handler->PSendSysMessage("Question: %s || Answer: %s ", frage, antwort);
+		handler->PSendSysMessage("ItemID: %u", itemid);
+		handler->PSendSysMessage("ItemName: %s", itemname);
+		handler->PSendSysMessage("##########################################################");
         return true;
         
     }
@@ -310,7 +354,8 @@ public:
 	static bool HandleDalaCommand(ChatHandler* handler, const char* /*args*/)
 	{
 		//MALL command
-
+		CustomPlayerLog * PlayerLog = 0;
+		CustomCharacterSystem * CharacterSystem = 0;
 		Player *chr = handler->GetSession()->GetPlayer();
 
 		if (chr->IsInCombat())
@@ -326,9 +371,28 @@ public:
 			return false;
 		}
 
-		chr->ResurrectPlayer(0.5, false);
+		if (chr->isDead()) {
+			handler->PSendSysMessage("##########################################################");
+			handler->PSendSysMessage("You are dead. Please resurrect yourself.");
+			handler->PSendSysMessage("##########################################################");
+			return true;
+		}
+		std::string accountname = "";
+		accountname = CharacterSystem->getAccountName(chr->GetSession()->GetAccountId());
+		switch (chr->GetTeam())
+		{
+		case ALLIANCE:
+			PlayerLog->insertNewPlayerLog(chr->GetSession()->GetPlayerName(),chr->GetGUID(),accountname,chr->GetSession()->GetAccountId(),"Alliance Dalaran Port used");
+			chr->TeleportTo(571, 5697.64, 659.37, 646.29, 2.66);    
+			break;
 
-		chr->TeleportTo(571, 5809.55f, 503.975f, 657.526f, 1.70185f);    // Insert Dala Coords
+		case HORDE:
+			PlayerLog->insertNewPlayerLog(chr->GetSession()->GetPlayerName(), chr->GetGUID(), accountname, chr->GetSession()->GetAccountId(), "Horde Dalaran Port used");
+			chr->TeleportTo(571, 5907.81, 638.60, 645.51, 5.81);    
+			break;
+		}
+
+		//chr->TeleportTo(571, 5809.55f, 503.975f, 657.526f, 1.70185f);    // Insert Dala Coords
 
 		return true;
 	};

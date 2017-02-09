@@ -39,7 +39,7 @@ public:
 		static std::vector<ChatCommand> coupontable =
 		{
 
-			{ "reedem", SEC_PLAYER, false, &HandleGutscheinCommand, "" },
+			{ "redeem", SEC_PLAYER, false, &HandleGutscheinCommand, "" },
 			{ "generate", SEC_ADMINISTRATOR, false, &HandlegutscheinerstellenCommand, "" }
 
 		};
@@ -112,6 +112,11 @@ public:
 			if (result == NULL) {
 				handler->PSendSysMessage("Debug: Result  = NULL reached!");
 				GMLogic->addGMPlayerCount(player->GetSession()->GetAccountId());
+				handler->PSendSysMessage("##########################################################");
+				handler->PSendSysMessage("Warning: GM should be a supporter not a cheater!");
+				handler->PSendSysMessage("This incident has been logged in DB.");
+				handler->PSendSysMessage("This is your first Incident. Beware!");
+				handler->PSendSysMessage("##########################################################");
 				return true;
 			}
 
@@ -123,10 +128,6 @@ public:
 			int newcounter = 0;
 			newcounter = counter + 1;	
 
-			TC_LOG_INFO("custom.coupon", "Debug: ID: %u", id);
-			TC_LOG_INFO("custom.coupon", "Debug: AccountID: %u", accountid);
-			TC_LOG_INFO("custom.coupon", "Debug: Counter: %u", counter);
-			TC_LOG_INFO("custom.coupon", "Debug: Counter + 1: %u", newcounter);
 
 			GMLogic->updateGMPlayerCount(newcounter, id);
 			handler->PSendSysMessage("##########################################################");
@@ -141,8 +142,11 @@ public:
 		std::string couponcode = "";
 		couponcode = CouponSystem->createNewCouponCode();
 		std::string itemname = "";
+		std::string accountname = "";
+		accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
 		itemname = WorldSystem->getItemNamebyItemId(itemid);
-		
+		GMLogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(),accountname,player->GetSession()->GetAccountId(),"GM created CouponCode. More Details in gm_actions_coupon_details!");
+		GMLogic->insertNewCouponGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), itemid,couponcode, quantity);
 		CouponSystem->insertNewCouponCodeinDB(couponcode, itemid, quantity, 0, codeuseable);
 		handler->PSendSysMessage("##########################################################");
 		handler->PSendSysMessage("The generated couponcode is: %s", couponcode);
@@ -192,8 +196,8 @@ public:
 			}
 			handler->PSendSysMessage("##########################################################");
 			handler->PSendSysMessage("Couponcode is invalid or has reached maximum uses!");
-			handler->PSendSysMessage("Couponcode: %s", couponCode);
-			handler->PSendSysMessage("Please check your Couponcode.");
+			handler->PSendSysMessage("Couponcode: %u", couponCode);
+			handler->PSendSysMessage("Please check your Couponcode %s", player->GetSession()->GetPlayerName());
 			handler->PSendSysMessage("If you type the correct Couponcode the Couponcodecharges are empty! Sorry for that!");
 			handler->PSendSysMessage("##########################################################");
 			return true;
@@ -206,13 +210,13 @@ public:
 		hasPlayeralreadyUsedCode = CouponSystem->hasPlayeralreadyUsedCode(couponCode,player->GetSession()->GetAccountId());
 		if (player->GetSession()->GetSecurity() >= 2) {
 			handler->PSendSysMessage("Debug: HasPLayerUsedcode %s", hasPlayeralreadyUsedCode);
-			handler->PSendSysMessage("Debug: Couponcode %s", couponCode);
+			handler->PSendSysMessage("Debug: Couponcode %u", couponCode);
 			handler->PSendSysMessage("Debug: AccountID %u", player->GetSession()->GetAccountId());
 		}
 
 		if (hasPlayeralreadyUsedCode) {
 			handler->PSendSysMessage("##########################################################");
-			handler->PSendSysMessage("You have already used this Coupon: %s", couponCode);
+			handler->PSendSysMessage("You have already used this Coupon: %u", couponCode);
 			handler->PSendSysMessage("##########################################################");
 			return true;
 		}
@@ -229,11 +233,11 @@ public:
 		TC_LOG_INFO("custom.coupon", "Debug: Couponcode %s was used by Player %s", couponCode, player->GetSession()->GetPlayerName());
 		CouponSystem->updateCouponCodeUsed(benutzt + 1, couponCode);
 		CouponSystem->insertNewPlayerUsedCode(player->GetSession()->GetPlayerName(), player->GetSession()->GetAccountId(), couponCode);
-		CharacterSystem->sendPlayerMailwithItem(belohnung, anzahl, "Congratulation", "Your Couponcode was valid. Here is your Reward! Kind Regards your Serverteam.", player->GetSession()->GetPlayer());
+		CharacterSystem->sendPlayerMailwithItem(belohnung, anzahl, "Congratulation", "Your Couponcode was valid. \nHere is your Reward! \nKind Regards your Serverteam.", player->GetSession()->GetPlayer());
 		handler->PSendSysMessage("##########################################################");
 		handler->PSendSysMessage("Congratulation %s", player->GetSession()->GetPlayerName());
-		handler->PSendSysMessage("Your Couponcode %s was valid!", couponCode);
-		handler->PSendSysMessage("Please check your Mails");
+		handler->PSendSysMessage("Your Couponcode %u was valid!", couponCode);
+		handler->PSendSysMessage("Please check your Mails %s!",player->GetSession()->GetPlayerName());
 		handler->PSendSysMessage("##########################################################");
 
 		std::string accountname = "";

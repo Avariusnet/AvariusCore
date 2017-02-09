@@ -456,6 +456,10 @@ public:
 			if (player->GetSession()->GetSecurity() > 0) {
 				PreparedQueryResult result = GMLogic->selectGMPlayerCount(player->GetSession()->GetAccountId());
 
+				if (!result) {
+					return;
+				}
+
 				Field * ergebnis = result->Fetch();
 				int counter = ergebnis[2].GetInt32();
 

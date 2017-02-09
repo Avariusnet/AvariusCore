@@ -9,8 +9,7 @@ public:
 	void addGMPlayerCount(int accountid);
 	void updateGMPlayerCount(int counter, int accountid);
 	PreparedQueryResult selectGMPlayerCount(int accountid);
-
-
+	void insertNewCouponGMLog(std::string charactername, int guid,int itemid, std::string couponcode, int quantity);
 };
 
 

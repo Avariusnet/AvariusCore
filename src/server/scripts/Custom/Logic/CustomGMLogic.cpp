@@ -48,3 +48,13 @@ PreparedQueryResult CustomGMLogic::selectGMPlayerCount(int accountid)
 	return result;
 }
 
+void CustomGMLogic::insertNewCouponGMLog(std::string charactername, int guid,int itemid, std::string couponcode, int quantity)
+{
+	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_EVENTLOG);
+	stmt->setString(0, charactername);
+	stmt->setInt32(1, guid);
+	stmt->setInt32(2, itemid);
+	stmt->setString(3, couponcode);
+	stmt->setInt32(4, quantity);
+	CharacterDatabase.Execute(stmt);
+}

@@ -25,6 +25,10 @@ void LoginDatabaseConnection::DoPrepareStatements()
 	//CUSTOM START
 	PrepareStatement(LOGIN_SEL_ACCOUNT_BYID, "SELECT username from account where id = ? ", CONNECTION_SYNCH);
 
+	//FirstNPC
+	PrepareStatement(LOGIN_SEL_ACCOUNT_LAST_IP, "SELECT last_ip FROM account where id = ?", CONNECTION_SYNCH);
+	PrepareStatement(LOGIN_SEL_ACCOUNT_LAST_IP_COUNT, "SELECT count(last_ip) FROM account WHERE last_ip = ?", CONNECTION_SYNCH);
+
 	//CUSTOM END
 
 
