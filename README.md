@@ -1,4 +1,7 @@
-AvariusCore
+### AvariusCore
+
+## Wiki
+www.avarius.net
 
 TrinityCore is a *MMORPG* Framework based mostly in C++.
 
