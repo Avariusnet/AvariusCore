@@ -3,3 +3,5 @@ CREATE TABLE IF NOT EXISTS `beantwortete_fragen` (
   `accountid` INT NULL COMMENT '',
   `nr` INT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '');
+
+  

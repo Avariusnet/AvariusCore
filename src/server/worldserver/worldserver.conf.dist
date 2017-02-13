@@ -38,8 +38,11 @@
 #	 CONTENT PATCH
 #	 DOUBLE XP WEEKEND
 #	 CUSTOM XP
+#	 CUSTOM GM SECURITY ACTIONS
 #	 CUSTOM SCRIPTS
-#	
+#	 EXALTOR (First) NPC 
+#	 VIP VENDOR
+#
 #
 ###################################################################################################
 
@@ -4257,6 +4260,7 @@ Wander.Volk = 1
 #
 
 XP.Weekend.Active = 0
+
 #
 #
 #		XP Rate for Xp Weekend 
@@ -4290,7 +4294,7 @@ Custom.XP = 1
 ###################################################################################################
 
 ###################################################################################################
-#GM Secuity Actions
+#CUSTOM GM SECURITY ACTIONS
 #
 #		Activate custom GM Security Options.
 #		Default:     0 - (Disabled)
@@ -4328,7 +4332,7 @@ GM.Security.Number = 50
 # 
 
 
-First.Ausstattung = 0
+
 Race.Change = 1
 GMIsland.Protection = 1
 Playtime.Goodies = 0
@@ -4342,6 +4346,91 @@ Quest.Report = 1
 Congrats.Level = 0
 Welcome.Message = 0
 
+#
+#
+#
+###################################################################################################
+
+###################################################################################################
+#EXALTOR NPC 
+#
+#		Activate or deactivate the Exaltor NPC
+#		All Options are: 
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)
+#
+
+Exaltor.Activate = 0
+
+#
+#
+#		Activate and Deactive First and Guild Character!
+#
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)
+#
+
+Exaltor.Character = 0
+
+#
+#		
+#
+#			Activate or Deactive Gossip Option to generate Coupons or not!
+#			Default:     0 - (Disabled)
+#                    	 1 - (Enabled)
+#
+
+Exaltor.Coupon.Generate = 0
+
+#
+#		
+#
+#
+#		Activate or Deactive Exaltor Features in general!
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)
+#
+
+Exaltor.Features = 0
+
+#
+#		Activate or Deactive Exaltor Professions! Players can buy Professions MaxSkill!
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)
+#
+
+Exaltor.Professions = 0
+
+#
+#
+#		Activate or Deactive Exaltor Level. Player can buy Levels for Credits.
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)
+#
+#
+
+Exaltor.Level = 0
+
+#
+#
+#
+#
+###################################################################################################
+
+
+###################################################################################################
+#VIP VENDOR
+#
+#			Activate or Deactive Exaltor Level. Player can buy Levels for Credits.
+#			Default:     0 - (Disabled)
+#                    	 1 - (Enabled)
+#
+
+Vip.Vendor = 1
+
+#
+#
+#
 #
 #
 #

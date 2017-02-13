@@ -3,8 +3,8 @@
 DELETE FROM command WHERE `name`='mall';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('mall', 195, 'Syntax: .mall Teleportiert dich in die Hauptstadt deine Fraktion und belebt dich dort wieder, wenn du tot bist (Kann nicht im Kampf, Flug oder auf einem Mount verwendet werden)');
 
-DELETE FROM command WHERE `name`='dala';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('dala', 195, 'Syntax: .dala Teleportiert dich nach Dalaran und belebt dich dort wieder, wenn du tot bist (Kann nicht im Kampf, Flug oder auf einem Mount verwendet werden)');
+DELETE FROM command WHERE `name`='dalaran';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('dalaran', 195, '');
 
 
 DELETE FROM command WHERE `name`='quest';
@@ -57,25 +57,16 @@ UPDATE `command` SET `permission`='195' WHERE `name`='gm ingame';
 DELETE FROM command WHERE `name` = 'frage';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('frage', 193, 'Syntax: .frage [Frage] [Antwort] [Itemid] [Anzahl]');
 
-DELETE FROM command WHERE `name`='bot add';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bot add', 195, 'Syntax: .bot add. Fügt einen neuen Bot hinzu.'); 
-
-DELETE FROM command WHERE `name`='bot buff';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bot buff', 195, 'Syntax: .bot buff.Bufft deinen Bot.'); 
-
-DELETE FROM command WHERE `name`='bot respawn';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('bot respawn', 195, 'Syntax: .bot respawn. Bringt euren Begleiter ins Leben zurück.'); 
-
 
 /* ITEM CODE BEFEHL */
 DELETE FROM command WHERE `name`='coupon';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('coupon', 195, '');  
 
-DELETE FROM command WHERE `name`='coupon reedem';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('coupon reedem', 195, 'Syntax: .coupon reedem [Your RedeemCore].');   
+DELETE FROM command WHERE `name`='coupon redeem';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('coupon redeem', 195, 'Syntax: .coupon reedem [Your RedeemCore].');   
 
 DELETE FROM command WHERE `name`='coupon generate';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('coupon generate', 195, 'Generate a new coupun. .coupon generate [ITEMID] [ITEMQuantity] [How often should the Code be used]');   
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('coupon generate', 195, 'Generate a new coupun. Syntax: .coupon generate [ITEMID] [ITEMQuantity] [How often should the Code be used]');   
 
 /* Fremdwerbung */
 DELETE FROM command WHERE `name`='werbung';
@@ -91,9 +82,7 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('report deactivate'
 DELETE FROM command WHERE `name`='report activate';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('report activate', 193, '');  
 
-/* Gutscheineventteam */
-DELETE FROM command WHERE `name`='gutscheinerstellen';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('gutscheinerstellen', 194, 'Syntax: .gutscheinerstellen [Itemid] [Itemanzahl] [Anzahl der Nutzbarkeit].'); 
+
 
 
 /*Testcommands */
@@ -117,3 +106,6 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('logic gildenid', 1
 
 DELETE FROM command WHERE `name`='logic time';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('logic time', 193, ''); 
+
+DELETE FROM command WHERE `name`='logic playerlog';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('logic playerlog', 193, ''); 

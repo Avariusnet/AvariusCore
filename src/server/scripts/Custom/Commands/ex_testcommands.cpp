@@ -37,9 +37,12 @@
 #include "Player.h"
 #include "ReputationMgr.h"
 #include "ScriptMgr.h"
+#include <time.h>
+#include <stdio.h>
 #include <Custom/Logic/CustomCharacterSystem.h>
 #include <Custom/Logic/CustomReportSystem.h>
 #include <Custom/Logic/CustomGMLogic.h>
+#include <Custom/Logic/CustomPlayerLog.h>
 
 class ex_testcommands : public CommandScript
 {
@@ -59,6 +62,7 @@ public:
 			{ "name", SEC_ADMINISTRATOR, false, &HandleLogicNameTest, "" },
 			{ "gildenid", SEC_ADMINISTRATOR, false, &HandleLogicGildenIDTest, "" },
 			{ "time", SEC_ADMINISTRATOR, false, &HandleLogicTimeTest, "" },
+			{ "playerlog", SEC_ADMINISTRATOR, false, &HandleLogicPlayerlogTest, "" },
 
 		};
 
@@ -71,13 +75,33 @@ public:
 		return commandTable;
 	}
 
-	static bool HandleLogicTimeTest(ChatHandler* handler, const char* /*args*/) {
+	
+	static bool HandleLogicPlayerlogTest(ChatHandler* handler, const char* /*args*/) {
+		CustomPlayerLog * PlayerLog = 0;
+		CustomCharacterSystem* CharacterSystem = 0;
 		Player* player = handler->GetSession()->GetPlayer();
+		std::string accountname = "";
+		accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+		PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(),player->GetGUID(),accountname,player->GetSession()->GetAccountId(),"Testeintrag");
+		return true;
+	}
 
-		int gildenid = 0;
-		gildenid = player->GetGuildId();
+	static bool HandleLogicTimeTest(ChatHandler* handler, const char* /*args*/) {
+		int playtime = 0;
+		int leveltime = 0;
+		
 
-		player->GetSession()->SendAreaTriggerMessage("Gildenid ist %u", gildenid);
+		//double difftime(time_t t1, time_t t2);
+		Player* player = handler->GetSession()->GetPlayer();
+		leveltime = player->GetLevelPlayedTime();
+		
+		playtime =	player->GetTotalPlayedTime();
+
+		int differenz = 0;
+		differenz = playtime - leveltime;
+		handler->PSendSysMessage("Time Difference: %u", differenz);
+		handler->PSendSysMessage("Totalplaytime: %u", playtime);
+		handler->PSendSysMessage("Leveltime: %u", leveltime);
 		return true;
 	}
 
@@ -98,8 +122,7 @@ public:
 		
 		int32 accountid = CharacterSystem->getAccountID(player->GetSession()->GetPlayerName());
 		
-	
-		player->GetSession()->SendAreaTriggerMessage("Die AccountId dieses Accounts ist: %u", accountid);
+		handler->PSendSysMessage("Accountid ist %u", accountid);
 		return true;
 	}
 
@@ -138,11 +161,7 @@ public:
 		uint32 questid = (uint32)atoi(px);
 
 		bool isreported = reportSystem->checkIfQuestIsAlreadyReported(questid);
-
-		std::ostringstream ss;
-		ss << "Der Befehl hat den return wert: " << isreported;
-
-		player->GetSession()->SendAreaTriggerMessage(ss.str().c_str());
+		handler->PSendSysMessage("Der Befehl hat den return wert: %s", isreported);
 		return true;
 	}
 
@@ -153,7 +172,7 @@ public:
 		int32 accountid = customcharactersystem->getAccountID(player->GetSession()->GetPlayerName());
 		std::string accountname = customcharactersystem->getAccountName(accountid);
 		gmlogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, accountid, "Testinsert");
-		player->GetSession()->SendAreaTriggerMessage("Command executed");
+		handler->PSendSysMessage("Command executed");
 		return true;
 	}
 };

@@ -54,11 +54,6 @@ public:
 			uint32 belohnung = felder[1].GetUInt32();
 			uint32 anzahl = felder[2].GetUInt32();
 
-			/*PreparedStatement* check = CharacterDatabase.GetPreparedStatement(CHAR_SEL_BEANTWORTET);
-			check->setInt32(0, player->GetSession()->GetAccountId());
-			check->setInt32(1, questionid);
-			PreparedQueryResult result = CharacterDatabase.Query(check);*/
-
 			bool playerHasAlreadyAnswerQuestion = CharacterSystem->hasPlayerAlreadyAnswertheQuestion(player->GetSession()->GetAccountId(), questionid);
 
 			if (playerHasAlreadyAnswerQuestion){
@@ -92,7 +87,7 @@ public:
     }
     
     
-    bool OnGossipSelectCode(Player * player, Creature* /*creature*/, uint32 /*sender*/, uint32 action, const char* code){
+    bool OnGossipSelectCode(Player * player, Creature* creature, uint32 /*sender*/, uint32 action, const char* code){
         
         switch(action){
             
@@ -103,6 +98,7 @@ public:
                     std::string codes = code;
                 
                     if(codes == "Easteregg"){
+						creature->Say("Yeah. The Easter Egg is found!. Here get your Reward!", LANG_UNIVERSAL, nullptr);
                         player->GetSession()->SendNotification("Viel Spass mit dem Easteregg");
                         return true;
                     }

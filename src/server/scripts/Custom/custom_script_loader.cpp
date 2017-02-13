@@ -23,6 +23,9 @@
 
 void AddSC_boss_galadriel();
 
+//vipvendor
+void AddSC_vipvendor();
+
 //Coupon 
 void AddSC_coupon();
 //eventnpc
@@ -109,8 +112,14 @@ void AddSC_port_item();
 
 void AddCustomScripts()
 {
+	//vipvendor
+	AddSC_vipvendor();
+
+
+	//port_item
 	AddSC_port_item();
 	
+	//galadriel
 	AddSC_boss_galadriel();
 
 	//Coupon

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `eventteamlog` (
+CREATE TABLE IF NOT EXISTS `gm_actions_coupon_details` (
   `ID` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `player` VARCHAR(45) NULL COMMENT '',
   `guid` INT NULL COMMENT '',

@@ -1,6 +1,0 @@
-CREATE TABLE  IF NOT EXISTS `firstnpc_log` (
-  `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
-  `Grund` VARCHAR(45) NULL COMMENT '',
-  `Spieler` VARCHAR(45) NULL COMMENT '',
-  `guid` INT NULL COMMENT '',
-  PRIMARY KEY (`id`)  COMMENT '');

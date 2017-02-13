@@ -31,7 +31,14 @@ enum LoginDatabaseStatements
 
 	/*Custom Start*/
 	LOGIN_SEL_ACCOUNT_BYID,
+
+	//FIRSTNP
+	LOGIN_SEL_ACCOUNT_LAST_IP,
+	LOGIN_SEL_ACCOUNT_LAST_IP_COUNT,
+
+
 	/*Custom End*/
+
 
     LOGIN_SEL_REALMLIST,
     LOGIN_DEL_EXPIRED_IP_BANS,
