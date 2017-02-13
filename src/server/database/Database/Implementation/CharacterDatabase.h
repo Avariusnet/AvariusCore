@@ -88,6 +88,7 @@ enum CharacterDatabaseStatements
 	//PlayerLog
 	CHAR_INS_PLAYERLOG,
 	CHAR_SEL_PLAYERLOG,
+	CHAR_INS_CURRENCYLOG,
 
 	//Guild 
 	CHAR_SEL_GUILD_LEADER,

@@ -40,7 +40,9 @@
 #	 CUSTOM XP
 #	 CUSTOM GM SECURITY ACTIONS
 #	 CUSTOM SCRIPTS
-#	 EXALTOR NPC 
+#	 EXALTOR (First) NPC 
+#	 VIP VENDOR
+#
 #
 ###################################################################################################
 
@@ -4409,6 +4411,25 @@ Exaltor.Professions = 0
 
 Exaltor.Level = 0
 
+#
+#
+#
+#
+###################################################################################################
+
+
+###################################################################################################
+#VIP VENDOR
+#
+#			Activate or Deactive Exaltor Level. Player can buy Levels for Credits.
+#			Default:     0 - (Disabled)
+#                    	 1 - (Enabled)
+#
+
+Vip.Vendor = 1
+
+#
+#
 #
 #
 #

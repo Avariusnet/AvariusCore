@@ -33,7 +33,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(CHAR_INS_BEANTWORTET, "Insert INTO beantwortete_fragen (accountid, nr) VALUES (?,?)", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_SEL_LOB, "SELECT `id`, `zeit`, `spieler`,`uid` `benutzt` FROM `lob` WHERE `zeit` = ? AND `uid`= ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_INS_LOB, "INSERT INTO lob (zeit,spieler,uid,benutzt)VALUES (?,?,?,?)", CONNECTION_SYNCH);
-	PrepareStatement(CHAR_INS_FIRSTLOG, "INSERT INTO firstnpc_log (grund,spieler, guid) VALUES (?,?,?)", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_INS_FIRSTLOG, "INSERT INTO firstnpc_log (grund,spieler, guid,actiontime) VALUES (?,?,?,UNIX_TIMESTAMP())", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_INS_EVENTLOG, "INSERT INTO gm_actions_coupon_details (player,guid, itemid,gutscheincode,anzahl) VALUES (?,?,?,?,?)", CONNECTION_ASYNC);
 	
 	PrepareStatement(CHAR_SEL_COUPON_REWARD, "SELECT ItemID from couponrewards where ID = ?", CONNECTION_SYNCH);
@@ -58,6 +58,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 
 	//PLayerlog
 	PrepareStatement(CHAR_INS_PLAYERLOG, "INSERT INTO playerlog (charactername,guid,accountname,accountid,action_done,actiondate) VALUES(?,?,?,?,?, UNIX_TIMESTAMP())", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_INS_CURRENCYLOG, "INSERT INTO characters_currencylog (charactername,characterguid,accountname, accountid,currencyitemid,amount,buydate,buy_action) VALUES (?,?,?,?,?,?,UNIX_TIMESTAMP(),?)", CONNECTION_ASYNC);
 
 	//REPORT QUEST SYSTEM
 	PrepareStatement(CHAR_INS_REPORT_QUEST, "Insert into `reported_quest` (questname, questid, anzahl, aktiv) VALUES (?,?,?,?)", CONNECTION_ASYNC);

@@ -3,4 +3,5 @@ CREATE TABLE  IF NOT EXISTS `firstnpc_log` (
   `Grund` VARCHAR(45) NULL COMMENT '',
   `Spieler` VARCHAR(45) NULL COMMENT '',
   `guid` INT NULL COMMENT '',
+  `actiontime` INT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '');
