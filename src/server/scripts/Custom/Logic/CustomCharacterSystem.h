@@ -37,21 +37,34 @@ public:
 	bool checkIfItemisForbidden(int itemid);
 
 
-	//First Character
+	
 	bool setProfessionSkill(Player* player, uint32 profession, int professioncost);
-	void insertNewFirstCharacterforPlayer(int guid, std::string charactername, int accountid, std::string accountname, int guildid, std::string ip);
+
+	//First Character
+
+	void insertNewFirstCharacterforPlayerCount(int guid, std::string charactername, int accountid, std::string accountname, int guildid, std::string ip);
+
 	PreparedQueryResult getFirstCharacterPlayerLog(int accountid);
 	bool hasPlayerAlreadyAFirstChar(int accountid, std::string action_done);
+	bool hasPlayerAlreadyCharacters(int accountid);
+	bool countIfPlayerHasLessTotalOf2FirstCharacters(int accountid);
 	int getGuildCreateDate(int guildid);
 	int getGuildMemberCount(int guildid);
-	bool hasPlayerAlreadyCharacters(int accountid);
+	
 	void executeFirstCharacter(Player* player, std::string playerlog);
 	std::string getLastIPbyAccount(int accountid);	
+
+	void deleteFirstCharacterPlayerLog(int accountid);
+	void updateCharacterToZeroAccount(int guid);
+
+
+
+
+
 	void givePlayerLevelWithCurrency(Player* player, uint16 cost, uint16 maxlevel, uint32 levelup);
 	void executeGuildCharacter(Player* player, std::string playerlog, int membercount);
 
 	int getUnixTimestamp();
-	void updateCharacterToAnotherAccount(int accountid, int guid);
 	void insertPlayerLob(int playtime, std::string charactername, int guid, int used);
 		
 

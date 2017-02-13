@@ -112,9 +112,10 @@ bool CustomCharacterSystem::setProfessionSkill(Player * player, uint32 professio
 
 }
 
-void CustomCharacterSystem::insertNewFirstCharacterforPlayer(int guid, std::string charactername, int accountid, std::string accountname, int guildid, std::string ip)
+void CustomCharacterSystem::insertNewFirstCharacterforPlayerCount(int guid, std::string charactername, int accountid, std::string accountname, int guildid, std::string ip)
 {
-	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_FIRST_CHAR);
+	//PrepareStatement(CHAR_INS_PLAYER_FIRST_CHARACTER_COUNT, "INSERT INTO player_first_character_count (guid,charname, account, accname, time, guildid,ip) VALUES (?,?,?,?,UNIX_TIMESTAMP(),?,?)", CONNECTION_ASYNC);
+	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_FIRST_CHARACTER_COUNT);
 	stmt->setInt32(0, guid);
 	stmt->setString(1, charactername);
 	stmt->setInt32(2, accountid);
@@ -123,6 +124,7 @@ void CustomCharacterSystem::insertNewFirstCharacterforPlayer(int guid, std::stri
 	stmt->setString(5, ip);
 	CharacterDatabase.Execute(stmt);
 }
+
 
 PreparedQueryResult CustomCharacterSystem::getFirstCharacterPlayerLog(int accountid)
 {
@@ -161,6 +163,29 @@ bool CustomCharacterSystem::hasPlayerAlreadyAFirstChar(int accountid,std::string
 	return true;
 }
 
+bool CustomCharacterSystem::countIfPlayerHasLessTotalOf2FirstCharacters(int accountid)
+{
+	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PLAYER_FIRST_CHARACTER_COUNT);
+	stmt->setInt32(0, accountid);
+	PreparedQueryResult result = CharacterDatabase.Query(stmt);
+
+	if (!result) {
+		return false;
+	}
+
+	Field* ergebnis = result->Fetch();
+	int32 count = ergebnis[0].GetInt32();
+
+	if (count < 2) {
+		return false;
+	}
+
+	if (count >= 2) {
+		return true;
+	}
+	
+}
+
 //If Returnvalue = 0, no guild was found!
 int CustomCharacterSystem::getGuildCreateDate(int guildid)
 {
@@ -195,13 +220,7 @@ int CustomCharacterSystem::getGuildMemberCount(int guildid)
 	return guildmembercount;
 }
 
-void CustomCharacterSystem::updateCharacterToAnotherAccount(int accountid, int guid)
-{
-	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_CHARACTER_TO_ACCOUNT);
-	stmt->setInt32(0, accountid);
-	stmt->setInt32(1, guid);
-	CharacterDatabase.Execute(stmt);
-}
+
 
 //If no character found return value = 0
 bool CustomCharacterSystem::hasPlayerAlreadyCharacters(int accountid)
@@ -254,6 +273,21 @@ std::string CustomCharacterSystem::getLastIPbyAccount(int accountid)
 	std::string lastip = ergebnis[0].GetCString();
 
 	return lastip;
+}
+
+void CustomCharacterSystem::deleteFirstCharacterPlayerLog(int accountid)
+{
+	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_FIRST_CHAR_PLAYERLOG);
+	stmt->setInt32(0, accountid);
+	stmt->setString(1, "FirstCharacter");
+	CharacterDatabase.Execute(stmt);
+}
+
+void CustomCharacterSystem::updateCharacterToZeroAccount(int guid)
+{
+	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_FIRSTCHARACTER_TO_ZEROACCOUNT);
+	stmt->setInt32(0, guid);
+	CharacterDatabase.Execute(stmt);
 }
 
 

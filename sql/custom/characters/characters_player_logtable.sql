@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `playerlog` (
+CREATE TABLE IF NOT EXISTS `player_log` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `charactername` VARCHAR(45) NULL,
   `guid` INT NULL,

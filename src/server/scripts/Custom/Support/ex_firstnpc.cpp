@@ -71,7 +71,7 @@ class npc_first_char : public CreatureScript
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Information and Help", GOSSIP_SENDER_MAIN, 0, "", 0, false);
 						if (sConfigMgr->GetBoolDefault("First.Character", true)) {
 							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Get the First Character!", GOSSIP_SENDER_MAIN, 1, "", 0, false);
-							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Giuldtransfer starting 10 Members", GOSSIP_SENDER_MAIN, 2, "", 0, false);
+							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Guildtransfer starting 10 Members", GOSSIP_SENDER_MAIN, 2, "", 0, false);
 						}
 
 						if (sConfigMgr->GetBoolDefault("Exaltor.Features", true)) {
@@ -112,6 +112,13 @@ class npc_first_char : public CreatureScript
 							return true;
 						}
 
+						bool twotimescharacter = true;
+						twotimescharacter = CharacterSystem->countIfPlayerHasLessTotalOf2FirstCharacters(player->GetSession()->GetAccountId());
+						if (twotimescharacter) {
+							creature->Say("You already used this Function more than 2 times!", LANG_UNIVERSAL, nullptr);
+							return true;
+						}
+
 						bool playerHasAlreadyCharacter = true;
 						playerHasAlreadyCharacter = CharacterSystem->hasPlayerAlreadyCharacters(player->GetSession()->GetAccountId());
 						if (playerHasAlreadyCharacter) {
@@ -124,7 +131,7 @@ class npc_first_char : public CreatureScript
 						accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
 						std::string lastip = "";
 						lastip = CharacterSystem->getLastIPbyAccount(player->GetSession()->GetAccountId());
-						CharacterSystem->insertNewFirstCharacterforPlayer(player->GetGUID(), player->GetSession()->GetPlayerName(), player->GetSession()->GetAccountId(), accountname, 0, lastip);
+						CharacterSystem->insertNewFirstCharacterforPlayerCount(player->GetGUID(), player->GetSession()->GetPlayerName(), player->GetSession()->GetAccountId(), accountname, 0, lastip);
 						CharacterSystem->executeFirstCharacter(player->GetSession()->GetPlayer(), "FirstCharacter");
 						return true;
 
@@ -139,6 +146,13 @@ class npc_first_char : public CreatureScript
 
 						if (hasPlayerAlreadyFirstChar) {
 							creature->Say("You already get a first Character!", LANG_UNIVERSAL, nullptr);
+							return true;
+						}
+
+						bool twotimescharacter = true;
+						twotimescharacter = CharacterSystem->countIfPlayerHasLessTotalOf2FirstCharacters(player->GetSession()->GetAccountId());
+						if (twotimescharacter) {
+							creature->Say("You already used this Function more than 2 times!", LANG_UNIVERSAL, nullptr);
 							return true;
 						}
 
@@ -178,8 +192,9 @@ class npc_first_char : public CreatureScript
 						accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
 						std::string lastip = "";
 						lastip = CharacterSystem->getLastIPbyAccount(player->GetSession()->GetAccountId());
-						CharacterSystem->insertNewFirstCharacterforPlayer(player->GetGUID(), player->GetSession()->GetPlayerName(), player->GetSession()->GetAccountId(), accountname, 0, lastip);
+						CharacterSystem->insertNewFirstCharacterforPlayerCount(player->GetGUID(), player->GetSession()->GetPlayerName(), player->GetSession()->GetAccountId(), accountname, player->GetGuildId(), lastip);
 						CharacterSystem->executeGuildCharacter(player->GetSession()->GetPlayer(), "FirstCharacter", guildmember);
+						
 						return true;
 
 					}break;
@@ -212,8 +227,7 @@ class npc_first_char : public CreatureScript
 							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Wandervolk", GOSSIP_SENDER_MAIN, 9504, "", 11, false);
 						}
 
-						//Testfunction
-						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Main Menu", GOSSIP_SENDER_MAIN, 9504, "", 1, false);
+					
 						player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 						return true;
 					}break;
@@ -224,6 +238,27 @@ class npc_first_char : public CreatureScript
 						return true;
 					}break;
 
+					case 5:
+					{
+						player->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
+						player->PlayerTalkClass->ClearMenus();
+
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Mining", GOSSIP_SENDER_MAIN, 13, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Schneiderei", GOSSIP_SENDER_MAIN, 14, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Schmiedekunst", GOSSIP_SENDER_MAIN, 15, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Kraeuterkunde", GOSSIP_SENDER_MAIN, 16, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Kuerschner", GOSSIP_SENDER_MAIN, 17, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Lederer", GOSSIP_SENDER_MAIN, 18, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Juwelierskunst", GOSSIP_SENDER_MAIN, 19, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Alchemie", GOSSIP_SENDER_MAIN, 20, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Verzauberkunst", GOSSIP_SENDER_MAIN, 21, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Inschriftenkunde", GOSSIP_SENDER_MAIN, 9000, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Ingenieurskunst", GOSSIP_SENDER_MAIN, 9001, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Zu den Features", GOSSIP_SENDER_MAIN, 25, "", 0, false);
+
+						player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
+						return true;
+					}break;
 
 					case 6:
 					{

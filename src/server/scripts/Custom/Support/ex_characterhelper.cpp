@@ -234,7 +234,17 @@ public:
 				return true;
 			}
 
+			bool hasPlayerMoreThanTwoFirstCharacters = true;
+			hasPlayerMoreThanTwoFirstCharacters = CharacterSystem->countIfPlayerHasLessTotalOf2FirstCharacters(player->GetSession()->GetAccountId());
+			if (hasPlayerMoreThanTwoFirstCharacters) {
+				creature->Say("You have already a choice!", LANG_UNIVERSAL, nullptr);
+				return true;
+			}
 
+			CharacterSystem->deleteFirstCharacterPlayerLog(player->GetSession()->GetAccountId());
+			CharacterSystem->updateCharacterToZeroAccount(player->GetGUID());
+			player->GetSession()->LogoutPlayer(true);
+		
 
 		}break;
 

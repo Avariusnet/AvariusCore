@@ -377,6 +377,13 @@ public:
 			handler->PSendSysMessage("##########################################################");
 			return true;
 		}
+
+		if (chr->getLevel() < 68) {
+			handler->PSendSysMessage("##########################################################");
+			handler->PSendSysMessage("You are not Level 68. Northrend is only for Level 68 Characters!");
+			handler->PSendSysMessage("##########################################################");
+			return true;
+		}
 		std::string accountname = "";
 		accountname = CharacterSystem->getAccountName(chr->GetSession()->GetAccountId());
 		switch (chr->GetTeam())
