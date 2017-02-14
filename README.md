@@ -8,13 +8,13 @@ The AvariusCore is a WotLK Core based on TrinityCore. It comes with hugh custom 
 ## Requirements
 
 
-Software requirements are available in the [wiki](https://www.trinitycore.info/display/tc/Requirements) for
+Software requirements are available in the [Trinity Core wiki](https://www.trinitycore.info/display/tc/Requirements) for
 Windows, Linux and OS X.
 
 
 ## Install
 
-Detailed installation guides are available in the [wiki](https://www.trinitycore.info/display/tc/Installation+Guide) for
+Detailed installation guides are available in the [Trinity Corenwiki](https://www.trinitycore.info/display/tc/Installation+Guide) for
 Windows, Linux and OS X.
 
 
@@ -28,6 +28,6 @@ Read file [COPYING](COPYING).
 
 ## Links
 
-* [Website](https://www.avarius.met)
-* [Wiki](http://avarius.net/index.php/projects/9-avarius-wotlk-core/2-wotlk-documentation)
+* [Website](https://www.avarius.net)
+* [Documentation](http://avarius.net/index.php/projects/9-avarius-wotlk-core/2-wotlk-documentation)
 * [Twitter] (https://twitter.com/avarius_info)
