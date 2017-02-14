@@ -22,7 +22,7 @@ void LoginDatabaseConnection::DoPrepareStatements()
     if (!m_reconnecting)
         m_stmts.resize(MAX_LOGINDATABASE_STATEMENTS);
 
-	//CUSTOM START
+	///CUSTOM START
 	PrepareStatement(LOGIN_SEL_ACCOUNT_BYID, "SELECT username from account where id = ? ", CONNECTION_SYNCH);
 
 	//FirstNPC

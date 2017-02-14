@@ -23,11 +23,11 @@
 
 enum CharacterDatabaseStatements
 {
-	/*  Naming standard for defines:
-		{DB}_{SEL/INS/UPD/DEL/REP}_{Summary of data changed}
-		When updating more than one field, consider looking at the calling function
-		name for a suiting suffix.
-	*/
+    /*  Naming standard for defines:
+        {DB}_{SEL/INS/UPD/DEL/REP}_{Summary of data changed}
+        When updating more than one field, consider looking at the calling function
+        name for a suiting suffix.
+    */
 
 	/* Exi Custom */
 	CHAR_SEL_UNIX_TIMESTAMP,

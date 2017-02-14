@@ -1,8 +1,8 @@
 #ifndef __REVISION_DATA_H__
 #define __REVISION_DATA_H__
- #define _HASH                      "@rev_hash@"
- #define _DATE                      "@rev_date@"
- #define _BRANCH                    "@rev_branch@"
+ #define _HASH                      "@v2.0@"
+ #define _DATE                      "@14.02.2017@"
+ #define _BRANCH                    "@3.3.5a@"
  #define _CMAKE_COMMAND             R"(@CMAKE_COMMAND@)"
  #define _SOURCE_DIRECTORY          R"(@CMAKE_SOURCE_DIR@)"
  #define _BUILD_DIRECTORY           R"(@BUILDDIR@)"

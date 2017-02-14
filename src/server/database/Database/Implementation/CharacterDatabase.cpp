@@ -83,7 +83,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(CHAR_SEL_PLAYER_FIRST_CHARACTER_COUNT, "SELECT count(account) from player_first_character_count where account = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_INS_PLAYER_FIRST_CHARACTER_COUNT, "INSERT INTO player_first_character_count (guid,charname, account, accname, time, guildid,ip) VALUES (?,?,?,?,UNIX_TIMESTAMP(),?,?)", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_SEL_FIRST_CHAR_PLAYERLOG, "SELECT guid,action_done,actiondate from player_log where accountid = ? and action_done = ?", CONNECTION_SYNCH);
-	PrepareStatement(CHAR_SEL_GUILD_CREATE_DATE,"SELECT createdate from guild where guildid = ?",CONNECTION_SYNCH);
+	PrepareStatement(CHAR_SEL_GUILD_CREATE_DATE, "SELECT createdate from guild where guildid = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_SEL_GUILD_MEMBER_COUNT, "SELECT count(guid) FROM guild_member WHERE guildid = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_UPD_FIRSTCHARACTER_TO_ZEROACCOUNT, "UPDATE characters set account = 0 where guid = ?", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_CHECK_IF_PLAYER_HAS_ALREADY_CHARACTERS, "Select count(account) from characters where account = ?", CONNECTION_SYNCH);
@@ -103,6 +103,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(CHAR_UPD_GM_ACTION_PLAYER_COUNT, "Update gm_actions_player_count set counter = ? where id = ?", CONNECTION_ASYNC);
 
 	/* CUSTOM ENDE */
+
 
     PrepareStatement(CHAR_DEL_QUEST_POOL_SAVE, "DELETE FROM pool_quest_save WHERE pool_id = ?", CONNECTION_ASYNC);
     PrepareStatement(CHAR_INS_QUEST_POOL_SAVE, "INSERT INTO pool_quest_save (pool_id, quest_id) VALUES (?, ?)", CONNECTION_ASYNC);
