@@ -39,7 +39,6 @@ enum LoginDatabaseStatements
 
 	/*Custom End*/
 
-
     LOGIN_SEL_REALMLIST,
     LOGIN_DEL_EXPIRED_IP_BANS,
     LOGIN_UPD_EXPIRED_ACCOUNT_BANS,

@@ -32,7 +32,7 @@ void CustomReportSystem::addNewPlayerReportInDB(std::string playername, std::str
 }
 
 
-
+//Insert an new reported Quest in DB if the quest isn´t already reported!
 void CustomReportSystem::addNewQuestReportInDB(std::string questname, int questid, int quantity, int active)
 {
 
@@ -50,7 +50,7 @@ void CustomReportSystem::addNewQuestReportInDB(std::string questname, int questi
 void CustomReportSystem::UpdateQuantityQuestReportInDB(int quantity, int questid)
 {
 
-	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST);
+	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST_COUNT);
 	stmt->setInt32(0, quantity);
 	stmt->setInt32(1, questid);
 	CharacterDatabase.Execute(stmt);
@@ -58,11 +58,11 @@ void CustomReportSystem::UpdateQuantityQuestReportInDB(int quantity, int questid
 
 
 //Activate or Deactivate a reported Quest with specific questid
-void CustomReportSystem::setQuestCompleteActive(int active, int questid)
+void CustomReportSystem::setQuestActiveOrInactive(int active, int questid)
 {
-	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST_ACTIVE);
-	stmt->setInt32(1, active);
-	stmt->setInt32(2, questid);
+	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST_SET_QUEST_ACTIVE);
+	stmt->setInt32(0, active);
+	stmt->setInt32(1, questid);
 	CharacterDatabase.Execute(stmt);
 }
 

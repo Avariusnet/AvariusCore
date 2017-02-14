@@ -49,7 +49,8 @@ public: vipvendor() : CreatureScript("vipvendor") { }
 		{
 			//test if this is possible in Fucntion
 			if (sConfigMgr->GetBoolDefault("Vip.Vendor", true)) {
-				player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "I want to buy some Tokens!", GOSSIP_SENDER_MAIN, 1 , "Amount of Tokens ", 0, true);
+				player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Help!", GOSSIP_SENDER_MAIN, 2, "", 0, false);
+				player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "I want to buy some Tokens!", GOSSIP_SENDER_MAIN, 1 , "Amount of Tokens you want to buy: ", 0, true);
 				player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
 				return true;
 			}
@@ -69,6 +70,13 @@ public: vipvendor() : CreatureScript("vipvendor") { }
 				
 			case 1:
 			{
+
+				if (code == "") {
+					creature->Say("Without amount. No Trading!", LANG_UNIVERSAL, nullptr);
+					return true;
+				}
+
+
 				CustomPlayerLog * PlayerLog = 0;
 				CustomCharacterSystem * CharacterSystem = 0;
 				int amount = (uint32)atoi(code);
@@ -92,7 +100,11 @@ public: vipvendor() : CreatureScript("vipvendor") { }
 					accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
 					PlayerLog->insertNewCurrencyLog(player->GetSession()->GetPlayerName(),player->GetGUID(),accountname, player->GetSession()->GetAccountId(), CURRENCYITEM,amount,"VIP_CURRENCY_BUY at VIP_VENDOR");
 					PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "VIP_CURRENCY_BUY at VIP_VENDOR");
-					ChatHandler(player->GetSession()).PSendSysMessage("You have bought %u", amount, " Tokens and payed %u", overallcost * GOLD,
+					ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+						player->GetName());
+					ChatHandler(player->GetSession()).PSendSysMessage("You have bought %u Tokens and payed %u Gold.", amount ,overallcost * GOLD,
+						player->GetName());
+					ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 						player->GetName());
 					return true;
 				}
@@ -101,6 +113,10 @@ public: vipvendor() : CreatureScript("vipvendor") { }
 			
 				return true;
 
+
+			}break;
+
+			case 2: {
 
 			}break;
 

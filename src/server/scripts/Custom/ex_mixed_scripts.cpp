@@ -185,44 +185,44 @@ class Announce_NewPlayer : public PlayerScript
 {
 
 public:
-	Announce_NewPlayer() : PlayerScript("Announce_NewPlayer") {}	
+	Announce_NewPlayer() : PlayerScript("Announce_NewPlayer") {}
 
-   
-    void Belohnung(Player* player, uint32 zeit, uint32 guid,uint32 money){
-            
-        PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_LOB);
-        stmt->setInt32(0,zeit);
-        stmt->setInt32(1, player->GetGUID());
-        PreparedQueryResult result = CharacterDatabase.Query(stmt);
-        
-        if (!result){
-			            
-            SQLTransaction trans = CharacterDatabase.BeginTransaction();
-            MailDraft(PRESENT, THX).AddMoney(money * GOLD)
-            .SendMailTo(trans, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
-            CharacterDatabase.CommitTransaction(trans);
-            
-            CharacterDatabase.PExecute("INSERT INTO lob (zeit,spieler,uid,benutzt) Values ('%u','%s','%u','%u')", zeit, player->GetName().c_str(), guid, 1);
-            player->SaveToDB();
-            return;
-            
-        }
-        
-    }
-    
-    
+
+	void Belohnung(Player* player, uint32 zeit, uint32 guid, uint32 money) {
+
+		PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_LOB);
+		stmt->setInt32(0, zeit);
+		stmt->setInt32(1, player->GetGUID());
+		PreparedQueryResult result = CharacterDatabase.Query(stmt);
+
+		if (!result) {
+
+			SQLTransaction trans = CharacterDatabase.BeginTransaction();
+			MailDraft(PRESENT, THX).AddMoney(money * GOLD)
+				.SendMailTo(trans, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
+			CharacterDatabase.CommitTransaction(trans);
+
+			CharacterDatabase.PExecute("INSERT INTO lob (zeit,spieler,uid,benutzt) Values ('%u','%s','%u','%u')", zeit, player->GetName().c_str(), guid, 1);
+			player->SaveToDB();
+			return;
+
+		}
+
+	}
+
+
 	void OnLogin(Player * player, bool /*online*/)
 	{
 		std::ostringstream ss;
-		      
-        
-        PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_SUM_CHARS);
-        stmt->setInt32(0,player->GetSession()->GetAccountId());
-        PreparedQueryResult result = CharacterDatabase.Query(stmt);
 
-        Field* felder = result->Fetch();
-        uint32 charresultint = felder[0].GetUInt32();
-        
+
+		PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_SUM_CHARS);
+		stmt->setInt32(0, player->GetSession()->GetAccountId());
+		PreparedQueryResult result = CharacterDatabase.Query(stmt);
+
+		Field* felder = result->Fetch();
+		uint32 charresultint = felder[0].GetUInt32();
+
 
 		if (sConfigMgr->GetBoolDefault("Welcome.Message", true)) {
 			if (player->GetTotalPlayedTime() < 1 && charresultint == 1)
@@ -233,12 +233,12 @@ public:
 			}
 		}
 
-	
+
 
 
 
 		uint32 time = player->GetTotalPlayedTime();
-		
+
 		if (sConfigMgr->GetBoolDefault("Playtime.Goodies", true)) {
 
 			//10h
@@ -446,7 +446,7 @@ public:
 class Logoutcheck : public PlayerScript
 {
 public:
-	Logoutcheck() : PlayerScript("Logoutcheck"){}
+	Logoutcheck() : PlayerScript("Logoutcheck") {}
 
 
 	void OnLogout(Player* player) {
@@ -493,12 +493,12 @@ public:
 class DoupleXP : public PlayerScript
 {
 public:
-	DoupleXP() : PlayerScript("DoupleXP"){}
-    
+	DoupleXP() : PlayerScript("DoupleXP") {}
+
 	void OnGiveXP(Player* player, uint32& amount, Unit* /*victim*/)
 	{
 		CustomXP * customxp = 0;
-		
+
 		int xpvalue = 0;
 		xpvalue = customxp->getCustomXPValue(player->GetGUID());
 
@@ -561,7 +561,7 @@ public:
 			}
 
 		}
-		
+
 		//Custom XP is off , but maybe double XP is on.
 		else {
 
@@ -577,7 +577,7 @@ public:
 				{
 
 					if (player->getLevel() < 80) {
-					
+
 						amount = amount * xpweekendrate;
 						ChatHandler(player->GetSession()).PSendSysMessage("XP Weekend actice. You get: %u", amount,
 							player->GetName());
@@ -610,9 +610,9 @@ public:
 			else {
 				return;
 			}
-			
+
 		}
-      
+
 	}
 };
 
@@ -620,30 +620,30 @@ public:
 class GMIsland : public PlayerScript
 {
 public:
-	GMIsland() : PlayerScript("GMIsland"){}
+	GMIsland() : PlayerScript("GMIsland") {}
 
-	void OnUpdateZone(Player* player, uint32 newzone, uint32 newarea){
-		
-		
-			GameEventMgr::ActiveEvents const& ae = sGameEventMgr->GetActiveEventList();
-			bool active = ae.find(70) != ae.end();
+	void OnUpdateZone(Player* player, uint32 newzone, uint32 newarea) {
 
-			if (active == true) {
+
+		GameEventMgr::ActiveEvents const& ae = sGameEventMgr->GetActiveEventList();
+		bool active = ae.find(70) != ae.end();
+
+		if (active == true) {
+			return;
+		}
+
+		else {
+			if (sConfigMgr->GetBoolDefault("GMIsland.Protection", true)) {
+				if (newzone == 876 && newarea == 876 && active == false && player->GetSession()->GetSecurity() <2) {
+					player->TeleportTo(0, -9773, 2126.72, 15.40, 3.88);
+					player->SetPvP(false);
+					sWorld->BanCharacter(player->GetSession()->GetPlayerName(), "10800", "GMIsland Hack", "Exitare");
+				}
+			}
+			else {
 				return;
 			}
-
-			else {
-				if (sConfigMgr->GetBoolDefault("GMIsland.Protection", true)) {
-					if (newzone == 876 && newarea == 876 && active == false && player->GetSession()->GetSecurity() <2) {
-						player->TeleportTo(0, -9773, 2126.72, 15.40, 3.88);
-						player->SetPvP(false);
-						sWorld->BanCharacter(player->GetSession()->GetPlayerName(),"10800", "GMIsland Hack", "Exitare");
-					}
-				}
-				else {
-					return;
-				}
-			}
+		}
 	}
 };
 
@@ -653,11 +653,11 @@ class fbevent : public PlayerScript
 public:
 	fbevent() : PlayerScript("fbevent") {}
 
-	void OnCreate(Player* player) { 
+	void OnCreate(Player* player) {
 
 		GameEventMgr::ActiveEvents const& ae = sGameEventMgr->GetActiveEventList();
 		bool active = ae.find(78) != ae.end();
-		
+
 		QueryResult anzahl;
 		anzahl = CharacterDatabase.PQuery("SELECT count(accountid) FROM fb_event WHERE accountid = '%u'", player->GetSession()->GetAccountId());
 		Field *felder = anzahl->Fetch();
@@ -667,26 +667,26 @@ public:
 		uint32 zeit = time(&sek);
 
 
-		if (active == true && accountanzahl == 0){
+		if (active == true && accountanzahl == 0) {
 			CharacterDatabase.PExecute("UPDATE `characters` set `level` = 80 where guid = '%u'", player->GetGUID());
 			CharacterDatabase.PExecute("UPDATE `characters` set `position_x` = -792.84 where guid = '%u'", player->GetGUID());
 			CharacterDatabase.PExecute("UPDATE `characters` set `position_y` = -1607.55 where guid = '%u'", player->GetGUID());
 			CharacterDatabase.PExecute("UPDATE `characters` set `position_z` = 142.30 where guid = '%u'", player->GetGUID());
 			CharacterDatabase.PExecute("UPDATE `characters` set `map` = 0 where guid = '%u'", player->GetGUID());
-            CharacterDatabase.PExecute("UPDATE `characters` set `money` = 50000000 where guid = '%u'", player->GetGUID());
-			
-			
+			CharacterDatabase.PExecute("UPDATE `characters` set `money` = 50000000 where guid = '%u'", player->GetGUID());
+
+
 			player->SetFullHealth();
 			QueryResult accountname = LoginDatabase.PQuery("SELECT username FROM account where id = %u", player->GetSession()->GetAccountId());
 			std::string accname = (*accountname)[0].GetString();
 
-			CharacterDatabase.PExecute("INSERT INTO fb_event (name,guid,accountname,accountid,date) Values ('%s','%u','%s','%u','%u')", player->GetSession()->GetPlayerName(),player->GetGUID() , accname, player->GetSession()->GetAccountId(),zeit);
+			CharacterDatabase.PExecute("INSERT INTO fb_event (name,guid,accountname,accountid,date) Values ('%s','%u','%s','%u','%u')", player->GetSession()->GetPlayerName(), player->GetGUID(), accname, player->GetSession()->GetAccountId(), zeit);
 		}
-		
-		else{
+
+		else {
 			return;
 		}
-		
+
 
 	}
 
@@ -701,11 +701,11 @@ public:
 class DuelLog : public PlayerScript
 {
 public:
-	DuelLog() : PlayerScript("DuelLog"){}
+	DuelLog() : PlayerScript("DuelLog") {}
 
 	std::ostringstream ss;
 
-	void OnDuelStart(Player* player, Player* pPlayer){
+	void OnDuelStart(Player* player, Player* pPlayer) {
 		ss << "|cff54b5ffDuel wurde gestartet mit den Teilnehmern: |r " << ChatHandler(player->GetSession()).GetNameLink() << " |cff54b5ff und |r" << ChatHandler(pPlayer->GetSession()).GetNameLink();
 		sWorld->SendGMText(LANG_GM_BROADCAST, ss.str().c_str());
 
@@ -718,15 +718,15 @@ public:
 class Shutdown : public WorldScript
 {
 public:
-	Shutdown() : WorldScript("Shutdown"){}
+	Shutdown() : WorldScript("Shutdown") {}
 
 
-	void OnStartup(){
-		
+	void OnStartup() {
+
 		std::ostringstream uu;
 		uu << MOTD;
 		sWorld->SetMotd(uu.str().c_str());
-				
+
 	}
 
 };

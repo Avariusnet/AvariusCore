@@ -23,11 +23,11 @@
 
 enum CharacterDatabaseStatements
 {
-	/*  Naming standard for defines:
-		{DB}_{SEL/INS/UPD/DEL/REP}_{Summary of data changed}
-		When updating more than one field, consider looking at the calling function
-		name for a suiting suffix.
-	*/
+    /*  Naming standard for defines:
+        {DB}_{SEL/INS/UPD/DEL/REP}_{Summary of data changed}
+        When updating more than one field, consider looking at the calling function
+        name for a suiting suffix.
+    */
 
 	/* Exi Custom */
 	CHAR_SEL_UNIX_TIMESTAMP,
@@ -64,12 +64,11 @@ enum CharacterDatabaseStatements
 	//Report Logic
 	CHAR_INS_REPORT_QUEST,
 	CHAR_SEL_REPORT_QUEST,
-	CHAR_UPD_REPORT_QUEST,
-	CHAR_UPD_REPORT_QUEST_ACTIVE,
-	CHAR_UPD_REPORT_QUEST_DEACTIVATE,
+	CHAR_UPD_REPORT_QUEST_COUNT,
+	CHAR_UPD_REPORT_QUEST_SET_QUEST_ACTIVE,
+	CHAR_UPD_REPORT_QUEST_STATE,
 	CHAR_INS_PLAYER_REPORT_QUEST,
 	CHAR_SEL_PLAYER_REPORT_QUEST,
-	CHAR_UDP_REPORT_QUEST_ACTIVATE,
 
 	//Cusom XP
 	CHAR_INS_CUSTOM_XP,
@@ -86,7 +85,6 @@ enum CharacterDatabaseStatements
 	CHAR_INS_PLAYER_FIRST_CHARACTER_COUNT,
 	CHAR_SEL_PLAYER_FIRST_CHARACTER_COUNT,
 	CHAR_DEL_FIRST_CHAR_PLAYERLOG,
-
 
 	//PlayerLog
 	CHAR_INS_PLAYERLOG,

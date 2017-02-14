@@ -1,38 +1,28 @@
 /*
 This small script allows for a reward to automatically go into the inventory of any player that makes it to a specific level.
-
 Make sure to modify this script before using. You must hard code in the money amounts, and item entry numbers, plus spell numbers.
-
 An example:
-
 This is the part of the cpp file you must edit. I will explain each part.
-
-            case 10:
-        money = 100;
-        item = ITEMID;
-        item2 = ITEMID2;
-        spell = SPELLID;
-        break;
-
+case 10:
+money = 100;
+item = ITEMID;
+item2 = ITEMID2;
+spell = SPELLID;
+break;
 Here is the breakdown:
-
-            case 10: (10 = Level 10)
-        money = 100; (100 = 100 gold)
-        item = ITEMID; (Change ITEMID to the entry number of the item you want offered at this level)
-        item2 = ITEMID2; (Change ITEMID2 to the entry number of second item)
-        spell = SPELLID; (Change SPELLID to the spell id number)
-        break;
-
+case 10: (10 = Level 10)
+money = 100; (100 = 100 gold)
+item = ITEMID; (Change ITEMID to the entry number of the item you want offered at this level)
+item2 = ITEMID2; (Change ITEMID2 to the entry number of second item)
+spell = SPELLID; (Change SPELLID to the spell id number)
+break;
 So if you wanted to offer 100 gold, a pet cat (pet carrier, black tabby) and a pet cockroach, plus buff the player with Power Word: Fortitude, it would look like this:
-
-
-            case 10:
-        money = 100;
-        item = 8491;
-        item2 = 10393;
-        spell = 48161;
-        break;
-
+case 10:
+money = 100;
+item = 8491;
+item2 = 10393;
+spell = 48161;
+break;
 You must do this for each level you want to have give rewards. At this time, since items are automatically added, the player loses the reward(s) if
 their bags are full.
 */
@@ -68,13 +58,13 @@ their bags are full.
 class custom_CongratsOnLevel : public PlayerScript
 {
 public:
-    custom_CongratsOnLevel() : PlayerScript("custom_CongratsOnLevel") { }
+	custom_CongratsOnLevel() : PlayerScript("custom_CongratsOnLevel") { }
 
 	void OnLevelChanged(Player* player, uint8 newLevel)
 	{
 		uint32 money /*item, item2, spell*/;
 
-		
+
 		if (sConfigMgr->GetBoolDefault("Congrats.Level", true)) {
 			switch (++newLevel)
 			{
@@ -154,10 +144,10 @@ public:
 		}
 	}
 
-       
+
 };
 
 void AddSC_custom_CongratsOnLevel()
 {
-    new custom_CongratsOnLevel();
+	new custom_CongratsOnLevel();
 }

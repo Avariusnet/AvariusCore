@@ -62,12 +62,11 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	//REPORT QUEST SYSTEM
 	PrepareStatement(CHAR_INS_REPORT_QUEST, "Insert into `reported_quest` (questname, questid, anzahl, aktiv) VALUES (?,?,?,?)", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_SEL_REPORT_QUEST, "SELECT questid, anzahl, aktiv from reported_quest where questid = ?", CONNECTION_SYNCH);
-	PrepareStatement(CHAR_UPD_REPORT_QUEST_ACTIVE, "Update reported_quest SET anzahl = ? , aktiv = ? where questid = ?", CONNECTION_ASYNC);
-	PrepareStatement(CHAR_UPD_REPORT_QUEST, "Update reported_quest SET anzahl = ? where questid = ?", CONNECTION_ASYNC);
-	PrepareStatement(CHAR_UPD_REPORT_QUEST_DEACTIVATE, "Update reported_quest SET aktiv = ? where questid = ?", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_UPD_REPORT_QUEST_SET_QUEST_ACTIVE, "Update reported_quest SET aktiv = ? where questid = ?", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_UPD_REPORT_QUEST_COUNT, "Update reported_quest SET anzahl = ? where questid = ?", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_UPD_REPORT_QUEST_STATE, "Update reported_quest SET aktiv = ? where questid = ?", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_INS_PLAYER_REPORT_QUEST, "INSERT into reported_quest_player (playername,guildname,guid,accid, reported_quest_id) Values (?,?,?,?,?)", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_SEL_PLAYER_REPORT_QUEST, "SELECT accid from reported_quest_player where accid = ? and reported_quest_id = ?", CONNECTION_SYNCH);
-	PrepareStatement(CHAR_UDP_REPORT_QUEST_ACTIVATE, "Update reported_quest SET aktiv = ? where questid = ?", CONNECTION_ASYNC);
 
 
 	//CUSTOM XP
@@ -83,12 +82,11 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(CHAR_SEL_PLAYER_FIRST_CHARACTER_COUNT, "SELECT count(account) from player_first_character_count where account = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_INS_PLAYER_FIRST_CHARACTER_COUNT, "INSERT INTO player_first_character_count (guid,charname, account, accname, time, guildid,ip) VALUES (?,?,?,?,UNIX_TIMESTAMP(),?,?)", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_SEL_FIRST_CHAR_PLAYERLOG, "SELECT guid,action_done,actiondate from player_log where accountid = ? and action_done = ?", CONNECTION_SYNCH);
-	PrepareStatement(CHAR_SEL_GUILD_CREATE_DATE,"SELECT createdate from guild where guildid = ?",CONNECTION_SYNCH);
+	PrepareStatement(CHAR_SEL_GUILD_CREATE_DATE, "SELECT createdate from guild where guildid = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_SEL_GUILD_MEMBER_COUNT, "SELECT count(guid) FROM guild_member WHERE guildid = ?", CONNECTION_SYNCH);
-	PrepareStatement(CHAR_UPD_FIRSTCHARACTER_TO_ZEROACCOUNT, "UPDATE characters set account = 0 where guid = ?", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_UPD_FIRSTCHARACTER_TO_ZEROACCOUNT, "UPDATE characters set account = 0 , name = ? where guid = ?", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_CHECK_IF_PLAYER_HAS_ALREADY_CHARACTERS, "Select count(account) from characters where account = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_DEL_FIRST_CHAR_PLAYERLOG, "Delete from player_log where accountid = ? and action_done = ?", CONNECTION_ASYNC);
-
 
 	//FORBIDDEN QUEST OR ID
 	PrepareStatement(CHAR_SEL_QUEST_FROM_FORBIDDEN_TABLE, "Select questid from forbidden_quest_or_item  where questid = ?", CONNECTION_SYNCH);
@@ -103,6 +101,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(CHAR_UPD_GM_ACTION_PLAYER_COUNT, "Update gm_actions_player_count set counter = ? where id = ?", CONNECTION_ASYNC);
 
 	/* CUSTOM ENDE */
+
 
     PrepareStatement(CHAR_DEL_QUEST_POOL_SAVE, "DELETE FROM pool_quest_save WHERE pool_id = ?", CONNECTION_ASYNC);
     PrepareStatement(CHAR_INS_QUEST_POOL_SAVE, "INSERT INTO pool_quest_save (pool_id, quest_id) VALUES (?, ?)", CONNECTION_ASYNC);
