@@ -209,6 +209,8 @@ public:
 				
 			int questid = atoul(id);
 
+			
+
 			if (player->GetSession()->GetSecurity() <= 2) {
 				handler->PSendSysMessage("QuestID : %u", questid);
 			}
@@ -245,22 +247,56 @@ public:
 
 				//if quantity == 5 , set quest to autocomplete
 				if (anzahl == 5) {
+					bool isQuestForbidden = false;
+					isQuestForbidden = CharacterSystem->checkIfQuestisForbidden(questid);
+
+					if (player->GetSession()->GetSecurity() >= 2) {
+						handler->PSendSysMessage("Debug: Questid: %u", questid);
+						handler->PSendSysMessage("Debug: Is Quest Forbidden?: %s", isQuestForbidden);
+					}
+
 					if (player->GetGuildId() != 0) {
+						//Quest is forbidden and should not be activated!
+						if (isQuestForbidden) {
+							std::string accountname = "";
+							accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+							PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Quest reported");
+							reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), player->GetGuildName(), player->GetGUID(), player->GetSession()->GetAccountId(), questid);
+							reportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
+							handler->PSendSysMessage("##########################################################");
+							handler->PSendSysMessage("The Quest %u is sucessfully reported!", questid);
+							handler->PSendSysMessage("##########################################################");
+							return true;
+						}
+
+						//Quest is not forbidden and activating is ok!
 						std::string accountname = "";
 						accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
 						PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Quest reported");
 						reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), player->GetGuildName(), player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 						reportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
-						reportSystem->setQuestCompleteActive(1, questid);
+						reportSystem->setQuestActiveOrInactive(1, questid);
+						handler->PSendSysMessage("##########################################################");
+						handler->PSendSysMessage("The Quest %u is sucessfully reported!", questid);
+						handler->PSendSysMessage("##########################################################");
 						return true;
 					}
 
+					//Player has no guild !
 					std::string accountname = "";
 					accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
 					PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Quest reported");
 					reportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null" , player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 					reportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
-					reportSystem->setQuestCompleteActive(1, questid);
+					handler->PSendSysMessage("##########################################################");
+					handler->PSendSysMessage("The Quest %u is sucessfully reported!", questid);
+					handler->PSendSysMessage("##########################################################");
+					
+					if (isQuestForbidden) {
+						reportSystem->setQuestActiveOrInactive(0, questid);
+						return true;
+					}
+					reportSystem->setQuestActiveOrInactive(1, questid);
 					return true;
 					
 				}
@@ -332,118 +368,64 @@ public:
 
 	static bool HandleDeactivateCommand(ChatHandler* handler, const char* args) {
 		if (sConfigMgr->GetBoolDefault("Quest.Report", true)) {
+			CustomReportSystem * ReportSystem = 0;
 			Player* player = handler->GetSession()->GetPlayer();
 			CustomGMLogic* gmlogic = 0;
-			CustomCharacterSystem * customcharactersystem = 0;
+			CustomCharacterSystem * CharacterSystem = 0;
 
 			std::string eingabe = std::string((char*)args);
 
 			if (eingabe == "")
 			{
+				handler->PSendSysMessage("##########################################################");
+				handler->PSendSysMessage("Without entering a valid Quest, the command cannot be executed!");
+				handler->PSendSysMessage("Syntax: .report quest [Shift-click on Questname]");
+				handler->PSendSysMessage("##########################################################");
 				player->GetSession()->SendNotification("Without entering a valid Quest, the command cannot be executed! Syntax: .report deactivate [Shift-click on Questname]!");
 				return true;
 			}
 
-			if (!*args)
+
+			if (!*args) {
 				return false;
+			}
+
 
 			uint32 questId = 0;
 
-			if (args[0] == '[')                                        // [name] manual form
-			{
-				char const* questNameStr = strtok((char*)args, "]");
+			char const* id = handler->extractKeyFromLink((char*)args, "Hquest");
+			if (!id)
+				return false;
+			questId = atoul(id);
+			int32 questid = questId;
 
+			bool isQuestForbidden = true;
+			isQuestForbidden = CharacterSystem->checkIfQuestisForbidden(questid);
 
-				if (questNameStr && questNameStr[0])
-				{
-					std::string questName = questNameStr + 1;
-					WorldDatabase.EscapeString(questName);
+			PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
+			selreportquest->setInt32(0, questid);
+			PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
 
-					PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_QUESTID_BY_NAME);
-					stmt->setString(0, questName);
-					PreparedQueryResult result = WorldDatabase.Query(stmt);
-
-					if (!result) {
-						player->GetSession()->SendNotification(CHECK_QUEST_ERROR);
-						return true;
-					}
-
-
-
-
-					Field* questnr = result->Fetch();
-					uint32 questid = questnr[0].GetInt32();
-
-					
-
-					PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
-					selreportquest->setInt32(0, questid);
-					PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
-
-					if (!ergebnis) {
-						player->GetSession()->SendNotification("No one reported this Quest!");
-						return true;
-					}
-
-					else {
-						int32 accountid = customcharactersystem->getAccountID(player->GetSession()->GetPlayerName());
-						std::string accountname = customcharactersystem->getAccountName(accountid);
-						gmlogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, accountid, "Report deactivate");
-
-					
-						// Update collum aktiv to 0!
-						PreparedStatement * updatequestactivate = CharacterDatabase.GetPreparedStatement(CHAR_UDP_REPORT_QUEST_ACTIVATE);
-						updatequestactivate->setInt32(0, 0);
-						updatequestactivate->setInt32(1, questid);
-						CharacterDatabase.Execute(updatequestactivate);
-						player->GetSession()->SendNotification(REPORT_DEACTIVATE);
-						return true;
-
-					}
-
-				}
-
-				else {
-					player->GetSession()->SendNotification("Without entering a valid Quest, the command cannot be executed! Syntax: .report deactivate [Questname]!");
-					return true;
-				}
+			if (!ergebnis) {
+				player->GetSession()->SendNotification("No one reported this Quest!");
+				return true;
 			}
 
-			else                                                    // item_id or [name] Shift-click form |color|Hitem:item_id:0:0:0|h[name]|h|r
-			{
-				char const* id = handler->extractKeyFromLink((char*)args, "Hquest");
-				if (!id)
-					return false;
-				questId = atoul(id);
-				int32 questid = questId;
-
-				PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
-				selreportquest->setInt32(0, questid);
-				PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
-
-				if (!ergebnis) {
-					player->GetSession()->SendNotification("No one reported this Quest!");
-					return true;
-				}
-
-				else {
-					int32 accountid = customcharactersystem->getAccountID(player->GetSession()->GetPlayerName());
-					std::string accountname = customcharactersystem->getAccountName(accountid);
+			else {
+				int32 accountid = CharacterSystem->getAccountID(player->GetSession()->GetPlayerName());
+				std::string accountname = CharacterSystem->getAccountName(accountid);
 
 
-					gmlogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, accountid, "Report deactivate");
+				gmlogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, accountid, "Report deactivate");
 
-					// Update collum aktiv to 0!
-					PreparedStatement * updatequestactivate = CharacterDatabase.GetPreparedStatement(CHAR_UDP_REPORT_QUEST_ACTIVATE);
-					updatequestactivate->setInt32(0, 0);
-					updatequestactivate->setInt32(1, questid);
-					CharacterDatabase.Execute(updatequestactivate);
-					player->GetSession()->SendNotification(REPORT_DEACTIVATE);
-					return true;
+				// Update collum aktiv to 0!
+				ReportSystem->setQuestActiveOrInactive(0, questid);
+				player->GetSession()->SendNotification(REPORT_DEACTIVATE);
+				return true;
 
-				}
 			}
 
+				
 			return true;
 		}
 
@@ -457,115 +439,61 @@ public:
 	{
 
 		if (sConfigMgr->GetBoolDefault("Quest.Report", true)) {
+			CustomReportSystem * ReportSystem = 0;
 			Player* player = handler->GetSession()->GetPlayer();
 			CustomGMLogic* gmlogic = 0;
-			CustomCharacterSystem * customcharactersystem = 0;
+			CustomCharacterSystem * CharacterSystem = 0;
 
 			std::string eingabe = std::string((char*)args);
 
 			if (eingabe == "")
 			{
+				handler->PSendSysMessage("##########################################################");
+				handler->PSendSysMessage("Without entering a valid Quest, the command cannot be executed!");
+				handler->PSendSysMessage("Syntax: .report quest [Shift-click on Questname]");
+				handler->PSendSysMessage("##########################################################");
 				player->GetSession()->SendNotification("Without entering a valid Quest, the command cannot be executed! Syntax: .report activate [Shift-click on Questname]!");
 				return true;
 			}
 
-			if (!*args)
+			if (!*args) {
 				return false;
-
+			}
 			uint32 questId = 0;
 
-			if (args[0] == '[')                                        // [name] manual form
-			{
-				char const* questNameStr = strtok((char*)args, "]");
 
+			// item_id or [name] Shift-click form |color|Hitem:item_id:0:0:0|h[name]|h|r
 
-				if (questNameStr && questNameStr[0])
-				{
-					std::string questName = questNameStr + 1;
-					WorldDatabase.EscapeString(questName);
+			char const* id = handler->extractKeyFromLink((char*)args, "Hquest");
+			if (!id)
+				return false;
+			questId = atoul(id);
+			int32 questid = questId;
 
-					PreparedStatement* stmt = WorldDatabase.GetPreparedStatement(WORLD_SEL_QUESTID_BY_NAME);
-					stmt->setString(0, questName);
-					PreparedQueryResult result = WorldDatabase.Query(stmt);
+			PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
+			selreportquest->setInt32(0, questid);
+			PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
 
-					if (!result) {
-						player->GetSession()->SendNotification(CHECK_QUEST_ERROR);
-						return true;
-					}
-
-					Field* questnr = result->Fetch();
-					uint32 questid = questnr[0].GetInt32();
-
-
-					PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
-					selreportquest->setInt32(0, questid);
-					PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
-
-					if (!ergebnis) {
-						player->GetSession()->SendNotification("No one reported this Quest!");
-						return true;
-					}
-
-					else {
-
-						int32 accountid = customcharactersystem->getAccountID(player->GetSession()->GetPlayerName());
-						std::string accountname = customcharactersystem->getAccountName(accountid);
-
-						gmlogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, accountid, "Report activate");
-
-						// Update collum aktiv to 0!
-						PreparedStatement * updatequestactivate = CharacterDatabase.GetPreparedStatement(CHAR_UDP_REPORT_QUEST_ACTIVATE);
-						updatequestactivate->setInt32(0, 1);
-						updatequestactivate->setInt32(1, questid);
-						CharacterDatabase.Execute(updatequestactivate);
-						player->GetSession()->SendNotification(REPORT_ACTIVATE);
-						return true;
-
-					}
-
-				}
-
-				else {
-					player->GetSession()->SendNotification("Without entering a valid Quest, the command cannot be executed! Syntax: .report activate [Questname]!");
-					return true;
-				}
+			if (!ergebnis) {
+				player->GetSession()->SendNotification("No one reported this Quest!");
+				return true;
 			}
 
-			else                                                    // item_id or [name] Shift-click form |color|Hitem:item_id:0:0:0|h[name]|h|r
-			{
-				char const* id = handler->extractKeyFromLink((char*)args, "Hquest");
-				if (!id)
-					return false;
-				questId = atoul(id);
-				int32 questid = questId;
+			else {
 
-				PreparedStatement * selreportquest = CharacterDatabase.GetPreparedStatement(CHAR_SEL_REPORT_QUEST);
-				selreportquest->setInt32(0, questid);
-				PreparedQueryResult ergebnis = CharacterDatabase.Query(selreportquest);
+				int32 accountid = CharacterSystem->getAccountID(player->GetSession()->GetPlayerName());
+				std::string accountname = CharacterSystem->getAccountName(accountid);
 
-				if (!ergebnis) {
-					player->GetSession()->SendNotification("No one reported this Quest!");
-					return true;
-				}
+				gmlogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, accountid, "Report activate");
 
-				else {
-
-					int32 accountid = customcharactersystem->getAccountID(player->GetSession()->GetPlayerName());
-					std::string accountname = customcharactersystem->getAccountName(accountid);
-
-					gmlogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, accountid, "Report activate");
-
-					// Update collum aktiv to 0!
-					PreparedStatement * updatequestactivate = CharacterDatabase.GetPreparedStatement(CHAR_UDP_REPORT_QUEST_ACTIVATE);
-					updatequestactivate->setInt32(0, 1);
-					updatequestactivate->setInt32(1, questid);
-					CharacterDatabase.Execute(updatequestactivate);
-					player->GetSession()->SendNotification(REPORT_ACTIVATE);
-					return true;
-
-				}
+				// Update collum aktiv to 1!
+				ReportSystem->setQuestActiveOrInactive(1, questid);
+				player->GetSession()->SendNotification(REPORT_ACTIVATE);
+				return true;
 
 			}
+		
+
 
 			return true;
 		}

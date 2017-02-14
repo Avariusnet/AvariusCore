@@ -62,12 +62,11 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	//REPORT QUEST SYSTEM
 	PrepareStatement(CHAR_INS_REPORT_QUEST, "Insert into `reported_quest` (questname, questid, anzahl, aktiv) VALUES (?,?,?,?)", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_SEL_REPORT_QUEST, "SELECT questid, anzahl, aktiv from reported_quest where questid = ?", CONNECTION_SYNCH);
-	PrepareStatement(CHAR_UPD_REPORT_QUEST_ACTIVE, "Update reported_quest SET anzahl = ? , aktiv = ? where questid = ?", CONNECTION_ASYNC);
-	PrepareStatement(CHAR_UPD_REPORT_QUEST, "Update reported_quest SET anzahl = ? where questid = ?", CONNECTION_ASYNC);
-	PrepareStatement(CHAR_UPD_REPORT_QUEST_DEACTIVATE, "Update reported_quest SET aktiv = ? where questid = ?", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_UPD_REPORT_QUEST_SET_QUEST_ACTIVE, "Update reported_quest SET aktiv = ? where questid = ?", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_UPD_REPORT_QUEST_COUNT, "Update reported_quest SET anzahl = ? where questid = ?", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_UPD_REPORT_QUEST_STATE, "Update reported_quest SET aktiv = ? where questid = ?", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_INS_PLAYER_REPORT_QUEST, "INSERT into reported_quest_player (playername,guildname,guid,accid, reported_quest_id) Values (?,?,?,?,?)", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_SEL_PLAYER_REPORT_QUEST, "SELECT accid from reported_quest_player where accid = ? and reported_quest_id = ?", CONNECTION_SYNCH);
-	PrepareStatement(CHAR_UDP_REPORT_QUEST_ACTIVATE, "Update reported_quest SET aktiv = ? where questid = ?", CONNECTION_ASYNC);
 
 
 	//CUSTOM XP
