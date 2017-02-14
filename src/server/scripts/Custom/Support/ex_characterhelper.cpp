@@ -241,9 +241,14 @@ public:
 				return true;
 			}
 
+			std::string generatedCharacterName = CharacterSystem->generateNewCharacterName();
+			std::string prefix = "first_";
+			std::string newCharacterName = prefix + generatedCharacterName;
 			CharacterSystem->deleteFirstCharacterPlayerLog(player->GetSession()->GetAccountId());
-			CharacterSystem->updateCharacterToZeroAccount(player->GetGUID());
-			player->GetSession()->LogoutPlayer(true);
+			CharacterSystem->updateCharacterToZeroAccount(newCharacterName,player->GetGUID());
+			ChatHandler(player->GetSession()).PSendSysMessage("Debug: Name: %s",newCharacterName,
+				player->GetName());
+			player->GetSession()->LogoutPlayer(false);
 		
 
 		}break;

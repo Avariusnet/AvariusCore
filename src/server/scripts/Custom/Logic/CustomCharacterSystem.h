@@ -55,9 +55,9 @@ public:
 	std::string getLastIPbyAccount(int accountid);	
 
 	void deleteFirstCharacterPlayerLog(int accountid);
-	void updateCharacterToZeroAccount(int guid);
+	void updateCharacterToZeroAccount(std::string newname,int guid);
 
-
+	std::string generateNewCharacterName();
 
 
 

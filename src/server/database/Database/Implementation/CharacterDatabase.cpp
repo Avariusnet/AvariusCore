@@ -85,10 +85,9 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(CHAR_SEL_FIRST_CHAR_PLAYERLOG, "SELECT guid,action_done,actiondate from player_log where accountid = ? and action_done = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_SEL_GUILD_CREATE_DATE, "SELECT createdate from guild where guildid = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_SEL_GUILD_MEMBER_COUNT, "SELECT count(guid) FROM guild_member WHERE guildid = ?", CONNECTION_SYNCH);
-	PrepareStatement(CHAR_UPD_FIRSTCHARACTER_TO_ZEROACCOUNT, "UPDATE characters set account = 0 where guid = ?", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_UPD_FIRSTCHARACTER_TO_ZEROACCOUNT, "UPDATE characters set account = 0 , name = ? where guid = ?", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_CHECK_IF_PLAYER_HAS_ALREADY_CHARACTERS, "Select count(account) from characters where account = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_DEL_FIRST_CHAR_PLAYERLOG, "Delete from player_log where accountid = ? and action_done = ?", CONNECTION_ASYNC);
-
 
 	//FORBIDDEN QUEST OR ID
 	PrepareStatement(CHAR_SEL_QUEST_FROM_FORBIDDEN_TABLE, "Select questid from forbidden_quest_or_item  where questid = ?", CONNECTION_SYNCH);

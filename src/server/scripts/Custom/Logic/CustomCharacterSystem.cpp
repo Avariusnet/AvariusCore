@@ -283,11 +283,29 @@ void CustomCharacterSystem::deleteFirstCharacterPlayerLog(int accountid)
 	CharacterDatabase.Execute(stmt);
 }
 
-void CustomCharacterSystem::updateCharacterToZeroAccount(int guid)
+void CustomCharacterSystem::updateCharacterToZeroAccount(std::string newname,int guid)
 {
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_FIRSTCHARACTER_TO_ZEROACCOUNT);
-	stmt->setInt32(0, guid);
+	stmt->setString(0, newname);
+	stmt->setInt32(1, guid);
 	CharacterDatabase.Execute(stmt);
+}
+
+std::string CustomCharacterSystem::generateNewCharacterName()
+{
+	auto randchar = []() -> char
+	{
+		const char charset[] =
+			"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+			"abcdefghijklmnopqrstuvwxyz";
+		const size_t max_index = (sizeof(charset) - 1);
+		return charset[rand() % max_index];
+	};
+	std::string str(5, 0);
+	std::generate_n(str.begin(), 5, randchar);
+
+
+	return str;
 }
 
 
