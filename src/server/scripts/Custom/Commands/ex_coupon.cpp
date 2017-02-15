@@ -62,6 +62,7 @@ public:
 	{
 		CustomWorldSystem * WorldSystem = 0;
 		CustomCouponSystem * CouponSystem = 0;
+		CustomReportSystem * ReportSystem = 0;
 		CustomGMLogic * GMLogic = 0;
 		CustomCharacterSystem * CharacterSystem = 0;
 		Player* player = handler->GetSession()->GetPlayer();
@@ -99,7 +100,7 @@ public:
 		uint32 codeuseable = atoi((char*)anzahlnutzer);
 
 	
-		bool checkifitemisforbidden = CharacterSystem->checkIfItemisForbidden(itemid);
+		bool checkifitemisforbidden = ReportSystem->checkIfItemisForbidden(itemid);
 
 		if (checkifitemisforbidden) {
 
@@ -110,8 +111,7 @@ public:
 
 			PreparedQueryResult result = GMLogic->selectGMPlayerCount(player->GetSession()->GetAccountId());
 			if (result == NULL) {
-				handler->PSendSysMessage("Debug: Result  = NULL reached!");
-				GMLogic->addGMPlayerCount(player->GetSession()->GetAccountId());
+				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer());
 				handler->PSendSysMessage("##########################################################");
 				handler->PSendSysMessage("Warning: GM should be a supporter not a cheater!");
 				handler->PSendSysMessage("This incident has been logged in DB.");
@@ -122,14 +122,13 @@ public:
 
 			Field* fields = result->Fetch();
 			int32 id = fields[0].GetInt32();
-			int32 accountid = fields[1].GetInt32();
+			//int32 accountid = fields[1].GetInt32();
 			int32 counter = fields[2].GetInt32();
 			
 			int newcounter = 0;
 			newcounter = counter + 1;	
 
-
-			GMLogic->updateGMPlayerCount(newcounter, id);
+			GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer());
 			handler->PSendSysMessage("##########################################################");
 			handler->PSendSysMessage("Warning: GM should be a supporter not a cheater!");
 			handler->PSendSysMessage("This incident has been logged in DB.");

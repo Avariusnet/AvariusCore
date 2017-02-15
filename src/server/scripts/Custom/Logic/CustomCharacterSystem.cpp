@@ -1,5 +1,6 @@
 #include <Custom/Logic/CustomCharacterSystem.h>
 #include <Custom/Logic/CustomPlayerLog.h>
+#include "Config.h"
 
 
 //Get Account By specific ID. If Result = NULL not Account with specific ID was found. All other is positive Result!
@@ -54,43 +55,7 @@ void CustomCharacterSystem::addNewPlayerAnsweredQuestion(int accountid, int ques
 
 }
 
-void CustomCharacterSystem::insertQuestIntoForbiddenTable(int questid)
-{
-	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_QUEST_IN_FORBIDDEN_TABLE);
-	stmt->setInt32(0, questid);
-	CharacterDatabase.Execute(stmt);
-}
 
-void CustomCharacterSystem::insertItemIntoForbiddenTable(int itemid)
-{
-	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_ITEM_IN_FORBIDDEN_TABLE);
-	stmt->setInt32(0, itemid);
-	CharacterDatabase.Execute(stmt);
-}
-
-bool CustomCharacterSystem::checkIfQuestisForbidden(int questid)
-{
-	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_QUEST_FROM_FORBIDDEN_TABLE);
-	stmt->setInt32(0, questid);
-	PreparedQueryResult result = CharacterDatabase.Query(stmt);
-
-	if (!result) {
-		return false;
-	}
-	return true;
-}
-
-bool CustomCharacterSystem::checkIfItemisForbidden(int itemid)
-{
-	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_ITEM_FROM_FORBIDDEN_TABLE);
-	stmt->setInt32(0, itemid);
-	PreparedQueryResult result = CharacterDatabase.Query(stmt);
-
-	if (!result) {
-		return false;
-	}
-	return true;
-}
 
 bool CustomCharacterSystem::setProfessionSkill(Player * player, uint32 profession, int professioncost)
 {
@@ -183,6 +148,8 @@ bool CustomCharacterSystem::countIfPlayerHasLessTotalOf2FirstCharacters(int acco
 	if (count >= 2) {
 		return true;
 	}
+
+	return false;
 	
 }
 
@@ -309,15 +276,81 @@ std::string CustomCharacterSystem::generateNewCharacterName()
 }
 
 
-//Insert a new Record in Lob for Playtime goodies
-void CustomCharacterSystem::insertPlayerLob(int playtime, std::string charactername, int guid, int used)
-{
-	
-	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_LOB);
+//Insert a new Record in player_playtime_rewards for Playtime goodies
+void CustomCharacterSystem::insertNewPlayerPlayTimeReward(int playtime, std::string charactername, int guid)
+{	
+	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYTIME_REWARDS);
 	stmt->setInt32(0, playtime);
 	stmt->setString(1, charactername);
 	stmt->setInt32(2, guid);
-	stmt->setInt32(3, used);
+	CharacterDatabase.Execute(stmt);
+}
+
+bool CustomCharacterSystem::checkIfPlayerGetPlayTimeReward(int playtime, int guid)
+{
+	PreparedStatement *stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PLAYTIME_REWARDS);
+	stmt->setInt32(0, playtime);
+	stmt->setInt32(1, guid);
+	PreparedQueryResult result = CharacterDatabase.Query(stmt);
+
+	if (!result) {
+		return false;
+	}
+
+	return false;
+}
+
+void CustomCharacterSystem::completeAddPlayTimeReward(int playtime, Player* player, int money)
+{
+	PreparedStatement *stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PLAYTIME_REWARDS);
+	stmt->setInt32(0, playtime);
+	stmt->setInt32(1, player->GetGUID());
+	PreparedQueryResult result = CharacterDatabase.Query(stmt);
+
+	if (!result) {
+		player->GetSession()->SendAreaTriggerMessage("Kein Result");
+		insertNewPlayerPlayTimeReward(playtime, player->GetSession()->GetPlayerName(), player->GetGUID());
+		if (playtime == 100) {
+			int itemid = sConfigMgr->GetIntDefault("Playtime.100", 38186);
+			int itemamount = sConfigMgr->GetIntDefault("Playtime.100.Amount", 1);
+			sendPlayerMailwithItem(itemid, itemamount, "Playtime Reward", "Here is you Playtime Reward. Thanks for playing 100h on our Server!", player->GetSession()->GetPlayer());
+			return;
+		}
+
+		if (playtime == 200) {
+			int itemid = sConfigMgr->GetIntDefault("Playtime.200", 38186);
+			int itemamount = sConfigMgr->GetIntDefault("Playtime.200.Amount", 1);
+			sendPlayerMailwithItem(itemid, itemamount, "Playtime Reward", "Here is you Playtime Reward. Thanks for playing 200h on our Server!", player->GetSession()->GetPlayer());
+			return;
+		}
+
+		else {
+			sendPlayerMailwithGold("Playtime Reward", "Here is you Playtime Reward. Thanks for playing on our Server!", player->GetSession()->GetPlayer(), money);
+			return;
+		}
+		return;
+	}
+	player->GetSession()->SendAreaTriggerMessage("Result");
+	return;
+
+}
+
+
+//if no Account found return -1
+int CustomCharacterSystem::checkPlayerAccountSecurity(int accountid)
+{
+	PreparedStatement * stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_ACCOUNT_SECURITY);
+	stmt->setInt32(0, accountid);
+	PreparedQueryResult result = LoginDatabase.Query(stmt);
+
+	if (!result) {
+		return -1;
+	}
+
+	Field* ergebnis = result->Fetch();
+	int32 security = ergebnis[0].GetInt32();
+
+	return security;
 }
 
 void CustomCharacterSystem::givePlayerLevelWithCurrency(Player * player, uint16 cost, uint16 maxlevel, uint32 levelup)
@@ -387,20 +420,6 @@ int CustomCharacterSystem::getUnixTimestamp()
 	return unixtimestamp;
 }
 
-bool CustomCharacterSystem::hasPlayerAlreadyGetHisLob(int playtime, int guid)
-{
-	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_LOB);
-	stmt->setInt32(0, playtime);
-	stmt->setInt32(1, guid);
-	PreparedQueryResult result = CharacterDatabase.Query(stmt);
-
-	if (!result) {
-		return false;
-	}
-
-	return true;
-}
-
 
 
 void CustomCharacterSystem::sendPlayerMailwithItem(int itemid, int quantity,std::string title, std::string message, Player * player)
@@ -419,6 +438,14 @@ void CustomCharacterSystem::sendPlayerMailwithoutanyhing(Player * player, std::s
 {
 	SQLTransaction trans = CharacterDatabase.BeginTransaction();
 	MailDraft(title, message)
+		.SendMailTo(trans, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
+	CharacterDatabase.CommitTransaction(trans);
+}
+
+void CustomCharacterSystem::sendPlayerMailwithGold(std::string title, std::string message, Player * player, int money)
+{
+	SQLTransaction trans = CharacterDatabase.BeginTransaction();
+	MailDraft(title, message).AddMoney(money * GOLD)
 		.SendMailTo(trans, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
 	CharacterDatabase.CommitTransaction(trans);
 }

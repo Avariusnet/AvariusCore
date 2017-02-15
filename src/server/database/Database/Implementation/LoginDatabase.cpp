@@ -28,6 +28,7 @@ void LoginDatabaseConnection::DoPrepareStatements()
 	//FirstNPC
 	PrepareStatement(LOGIN_SEL_ACCOUNT_LAST_IP, "SELECT last_ip FROM account where id = ?", CONNECTION_SYNCH);
 	PrepareStatement(LOGIN_SEL_ACCOUNT_LAST_IP_COUNT, "SELECT count(last_ip) FROM account WHERE last_ip = ?", CONNECTION_SYNCH);
+	PrepareStatement(LOGIN_SEL_ACCOUNT_SECURITY, "SELECT id, gmlevel from account_access where id = ? ", CONNECTION_SYNCH);
 
 	//CUSTOM END
 

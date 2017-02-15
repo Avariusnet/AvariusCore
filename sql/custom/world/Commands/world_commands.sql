@@ -109,3 +109,13 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('logic time', 193, 
 
 DELETE FROM command WHERE `name`='logic playerlog';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('logic playerlog', 193, ''); 
+
+DELETE FROM command WHERE `name`='logic gmaddlog';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('logic gmaddlog', 193, ''); 
+
+DELETE FROM command WHERE `name`='logic playtime';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('logic playtime', 193, ''); 
+
+
+DELETE FROM command WHERE `name`='logic playinsert';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('logic playinsert', 193, ''); 

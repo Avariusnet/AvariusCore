@@ -9,11 +9,11 @@
 class CustomCharacterSystem {
 public:
 
+	//Send PlayerMails
 	void sendPlayerMailwithItem(int itemid, int quantity,std::string title, std::string message, Player* player);
 	void sendPlayerMailwithoutanyhing(Player* player, std::string title, std::string message);
+	void sendPlayerMailwithGold(std::string title, std::string message, Player* player, int money);
 
-	//PlaytimeGoodies
-	bool hasPlayerAlreadyGetHisLob(int playtime, int guid);
 
 
 	//CharacterFunctions
@@ -29,12 +29,6 @@ public:
 	bool hasPlayerAlreadyAnswertheQuestion(int accountid, int questionnumber);
 	void addNewPlayerAnsweredQuestion(int accountid, int questionnumber);
 
-
-	//Forbidden Quest or Items
-	void insertQuestIntoForbiddenTable(int questid);
-	void insertItemIntoForbiddenTable(int itemid);
-	bool checkIfQuestisForbidden(int questid);
-	bool checkIfItemisForbidden(int itemid);
 
 
 	
@@ -65,8 +59,13 @@ public:
 	void executeGuildCharacter(Player* player, std::string playerlog, int membercount);
 
 	int getUnixTimestamp();
-	void insertPlayerLob(int playtime, std::string charactername, int guid, int used);
-		
+
+	//PlayTimeRewards
+	void insertNewPlayerPlayTimeReward(int playtime, std::string charactername, int guid);
+	bool checkIfPlayerGetPlayTimeReward(int playtime, int guid);
+	void completeAddPlayTimeReward(int playtime, Player* player, int money);
+
+	int checkPlayerAccountSecurity(int accountid);
 
 };
 

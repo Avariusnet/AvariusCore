@@ -97,3 +97,42 @@ bool CustomReportSystem::checkIfQuestIsAlreadyReported(int questid) {
 
 	return true;
 }
+
+
+void CustomReportSystem::insertQuestIntoForbiddenTable(int questid)
+{
+	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_QUEST_IN_FORBIDDEN_TABLE);
+	stmt->setInt32(0, questid);
+	CharacterDatabase.Execute(stmt);
+}
+
+void CustomReportSystem::insertItemIntoForbiddenTable(int itemid)
+{
+	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_ITEM_IN_FORBIDDEN_TABLE);
+	stmt->setInt32(0, itemid);
+	CharacterDatabase.Execute(stmt);
+}
+
+bool CustomReportSystem::checkIfQuestisForbidden(int questid)
+{
+	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_QUEST_FROM_FORBIDDEN_TABLE);
+	stmt->setInt32(0, questid);
+	PreparedQueryResult result = CharacterDatabase.Query(stmt);
+
+	if (!result) {
+		return false;
+	}
+	return true;
+}
+
+bool CustomReportSystem::checkIfItemisForbidden(int itemid)
+{
+	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_ITEM_FROM_FORBIDDEN_TABLE);
+	stmt->setInt32(0, itemid);
+	PreparedQueryResult result = CharacterDatabase.Query(stmt);
+
+	if (!result) {
+		return false;
+	}
+	return true;
+}

@@ -15,6 +15,15 @@ public:
 	void setQuestActiveOrInactive(int active, int questid);
 	PreparedQueryResult getReportedQuestDetails(int questid);
 
+
+
+	//Forbidden Quest or Items
+	void insertQuestIntoForbiddenTable(int questid);
+	void insertItemIntoForbiddenTable(int itemid);
+	bool checkIfQuestisForbidden(int questid);
+	bool checkIfItemisForbidden(int itemid);
+
+
 };
 
 

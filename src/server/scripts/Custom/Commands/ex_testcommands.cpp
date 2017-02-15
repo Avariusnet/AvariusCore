@@ -63,6 +63,10 @@ public:
 			{ "gildenid", SEC_ADMINISTRATOR, false, &HandleLogicGildenIDTest, "" },
 			{ "time", SEC_ADMINISTRATOR, false, &HandleLogicTimeTest, "" },
 			{ "playerlog", SEC_ADMINISTRATOR, false, &HandleLogicPlayerlogTest, "" },
+			{ "gmaddlog", SEC_ADMINISTRATOR, false, &HandleLogicGMAddLogTest, "" },
+			{ "playtime", SEC_ADMINISTRATOR, false, &HandleLogicPlayTimeTest, "" },
+			{ "playinsert", SEC_ADMINISTRATOR, false, &HandleLogicPlayInsertTest, "" },
+
 
 		};
 
@@ -75,6 +79,32 @@ public:
 		return commandTable;
 	}
 
+
+	static bool HandleLogicPlayInsertTest(ChatHandler* handler, const char* /*args*/) {
+		CustomCharacterSystem * CharacterSystem = 0;
+		Player* player = handler->GetSession()->GetPlayer();
+		CharacterSystem->insertNewPlayerPlayTimeReward(200, player->GetSession()->GetPlayerName(), player->GetGUID());
+		handler->PSendSysMessage("Command executed!");
+
+		return true;
+	}
+
+	static bool HandleLogicPlayTimeTest(ChatHandler* handler, const char* /*args*/) {
+		CustomCharacterSystem * CharacterSystem = 0;
+		Player* player = handler->GetSession()->GetPlayer();
+		CharacterSystem->completeAddPlayTimeReward(10,player->GetSession()->GetPlayer(),250);
+		handler->PSendSysMessage("Command executed!");
+		return true;
+	}
+
+	static bool HandleLogicGMAddLogTest(ChatHandler* handler, const char* /*args*/) {
+		CustomGMLogic * GMLogic = 0;
+		Player* player = handler->GetSession()->GetPlayer();
+		int32 accountid = player->GetSession()->GetAccountId();
+	
+		GMLogic->addCompleteGMCountLogic(accountid, player->GetSession()->GetPlayer());
+		return true;
+	}
 	
 	static bool HandleLogicPlayerlogTest(ChatHandler* handler, const char* /*args*/) {
 		CustomPlayerLog * PlayerLog = 0;

@@ -217,7 +217,7 @@ class npc_first_char : public CreatureScript
 						}
 						
 						bool checkifPlayerhasGetLob = false;
-						checkifPlayerhasGetLob = CharacterSystem->hasPlayerAlreadyGetHisLob(200, player->GetGUID());
+						checkifPlayerhasGetLob = CharacterSystem->checkIfPlayerGetPlayTimeReward(200,player->GetGUID());
 
 						if (!checkifPlayerhasGetLob && player->GetTotalPlayedTime() > 720000) {
 							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Please give me the 200h Playtime Reward!", GOSSIP_SENDER_MAIN, 9, "", 0, false);

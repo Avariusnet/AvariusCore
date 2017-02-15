@@ -166,6 +166,7 @@ public:
     //Erstellt neue Fragen in der DB
     static bool HandleFragenCommand(ChatHandler* handler, const char* args)
     {
+		CustomReportSystem * ReportSystem = 0;
 		CustomCharacterSystem * CharacterSystem = 0;
 		CustomGMLogic * GMLogic = 0;
 		CustomWorldSystem * WorldSystem = 0;
@@ -216,7 +217,7 @@ public:
         }
         
 		bool checkifItemIsForbidden = false;
-		checkifItemIsForbidden = CharacterSystem->checkIfItemisForbidden(itemid);
+		checkifItemIsForbidden = ReportSystem->checkIfItemisForbidden(itemid);
 		
 		if (checkifItemIsForbidden) {
 			std::string accountname = "";

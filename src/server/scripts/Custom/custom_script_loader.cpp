@@ -109,9 +109,14 @@ void AddSC_ex_customxpcommands();
 
 void AddSC_port_item();
 
+//Playtime Rewards
+void AddSC_PlayTimeRewards();
+
 
 void AddCustomScripts()
 {
+	//Playtime Rewards
+	AddSC_PlayTimeRewards();
 	//vipvendor
 	AddSC_vipvendor();
 

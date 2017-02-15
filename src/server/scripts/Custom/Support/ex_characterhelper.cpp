@@ -121,6 +121,7 @@ public:
 		{
 			
 			CustomGMLogic * GMLogic = 0;
+			CustomCharacterSystem * CharacterSystem = 0;
 			std::string codes = code;
 			PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_ACCOUNT_ID_BY_NAME);
 			stmt->setString(0, codes);
@@ -130,6 +131,7 @@ public:
 				player->GetSession()->SendNotification(NOACCOUNTFOUND);
 				return true;
 			}
+
 
 			Field* feld = result->Fetch();
 			uint32 accid = feld[0].GetInt32();
@@ -150,7 +152,7 @@ public:
 			if (player->GetSession()->GetSecurity() > 0) {
 				PreparedQueryResult result = GMLogic->selectGMPlayerCount(player->GetSession()->GetAccountId());
 				if (result == NULL) {
-					GMLogic->addGMPlayerCount(player->GetSession()->GetAccountId());
+					GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(),player->GetSession()->GetPlayer());
 					ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 						player->GetName());
 					ChatHandler(player->GetSession()).PSendSysMessage("Warning: GM should be a supporter not a cheater!",
@@ -165,15 +167,14 @@ public:
 				}
 
 				Field* fields = result->Fetch();
-				int32 id = fields[0].GetInt32();
-				int32 accountid = fields[1].GetInt32();
+				//int32 id = fields[0].GetInt32();
+				//int32 accountid = fields[1].GetInt32();
 				int32 counter = fields[2].GetInt32();
 
 				int newcounter = 0;
 				newcounter = counter + 1;
 
-
-				GMLogic->updateGMPlayerCount(newcounter, id);
+				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer());
 				ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 					player->GetName());
 				ChatHandler(player->GetSession()).PSendSysMessage("Warning: GM should be a supporter not a cheater!",

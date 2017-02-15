@@ -130,7 +130,7 @@ public:
 			}
 
 			std::ostringstream ss;
-			ss << "|cffFF0000[MMOwning]|r Gratuliert " << player->GetName() << " zum Level " << (uint32)newLevel;
+			ss << "|cffFF0000[The Server]|r  congratulates" << player->GetName() << " for reaching Level " << (uint32)newLevel;
 			sWorld->SendServerMessage(SERVER_MSG_STRING, ss.str().c_str());
 
 			std::ostringstream ss2;
