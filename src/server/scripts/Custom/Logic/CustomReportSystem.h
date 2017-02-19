@@ -14,6 +14,7 @@ public:
 	void UpdateQuantityQuestReportInDB(int quantity, int questid);
 	void setQuestActiveOrInactive(int active, int questid);
 	PreparedQueryResult getReportedQuestDetails(int questid);
+	void insertErrorMessageForQuest(std::string charactername, int guid, std::string accountname, int accountid, int questid, std::string error_message);
 
 
 

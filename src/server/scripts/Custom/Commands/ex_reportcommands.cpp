@@ -185,8 +185,32 @@ public:
 			CustomPlayerLog * PlayerLog = 0;
 			Player* player = handler->GetSession()->GetPlayer();
 
+
 			
-			std::string eingabe = std::string((char*)args);
+
+			char* reportmsg = strtok((char*)args, " ");
+			if (!reportmsg) {
+				handler->PSendSysMessage("##########################################################");
+				handler->PSendSysMessage("Without entering a valid Questerrormessage, the command cannot be executed!");
+				handler->PSendSysMessage("Syntax: .report quest [Shift-click on Questname] Your Reportmessage.");
+				handler->PSendSysMessage("##########################################################");
+				return true;
+			}
+
+			std::string error_message = std::string((char*)reportmsg);
+
+			char* questlogname = strtok(NULL, " ");
+			if (!questlogname) {
+				handler->PSendSysMessage("##########################################################");
+				handler->PSendSysMessage("Without entering a valid Quest, the command cannot be executed!");
+				handler->PSendSysMessage("Syntax: .report quest [Shift-click on Questname]");
+				handler->PSendSysMessage("##########################################################");
+				player->GetSession()->SendNotification("Without entering a valid Quest, the command cannot be executed! Syntax: .report quest [Shift-click on Questname] !");
+				return true;
+			}
+
+			std::string eingabe = std::string((char*)questlogname);
+			
 
 			if (eingabe == "") {
 				handler->PSendSysMessage("##########################################################");
@@ -197,7 +221,7 @@ public:
 				return true;
 			}
 
-			char const* id = handler->extractKeyFromLink((char*)args, "Hquest");
+			char const* id = handler->extractKeyFromLink((char*)questlogname, "Hquest");
 			if (!id) {
 				handler->PSendSysMessage("##########################################################");
 				handler->PSendSysMessage("Without entering a valid Quest, the command cannot be executed!");
@@ -207,9 +231,10 @@ public:
 				return true;
 			}
 				
-			int questid = atoul(id);
 
 			
+
+			int questid = atoul(id);
 
 			if (player->GetSession()->GetSecurity() <= 2) {
 				handler->PSendSysMessage("QuestID : %u", questid);
@@ -263,6 +288,7 @@ public:
 							PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Quest reported");
 							ReportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), player->GetGuildName(), player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 							ReportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
+							ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(),questid, error_message);
 							handler->PSendSysMessage("##########################################################");
 							handler->PSendSysMessage("The Quest %u is sucessfully reported!", questid);
 							handler->PSendSysMessage("##########################################################");
@@ -276,6 +302,7 @@ public:
 						ReportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), player->GetGuildName(), player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 						ReportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
 						ReportSystem->setQuestActiveOrInactive(1, questid);
+						ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), questid, error_message);
 						handler->PSendSysMessage("##########################################################");
 						handler->PSendSysMessage("The Quest %u is sucessfully reported!", questid);
 						handler->PSendSysMessage("##########################################################");
@@ -288,6 +315,7 @@ public:
 					PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Quest reported");
 					ReportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null" , player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 					ReportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
+					ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), questid, error_message);
 					handler->PSendSysMessage("##########################################################");
 					handler->PSendSysMessage("The Quest %u is sucessfully reported!", questid);
 					handler->PSendSysMessage("##########################################################");
@@ -309,6 +337,7 @@ public:
 					ReportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null", player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 					ReportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
 					completeQuest(questreportid, handler, player);
+					ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), questid, error_message);
 					handler->PSendSysMessage(REPORT_QUEST_SUCESS_AND_COMPLETE);
 					return true;
 				}
@@ -319,6 +348,7 @@ public:
 				PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Quest reported");
 				ReportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null", player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 				ReportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
+				ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), questid, error_message);
 				handler->PSendSysMessage(REPORT_QUEST_SUCESS);
 				return true;
 
@@ -334,6 +364,7 @@ public:
 					accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
 					PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Quest reported");
 					ReportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), player->GetGuildName(), player->GetGUID(), player->GetSession()->GetAccountId(), questid);
+					ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), questid, error_message);
 					handler->PSendSysMessage("##########################################################");
 					handler->PSendSysMessage(REPORT_QUEST_SUCESS);	
 					handler->PSendSysMessage("QuestID: %u", questid);
@@ -347,6 +378,7 @@ public:
 				accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
 				PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Quest reported");
 				ReportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null", player->GetGUID(), player->GetSession()->GetAccountId(), questid);
+				ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), questid, error_message);
 				handler->PSendSysMessage("##########################################################");
 				handler->PSendSysMessage(REPORT_QUEST_SUCESS);
 				handler->PSendSysMessage("QuestID: %u", questid);

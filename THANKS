@@ -16,7 +16,6 @@ sequence, item scaling stats algorithm, gameobject rotation issues.
 Thanks go out to the following people for various patches/code (there may be duplicates or invalid names, most of them
 were extracted from old commits):
 
-- Exitare
 - 0xFuture
 - 123qwe
 - 19Maxx83

@@ -3881,6 +3881,10 @@ XP.Weekend.Rate = 2
 
 Custom.XP = 1
 
+Custom.XP.MinRate = 1
+
+Custom.XP.MaxRate = 5
+
 #
 ###################################################################################################
 
@@ -3898,7 +3902,7 @@ GM.Security = 1
 #		Default:     0 - (Disabled)
 #                    1 - (Enabled)
 
-GM.Ban = 0
+GM.Ban = 1
 
 #		Define count for automatic Ban
 #		Default:    50 
@@ -3925,16 +3929,28 @@ GM.Security.Number = 50
 
 
 Race.Change = 1
+
 GMIsland.Protection = 1
+
 GuildHouse.Vendor = 1
+
 Event.NPC = 1
+
 Support.NPC = 1
+
 Characterhelper.NPC = 1
+
 Teleport.NPC = 1
+
 Custom.Commands = 1
+
 Quest.Report = 1
-Congrats.Level = 0
-Welcome.Message = 0
+
+Congrats.Level = 1
+
+Welcome.Message = 1
+
+Welcome.Quest = 1
 
 #
 #
@@ -3950,7 +3966,7 @@ Welcome.Message = 0
 #                    1 - (Enabled)
 #
 
-Exaltor.Activate = 0
+Exaltor.Activate = 1
 
 #
 #
@@ -3960,7 +3976,7 @@ Exaltor.Activate = 0
 #                    1 - (Enabled)
 #
 
-Exaltor.Character = 0
+Exaltor.Character = 1
 
 #
 #		
@@ -3970,7 +3986,7 @@ Exaltor.Character = 0
 #                    	 1 - (Enabled)
 #
 
-Exaltor.Coupon.Generate = 0
+Exaltor.Coupon.Generate = 1
 
 #
 #		
@@ -3981,7 +3997,7 @@ Exaltor.Coupon.Generate = 0
 #                    1 - (Enabled)
 #
 
-Exaltor.Features = 0
+Exaltor.Features = 1
 
 #
 #		Activate or Deactive Exaltor Professions! Players can buy Professions MaxSkill!
@@ -3989,7 +4005,7 @@ Exaltor.Features = 0
 #                    1 - (Enabled)
 #
 
-Exaltor.Professions = 0
+Exaltor.Professions = 1
 
 #
 #
@@ -3999,7 +4015,7 @@ Exaltor.Professions = 0
 #
 #
 
-Exaltor.Level = 0
+Exaltor.Level = 1
 
 #
 #

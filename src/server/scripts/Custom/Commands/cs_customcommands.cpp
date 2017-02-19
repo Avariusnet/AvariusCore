@@ -166,7 +166,7 @@ public:
     //Erstellt neue Fragen in der DB
     static bool HandleFragenCommand(ChatHandler* handler, const char* args)
     {
-		CustomReportSystem * ReportSystem = 0;
+		CustomReportSystem * ReportSystem =  0;
 		CustomCharacterSystem * CharacterSystem = 0;
 		CustomGMLogic * GMLogic = 0;
 		CustomWorldSystem * WorldSystem = 0;
@@ -354,64 +354,55 @@ public:
 	//Dalaran Teleporter
 	static bool HandleDalaCommand(ChatHandler* handler, const char* /*args*/)
 	{
+		//MALL command
+		CustomPlayerLog * PlayerLog = 0;
+		CustomCharacterSystem * CharacterSystem = 0;
 		Player *chr = handler->GetSession()->GetPlayer();
-		if (sConfigMgr->GetBoolDefault("Custom.Commands", 1)) {
-			//MALL command
-			CustomPlayerLog * PlayerLog = 0;
-			CustomCharacterSystem * CharacterSystem = 0;
-			
 
-			if (chr->IsInCombat())
-			{
-				handler->PSendSysMessage(LANG_YOU_IN_COMBAT);
-				//SetSentErrorMessage(true);
-				return false;
-			}
-			if (chr->IsInFlight())
-			{
-				handler->PSendSysMessage(LANG_YOU_IN_FLIGHT);
-				//SetSentErrorMessage(true);
-				return false;
-			}
+		if (chr->IsInCombat())
+		{
+			handler->PSendSysMessage(LANG_YOU_IN_COMBAT);
+			//SetSentErrorMessage(true);
+			return false;
+		}
+		if (chr->IsInFlight())
+		{
+			handler->PSendSysMessage(LANG_YOU_IN_FLIGHT);
+			//SetSentErrorMessage(true);
+			return false;
+		}
 
-			if (chr->isDead()) {
-				handler->PSendSysMessage("##########################################################");
-				handler->PSendSysMessage("You are dead. Please resurrect yourself.");
-				handler->PSendSysMessage("##########################################################");
-				return true;
-			}
-
-			if (chr->getLevel() < 68) {
-				handler->PSendSysMessage("##########################################################");
-				handler->PSendSysMessage("You are not Level 68. Northrend is only for Level 68 Characters!");
-				handler->PSendSysMessage("##########################################################");
-				return true;
-			}
-			std::string accountname = "";
-			accountname = CharacterSystem->getAccountName(chr->GetSession()->GetAccountId());
-			switch (chr->GetTeam())
-			{
-			case ALLIANCE:
-				PlayerLog->insertNewPlayerLog(chr->GetSession()->GetPlayerName(), chr->GetGUID(), accountname, chr->GetSession()->GetAccountId(), "Alliance Dalaran Port used");
-				chr->TeleportTo(571, 5697.64, 659.37, 646.29, 2.66);
-				break;
-
-			case HORDE:
-				PlayerLog->insertNewPlayerLog(chr->GetSession()->GetPlayerName(), chr->GetGUID(), accountname, chr->GetSession()->GetAccountId(), "Horde Dalaran Port used");
-				chr->TeleportTo(571, 5907.81, 638.60, 645.51, 5.81);
-				break;
-			}
-
-			//chr->TeleportTo(571, 5809.55f, 503.975f, 657.526f, 1.70185f);    // Insert Dala Coords
-
+		if (chr->isDead()) {
+			handler->PSendSysMessage("##########################################################");
+			handler->PSendSysMessage("You are dead. Please resurrect yourself.");
+			handler->PSendSysMessage("##########################################################");
 			return true;
 		}
-		if (chr->GetSession()->GetSecurity() > 0) {
-			handler->PSendSysMessage("Activate command in WorldServer.conf. Custom.Commands is the Key!");
+
+		if (chr->getLevel() < 68) {
+			handler->PSendSysMessage("##########################################################");
+			handler->PSendSysMessage("You are not Level 68. Northrend is only for Level 68 Characters!");
+			handler->PSendSysMessage("##########################################################");
 			return true;
 		}
+		std::string accountname = "";
+		accountname = CharacterSystem->getAccountName(chr->GetSession()->GetAccountId());
+		switch (chr->GetTeam())
+		{
+		case ALLIANCE:
+			PlayerLog->insertNewPlayerLog(chr->GetSession()->GetPlayerName(),chr->GetGUID(),accountname,chr->GetSession()->GetAccountId(),"Alliance Dalaran Port used");
+			chr->TeleportTo(571, 5697.64, 659.37, 646.29, 2.66);    
+			break;
+
+		case HORDE:
+			PlayerLog->insertNewPlayerLog(chr->GetSession()->GetPlayerName(), chr->GetGUID(), accountname, chr->GetSession()->GetAccountId(), "Horde Dalaran Port used");
+			chr->TeleportTo(571, 5907.81, 638.60, 645.51, 5.81);    
+			break;
+		}
+
+		//chr->TeleportTo(571, 5809.55f, 503.975f, 657.526f, 1.70185f);    // Insert Dala Coords
+
 		return true;
-
 	};
 
 	//Buffer

@@ -219,6 +219,8 @@ void CustomCharacterSystem::executeFirstCharacter(Player * player, std::string p
 	player->SetMoney(50000000);
 	player->UpdateSkillsToMaxSkillsForLevel();
 	player->UpdateSkillsForLevel();
+	int32 maxhealth = player->GetMaxHealth();
+	player->SetMaxHealth(maxhealth);
 	std::string accountname = "";
 	accountname = CustomCharacterSystem::getAccountName(player->GetSession()->GetAccountId());
 	PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), playerlog);

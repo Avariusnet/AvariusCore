@@ -1,5 +1,5 @@
 #include "CustomReportSystem.h"
-
+#include "CharacterDatabase.h"
 
 
 
@@ -79,6 +79,18 @@ PreparedQueryResult CustomReportSystem::getReportedQuestDetails(int questid)
 	}
 
 	return ergebnis;
+}
+
+void CustomReportSystem::insertErrorMessageForQuest(std::string charactername, int guid, std::string accountname, int accountid, int questid, std::string error_message)
+{
+	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_REPORT_ERROR_MESSAGE);
+	stmt->setString(0, charactername);
+	stmt->setInt32(1, guid);
+	stmt->setString(2, accountname);
+	stmt->setInt32(3, accountid);
+	stmt->setInt32(4, questid);
+	stmt->setString(5, error_message);
+	CharacterDatabase.Execute(stmt);
 }
 
 

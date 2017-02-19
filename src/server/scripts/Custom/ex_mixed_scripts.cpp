@@ -186,10 +186,7 @@ class Announce_NewPlayer : public PlayerScript
 public:
 	Announce_NewPlayer() : PlayerScript("Announce_NewPlayer") {}
 
-
-	
-
-	void OnLogin(Player * player, bool /*firstlogin*/)
+	void OnLogin(Player * player, bool firstlogin)
 	{
 		std::ostringstream ss;
 
@@ -200,7 +197,12 @@ public:
 
 		Field* felder = result->Fetch();
 		uint32 charresultint = felder[0].GetUInt32();
+		const Quest* quest = sObjectMgr->GetQuestTemplate(750000);
 
+		if (sConfigMgr->GetIntDefault("Welcome.Quest", 1) && firstlogin) {
+			player->AddQuest(quest, nullptr);
+			player->CompleteQuest(750000);
+		}
 
 		if (sConfigMgr->GetBoolDefault("Welcome.Message", true)) {
 			if (player->GetTotalPlayedTime() < 1 && charresultint == 1)
@@ -214,7 +216,6 @@ public:
 	}
 
 };
-
 
 
 
@@ -308,7 +309,7 @@ public:
 					if (player->getLevel() < 80) {
 
 						amount = amount * xpweekendrate;
-						ChatHandler(player->GetSession()).PSendSysMessage("XP Weekend actice. You get: %u", amount,
+						ChatHandler(player->GetSession()).PSendSysMessage("XP Weekend active. You get: %u", amount,
 							player->GetName());
 
 						return;
@@ -452,6 +453,8 @@ public:
 
 	void OnStartup() {
 
+		
+		
 		std::ostringstream uu;
 		uu << MOTD;
 		sWorld->SetMotd(uu.str().c_str());

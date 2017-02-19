@@ -48,10 +48,9 @@ public:
 
 
 			int32 newxpvalue = (uint32)atoi(px);
-			int32 minxprate = sConfigMgr->GetIntDefault("Custom.XP.MinRate", 1);
-			int32 maxxprate = sConfigMgr->GetIntDefault("Custom.XP.MaxRate", 5);
-			if (newxpvalue == 0 || newxpvalue > maxxprate) {
-				handler->PSendSysMessage("Your Values are invalid. Use only values between %u and %u!",minxprate, maxxprate);
+
+			if (newxpvalue == 0 || newxpvalue > 5) {
+				handler->PSendSysMessage("Your Values are invalid. Use only between 1 and 5!");
 				return true;
 			}
 
