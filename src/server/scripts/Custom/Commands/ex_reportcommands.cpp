@@ -185,10 +185,10 @@ public:
 			CustomPlayerLog * PlayerLog = 0;
 			Player* player = handler->GetSession()->GetPlayer();
 
+			char* questlogname = strtok((char*)args, ",");
+			char* reportmsg = strtok(NULL, "");
 
-			
-
-			char* reportmsg = strtok((char*)args, " ");
+			//char* reportmsg = strtok((char*)args, " ");
 			if (!reportmsg) {
 				handler->PSendSysMessage("##########################################################");
 				handler->PSendSysMessage("Without entering a valid Questerrormessage, the command cannot be executed!");
@@ -199,7 +199,7 @@ public:
 
 			std::string error_message = std::string((char*)reportmsg);
 
-			char* questlogname = strtok(NULL, " ");
+			//char* questlogname = strtok(NULL, " ");
 			if (!questlogname) {
 				handler->PSendSysMessage("##########################################################");
 				handler->PSendSysMessage("Without entering a valid Quest, the command cannot be executed!");

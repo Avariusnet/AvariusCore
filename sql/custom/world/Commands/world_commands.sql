@@ -84,6 +84,10 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('report activate', 
 
 
 
+/* Custom Xp Rate */
+DELETE FROM command WHERE `name`='xprate';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('xprate', 195, '');   
+
 
 /*Testcommands */
 DELETE FROM command WHERE `name`='logic';
