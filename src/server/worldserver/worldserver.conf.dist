@@ -3944,7 +3944,7 @@ Teleport.NPC = 1
 
 Custom.Commands = 1
 
-Quest.Report = 1
+
 
 Congrats.Level = 1
 
@@ -3956,6 +3956,34 @@ Welcome.Quest = 1
 #
 #
 ###################################################################################################
+
+
+###################################################################################################
+#Report System
+#
+#
+#		Activate or deactivate the Report System
+#		Options are: 
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)
+#
+#
+
+Quest.Report = 1
+
+#
+#		Set the amount of Reports that are needed to set a Reported Quest to autocomplete.
+#		Default: 5
+#
+
+Quest.Report.Amount = 5
+
+#
+#
+#
+#
+###################################################################################################
+
 
 ###################################################################################################
 #EXALTOR NPC 

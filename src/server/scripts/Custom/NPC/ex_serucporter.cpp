@@ -66,7 +66,7 @@ public: seruc() : CreatureScript("seruc"){ }
 				/*RAID*/
 			case 0: {
 				if (pPlayer->GetSession()->GetSecurity() == 3){
-					pPlayer->TeleportTo(169, -393.26, 2972.93, 92.85, 5.94);
+					pPlayer->TeleportTo(169, -393.26f, 2972.93f, 92.85f, 5.94f);
 					return true;
 				}
 
@@ -113,7 +113,7 @@ public: seruc() : CreatureScript("seruc"){ }
 			case 1: {
 				if (pPlayer->HasEnoughMoney(200000)){
 					pPlayer->GetGUID();
-					pPlayer->TeleportTo(0, -793.67, 1565.25, 19.88, 3.25);
+					pPlayer->TeleportTo(0, -793.67f, 1565.25f, 19.88f, 3.25f);
 					pPlayer->ModifyMoney(-200000);
 					return true;
 				}
@@ -131,7 +131,7 @@ public: seruc() : CreatureScript("seruc"){ }
 				case 2: {
 					if (pPlayer->HasEnoughMoney(200000)){
 						pPlayer->GetGUID();
-						pPlayer->TeleportTo(0, -9773, 2126.72, 15.40, 3.88);
+						pPlayer->TeleportTo(0, -9773.00f, 2126.72f, 15.40f, 3.88f);
 						pPlayer->ModifyMoney(-200000);
 						return true;
 					}
@@ -149,7 +149,7 @@ public: seruc() : CreatureScript("seruc"){ }
 				case 3: {
 					if (pPlayer->HasEnoughMoney(200000)){
 						pPlayer->GetGUID();
-						pPlayer->TeleportTo(571, 5728.79, 608.62, 618.59, 5.60);
+						pPlayer->TeleportTo(571, 5728.79f, 608.62f, 618.59f, 5.60f);
 						pPlayer->ModifyMoney(-200000);
 						return true;
 					}
@@ -169,7 +169,7 @@ public: seruc() : CreatureScript("seruc"){ }
 				case 4: {
 					if (pPlayer->HasEnoughMoney(200000)){
 						pPlayer->GetGUID();
-						pPlayer->TeleportTo(169, -2902.55, -1259.97, 121.88, 3.28);
+						pPlayer->TeleportTo(169, -2902.55f, -1259.97f, 121.88f, 3.28f);
 						pPlayer->ModifyMoney(-200000);
 						return true;
 					}
@@ -190,7 +190,7 @@ public: seruc() : CreatureScript("seruc"){ }
 				case 5: {
 					if (pPlayer->HasEnoughMoney(200000)){
 						pPlayer->GetGUID();
-						pPlayer->TeleportTo(169, -480.42, 3326.65, 286.07, 4.69);
+						pPlayer->TeleportTo(169, -480.42f, 3326.65f, 286.07f, 4.69f);
 						pPlayer->ModifyMoney(-200000);
 						return true;
 					}
@@ -211,7 +211,7 @@ public: seruc() : CreatureScript("seruc"){ }
 				case 6: {
 					if (pPlayer->HasEnoughMoney(200000)){
 						pPlayer->GetGUID();
-						pPlayer->TeleportTo(169, -250.27, 3081.07, 96.45, 3.10);
+						pPlayer->TeleportTo(169, -250.27f, 3081.07f, 96.45f, 3.10f);
 						pPlayer->ModifyMoney(-200000);
 						return true;
 					}
@@ -229,7 +229,7 @@ public: seruc() : CreatureScript("seruc"){ }
 				case 7: {
 					if (pPlayer->HasEnoughMoney(200000)){
 						pPlayer->GetGUID();
-						pPlayer->TeleportTo(169, -1221.52, -2432.34, 112.95, 1.00);
+						pPlayer->TeleportTo(169, -1221.52f, -2432.34f, 112.95f, 1.00f);
 						pPlayer->ModifyMoney(-200000);
 						return true;
 					}
@@ -248,7 +248,7 @@ public: seruc() : CreatureScript("seruc"){ }
 				case 8: {
 					if (pPlayer->HasEnoughMoney(200000)){
 						pPlayer->GetGUID();
-						pPlayer->TeleportTo(169, 3617.89, 4050.67, 92.00, 3.50);
+						pPlayer->TeleportTo(169, 3617.89f, 4050.67f, 92.00f, 3.50f);
 						pPlayer->ModifyMoney(-200000);
 						return true;
 					}
@@ -267,7 +267,7 @@ public: seruc() : CreatureScript("seruc"){ }
 				case 9: {
 					if (pPlayer->HasEnoughMoney(200000)){
 						pPlayer->GetGUID();
-						pPlayer->TeleportTo(169, -1743.87, -854.50, 121.70, 2.06);
+						pPlayer->TeleportTo(169, -1743.87f, -854.50f, 121.70f, 2.06f);
 						pPlayer->ModifyMoney(-200000);
 						return true;
 					}
@@ -286,7 +286,7 @@ public: seruc() : CreatureScript("seruc"){ }
 				case 10: {
 					if (pPlayer->HasEnoughMoney(200000)){
 						pPlayer->GetGUID();
-						pPlayer->TeleportTo(169, -2872.38, -1386.17, 118.51, 2.60);
+						pPlayer->TeleportTo(169, -2872.38f, -1386.17f, 118.51f, 2.60f);
 						pPlayer->ModifyMoney(-200000);
 						return true;
 					}
@@ -304,7 +304,7 @@ public: seruc() : CreatureScript("seruc"){ }
 				case 11: {
 					if (pPlayer->HasEnoughMoney(200000)){
 						pPlayer->GetGUID();
-						pPlayer->TeleportTo(169, -4385.68, -754.82, 120.89, 0.63);
+						pPlayer->TeleportTo(169, -4385.68f, -754.82f, 120.89f, 0.63f);
 						return true;
 					}
 
@@ -323,7 +323,7 @@ public: seruc() : CreatureScript("seruc"){ }
 				case 12: {
 					if (pPlayer->HasEnoughMoney(200000)){
 						pPlayer->GetGUID();
-						pPlayer->TeleportTo(169, -2710.73, -2722.46, 127.87, 0.42);
+						pPlayer->TeleportTo(169, -2710.73f, -2722.46f, 127.87f, 0.42f);
 						pPlayer->ModifyMoney(-200000);
 						return true;
 					}
@@ -339,7 +339,7 @@ public: seruc() : CreatureScript("seruc"){ }
 					/*INSTANZ*/
 				case 13: {
 					if (pPlayer->GetSession()->GetSecurity() == 3){
-						pPlayer->TeleportTo(169, -393.26, 2972.93, 92.85, 5.94);
+						pPlayer->TeleportTo(169, -393.26f, 2972.93f, 92.85f, 5.94f);
 						return true;
 					}
 					else {
@@ -356,7 +356,7 @@ public: seruc() : CreatureScript("seruc"){ }
 				case 14: {
 					if (pPlayer->HasEnoughMoney(200000)){
 					pPlayer->GetGUID();
-					pPlayer->TeleportTo(169, -4367.24, -1477.58, 92.00, 0.21);
+					pPlayer->TeleportTo(169, -4367.24f, -1477.58f, 92.00f, 0.21f);
 					pPlayer->ModifyMoney(-200000);
 					return true;
 					}
@@ -373,7 +373,7 @@ public: seruc() : CreatureScript("seruc"){ }
 				case 16: {
 					if (pPlayer->HasEnoughMoney(200000)){
 						pPlayer->GetGUID();
-						pPlayer->TeleportTo(169, -3655.76, -1052.01, 126.75, 3.38);
+						pPlayer->TeleportTo(169, -3655.76f, -1052.01f, 126.75f, 3.38f);
 						pPlayer->ModifyMoney(-200000);
 						return true;
 					}

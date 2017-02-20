@@ -64,8 +64,8 @@ public: dark() : CreatureScript("dark"){ }
 			case 1:
 			{
                 
-                    pPlayer->TeleportTo(0, -7138.54, -4310.35, 264.33, 3.13);
-                    pCreature->SummonCreature(800064, -7139.58, -4317.59, 264.33, 3.13, TEMPSUMMON_TIMED_DESPAWN, 120000);
+                    pPlayer->TeleportTo(0, -7138.54f, -4310.35f, 264.33f, 3.13f);
+                    pCreature->SummonCreature(800064, -7139.58f, -4317.59f, 264.33f, 3.13f, TEMPSUMMON_TIMED_DESPAWN, 120000);
 					return true;
 			}break;
 

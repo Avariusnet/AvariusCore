@@ -31,8 +31,6 @@ enum Events
 	EVENT_SPALTEN= 10,
 	EVENT_BURN = 11,
 	EVENT_BREATH = 12
-
-
 };
 
 enum Phases
@@ -75,9 +73,6 @@ public:
 
 		void EnterCombat(Unit* /*who*/) override
 		{
-			me->Yell("Ich bin gerade auf Kaffee bei Kayoula. Bitte versucht es spaeter noch einmal!", LANG_UNIVERSAL, nullptr);
-			me->setFaction(35);
-			Reset();
 			Talk(SAY_AGGRO);
 			_events.SetPhase(PHASE_ONE);
 			_events.ScheduleEvent(EVENT_TOXIC_WASTE, 20000);

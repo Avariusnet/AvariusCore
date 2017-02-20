@@ -269,9 +269,9 @@ public:
 				uint32 questreportid = report_quest[0].GetInt32();
 				uint32 anzahl = report_quest[1].GetInt32();
 				uint32 aktiv = report_quest[2].GetInt32();
-
+				uint32 activateamount = sConfigMgr->GetIntDefault("Quest.Report.Amount", 5);
 				//if quantity == 5 , set quest to autocomplete
-				if (anzahl == 5) {
+				if (anzahl+1 == activateamount) {
 					bool isQuestForbidden = false;
 					isQuestForbidden = ReportSystem->checkIfQuestisForbidden(questid);
 

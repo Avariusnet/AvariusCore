@@ -29,10 +29,7 @@ class supportnpc : public CreatureScript
 public:
 		supportnpc() : CreatureScript("supportnpc") { }
 		
-		
 	
-		
-		
 
 		void erklaerung(Player* player, std::string hilfe){
         

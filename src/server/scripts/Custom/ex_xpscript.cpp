@@ -172,8 +172,6 @@ public:
 
 
 void AddSC_XPScripts()
-{
-	
+{	
 	new DoupleXP();
-
 }
