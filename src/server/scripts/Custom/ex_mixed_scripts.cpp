@@ -217,136 +217,6 @@ public:
 
 };
 
-
-
-
-class DoupleXP : public PlayerScript
-{
-public:
-	DoupleXP() : PlayerScript("DoupleXP") {}
-
-	void OnGiveXP(Player* player, uint32& amount, Unit* /*victim*/)
-	{
-		CustomXP * customxp = 0;
-
-		int xpvalue = 0;
-		xpvalue = customxp->getCustomXPValue(player->GetGUID());
-
-		//Custom XP is on, check if double xp is on.
-		if (sConfigMgr->GetBoolDefault("Custom.XP", 1)) {
-
-			if (player->getLevel() < 80) {
-				//Check if Xp Weekend is on
-				if (sConfigMgr->GetBoolDefault("XP.Weekend.Active", true)) {
-
-					int32 xpweekendrate = sConfigMgr->GetIntDefault("XP.Weekend.Rate", 2);
-
-					boost::gregorian::date date(boost::gregorian::day_clock::local_day());
-					if (date.day_of_week() == boost::date_time::Friday ||
-						date.day_of_week() == boost::date_time::Saturday ||
-						date.day_of_week() == boost::date_time::Sunday)
-					{
-
-						if (player->getLevel() < 80) {
-							int xpvalue = customxp->getCustomXPValue(player->GetGUID());
-
-							amount = (amount *xpvalue)* xpweekendrate;
-							ChatHandler(player->GetSession()).PSendSysMessage("XP Weekend actice. You get: %u", amount,
-								player->GetName());
-
-							return;
-						}
-
-						return;
-					}
-
-
-					if (date.day_of_week() == boost::date_time::Monday ||
-						date.day_of_week() == boost::date_time::Tuesday ||
-						date.day_of_week() == boost::date_time::Wednesday || date.day_of_week() == boost::date_time::Thursday)
-					{
-						if (player->getLevel() < 80) {
-							int xpvalue = customxp->getCustomXPValue(player->GetGUID());
-							amount = amount * xpvalue;
-							return;
-						}
-						return;
-					}
-
-					//Should never be reached.
-					else {
-						amount = amount* xpvalue;
-						return;
-					}
-				}
-
-				//XP Weekend is offline
-				else {
-					amount = amount * xpvalue;
-				}
-
-			}
-			else {
-				return;
-			}
-
-		}
-
-		//Custom XP is off , but maybe double XP is on.
-		else {
-
-			//Check if Xp Weekend is on
-			if (sConfigMgr->GetBoolDefault("XP.Weekend.Active", true)) {
-
-				int32 xpweekendrate = sConfigMgr->GetIntDefault("XP.Weekend.Rate", 2);
-
-				boost::gregorian::date date(boost::gregorian::day_clock::local_day());
-				if (date.day_of_week() == boost::date_time::Friday ||
-					date.day_of_week() == boost::date_time::Saturday ||
-					date.day_of_week() == boost::date_time::Sunday)
-				{
-
-					if (player->getLevel() < 80) {
-
-						amount = amount * xpweekendrate;
-						ChatHandler(player->GetSession()).PSendSysMessage("XP Weekend active. You get: %u", amount,
-							player->GetName());
-
-						return;
-					}
-
-					return;
-				}
-
-
-				if (date.day_of_week() == boost::date_time::Monday ||
-					date.day_of_week() == boost::date_time::Tuesday ||
-					date.day_of_week() == boost::date_time::Wednesday || date.day_of_week() == boost::date_time::Thursday)
-				{
-					if (player->getLevel() < 80) {
-						return;
-					}
-					return;
-				}
-
-
-				else {
-					return;
-				}
-			}
-
-
-			//Xp Weekend is not online
-			else {
-				return;
-			}
-
-		}
-
-	}
-};
-
-
 class GMIsland : public PlayerScript
 {
 public:
@@ -464,29 +334,13 @@ public:
 };
 
 
-class GMCcommandLog : public PlayerScript
-{
-public:
-	GMCcommandLog() : PlayerScript("GMCcommandLog") {}
-
-	
-	void OnChat(Player* player, uint32 /*type*/, uint32 /*lang*/, std::string& msg) {
-		return;
-	}
-
-		
-
-
-};
 
 
 void AddSC_mixed_scripts()
 {
 	new fbevent();
 	new Announce_NewPlayer();
-	new DoupleXP();
 	new Shutdown();
 	new DuelLog();
-	new GMCcommandLog();
 	new GMIsland();
 }
