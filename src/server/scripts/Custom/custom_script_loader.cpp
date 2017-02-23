@@ -116,8 +116,19 @@ void AddSC_PlayTimeRewards();
 //XP Scripts
 void AddSC_XPScripts();
 
+//AllLoger
+void AddSC_logscript();
+
+//Question and Answer commands
+void AddSC_Question_and_Answer_Commands();
+
 void AddCustomScripts()
 {
+	//Question and Answer command
+	AddSC_Question_and_Answer_Commands();
+
+	//All Loger
+	AddSC_logscript();
 
 	//XP Scripts
 	AddSC_XPScripts();

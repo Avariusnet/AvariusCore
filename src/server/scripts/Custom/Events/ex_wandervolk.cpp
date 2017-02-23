@@ -25,6 +25,7 @@
 #include <stdlib.h>
 #include "ScriptMgr.h"
 #include "ScriptedCreature.h"
+#include "Custom/Logic/CustomQuestionAnswerSystem.h"
 
 enum Phases{
 	PHASE_ONE = 1
@@ -98,7 +99,7 @@ public:
 		case 0: {
 
 			pPlayer->GetGUID();
-			pPlayer->TeleportTo(0, 3129.77, -6284.07, 140.95, 1.53);
+			pPlayer->TeleportTo(0, 3129.77f, -6284.07f, 140.95f, 1.53f);
 			return true;
 		}break;
 
@@ -279,7 +280,7 @@ public:
 
 		case 1: {
 			pPlayer->GetGUID();
-			pPlayer->TeleportTo(0, 3174.49, -6000.48, 208.00, 0.27);
+			pPlayer->TeleportTo(0, 3174.49f, -6000.48f, 208.00f, 0.27f);
 			return true;
 		}break;
 			
@@ -326,61 +327,38 @@ public:
 		
 		
 		pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Das zweite Raetsel", GOSSIP_SENDER_MAIN, 0, "", 0, false);
-		pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Was tust du hier?", GOSSIP_SENDER_MAIN, 1, "", 0, false);
-		pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Stellt mir eine Frage!", GOSSIP_SENDER_MAIN, 2, "", 0, false);
+		pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "What are u doing here?", GOSSIP_SENDER_MAIN, 1, "", 0, false);
+		pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Ask me a Question!", GOSSIP_SENDER_MAIN, 2, "", 0, false);
 		pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
 		return true;
 	}
 
-	bool OnGossipSelect(Player * pPlayer, Creature * /*pCreature */, uint32 /*uiSender*/, uint32 uiAction)
+	bool OnGossipSelect(Player * player, Creature * /*pCreature */, uint32 /*uiSender*/, uint32 uiAction)
 	{
 		switch (uiAction)
 		{
 
 		case 0: {
 
-			pPlayer->GetGUID();
-			ChatHandler(pPlayer->GetSession()).PSendSysMessage("Ein anderes Wort fuer Dunkel ist gesucht und Soldaten liefen auf gesuchten Routen. Findet ihr dazu 2 Stelzen die Koordinaten veraendern, seid ihr auf dem richtigen Weg.",
-				pPlayer->GetName());
-			pPlayer->PlayerTalkClass->SendCloseGossip();
+			player->GetGUID();
+			ChatHandler(player->GetSession()).PSendSysMessage("Ein anderes Wort fuer Dunkel ist gesucht und Soldaten liefen auf gesuchten Routen. Findet ihr dazu 2 Stelzen die Koordinaten veraendern, seid ihr auf dem richtigen Weg.",
+				player->GetName());
+			player->PlayerTalkClass->SendCloseGossip();
 			return true;
 		}break;
 
 		case 1: {
 
-			pPlayer->GetGUID();
-			ChatHandler(pPlayer->GetSession()).PSendSysMessage("Hier kann man die lukrativen Raetselquestreihen abschliessen. Werden dir keine Quests angezeigt, hast du nicht die erforderlichen Vorquests abgeschlossen.",
-				pPlayer->GetName());
-			pPlayer->PlayerTalkClass->SendCloseGossip();
+			player->GetGUID();
+			ChatHandler(player->GetSession()).PSendSysMessage("Hier kann man die lukrativen Raetselquestreihen abschliessen. Werden dir keine Quests angezeigt, hast du nicht die erforderlichen Vorquests abgeschlossen.",
+				player->GetName());
+			player->PlayerTalkClass->SendCloseGossip();
 			return true;
 		}break;
 
 		case 2: {
-
-
-			PreparedStatement* count = CharacterDatabase.GetPreparedStatement(CHAR_SEL_FRAGEN_COUNT);
-			PreparedQueryResult ergebnis = CharacterDatabase.Query(count);
-
-			Field *feld = ergebnis->Fetch();
-			uint32 durchschnitt = feld[0].GetInt32();
-			pPlayer->GetSession()->SendNotification(durchschnitt);
-			
-			PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_FRAGEN);
-			stmt->setInt32(0,generaterdmint(1,durchschnitt));
-			PreparedQueryResult result = CharacterDatabase.Query(stmt);
-
-			Field *field = result->Fetch();
-			std::string frage = field[0].GetCString();
-			std::string antwort = field[1].GetCString();
-			//uint32 belohnung = field[2].GetInt32();
-			//uint32 anzahl = field[3].GetInt32();
-
-			std::ostringstream ss;
-			ss << "Deine Frage lautet: " << frage;
-			ChatHandler(pPlayer->GetSession()).PSendSysMessage(ss.str().c_str(),
-				pPlayer->GetName());
-
-
+			CustomQuestionAnswerSystem * QuestionAnswerSystem = 0;
+			QuestionAnswerSystem->getQuestionForPlayer(player->GetSession()->GetPlayer());
 			return true;
 		}break;
 

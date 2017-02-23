@@ -60,7 +60,7 @@ public:
 			case 1:
 			{
 				player->GetGUID();
-				player->TeleportTo(1, -8646.00, -1316.99, 8.87, 3.10, 0);
+				player->TeleportTo(1, -8646.00f, -1316.99f, 8.87f, 3.10f, 0);
 				return true;
 			}break;
 			
@@ -68,7 +68,7 @@ public:
 			case 2:
 			{
 				player->GetGUID();
-				player->TeleportTo(1, -8790.68, -1339.47, 8.87, 3.16, 0);
+				player->TeleportTo(1, -8790.68f, -1339.47f, 8.87f, 3.16f, 0);
 				return true;
 			}break;
 

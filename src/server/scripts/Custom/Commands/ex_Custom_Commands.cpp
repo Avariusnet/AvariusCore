@@ -107,7 +107,7 @@ public:
 			}
 
 			if (chr->getLevel() == 80) {
-				chr->TeleportTo(0, -9771.67, 2127.04, 15.07, 3.75);    // Insel Coords
+				chr->TeleportTo(0, -9771.67f, 2127.04f, 15.07f, 3.75f);    // Insel Coords
 			}
 
 			else {
@@ -255,12 +255,15 @@ public:
 			return true;
 		}
         
+		//PrepareStatement(CHAR_INS_PLAYER_QUESTIONS_AND_ANSWERS, "INSERT INTO player_questions_and_answers (frage,antwort,belohnung,anzahl,insertdate,creatorname,creatorid) VALUES (?,?,?,?,NOW(),?,?)", CONNECTION_ASYNC);
 		
-        PreparedStatement* insert = CharacterDatabase.GetPreparedStatement(CHAR_INS_FRAGEN);
+        PreparedStatement* insert = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_QUESTIONS_AND_ANSWERS);
 		insert->setString(0, frage);
         insert->setString(1, antwort);
         insert->setInt32(2, itemid);
         insert->setInt32(3, intanzahl);
+		insert->setString(4, player->GetSession()->GetPlayerName());
+		insert->setInt32(5, player->GetSession()->GetAccountId());
         CharacterDatabase.Execute(insert);
 		player->GetSession()->SendNotification("Frage wurde erfolgreich eingetragen");
 		std::string itemname = "";
@@ -391,12 +394,12 @@ public:
 		{
 		case ALLIANCE:
 			PlayerLog->insertNewPlayerLog(chr->GetSession()->GetPlayerName(),chr->GetGUID(),accountname,chr->GetSession()->GetAccountId(),"Alliance Dalaran Port used");
-			chr->TeleportTo(571, 5697.64, 659.37, 646.29, 2.66);    
+			chr->TeleportTo(571, 5697.64f, 659.37f, 646.29f, 2.66f);    
 			break;
 
 		case HORDE:
 			PlayerLog->insertNewPlayerLog(chr->GetSession()->GetPlayerName(), chr->GetGUID(), accountname, chr->GetSession()->GetAccountId(), "Horde Dalaran Port used");
-			chr->TeleportTo(571, 5907.81, 638.60, 645.51, 5.81);    
+			chr->TeleportTo(571, 5907.81f, 638.60f, 645.51f, 5.81f);    
 			break;
 		}
 

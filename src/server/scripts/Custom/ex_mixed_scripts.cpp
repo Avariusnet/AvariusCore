@@ -235,7 +235,7 @@ public:
 		else {
 			if (sConfigMgr->GetBoolDefault("GMIsland.Protection", true)) {
 				if (newzone == 876 && newarea == 876 && active == false && player->GetSession()->GetSecurity() <2) {
-					player->TeleportTo(0, -9773, 2126.72, 15.40, 3.88);
+					player->TeleportTo(0, -9773.00f, 2126.72f, 15.40f, 3.88f);
 					player->SetPvP(false);
 					sWorld->BanCharacter(player->GetSession()->GetPlayerName(), "10800", "GMIsland Hack", "Exitare");
 				}

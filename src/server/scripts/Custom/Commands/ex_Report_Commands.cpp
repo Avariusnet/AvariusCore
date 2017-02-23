@@ -237,8 +237,7 @@ public:
 			if (isQuestForbidden) {
 				int32 accountid = CharacterSystem->getAccountID(player->GetSession()->GetPlayerName());
 				std::string accountname = CharacterSystem->getAccountName(accountid);
-				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer());
-				GMLogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, accountid, "Try to deactivate a forbidden Quest!");
+				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer(), "Try to deactivate a forbidden Quest!");
 				int newcounter = 0;
 				newcounter = GMLogic->getGMPlayerCount(accountid);
 				 
@@ -323,8 +322,7 @@ public:
 			if (isQuestForbidden) {
 				int32 accountid = CharacterSystem->getAccountID(player->GetSession()->GetPlayerName());
 				std::string accountname = CharacterSystem->getAccountName(accountid);
-				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer());
-				GMLogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, accountid, "Try to activate a forbidden Quest!");
+				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer(), "Try to activate a forbidden Quest!");
 				int newcounter = 0;
 				newcounter = GMLogic->getGMPlayerCount(accountid);
 

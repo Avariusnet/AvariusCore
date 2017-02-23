@@ -12,7 +12,7 @@ public:
 	void insertNewCouponGMLog(std::string charactername, int guid,int itemid, std::string couponcode, int quantity);
 	int getGMPlayerCount(int accountid);
 
-	void addCompleteGMCountLogic(int accountid, Player* player);
+	void addCompleteGMCountLogic(int accountid, Player* player, std::string logmessage);
 
 	//void checkGMCommands()
 };

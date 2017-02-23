@@ -106,12 +106,11 @@ public:
 
 			std::string accountname = "";
 			accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-			GMLogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), " Try to generate a forbidden Coupon code");
-			
+					
 
 			PreparedQueryResult result = GMLogic->selectGMPlayerCount(player->GetSession()->GetAccountId());
 			if (result == NULL) {
-				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer());
+				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer(), "Tries to create a forbidden Coupon!");
 				handler->PSendSysMessage("##########################################################");
 				handler->PSendSysMessage("Warning: GM should be a supporter not a cheater!");
 				handler->PSendSysMessage("This incident has been logged in DB.");
@@ -128,7 +127,7 @@ public:
 			int newcounter = 0;
 			newcounter = counter + 1;	
 
-			GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer());
+			GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer(), "Tries to create a forbidden Coupon!");
 			handler->PSendSysMessage("##########################################################");
 			handler->PSendSysMessage("Warning: GM should be a supporter not a cheater!");
 			handler->PSendSysMessage("This incident has been logged in DB.");

@@ -54,7 +54,7 @@ public:
 
 			case 0: {
                 //Port to upper position
-                pPlayer->TeleportTo(1,16220.94,16350.46,210.77,1.48);
+                pPlayer->TeleportTo(1,16220.94f,16350.46f,210.77f,1.48f);
 				pPlayer->PlayerTalkClass->SendCloseGossip();
 				pPlayer->CastSpell(pPlayer->GetSession()->GetPlayer(), 1706, true, NULL, NULL, pPlayer->GetGUID());
 				pPlayer->GetGUID();
@@ -84,7 +84,7 @@ public:
 				ChatHandler(pPlayer->GetSession()).PSendSysMessage("Ich habe Euch zu dem Questgeber geportet. Diese Freiheit habe ich mir herausgenommen.",
 					pPlayer->GetName());
 				pPlayer->PlayerTalkClass->SendCloseGossip();
-				pPlayer->TeleportTo(571,5806.13,629.32,647.40,1.64);
+				pPlayer->TeleportTo(571,5806.13f,629.32f,647.40f,1.64f);
 				pPlayer->AddAura(155, pPlayer);
 			}break;
 

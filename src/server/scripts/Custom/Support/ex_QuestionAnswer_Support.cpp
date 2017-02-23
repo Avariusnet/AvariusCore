@@ -23,6 +23,7 @@
 #include <sstream>
 #include <string>
 #include <stdlib.h>
+#include <Custom/Logic/CustomQuestionAnswerSystem.h>
 
 #include <Custom/Logic/CustomCharacterSystem.h>
 
@@ -36,47 +37,7 @@ class codenpc : public CreatureScript
 public:
     codenpc() : CreatureScript("codenpc") { }
     
-    void Belohnung(Player* player, std::string codes){
-		CustomCharacterSystem * CharacterSystem  = 0;
-
-	
-
-		PreparedQueryResult ergebnis = CharacterSystem->getAntwortbyPlayerAntwort(codes);
-		
-		if (!ergebnis){
-			player->GetSession()->SendNotification(ANSWER_NOT_CORRECT);
-			return;
-		}
-
-		if (ergebnis){
-			Field* felder = ergebnis->Fetch();
-			uint32 questionid = felder[0].GetUInt32();
-			uint32 belohnung = felder[1].GetUInt32();
-			uint32 anzahl = felder[2].GetUInt32();
-
-			bool playerHasAlreadyAnswerQuestion = CharacterSystem->hasPlayerAlreadyAnswertheQuestion(player->GetSession()->GetAccountId(), questionid);
-
-			if (playerHasAlreadyAnswerQuestion){
-				player->GetSession()->SendNotification(ANSWER_ALREADY_ANSWERED);
-				return;
-			}
-
-			CharacterSystem->addNewPlayerAnsweredQuestion(player->GetSession()->GetAccountId(), questionid);
-			ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
-				player->GetName());
-			ChatHandler(player->GetSession()).PSendSysMessage("Your Answer is correct and your Goodie will be send to you by Mail.",
-				player->GetName());
-			ChatHandler(player->GetSession()).PSendSysMessage("This may take a while.",
-				player->GetName());
-			ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
-				player->GetName());
-			CharacterSystem->sendPlayerMailwithItem(belohnung, anzahl, "Congratulation", "Congratulation. Here is your Goodie for the correct Answer!", player->GetSession()->GetPlayer());
-			
-			return;
-		}
-
-    }
-    
+        
     
    
     bool OnGossipHello(Player *player, Creature* _creature)
@@ -94,7 +55,7 @@ public:
             
             case 2:
                 {
-                
+				CustomQuestionAnswerSystem * QuestionAnswerSystem = 0;
                     std::string codes = code;
                 
                     if(codes == "Easteregg"){
@@ -103,7 +64,7 @@ public:
                         return true;
                     }
                     
-					Belohnung(player->GetSession()->GetPlayer(), codes);
+					QuestionAnswerSystem->checkPlayerAnswer(player->GetSession()->GetPlayer(), code);
 					return true;
                     
                 

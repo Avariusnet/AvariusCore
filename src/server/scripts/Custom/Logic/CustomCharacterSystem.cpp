@@ -18,43 +18,6 @@ PreparedQueryResult CustomCharacterSystem::getAccountbyID(int accountid)
 
 }
 
-PreparedQueryResult CustomCharacterSystem::getAntwortbyPlayerAntwort(std::string answer)
-{
-
-	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_ANTWORTEN_NACH_ANTWORT);
-	stmt->setString(0, answer);
-	PreparedQueryResult ergebnis = CharacterDatabase.Query(stmt);
-	
-	if (!ergebnis) {
-		return NULL;
-	}
-
-	return ergebnis;
-}
-
-bool CustomCharacterSystem::hasPlayerAlreadyAnswertheQuestion(int accountid, int questionnumber)
-{
-	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_BEANTWORTET);
-	stmt->setInt32(0, accountid);
-	stmt->setInt32(1, questionnumber);
-	PreparedQueryResult result = CharacterDatabase.Query(stmt);
-
-	if (!result) {
-		return false;
-	}
-
-	return true;
-}
-
-void CustomCharacterSystem::addNewPlayerAnsweredQuestion(int accountid, int questionnumber)
-{
-	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_BEANTWORTET);
-	stmt->setInt32(0, accountid);
-	stmt->setInt32(1, questionnumber);
-	CharacterDatabase.Execute(stmt);
-
-}
-
 
 
 bool CustomCharacterSystem::setProfessionSkill(Player * player, uint32 profession, int professioncost)
@@ -214,7 +177,7 @@ void CustomCharacterSystem::executeFirstCharacter(Player * player, std::string p
 	CustomPlayerLog * PlayerLog = 0;
 	player->PlayerTalkClass->SendCloseGossip();
 	player->SetLevel(80);
-	player->TeleportTo(0, -792.84, -1607.55, 142.30, 2.33, 0);
+	player->TeleportTo(0, -792.84f, -1607.55f, 142.30f, 2.33f, 0);
 	player->AddItem(20400, 4);
 	player->SetMoney(50000000);
 	player->UpdateSkillsToMaxSkillsForLevel();
@@ -491,7 +454,7 @@ std::string CustomCharacterSystem::getAccountName(int accountid) {
 
 
 
-//Return the Characterresult with following parameters guid,account,name,level,totaltime. 
+/*Return the Characterresult with following parameters guid,account,name,level,totaltime. 
 PreparedQueryResult CustomCharacterSystem::getCharacterByName(std::string charactername)
 {
 	PreparedStatement* charselbyname = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHARACTER_BYNAME);
@@ -502,7 +465,7 @@ PreparedQueryResult CustomCharacterSystem::getCharacterByName(std::string charac
 	}
 
 	return result;
-}
+}*/
 
 
 //Return the GUID of the Guildleader. If an Error occurs 0 is the returnvalue

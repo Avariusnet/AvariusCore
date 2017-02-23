@@ -152,7 +152,7 @@ public:
 			if (player->GetSession()->GetSecurity() > 0) {
 				PreparedQueryResult result = GMLogic->selectGMPlayerCount(player->GetSession()->GetAccountId());
 				if (result == NULL) {
-					GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(),player->GetSession()->GetPlayer());
+					GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(),player->GetSession()->GetPlayer(),"Try to transfer Character to a Lower or Higher Sec Account!");
 					ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 						player->GetName());
 					ChatHandler(player->GetSession()).PSendSysMessage("Warning: GM should be a supporter not a cheater!",
@@ -174,7 +174,7 @@ public:
 				int newcounter = 0;
 				newcounter = counter + 1;
 
-				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer());
+				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer(), "Try to transfer Character to a Lower or Higher Sec Account!");
 				ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 					player->GetName());
 				ChatHandler(player->GetSession()).PSendSysMessage("Warning: GM should be a supporter not a cheater!",

@@ -51,7 +51,7 @@ PreparedQueryResult CustomGMLogic::selectGMPlayerCount(int accountid)
 
 void CustomGMLogic::insertNewCouponGMLog(std::string charactername, int guid,int itemid, std::string couponcode, int quantity)
 {
-	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_EVENTLOG);
+	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_GM_ACTIONS_COUPON_DETAILS);
 	stmt->setString(0, charactername);
 	stmt->setInt32(1, guid);
 	stmt->setInt32(2, itemid);
@@ -77,8 +77,9 @@ int CustomGMLogic::getGMPlayerCount(int accountid)
 	return counter;
 }
 
-void CustomGMLogic::addCompleteGMCountLogic(int accountid, Player* player)
+void CustomGMLogic::addCompleteGMCountLogic(int accountid, Player* player, std::string logmessage)
 {
+	
 	CustomCharacterSystem * CharacterSystem = 0;
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_GM_ACTION_PLAYER_COUNT);
 	stmt->setInt32(0, accountid);
@@ -103,7 +104,8 @@ void CustomGMLogic::addCompleteGMCountLogic(int accountid, Player* player)
 
 
 	updateGMPlayerCount(newcounter, id);
-
+	std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+	addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), logmessage);
 	if (sConfigMgr->GetBoolDefault("GM.Security", 1)) {
 		int maxcount = 0;
 		maxcount = sConfigMgr->GetIntDefault("GM.Security.Number", 50);

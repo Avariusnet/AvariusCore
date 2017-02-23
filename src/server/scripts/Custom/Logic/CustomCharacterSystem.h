@@ -20,17 +20,9 @@ public:
 	int getAccountID(std::string charactername);
 	std::string getAccountName(int accountid);	
 	int getGuildLeader(int guildid);
-	PreparedQueryResult getCharacterByName(std::string charactername);
+	//PreparedQueryResult getCharacterByName(std::string charactername);
 	PreparedQueryResult getAccountbyID(int accountid);
 	
-
-	//Answer and Questions
-	PreparedQueryResult getAntwortbyPlayerAntwort(std::string answer);
-	bool hasPlayerAlreadyAnswertheQuestion(int accountid, int questionnumber);
-	void addNewPlayerAnsweredQuestion(int accountid, int questionnumber);
-
-
-
 	
 	bool setProfessionSkill(Player* player, uint32 profession, int professioncost);
 
