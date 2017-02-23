@@ -70,10 +70,11 @@ public:
 
 		case 0:
 		{
-			std::string codes = code;
-
+			std::string charactername = code;
+			CustomCharacterSystem * CharacterSystem = 0;
+			CustomPlayerLog * PlayerLog = 0;
 			PreparedStatement* charselbyname = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHARACTER_BYNAME);
-			charselbyname->setString(0, codes);
+			charselbyname->setString(0, charactername);
 			PreparedQueryResult result = CharacterDatabase.Query(charselbyname);
 
 			if (!result){
@@ -105,7 +106,12 @@ public:
 				std::string accname = ergfeld[0].GetCString();
 				uint32 spielzeith = totaltime / 60 / 60;
 				uint32 spielzeit = totaltime / 60 / 60 / 24;
+				std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
 
+				std::ostringstream tt;
+				tt << "Search for Character " << charactername;
+				std::string reason = tt.str().c_str();
+				PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), reason);
 				std::ostringstream pp;
 				pp << "Folgende Daten wurden gefunden \nGuid: " << guid << "\nAccountname: " << accname << "\nSpielzeit in Stunden: " << spielzeith << "\nSpielzeit in Tagen: " << spielzeit;
 					ChatHandler(player->GetSession()).PSendSysMessage(pp.str().c_str(),
@@ -119,12 +125,13 @@ public:
 
 		case 2:
 		{
-			
+			CustomPlayerLog * PlayerLog = 0;
+			CustomCharacterSystem * CharacterSystem = 0;
 			CustomGMLogic * GMLogic = 0;
 			//CustomCharacterSystem * CharacterSystem = 0;
-			std::string codes = code;
+			std::string accountname = code;
 			PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_ACCOUNT_ID_BY_NAME);
-			stmt->setString(0, codes);
+			stmt->setString(0, accountname);
 			PreparedQueryResult result = LoginDatabase.Query(stmt);
 
 			if (!result){
@@ -197,7 +204,11 @@ public:
 				player->GetSession()->SendNotification("Der Accounttausch wurde vollzogen");
 				ChatHandler(player->GetSession()).PSendSysMessage("Der Accounttausch wurde vollzogen.",
 					player->GetName());
-
+				std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+				std::ostringstream tt;
+				tt << "Transfer character to Account " << accountname;
+				std::string reason = tt.str().c_str();
+				PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), reason);
 				return true;
 			}
 
@@ -212,6 +223,8 @@ public:
 			return true;
 		}break;
 
+
+		//Request new Firstchar!
 		case 3: 
 		{
 			CustomPlayerLog * PlayerLog = 0;
@@ -232,6 +245,8 @@ public:
 			bool hasPlayeralreadyAFirstCharacter = CharacterSystem->hasPlayerAlreadyAFirstChar(player->GetSession()->GetAccountId(), "FirstCharacter");
 			if (!hasPlayeralreadyAFirstCharacter) {
 				creature->Say("There is no First Character on your Account! So do not try this again please!", LANG_UNIVERSAL, nullptr);
+				std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+				PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), "Request declined!");
 				return true;
 			}
 
@@ -239,9 +254,13 @@ public:
 			hasPlayerMoreThanTwoFirstCharacters = CharacterSystem->countIfPlayerHasLessTotalOf2FirstCharacters(player->GetSession()->GetAccountId());
 			if (hasPlayerMoreThanTwoFirstCharacters) {
 				creature->Say("You have already a choice!", LANG_UNIVERSAL, nullptr);
+
 				return true;
 			}
 
+			std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+
+			PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), "Request new FirstChar!");
 			std::string generatedCharacterName = CharacterSystem->generateNewCharacterName();
 			std::string prefix = "first_";
 			std::string newCharacterName = prefix + generatedCharacterName;
