@@ -160,7 +160,7 @@ PreparedQueryResult CustomQuestionAnswerSystem::getQuestionByAnswer(std::string 
 	PreparedQueryResult result = CharacterDatabase.Query(stmt);
 
 	if (!result) {
-		return false;
+		return PreparedQueryResult();
 	}
 
 	return result;

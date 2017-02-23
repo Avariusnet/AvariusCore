@@ -239,7 +239,7 @@ public:
 
 			Field* fields = result->Fetch();
 			int32 id = fields[0].GetInt32();
-			int32 accountid = fields[1].GetInt32();
+			//int32 accountid = fields[1].GetInt32();
 			int32 counter = fields[2].GetInt32();
 
 			int newcounter = 0;

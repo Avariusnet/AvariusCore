@@ -247,7 +247,7 @@ int CustomCouponSystem::getFortuneItem()
 		return reward;
 	}
 
-	
+	return 100;
 
 }
 

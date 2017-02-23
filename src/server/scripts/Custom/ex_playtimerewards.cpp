@@ -45,9 +45,6 @@ class PlayTimeRewards : public PlayerScript
 public:
 	PlayTimeRewards() : PlayerScript("PlayTimeRewards") { }
 
-	void Belohnung(Player* player, int amount, int guid, int money) {
-		return;
-	}
 
 	void OnLogin(Player* player, bool /*firstLogin*/) {
 
@@ -63,14 +60,14 @@ public:
 			//20h
 			if (time >= 72000 && time <= 107999) {
 
-				Belohnung(player->GetSession()->GetPlayer(), 20, player->GetGUID(), 250);
+				
 
 			}
 
 			//30h
 			if (time >= 108000 && time <= 143999) {
 
-				Belohnung(player->GetSession()->GetPlayer(), 30, player->GetGUID(), 250);
+			
 
 			}
 
@@ -79,7 +76,7 @@ public:
 			//40h
 			if (time >= 144000 && time <= 179999) {
 
-				Belohnung(player->GetSession()->GetPlayer(), 40, player->GetGUID(), 250);
+				
 
 			}
 
@@ -87,16 +84,14 @@ public:
 			//50h
 			if (time >= 180000 && time <= 215999) {
 
-				Belohnung(player->GetSession()->GetPlayer(), 50, player->GetGUID(), 500);
-
+			
 
 			}
 
 			//60h
 			if (time >= 216000 && time <= 251999) {
 
-				Belohnung(player->GetSession()->GetPlayer(), 60, player->GetGUID(), 500);
-
+				
 
 			}
 
@@ -104,8 +99,7 @@ public:
 			//70h
 			if (time >= 252000 && time <= 279999) {
 
-				Belohnung(player->GetSession()->GetPlayer(), 70, player->GetGUID(), 500);
-
+				
 
 			}
 
@@ -113,14 +107,11 @@ public:
 			//80h
 			if (time >= 288000 && time <= 323999) {
 
-				Belohnung(player->GetSession()->GetPlayer(), 80, player->GetGUID(), 500);
-
+				
 			}
 
 			//90h
 			if (time >= 324000 && time <= 359999) {
-
-				Belohnung(player->GetSession()->GetPlayer(), 90, player->GetGUID(), 500);
 
 
 			}
@@ -156,16 +147,14 @@ public:
 			//110h
 			if (time >= 396000 && time <= 431999) {
 
-				Belohnung(player->GetSession()->GetPlayer(), 110, player->GetGUID(), 500);
-
+				
 
 			}
 
 			//120h
 			if (time >= 432000 && time <= 467999) {
 
-				Belohnung(player->GetSession()->GetPlayer(), 120, player->GetGUID(), 500);
-
+				
 
 			}
 
@@ -173,8 +162,7 @@ public:
 			//130h
 			if (time >= 468000 && time <= 503999) {
 
-				Belohnung(player->GetSession()->GetPlayer(), 130, player->GetGUID(), 500);
-
+				
 
 			}
 
@@ -182,46 +170,41 @@ public:
 			//140h
 			if (time >= 504000 && time <= 539999) {
 
-				Belohnung(player->GetSession()->GetPlayer(), 140, player->GetGUID(), 500);
-
+				
 			}
 
 
 			//150h
 			if (time >= 540000 && time <= 575999) {
 
-				Belohnung(player->GetSession()->GetPlayer(), 150, player->GetGUID(), 1000);
+				
 			}
 
 
 			//160h
 			if (time >= 576000 && time <= 611999) {
 
-				Belohnung(player->GetSession()->GetPlayer(), 160, player->GetGUID(), 1000);
-
+				
 			}
 
 
 			//170h
 			if (time >= 612000 && time <= 647999) {
 
-				Belohnung(player->GetSession()->GetPlayer(), 170, player->GetGUID(), 1000);
-
+				
 			}
 
 			//180h
 			if (time >= 648000 && time <= 683999) {
 
-				Belohnung(player->GetSession()->GetPlayer(), 180, player->GetGUID(), 1000);
-
+				
 			}
 
 
 			//190h
 			if (time >= 684000 && time <= 719999) {
 
-				Belohnung(player->GetSession()->GetPlayer(), 190, player->GetGUID(), 1000);
-
+				
 			}
 
 

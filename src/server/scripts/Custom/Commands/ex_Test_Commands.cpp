@@ -171,7 +171,7 @@ public:
 
 
 	static bool HandleLogicReportTest(ChatHandler* handler, const char* args) {
-		Player* player = handler->GetSession()->GetPlayer();
+		//Player* player = handler->GetSession()->GetPlayer();
 		CustomCharacterSystem* CharacterSystem = 0;
 		CustomReportSystem * reportSystem = 0;
 		

@@ -71,7 +71,8 @@ public: vipvendor() : CreatureScript("vipvendor") { }
 			case 1:
 			{
 
-				if (code == "") {
+				std::string eingabe = code;
+				if (eingabe == "") {
 					creature->Say("Without amount. No Trading!", LANG_UNIVERSAL, nullptr);
 					return true;
 				}

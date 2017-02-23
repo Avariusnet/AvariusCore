@@ -19,7 +19,7 @@ public:
 		{
 			Field* fields = result1->Fetch();
 
-			uint32 guid = fields[0].GetUInt32();
+			//uint32 guid = fields[0].GetUInt32();
 			uint32 race = fields[1].GetUInt8();
 
 			if ((Player::TeamForRace(race) == Player::TeamForRace(pPlayer->getRace())) || !limitrace)

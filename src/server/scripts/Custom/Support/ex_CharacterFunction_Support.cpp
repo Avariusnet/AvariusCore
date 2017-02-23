@@ -121,7 +121,7 @@ public:
 		{
 			
 			CustomGMLogic * GMLogic = 0;
-			CustomCharacterSystem * CharacterSystem = 0;
+			//CustomCharacterSystem * CharacterSystem = 0;
 			std::string codes = code;
 			PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_ACCOUNT_ID_BY_NAME);
 			stmt->setString(0, codes);
