@@ -228,7 +228,6 @@ public:
 		uint32 anzahl = fields[2].GetUInt32();
 		uint8 benutzt = fields[3].GetUInt8();
 		uint32 benutztbar = fields[4].GetUInt32();
-		TC_LOG_INFO("custom.coupon", "Debug: Couponcode %s was used by Player %s", couponCode, player->GetSession()->GetPlayerName());
 		CouponSystem->updateCouponCodeUsed(benutzt + 1, couponCode);
 		CouponSystem->insertNewPlayerUsedCode(player->GetSession()->GetPlayerName(), player->GetSession()->GetAccountId(), couponCode);
 		CharacterSystem->sendPlayerMailwithItem(belohnung, anzahl, "Congratulation", "Your Couponcode was valid. \nHere is your Reward! \nKind Regards your Serverteam.", player->GetSession()->GetPlayer());

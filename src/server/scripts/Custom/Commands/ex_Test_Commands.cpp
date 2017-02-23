@@ -172,8 +172,7 @@ public:
 
 	static bool HandleLogicReportTest(ChatHandler* handler, const char* args) {
 		//Player* player = handler->GetSession()->GetPlayer();
-		CustomCharacterSystem* CharacterSystem = 0;
-		CustomReportSystem * reportSystem = 0;
+		CustomReportSystem * ReportSystem = 0;
 		
 
 		std::string eingabe = std::string((char*)args);
@@ -190,18 +189,18 @@ public:
 
 		uint32 questid = (uint32)atoi(px);
 
-		bool isreported = reportSystem->checkIfQuestIsAlreadyReported(questid);
+		bool isreported = ReportSystem->checkIfQuestIsAlreadyReported(questid);
 		handler->PSendSysMessage("Der Befehl hat den return wert: %s", isreported);
 		return true;
 	}
 
-	static bool HandleLogicGMLogTest(ChatHandler* handler, const char* args) {
-		CustomGMLogic* gmlogic = 0;
-		CustomCharacterSystem* customcharactersystem =0;
+	static bool HandleLogicGMLogTest(ChatHandler* handler, const char* /*args*/) {
+		CustomGMLogic* GMLogic = 0;
+		CustomCharacterSystem* CharacterSystem =0;
 		Player* player = handler->GetSession()->GetPlayer();
-		int32 accountid = customcharactersystem->getAccountID(player->GetSession()->GetPlayerName());
-		std::string accountname = customcharactersystem->getAccountName(accountid);
-		gmlogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, accountid, "Testinsert");
+		int32 accountid = CharacterSystem->getAccountID(player->GetSession()->GetPlayerName());
+		std::string accountname = CharacterSystem->getAccountName(accountid);
+		GMLogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, accountid, "Testinsert");
 		handler->PSendSysMessage("Command executed");
 		return true;
 	}

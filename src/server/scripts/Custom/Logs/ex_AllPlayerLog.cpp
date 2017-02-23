@@ -77,7 +77,7 @@ public: GraveYardReleaseLog() : PlayerScript("GraveYardReleaseLog") {}
 			CustomCharacterSystem * CharacterSystem = 0;
 
 			std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-			PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), "Release soul on dead Soul!");
+			PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), "Release soul with Release Button!");
 			return;
 		}
 

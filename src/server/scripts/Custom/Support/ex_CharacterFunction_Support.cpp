@@ -219,7 +219,7 @@ public:
 			std::string codes = code;
 
 			if (codes != player->GetSession()->GetPlayerName()) {
-				creature->Say("Can´t you spell your Charactername right? Try again please.", LANG_UNIVERSAL, nullptr);
+				creature->Say("Try again please! You spelled something wrong!", LANG_UNIVERSAL, nullptr);
 				ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 					player->GetName());
 				ChatHandler(player->GetSession()).PSendSysMessage("Please try it again. You spelled your Charactername wrong!",
