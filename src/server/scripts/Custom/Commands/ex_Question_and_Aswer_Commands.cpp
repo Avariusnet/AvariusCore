@@ -85,7 +85,7 @@ public:
 	}
 
 
-	static bool HandleGetQuestionCommand(ChatHandler* handler, const char* args)
+	static bool HandleGetQuestionCommand(ChatHandler* handler, const char* /*args*/)
 	{
 		Player* player = handler->GetSession()->GetPlayer();
 		CustomQuestionAnswerSystem * QuestionAnswerSystem = 0;

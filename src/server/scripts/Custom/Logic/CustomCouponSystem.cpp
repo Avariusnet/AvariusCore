@@ -274,7 +274,6 @@ void CustomCouponSystem::playerRedeemCommand(Player * player, const char * args)
 {
 
 	CustomCouponSystem * CouponSystem = 0;
-	CustomGMLogic * GmLogic = 0;
 	CustomCharacterSystem * CharacterSystem = 0;
 	CustomPlayerLog* PlayerLog = 0;
 
@@ -370,6 +369,9 @@ void CustomCouponSystem::couponGeneration(Player * player, const char * args)
 	char* itemchar = strtok((char*)args, " ");
 	if (!itemchar) {
 		player->GetSession()->SendNotification("Without ItemID command will not work!");
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
+		ChatHandler(player->GetSession()).PSendSysMessage("Without ItemID command will not work!");
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
 		return;
 	}
 
@@ -378,12 +380,18 @@ void CustomCouponSystem::couponGeneration(Player * player, const char * args)
 
 	if (!itemexist) {
 		player->GetSession()->SendNotification("Item not in DB!");
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
+		ChatHandler(player->GetSession()).PSendSysMessage("Item does not exist in DB!");
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
 		return;
 	}
 
 	char* itemanzahl = strtok(NULL, " ");
 	if (!itemanzahl || !atoi(itemanzahl)) {
 		player->GetSession()->SendNotification("Without Quantity command will not work !");
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
+		ChatHandler(player->GetSession()).PSendSysMessage("Without Quantity command will not work !");
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
 		return;
 	}
 
@@ -391,6 +399,9 @@ void CustomCouponSystem::couponGeneration(Player * player, const char * args)
 	char* anzahlnutzer = strtok(NULL, " ");
 	if (!anzahlnutzer) {
 		player->GetSession()->SendNotification("Without usability the command will not work!");
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
+		ChatHandler(player->GetSession()).PSendSysMessage("Without usability the command will not work!");
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
 		return;
 	}
 

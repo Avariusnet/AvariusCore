@@ -15,6 +15,7 @@ public:
 	void updateCustomXPEntry(int xpvalue, int characterguid);
 	int getCustomXPValue(int characterguid);
 	
+	void setXPRate(Player * player, const char* args);
 	
 		
 };
