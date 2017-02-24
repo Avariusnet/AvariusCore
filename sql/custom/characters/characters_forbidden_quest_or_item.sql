@@ -5,4 +5,4 @@ CREATE TABLE IF NOT EXISTS `forbidden_quest_or_item` (
   PRIMARY KEY (`id`));
 
 DELETE FROM `forbidden_quest_or_item` WHERE ID BETWEEN 1 AND 100;
-INSERT INTO `forbidden_quest_or_item` (`id`, `questid`, `itemid`) VALUES ('2', '0', '100');
+INSERT INTO `forbidden_quest_or_item` (`id`, `questid`, `itemid`) VALUES ('1', '0', '38186');

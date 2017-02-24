@@ -59,6 +59,9 @@ public:
 
 	int checkPlayerAccountSecurity(int accountid);
 
+
+	void requestNewFirstCharacter(Player* player, const char* code);
+
 };
 
 

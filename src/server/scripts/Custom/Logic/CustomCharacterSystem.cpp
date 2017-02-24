@@ -318,6 +318,52 @@ int CustomCharacterSystem::checkPlayerAccountSecurity(int accountid)
 	return security;
 }
 
+void CustomCharacterSystem::requestNewFirstCharacter(Player * player, const char * code)
+{
+	CustomPlayerLog * PlayerLog = 0;
+	CustomCharacterSystem * CharacterSystem = 0;
+	std::string codes = code;
+
+	if (codes != player->GetSession()->GetPlayerName()) {
+
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("Please try it again. You spelled your Charactername wrong!",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		return;
+	}
+
+	bool hasPlayeralreadyAFirstCharacter = CharacterSystem->hasPlayerAlreadyAFirstChar(player->GetSession()->GetAccountId(), "FirstCharacter");
+	if (!hasPlayeralreadyAFirstCharacter) {
+		//creature->Say("There is no First Character on your Account! So do not try this again please!", LANG_UNIVERSAL, nullptr);
+		std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+		PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), "Request declined!");
+		return;
+	}
+
+	bool hasPlayerMoreThanTwoFirstCharacters = true;
+	hasPlayerMoreThanTwoFirstCharacters = CharacterSystem->countIfPlayerHasLessTotalOf2FirstCharacters(player->GetSession()->GetAccountId());
+	if (hasPlayerMoreThanTwoFirstCharacters) {
+		return;
+	}
+
+	std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+
+	PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), "Request new FirstChar!");
+	std::string generatedCharacterName = CharacterSystem->generateNewCharacterName();
+	std::string prefix = "first_";
+	std::string newCharacterName = prefix + generatedCharacterName;
+	CharacterSystem->deleteFirstCharacterPlayerLog(player->GetSession()->GetAccountId());
+	CharacterSystem->updateCharacterToZeroAccount(newCharacterName, player->GetGUID());
+	ChatHandler(player->GetSession()).PSendSysMessage("Debug: Name: %s", newCharacterName,
+		player->GetName());
+	player->GetSession()->LogoutPlayer(false);
+	return;
+
+}
+
 void CustomCharacterSystem::givePlayerLevelWithCurrency(Player * player, uint16 cost, uint16 maxlevel, uint32 levelup)
 {
 	if (player->getLevel() <= maxlevel)

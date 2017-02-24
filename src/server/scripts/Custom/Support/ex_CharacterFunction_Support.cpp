@@ -227,49 +227,10 @@ public:
 		//Request new Firstchar!
 		case 3: 
 		{
-			CustomPlayerLog * PlayerLog = 0;
+
 			CustomCharacterSystem * CharacterSystem = 0;
-			std::string codes = code;
-
-			if (codes != player->GetSession()->GetPlayerName()) {
-				creature->Say("Try again please! You spelled something wrong!", LANG_UNIVERSAL, nullptr);
-				ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
-					player->GetName());
-				ChatHandler(player->GetSession()).PSendSysMessage("Please try it again. You spelled your Charactername wrong!",
-					player->GetName());
-				ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
-					player->GetName());
-				return true;
-			}
-
-			bool hasPlayeralreadyAFirstCharacter = CharacterSystem->hasPlayerAlreadyAFirstChar(player->GetSession()->GetAccountId(), "FirstCharacter");
-			if (!hasPlayeralreadyAFirstCharacter) {
-				creature->Say("There is no First Character on your Account! So do not try this again please!", LANG_UNIVERSAL, nullptr);
-				std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-				PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), "Request declined!");
-				return true;
-			}
-
-			bool hasPlayerMoreThanTwoFirstCharacters = true;
-			hasPlayerMoreThanTwoFirstCharacters = CharacterSystem->countIfPlayerHasLessTotalOf2FirstCharacters(player->GetSession()->GetAccountId());
-			if (hasPlayerMoreThanTwoFirstCharacters) {
-				creature->Say("You have already a choice!", LANG_UNIVERSAL, nullptr);
-
-				return true;
-			}
-
-			std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-
-			PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), "Request new FirstChar!");
-			std::string generatedCharacterName = CharacterSystem->generateNewCharacterName();
-			std::string prefix = "first_";
-			std::string newCharacterName = prefix + generatedCharacterName;
-			CharacterSystem->deleteFirstCharacterPlayerLog(player->GetSession()->GetAccountId());
-			CharacterSystem->updateCharacterToZeroAccount(newCharacterName,player->GetGUID());
-			ChatHandler(player->GetSession()).PSendSysMessage("Debug: Name: %s",newCharacterName,
-				player->GetName());
-			player->GetSession()->LogoutPlayer(false);
-		
+			CharacterSystem->requestNewFirstCharacter(player->GetSession()->GetPlayer(), code);
+			return true;
 
 		}break;
 
