@@ -1,5 +1,8 @@
 #include <Custom/Logic/CustomCouponSystem.h>
-
+#include <Custom/Logic/CustomGMLogic.h>
+#include <Custom/Logic/CustomCharacterSystem.h>
+#include <Custom/Logic/CustomPlayerLog.h>
+#include <Custom/Logic/CustomWorldSystem.h>
 
 #include "ScriptPCH.h"
 #include "CustomCouponSystem.h"
@@ -265,6 +268,169 @@ int CustomCouponSystem::getCouponRewardbyID(int modulo)
 	int itemid = ergebnis[0].GetInt32();
 
 	return itemid;
+}
+
+void CustomCouponSystem::playerRedeemCommand(Player * player, const char * args)
+{
+
+	CustomCouponSystem * CouponSystem = 0;
+	CustomGMLogic * GmLogic = 0;
+	CustomCharacterSystem * CharacterSystem = 0;
+	CustomPlayerLog* PlayerLog = 0;
+
+	//Player *player = handler->GetSession()->GetPlayer();
+
+	std::string couponCode = std::string((char*)args);
+
+	if (couponCode == "")
+	{
+		player->GetSession()->SendNotification("Without Code we cannot send you a Reward!");
+		return;
+	}
+
+	if (couponCode == "GOLD") {
+		return;
+	}
+
+
+	//Check if Code does exist and is still valid!
+	bool couponCodeStillValid = false;
+	couponCodeStillValid = CouponSystem->isItemCodeStillValid(couponCode);
+
+
+	if (!couponCodeStillValid) {
+		if (player->GetSession()->GetSecurity() >= 2) {
+			ChatHandler(player->GetSession()).PSendSysMessage("Debug: Couponstillvalidvalue: %s", couponCodeStillValid);
+		}
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
+		ChatHandler(player->GetSession()).PSendSysMessage("Couponcode is invalid or has reached maximum uses!");
+		ChatHandler(player->GetSession()).PSendSysMessage("Couponcode: %s", couponCode);
+		ChatHandler(player->GetSession()).PSendSysMessage("Please check your Couponcode %s", player->GetSession()->GetPlayerName());
+		ChatHandler(player->GetSession()).PSendSysMessage("If you type the correct Couponcode the Couponcodecharges are empty! Sorry for that!");
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
+		return;
+	}
+
+
+	//Check if Player used Code already
+	//"SELECT accid, code from item_codes_account where code = ? and accid = ?"
+	bool hasPlayeralreadyUsedCode = false;
+	hasPlayeralreadyUsedCode = CouponSystem->hasPlayeralreadyUsedCode(couponCode, player->GetSession()->GetAccountId());
+	if (player->GetSession()->GetSecurity() >= 2) {
+		ChatHandler(player->GetSession()).PSendSysMessage("Debug: HasPLayerUsedcode %s", hasPlayeralreadyUsedCode);
+		ChatHandler(player->GetSession()).PSendSysMessage("Debug: Couponcode %s", couponCode);
+		ChatHandler(player->GetSession()).PSendSysMessage("Debug: AccountID %u", player->GetSession()->GetAccountId());
+	}
+
+	if (hasPlayeralreadyUsedCode) {
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
+		ChatHandler(player->GetSession()).PSendSysMessage("You have already used this Coupon: %s", couponCode);
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
+		return;
+	}
+
+
+	PreparedQueryResult result = CouponSystem->getRequestedCodeData(couponCode);
+
+	Field* fields = result->Fetch();
+	uint32 belohnung = fields[1].GetUInt32();
+	uint32 anzahl = fields[2].GetUInt32();
+	uint8 benutzt = fields[3].GetUInt8();
+	CouponSystem->updateCouponCodeUsed(benutzt + 1, couponCode);
+	CouponSystem->insertNewPlayerUsedCode(player->GetSession()->GetPlayerName(), player->GetSession()->GetAccountId(), couponCode);
+	CharacterSystem->sendPlayerMailwithItem(belohnung, anzahl, "Congratulation", "Your Couponcode was valid. \nHere is your Reward! \nKind Regards your Serverteam.", player->GetSession()->GetPlayer());
+	ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
+	ChatHandler(player->GetSession()).PSendSysMessage("Congratulation %s!", player->GetSession()->GetPlayerName());
+	ChatHandler(player->GetSession()).PSendSysMessage("Your Couponcode %s was valid!", couponCode);
+	ChatHandler(player->GetSession()).PSendSysMessage("Please check your Mails %s!", player->GetSession()->GetPlayerName());
+	ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
+
+	//ChatHandler(player->GetSession()).PSendSysMessage("This is your %u Incident. Beware!", newcounter,player->GetName());
+
+	std::string accountname = "";
+	accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+	std::ostringstream tt;
+	tt << "Coupon redeem with code : " << couponCode;
+	std::string reason = tt.str().c_str();
+	PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), reason);
+
+	return;
+
+}
+
+void CustomCouponSystem::couponGeneration(Player * player, const char * args)
+{
+
+	CustomWorldSystem * WorldSystem = 0;
+	CustomCouponSystem * CouponSystem = 0;
+	CustomReportSystem * ReportSystem = 0;
+	CustomGMLogic * GMLogic = 0;
+	CustomCharacterSystem * CharacterSystem = 0;
+
+	char* itemchar = strtok((char*)args, " ");
+	if (!itemchar) {
+		player->GetSession()->SendNotification("Without ItemID command will not work!");
+		return;
+	}
+
+	uint32 itemid = atoi((char*)itemchar);
+	bool itemexist = WorldSystem->doesItemExistinDB(itemid);
+
+	if (!itemexist) {
+		player->GetSession()->SendNotification("Item not in DB!");
+		return;
+	}
+
+	char* itemanzahl = strtok(NULL, " ");
+	if (!itemanzahl || !atoi(itemanzahl)) {
+		player->GetSession()->SendNotification("Without Quantity command will not work !");
+		return;
+	}
+
+
+	char* anzahlnutzer = strtok(NULL, " ");
+	if (!anzahlnutzer) {
+		player->GetSession()->SendNotification("Without usability the command will not work!");
+		return;
+	}
+
+
+	uint32 quantity = atoi((char*)itemanzahl);
+	uint32 codeuseable = atoi((char*)anzahlnutzer);
+
+
+	bool checkifitemisforbidden = ReportSystem->checkIfItemisForbidden(itemid);
+
+	if (checkifitemisforbidden) {
+
+		std::string accountname = "";
+		accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+		GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer(), "Tries to create a forbidden Coupon!");
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
+		ChatHandler(player->GetSession()).PSendSysMessage("Warning: GM should be a supporter not a cheater!");
+		ChatHandler(player->GetSession()).PSendSysMessage("This incident has been logged in DB.");
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
+		return;
+	}
+
+
+	std::string couponcode = "";
+	couponcode = CouponSystem->createNewCouponCode();
+	std::string itemname = "";
+	std::string accountname = "";
+	accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+	itemname = WorldSystem->getItemNamebyItemId(itemid);
+	GMLogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "GM created CouponCode. More Details in gm_actions_coupon_details!");
+	GMLogic->insertNewCouponGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), itemid, couponcode, quantity);
+	CouponSystem->insertNewCouponCodeinDB(couponcode, itemid, quantity, 0, codeuseable);
+	ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
+	ChatHandler(player->GetSession()).PSendSysMessage("The generated couponcode is: %s", couponcode);
+	ChatHandler(player->GetSession()).PSendSysMessage("The ItemID is: %u", itemid);
+	ChatHandler(player->GetSession()).PSendSysMessage("The Item Name is: %s", itemname);
+	ChatHandler(player->GetSession()).PSendSysMessage("Coupon Useable: %u", codeuseable);
+	ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
+
+	return;
 }
 
 

@@ -102,7 +102,7 @@ void CustomGMLogic::addCompleteGMCountLogic(int accountid, Player* player, std::
 	int newcounter = 0;
 	newcounter = counter + 1;
 
-
+	ChatHandler(player->GetSession()).PSendSysMessage("This is your %u Incident. Beware %s!", newcounter,player->GetSession()->GetPlayerName());
 	updateGMPlayerCount(newcounter, id);
 	std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
 	addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), logmessage);

@@ -54,10 +54,19 @@ public:
 	std::vector<ChatCommand> GetCommands()  const override
 	{
 
+		static std::vector<ChatCommand> questiontable =
+		{
+			{ "set", SEC_ADMINISTRATOR, false, &HandleSetQuestionCommand, "" },
+			{ "get", SEC_PLAYER, false, &HandleGetQuestionCommand, "" }
+
+		};
+
+
+
 		static std::vector<ChatCommand> commandTable =
 		{
 		
-			{ "question", SEC_ADMINISTRATOR, false, &HandleFragenCommand, "" },
+			{ "question", SEC_ADMINISTRATOR, false, NULL, "",questiontable },
 
 		};
 
@@ -66,12 +75,22 @@ public:
 
 
 	//Create new Questions in DB!
-	static bool HandleFragenCommand(ChatHandler* handler, const char* args)
+	static bool HandleSetQuestionCommand(ChatHandler* handler, const char* args)
 	{
 		Player* player = handler->GetSession()->GetPlayer();
 		CustomQuestionAnswerSystem * QuestionAnswerSystem = 0;
 
 		QuestionAnswerSystem->insertNewQuestion(player->GetSession()->GetPlayer(), args);
+		return true;
+	}
+
+
+	static bool HandleGetQuestionCommand(ChatHandler* handler, const char* args)
+	{
+		Player* player = handler->GetSession()->GetPlayer();
+		CustomQuestionAnswerSystem * QuestionAnswerSystem = 0;
+
+		QuestionAnswerSystem->getQuestionForPlayer(player->GetSession()->GetPlayer());
 		return true;
 	}
 

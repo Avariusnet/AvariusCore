@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `characters_currencylog` (
+CREATE TABLE IF NOT EXISTS `player_vip_currencylog` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `charactername` VARCHAR(45) NULL,
   `characterguid` INT NULL,

@@ -55,7 +55,13 @@ UPDATE `command` SET `permission`='195' WHERE `name`='gm ingame';
 
 /* ex-commands */
 DELETE FROM command WHERE `name` = 'question';
-INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('question', 193, 'Syntax: .question [Frage] [Antwort] [Itemid] [Anzahl]');
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('question', 193, '');
+
+DELETE FROM command WHERE `name` = 'question set';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('question set', 193, 'Syntax: .question [Question] [Answer] [Itemid] [Quantity]');
+
+DELETE FROM command WHERE `name` = 'question get';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('question get', 195, '');
 
 
 /* ITEM CODE BEFEHL */

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `couponrewards` (
+CREATE TABLE IF NOT EXISTS `player_auto_couponrewards` (
   `ID` INT NOT NULL AUTO_INCREMENT,
   `ItemID` INT NULL,
   PRIMARY KEY (`ID`));

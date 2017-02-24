@@ -37,7 +37,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 
 	//Coupon System
 	PrepareStatement(CHAR_INS_GM_ACTIONS_COUPON_DETAILS, "INSERT INTO gm_actions_coupon_details (player,guid, itemid,gutscheincode,anzahl) VALUES (?,?,?,?,?)", CONNECTION_ASYNC);
-	PrepareStatement(CHAR_SEL_COUPON_REWARD, "SELECT ItemID from couponrewards where ID = ?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_SEL_COUPON_REWARD, "SELECT ItemID from player_auto_couponrewards where ID = ?", CONNECTION_SYNCH);
 
 	//Playtime Rewards
 	PrepareStatement(CHAR_INS_PLAYTIME_REWARDS, "INSERT INTO player_playtime_rewards (playtime,charactername,guid) VALUES (?,?,?)", CONNECTION_ASYNC);
@@ -45,11 +45,11 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	
 
 	//Item Codes
-	PrepareStatement(CHAR_SEL_ITEMCODE, "SELECT `code`, `belohnung`, `anzahl`, `benutzt`, `benutztbar` FROM `item_codes` WHERE `code` = ?", CONNECTION_SYNCH);
-	PrepareStatement(CHAR_INS_ITEMCODE, "INSERT INTO `item_codes` (code,belohnung,anzahl,benutzt,benutztbar) VALUES (?,?,?,?,?)", CONNECTION_ASYNC);
-	PrepareStatement(CHAR_INS_ITEMCODEACCOUNT, "INSERT INTO item_codes_account (name,accid,code) Values(?,?,?)", CONNECTION_ASYNC);
-	PrepareStatement(CHAR_SEL_ITEMCODEACCOUNT, "SELECT accid, code from item_codes_account where code = ? and accid = ?", CONNECTION_SYNCH);
-	PrepareStatement(CHAR_UPD_ITEMCODEUSED, "UPDATE item_codes SET benutzt = ? WHERE code = ?", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_SEL_ITEMCODE, "SELECT `code`, `belohnung`, `anzahl`, `benutzt`, `benutztbar` FROM `player_coupon_codes` WHERE `code` = ?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_INS_ITEMCODE, "INSERT INTO `player_coupon_codes` (code,belohnung,anzahl,benutzt,benutztbar) VALUES (?,?,?,?,?)", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_INS_ITEMCODEACCOUNT, "INSERT INTO player_coupon_codes_account (name,accid,code) Values(?,?,?)", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_SEL_ITEMCODEACCOUNT, "SELECT accid, code from player_coupon_codes_account where code = ? and accid = ?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_UPD_ITEMCODEUSED, "UPDATE player_coupon_codes SET benutzt = ? WHERE code = ?", CONNECTION_ASYNC);
 	
 
 	//CharacterHelper
@@ -58,7 +58,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 
 	//PLayerlog
 	PrepareStatement(CHAR_INS_PLAYERLOG, "INSERT INTO player_log (charactername,guid,accountname,accountid,action_done,actiondate) VALUES(?,?,?,?,?, NOW())", CONNECTION_ASYNC);
-	PrepareStatement(CHAR_INS_CURRENCYLOG, "INSERT INTO characters_currencylog (charactername,characterguid,accountname, accountid,currencyitemid,amount,buydate,buy_action) VALUES (?,?,?,?,?,?,NOW(),?)", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_INS_CURRENCYLOG, "INSERT INTO player_vip_currencylog (charactername,characterguid,accountname, accountid,currencyitemid,amount,buydate,buy_action) VALUES (?,?,?,?,?,?,NOW(),?)", CONNECTION_ASYNC);
 
 	//REPORT QUEST SYSTEM
 	PrepareStatement(CHAR_INS_REPORT_QUEST, "Insert into `reported_quest` (questname, questid, anzahl, aktiv) VALUES (?,?,?,?)", CONNECTION_ASYNC);
@@ -72,11 +72,11 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 
 
 	//CUSTOM XP
-	PrepareStatement(CHAR_INS_CUSTOM_XP, "INSERT INTO custom_xp (charactername, characterguid,xp_value) VALUES (?,?,?)", CONNECTION_ASYNC);
-	PrepareStatement(CHAR_SEL_CUSTOM_XP, "SELECT charactername from custom_xp where characterguid = ?", CONNECTION_SYNCH);
-	PrepareStatement(CHAR_SEL_CUSTOM_XP_VALUE, "SELECT xp_value from custom_xp where characterguid = ?", CONNECTION_SYNCH);
-	PrepareStatement(CHAR_UPD_CUSTOM_XP, "Update custom_xp  set xp_value = ? where characterguid = ?", CONNECTION_ASYNC);
-	PrepareStatement(CHAR_SEL_GUILD_LEADER, "SELECT leaderguid from `guild` where `guildid` = ?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_INS_CUSTOM_XP, "INSERT INTO player_custom_xp (charactername, characterguid,xp_value) VALUES (?,?,?)", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_SEL_CUSTOM_XP, "SELECT charactername from player_custom_xp where characterguid = ?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_SEL_CUSTOM_XP_VALUE, "SELECT xp_value from player_custom_xp where characterguid = ?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_UPD_CUSTOM_XP, "Update player_custom_xp  set xp_value = ? where characterguid = ?", CONNECTION_ASYNC);
+	
 
 
 
@@ -89,6 +89,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(CHAR_UPD_FIRSTCHARACTER_TO_ZEROACCOUNT, "UPDATE characters set account = 0 , name = ? where guid = ?", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_CHECK_IF_PLAYER_HAS_ALREADY_CHARACTERS, "Select count(account) from characters where account = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_DEL_FIRST_CHAR_PLAYERLOG, "Delete from player_log where accountid = ? and action_done = ?", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_SEL_GUILD_LEADER, "SELECT leaderguid from `guild` where `guildid` = ?", CONNECTION_SYNCH);
 
 	//FORBIDDEN QUEST OR ID
 	PrepareStatement(CHAR_SEL_QUEST_FROM_FORBIDDEN_TABLE, "Select questid from forbidden_quest_or_item  where questid = ?", CONNECTION_SYNCH);

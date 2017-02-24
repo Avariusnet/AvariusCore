@@ -14,7 +14,8 @@ public:
 	 int getFortuneItem();
 	 int getCouponRewardbyID(int modulo);
 
-	
+	 void playerRedeemCommand(Player * player, const char* args);
+	 void couponGeneration(Player * player, const char* args);
 	
 };
 

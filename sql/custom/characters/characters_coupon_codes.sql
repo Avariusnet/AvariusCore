@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `item_codes` (
+CREATE TABLE IF NOT EXISTS `player_coupon_codes` (
   `ID` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `code` VARCHAR(45) NOT NULL COMMENT '',
   `belohnung` INT NULL COMMENT '',
@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `item_codes` (
   PRIMARY KEY (`ID`)  COMMENT '');
 
 
-CREATE TABLE IF NOT EXISTS `item_codes_account` (
+CREATE TABLE IF NOT EXISTS `player_coupon_codes_account` (
    `ID` INT NOT NULL AUTO_INCREMENT COMMENT '',
   `name` VARCHAR(45) NULL COMMENT '',
   `accid` INT NULL DEFAULT 0 COMMENT '',

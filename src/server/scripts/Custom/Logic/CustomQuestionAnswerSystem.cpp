@@ -329,35 +329,11 @@ void CustomQuestionAnswerSystem::insertNewQuestion(Player * player, const char* 
 	if (checkifItemIsForbidden) {
 		std::string accountname = "";
 		accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-		GMLogic->addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), " Try to generate a forbidden Coupon code");
-
-
-		PreparedQueryResult result = GMLogic->selectGMPlayerCount(player->GetSession()->GetAccountId());
-		if (result == NULL) {
-			GMLogic->addGMPlayerCount(player->GetSession()->GetAccountId());
-			ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
-			ChatHandler(player->GetSession()).PSendSysMessage("Warning: GM should be a supporter not a cheater!");
-			ChatHandler(player->GetSession()).PSendSysMessage("This incident has been logged in DB.");
-			ChatHandler(player->GetSession()).PSendSysMessage("This is your 1 Incident. Beware!");
-			ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
-			return;
-		}
-
-		Field* fields = result->Fetch();
-		int32 id = fields[0].GetInt32();
-		//int32 accountid = fields[1].GetInt32();
-		int32 counter = fields[2].GetInt32();
-
-		int newcounter = 0;
-		newcounter = counter + 1;
-
-
-		GMLogic->updateGMPlayerCount(newcounter, id);
+		GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer(), "Try to generate a forbidden Item Reward in a question!");
 		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
 		ChatHandler(player->GetSession()).PSendSysMessage("Warning: GM should be a supporter not a cheater!");
 		ChatHandler(player->GetSession()).PSendSysMessage("This incident has been logged in DB.");
-		ChatHandler(player->GetSession()).PSendSysMessage("This is your %u Incident. Beware!", newcounter);
-		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################"); 
 		return;
 	}
 
