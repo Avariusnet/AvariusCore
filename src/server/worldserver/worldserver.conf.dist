@@ -3815,3 +3815,293 @@ Metric.OverallStatusInterval = 1
 
 #
 ###################################################################################################
+
+
+###################################################################################################
+# CONTENT PATCH
+#
+#		Activate Content Patch and all needed Scripts in Core + set all Spawns 
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)
+#
+
+Content.Patch = 1
+
+#
+#		
+#		Activate the special Event of the Content Patch
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)
+#
+#
+
+Wander.Volk = 1
+
+#
+#
+#
+#
+#
+###################################################################################################
+
+###################################################################################################
+#XP WEEKEND
+#		Active XP WEEKEND
+#
+#
+
+XP.Weekend.Active = 0
+
+#
+#
+#		XP Rate for Xp Weekend 
+#		Default:	1 - Lower
+#					2 - Default
+#					3 - Higher	
+	
+XP.Weekend.Rate = 2
+
+#
+#
+#
+#
+#
+###################################################################################################
+
+
+###################################################################################################
+#CUSTOM XP FOR PLAYER
+#		
+#
+#		Activate custom XP for every Player. Use with command .xprate [Your Rate]. Maximum is 5. Minimun is 1.
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)
+#
+#
+
+Custom.XP = 1
+
+Custom.XP.MinRate = 1
+
+Custom.XP.MaxRate = 5
+
+#
+###################################################################################################
+
+###################################################################################################
+#CUSTOM GM SECURITY ACTIONS
+#
+#		Activate custom GM Security Options.
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)
+#
+
+GM.Security = 1
+
+#		Activate automatic Ban
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)
+
+GM.Ban = 1
+
+#		Define count for automatic Ban
+#		Default:    50 
+#
+#
+
+GM.Security.Number = 50
+
+#
+###################################################################################################
+
+
+
+
+###################################################################################################
+# CUSTOM SCRIPTS
+#
+#		Activate Custom Scripts. You can decide which one you´ll like activate or not.
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)		
+#
+# 
+
+
+
+Race.Change = 1
+
+GMIsland.Protection = 1
+
+GuildHouse.Vendor = 1
+
+Event.NPC = 1
+
+Support.NPC = 1
+
+Characterhelper.NPC = 1
+
+Teleport.NPC = 1
+
+Custom.Commands = 1
+
+
+
+Congrats.Level = 1
+
+Welcome.Message = 1
+
+Welcome.Quest = 1
+
+#
+#
+#
+###################################################################################################
+
+
+###################################################################################################
+#Report System
+#
+#
+#		Activate or deactivate the Report System
+#		Options are: 
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)
+#
+#
+
+Quest.Report = 1
+
+#
+#		Set the amount of Reports that are needed to set a Reported Quest to autocomplete.
+#		Default: 5
+#
+
+Quest.Report.Amount = 5
+
+#
+#
+#
+#
+###################################################################################################
+
+
+###################################################################################################
+#EXALTOR NPC 
+#
+#		Activate or deactivate the Exaltor NPC
+#		All Options are: 
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)
+#
+
+Exaltor.Activate = 1
+
+#
+#
+#		Activate and Deactive First and Guild Character!
+#
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)
+#
+
+Exaltor.Character = 1
+
+#
+#		
+#
+#			Activate or Deactive Gossip Option to generate Coupons or not!
+#			Default:     0 - (Disabled)
+#                    	 1 - (Enabled)
+#
+
+Exaltor.Coupon.Generate = 1
+
+#
+#		
+#
+#
+#		Activate or Deactive Exaltor Features in general!
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)
+#
+
+Exaltor.Features = 1
+
+#
+#		Activate or Deactive Exaltor Professions! Players can buy Professions MaxSkill!
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)
+#
+
+Exaltor.Professions = 1
+
+#
+#
+#		Activate or Deactive Exaltor Level. Player can buy Levels for Credits.
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)
+#
+#
+
+Exaltor.Level = 1
+
+#
+#
+#
+#
+###################################################################################################
+
+
+###################################################################################################
+#VIP VENDOR
+#
+#			Activate or Deactive Exaltor Level. Player can buy Levels for Credits.
+#			Default:     0 - (Disabled)
+#                    	 1 - (Enabled)
+#
+
+Vip.Vendor = 1
+
+#
+#
+#
+#
+#
+#
+###################################################################################################
+
+
+###################################################################################################
+#PLAYTIME REWARD
+#
+#			Activate or Deactive Exaltor Level. Player can buy Levels for Credits.
+#			Default:     0 - (Disabled)
+#                    	 1 - (Enabled)
+#
+
+Playtime.Rewards = 1
+
+#
+#			Insert the ItemId´s for the Playtime Rewards for 100h and 200h of playing!
+#			Default:     100 - 38186
+#                    	 200 - 38186
+#
+#			Amount describes h
+#			Amount: 
+#
+#
+
+Playtime.100 = 38186
+Playtime.100.Amount = 1
+
+#
+#
+#
+#
+
+Playtime.200 = 38186
+Playtime.200.Amount = 1
+
+#
+#
+###################################################################################################

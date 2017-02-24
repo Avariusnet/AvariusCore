@@ -1,8 +1,8 @@
 #ifndef __REVISION_DATA_H__
 #define __REVISION_DATA_H__
- #define _HASH                      "@rev_hash@"
- #define _DATE                      "@rev_date@"
- #define _BRANCH                    "@rev_branch@"
+ #define _HASH                      "24.02.2017 20:15 AvariusCore 2.2"
+ #define _DATE                      "24.02.2017"
+ #define _BRANCH                    "AvariusCore 2.2"
  #define _CMAKE_COMMAND             R"(@CMAKE_COMMAND@)"
  #define _SOURCE_DIRECTORY          R"(@CMAKE_SOURCE_DIR@)"
  #define _BUILD_DIRECTORY           R"(@BUILDDIR@)"
@@ -11,7 +11,7 @@
  #define VER_COMPANYNAME_STR        "TrinityCore Developers"
  #define VER_LEGALCOPYRIGHT_STR     "(c)2008-2017 TrinityCore"
  #define VER_FILEVERSION            0,0,0
- #define VER_FILEVERSION_STR        "@rev_hash@ @rev_date@ (@rev_branch@ branch)"
+ #define VER_FILEVERSION_STR        "24.02.2017 20:15 AvariusCore 2.2 Branch Master"
  #define VER_PRODUCTVERSION         VER_FILEVERSION
  #define VER_PRODUCTVERSION_STR     VER_FILEVERSION_STR
 #endif // __REVISION_DATA_H__
