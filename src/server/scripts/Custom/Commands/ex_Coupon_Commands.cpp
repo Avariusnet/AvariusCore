@@ -194,7 +194,7 @@ public:
 			}
 			handler->PSendSysMessage("##########################################################");
 			handler->PSendSysMessage("Couponcode is invalid or has reached maximum uses!");
-			handler->PSendSysMessage("Couponcode: %u", couponCode);
+			handler->PSendSysMessage("Couponcode: %s", couponCode);
 			handler->PSendSysMessage("Please check your Couponcode %s", player->GetSession()->GetPlayerName());
 			handler->PSendSysMessage("If you type the correct Couponcode the Couponcodecharges are empty! Sorry for that!");
 			handler->PSendSysMessage("##########################################################");
@@ -208,13 +208,13 @@ public:
 		hasPlayeralreadyUsedCode = CouponSystem->hasPlayeralreadyUsedCode(couponCode,player->GetSession()->GetAccountId());
 		if (player->GetSession()->GetSecurity() >= 2) {
 			handler->PSendSysMessage("Debug: HasPLayerUsedcode %s", hasPlayeralreadyUsedCode);
-			handler->PSendSysMessage("Debug: Couponcode %u", couponCode);
+			handler->PSendSysMessage("Debug: Couponcode %s", couponCode);
 			handler->PSendSysMessage("Debug: AccountID %u", player->GetSession()->GetAccountId());
 		}
 
 		if (hasPlayeralreadyUsedCode) {
 			handler->PSendSysMessage("##########################################################");
-			handler->PSendSysMessage("You have already used this Coupon: %u", couponCode);
+			handler->PSendSysMessage("You have already used this Coupon: %s", couponCode);
 			handler->PSendSysMessage("##########################################################");
 			return true;
 		}
@@ -223,17 +223,17 @@ public:
 		PreparedQueryResult result = CouponSystem->getRequestedCodeData(couponCode);
 		
 		Field* fields = result->Fetch();
-		std::string code = fields[0].GetCString();
+		//std::string code = fields[0].GetCString();
 		uint32 belohnung = fields[1].GetUInt32();
 		uint32 anzahl = fields[2].GetUInt32();
 		uint8 benutzt = fields[3].GetUInt8();
-		uint32 benutztbar = fields[4].GetUInt32();
+		//uint32 benutztbar = fields[4].GetUInt32();
 		CouponSystem->updateCouponCodeUsed(benutzt + 1, couponCode);
 		CouponSystem->insertNewPlayerUsedCode(player->GetSession()->GetPlayerName(), player->GetSession()->GetAccountId(), couponCode);
 		CharacterSystem->sendPlayerMailwithItem(belohnung, anzahl, "Congratulation", "Your Couponcode was valid. \nHere is your Reward! \nKind Regards your Serverteam.", player->GetSession()->GetPlayer());
 		handler->PSendSysMessage("##########################################################");
-		handler->PSendSysMessage("Congratulation %s", player->GetSession()->GetPlayerName());
-		handler->PSendSysMessage("Your Couponcode %u was valid!", couponCode);
+		handler->PSendSysMessage("Congratulation %s!", player->GetSession()->GetPlayerName());
+		handler->PSendSysMessage("Your Couponcode %s was valid!", couponCode);
 		handler->PSendSysMessage("Please check your Mails %s!",player->GetSession()->GetPlayerName());
 		handler->PSendSysMessage("##########################################################");
 
