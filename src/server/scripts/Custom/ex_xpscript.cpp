@@ -31,9 +31,9 @@
 #include "ArenaScore.h"
 #include "ArenaTeamMgr.h"
 #include <vector>
-#include <Custom/Logic/CustomXP.h>
 #include <Custom/Logic/CustomGMLogic.h>
 #include <Custom/Logic/CustomCharacterSystem.h>
+#include <Custom/Logic/CustomXPSystem.h>
 
 
 
@@ -45,10 +45,10 @@ public:
 
 	void OnGiveXP(Player* player, uint32& amount, Unit* /*victim*/)
 	{
-		CustomXP * customxp = 0;
+		CustomXP * XPSystem = 0;
 
 		int xpvalue = 0;
-		xpvalue = customxp->getCustomXPValue(player->GetGUID());
+		xpvalue = XPSystem->getCustomXPValue(player->GetGUID());
 
 		//Custom XP is on, check if double xp is on.
 		if (sConfigMgr->GetBoolDefault("Custom.XP", 1)) {
@@ -66,7 +66,7 @@ public:
 					{
 
 						if (player->getLevel() < 80) {
-							int xpvalue = customxp->getCustomXPValue(player->GetGUID());
+							int xpvalue = XPSystem->getCustomXPValue(player->GetGUID());
 
 							amount = (amount *xpvalue)* xpweekendrate;
 							ChatHandler(player->GetSession()).PSendSysMessage("XP Weekend actice. You get: %u", amount,
@@ -84,7 +84,7 @@ public:
 						date.day_of_week() == boost::date_time::Wednesday || date.day_of_week() == boost::date_time::Thursday)
 					{
 						if (player->getLevel() < 80) {
-							int xpvalue = customxp->getCustomXPValue(player->GetGUID());
+							int xpvalue = XPSystem->getCustomXPValue(player->GetGUID());
 							amount = amount * xpvalue;
 							return;
 						}

@@ -31,7 +31,6 @@
 #include "ArenaScore.h"
 #include "ArenaTeamMgr.h"
 #include <vector>
-#include <Custom/Logic/CustomXP.h>
 #include <Custom/Logic/CustomGMLogic.h>
 #include <Custom/Logic/CustomCharacterSystem.h>
 
