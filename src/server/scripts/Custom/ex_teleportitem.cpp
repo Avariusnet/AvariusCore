@@ -54,7 +54,7 @@ class port_item : public ItemScript
 
 				case 0:
 				{
-					player->TeleportTo(0, -9773.22, 2125.16, 15.49, 3.47, 0.0f);
+					player->TeleportTo(0, -9773.22f, 2125.16f, 15.49f, 3.47f, 0.0f);
 				}break;
 
 				default:

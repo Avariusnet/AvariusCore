@@ -41,7 +41,7 @@ enum CharacterDatabaseStatements
 	CHAR_SEL_PLAYER_QUESTIONS_AND_ANSWERS,
 	CHAR_SEL_PLAYER_QUESTIONS_AND_ANSWERS_MAX_COUNT,
 	CHAR_SEL_PLAYER_QUESTIONS_AND_ANSWERS_BY_ANSWER,
-	
+
 
 
 	//PlayTime Rewards
@@ -59,7 +59,7 @@ enum CharacterDatabaseStatements
 	//Characterhelper
 	CHAR_SEL_CHARACTER_BYNAME,
 	CHAR_UPD_ACCOUNT_ID,
-	
+
 
 	//Report Logic
 	CHAR_INS_REPORT_QUEST,

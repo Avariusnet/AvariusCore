@@ -22,14 +22,15 @@ void CharacterDatabaseConnection::DoPrepareStatements()
     if (!m_reconnecting)
         m_stmts.resize(MAX_CHARACTERDATABASE_STATEMENTS);
 
+
 	/* EXI CUSTOM */
 
 	PrepareStatement(CHAR_SEL_UNIX_TIMESTAMP, "SELECT UNIX_TIMESTAMP(NOW())", CONNECTION_SYNCH);
 
 	//Question Answer System
 	PrepareStatement(CHAR_INS_PLAYER_ALREADY_ANSWERED_QUESTIONS, "INSERT INTO player_already_answered_questions (accountid, accountname, questionnr,actiontime) VALUES (?,?,?,NOW())", CONNECTION_ASYNC);
-	PrepareStatement(CHAR_SEL_PLAYER_ALREADY_ANSWERED_QUESTIONS, "SELECT accountid,accountname,questionnr,actiontime FROM player_already_answered_questions WHERE accountid = ? and questionnr = ?",CONNECTION_SYNCH);
-	PrepareStatement(CHAR_SEL_PLAYER_ALREADY_ANSWERED_QUESTIONS_ACCOUNTID_COUNT, "SELECT count(accountid) FROM wotlkcharacters.player_already_answered_questions where accountid = ?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_SEL_PLAYER_ALREADY_ANSWERED_QUESTIONS, "SELECT accountid,accountname,questionnr,actiontime FROM player_already_answered_questions WHERE accountid = ? and questionnr = ?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_SEL_PLAYER_ALREADY_ANSWERED_QUESTIONS_ACCOUNTID_COUNT, "SELECT count(accountid) FROM player_already_answered_questions where accountid = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_INS_PLAYER_QUESTIONS_AND_ANSWERS, "INSERT INTO player_questions_and_answers (frage,antwort,belohnung,anzahl,insertdate,creatorname,creatorid) VALUES (?,?,?,?,NOW(),?,?)", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_SEL_PLAYER_QUESTIONS_AND_ANSWERS, "SELECT id,frage,antwort,belohnung,anzahl,creatorname,creatorid FROM player_questions_and_answers WHERE id = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_SEL_PLAYER_QUESTIONS_AND_ANSWERS_MAX_COUNT, "SELECT max(id) FROM player_questions_and_answers", CONNECTION_SYNCH);
@@ -42,7 +43,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	//Playtime Rewards
 	PrepareStatement(CHAR_INS_PLAYTIME_REWARDS, "INSERT INTO player_playtime_rewards (playtime,charactername,guid) VALUES (?,?,?)", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_SEL_PLAYTIME_REWARDS, "SELECT id, playtime, charactername, guid FROM player_playtime_rewards WHERE playtime = ? AND guid =  ?", CONNECTION_SYNCH);
-	
+
 
 	//Item Codes
 	PrepareStatement(CHAR_SEL_ITEMCODE, "SELECT `code`, `belohnung`, `anzahl`, `benutzt`, `benutztbar` FROM `player_coupon_codes` WHERE `code` = ?", CONNECTION_SYNCH);
@@ -50,7 +51,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(CHAR_INS_ITEMCODEACCOUNT, "INSERT INTO player_coupon_codes_account (name,accid,code) Values(?,?,?)", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_SEL_ITEMCODEACCOUNT, "SELECT accid, code from player_coupon_codes_account where code = ? and accid = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_UPD_ITEMCODEUSED, "UPDATE player_coupon_codes SET benutzt = ? WHERE code = ?", CONNECTION_ASYNC);
-	
+
 
 	//CharacterHelper
 	PrepareStatement(CHAR_SEL_CHARACTER_BYNAME, "SELECT guid,account,name,level,totaltime FROM characters where name = ?", CONNECTION_SYNCH);
@@ -76,7 +77,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(CHAR_SEL_CUSTOM_XP, "SELECT charactername from player_custom_xp where characterguid = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_SEL_CUSTOM_XP_VALUE, "SELECT xp_value from player_custom_xp where characterguid = ?", CONNECTION_SYNCH);
 	PrepareStatement(CHAR_UPD_CUSTOM_XP, "Update player_custom_xp  set xp_value = ? where characterguid = ?", CONNECTION_ASYNC);
-	
+
 
 
 
