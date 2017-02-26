@@ -105,37 +105,7 @@ class npc_first_char : public CreatureScript
 						//First Character Single
 					case 1:
 					{
-						bool hasPlayerAlreadyFirstChar = true;
-
-						hasPlayerAlreadyFirstChar = CharacterSystem->hasPlayerAlreadyAFirstChar(player->GetSession()->GetAccountId(), "FirstCharacter");
-
-						if (hasPlayerAlreadyFirstChar) {
-							creature->Say("You already get a first Character!", LANG_UNIVERSAL, nullptr);
-							return true;
-						}
-
-						bool twotimescharacter = true;
-						twotimescharacter = CharacterSystem->countIfPlayerHasLessTotalOf2FirstCharacters(player->GetSession()->GetAccountId());
-						if (twotimescharacter) {
-							creature->Say("You already used this Function more than 2 times!", LANG_UNIVERSAL, nullptr);
-							return true;
-						}
-
-						bool playerHasAlreadyCharacter = true;
-						playerHasAlreadyCharacter = CharacterSystem->hasPlayerAlreadyCharacters(player->GetSession()->GetAccountId());
-						if (playerHasAlreadyCharacter) {
-							creature->Say("You already have more than one Character!", LANG_UNIVERSAL, nullptr);
-							return true;
-						}
-
-
-						std::string accountname = "";
-						accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-						std::string lastip = "";
-						lastip = CharacterSystem->getLastIPbyAccount(player->GetSession()->GetAccountId());
-						CharacterSystem->insertNewFirstCharacterforPlayerCount(player->GetGUID(), player->GetSession()->GetPlayerName(), player->GetSession()->GetAccountId(), accountname, 0, lastip);
-						CharacterSystem->executeFirstCharacter(player->GetSession()->GetPlayer(), "Create FirstCharacter without guild!");
-
+						CharacterSystem->playerSetSingleFirstCharacter(player->GetSession()->GetPlayer());
 						return true;
 
 					}break;
@@ -143,61 +113,7 @@ class npc_first_char : public CreatureScript
 					//First Character Guild 
 					case 2:
 					{
-						bool hasPlayerAlreadyFirstChar = true;
-
-						hasPlayerAlreadyFirstChar = CharacterSystem->hasPlayerAlreadyAFirstChar(player->GetSession()->GetAccountId(), "FirstCharacter");
-
-						if (hasPlayerAlreadyFirstChar) {
-							creature->Say("You already get a first Character!", LANG_UNIVERSAL, nullptr);
-							return true;
-						}
-
-						bool twotimescharacter = true;
-						twotimescharacter = CharacterSystem->countIfPlayerHasLessTotalOf2FirstCharacters(player->GetSession()->GetAccountId());
-						if (twotimescharacter) {
-							creature->Say("You already used this Function more than 2 times!", LANG_UNIVERSAL, nullptr);
-							return true;
-						}
-
-						bool playerHasAlreadyCharacter = true;
-						playerHasAlreadyCharacter = CharacterSystem->hasPlayerAlreadyCharacters(player->GetSession()->GetAccountId());
-						if (playerHasAlreadyCharacter) {
-							creature->Say("You already have more than one Character!", LANG_UNIVERSAL, nullptr);
-							return true;
-						}
-
-						int guildmember = 0;
-						guildmember = CharacterSystem->getGuildMemberCount(player->GetGuildId());
-
-						if (guildmember < 10) {
-							creature->Say("Not enough Guild Members! Come again with your Friends!", LANG_UNIVERSAL, nullptr);
-							return true;
-						}
-
-						int guildcreatedate = 0;
-						guildcreatedate = CharacterSystem->getGuildCreateDate(player->GetGuildId());
-
-						if (guildcreatedate == 0) {
-							creature->Say("Not Member of a Guild.", LANG_UNIVERSAL, nullptr);
-							return true;
-						}
-
-						int unixtimestamp = 0;
-						unixtimestamp = CharacterSystem->getUnixTimestamp();
-
-						if (unixtimestamp - guildcreatedate > 1209600) {
-							creature->Say("Your Guild is older than 2 Weeks. Sorry i cannot grant you this Feature!", LANG_UNIVERSAL, nullptr);
-							creature->HandleEmoteCommand(EMOTE_ONESHOT_KNEEL);
-							return true;
-						}
-
-						std::string accountname = "";
-						accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-						std::string lastip = "";
-						lastip = CharacterSystem->getLastIPbyAccount(player->GetSession()->GetAccountId());
-						CharacterSystem->insertNewFirstCharacterforPlayerCount(player->GetGUID(), player->GetSession()->GetPlayerName(), player->GetSession()->GetAccountId(), accountname, player->GetGuildId(), lastip);
-						CharacterSystem->executeGuildCharacter(player->GetSession()->GetPlayer(), "Create FirstCharacter with active guild!", guildmember);
-
+						CharacterSystem->playerSetGuildFirstCharacter(player->GetSession()->GetPlayer());
 						return true;
 
 					}break;
@@ -265,79 +181,49 @@ class npc_first_char : public CreatureScript
 
 					case 6:
 					{
-
-						if (player->HasEnoughMoney(5000 * GOLD)) {
-							player->ModifyMoney(-5000 * GOLD);
-							std::string couponcode = "";
-							couponcode = CouponSystem->createNewCouponCode();
-							int rewarditem = CouponSystem->getFortuneItem();
-							uint32 quantity = 1 + (std::rand() % (15 - 1 + 1));
-							CouponSystem->insertNewCouponCodeinDB(couponcode, rewarditem, quantity, 1, 1);
-							CharacterSystem->sendPlayerMailwithItem(rewarditem, quantity, "Your CouponCode", "Here is your CouponCode\n Have fun with your Reward. \n Feel free to do all what you want with it!", player->GetSession()->GetPlayer());
-							std::string accountname = "";
-							accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-							PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Generate private Coupon at Exaltor");
-
-							ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
-								player->GetName());
-							ChatHandler(player->GetSession()).PSendSysMessage("Your Coupon was created and redeemed.",
-								player->GetName());
-							ChatHandler(player->GetSession()).PSendSysMessage("You should have Mail right now.",
-								player->GetName());
-							ChatHandler(player->GetSession()).PSendSysMessage("Have fun with it, %s", player->GetSession()->GetPlayerName(),
-								player->GetName());
-							ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
-								player->GetName());
-
-							return true;
-						}
-
-						else {
-							creature->Say("Your Bag seems to be very empty! Come again if you had enoungh money to pay me!", LANG_UNIVERSAL, nullptr);
-							return true;
-						}
-						return true;
+						CouponSystem->playerCouponGenerationAndRedeeming(player->GetSession()->GetPlayer(), "Generate and Redeem code at Exaltor");
+						
 					}break;
 
 
 					case 7:
 					{
-						if (player->HasEnoughMoney(5000 * GOLD)) {
-							player->ModifyMoney(-5000 * GOLD);
-							std::string couponcode = "";
-							couponcode = CouponSystem->createNewCouponCode();
-							int rewarditem = CouponSystem->getFortuneItem();
-							uint32 quantity = 1 + (std::rand() % (15 - 1 + 1));
-							CouponSystem->insertNewCouponCodeinDB(couponcode, rewarditem, quantity, 1, 1);
-							std::ostringstream mailmessage;
-							mailmessage << "Your created CouponCode is: " << couponcode << " \nThe CouponCode Price was 5000 Gold. \nThe Server Team wish you a nice Day!";
-							CharacterSystem->sendPlayerMailwithoutanyhing(player->GetSession()->GetPlayer(), "Your Coupon Details", mailmessage.str().c_str());
-							std::string accountname = "";
-							accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-							PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Generate Friends Coupon Code at Exaltor.");
-
-							ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
-								player->GetName());
-							ChatHandler(player->GetSession()).PSendSysMessage("Your Coupon was created. CouponCode: %s", couponcode,
-								player->GetName());
-							ChatHandler(player->GetSession()).PSendSysMessage("You should have Mail now with all Details.",
-								player->GetName());
-							ChatHandler(player->GetSession()).PSendSysMessage("Have fun with it, %s", player->GetSession()->GetPlayerName(),
-								player->GetName());
-							ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
-								player->GetName());
-
-							return true;
-						}
-
-
-
-						else {
-							creature->Say("Your Bag seems to be very empty! Come again if you had enoungh money to pay me!", LANG_UNIVERSAL, nullptr);
-							return true;
-						}
+						CouponSystem->playerCouponGerationForAFriend(player->GetSession()->GetPlayer(), "Generate a couponcode for a friend a Exaltor!");
 						return true;
 					}break;
+
+
+					case 8:
+					{
+						player->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
+						player->PlayerTalkClass->ClearMenus();
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "1 Level", GOSSIP_SENDER_MAIN, 300, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "5 Level", GOSSIP_SENDER_MAIN, 301, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Level up to 80!", GOSSIP_SENDER_MAIN, 302, "", 0, false);
+						player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
+						return true;
+						
+					}break;
+
+					case 300:
+					{
+						CharacterSystem->givePlayerLevelWithCurrency(player->GetSession()->GetPlayer(), 2, 1,"Buy 1 Level at Exaltor!");
+						return true;
+					}break;
+
+
+					case 301:
+					{
+						CharacterSystem->givePlayerLevelWithCurrency(player->GetSession()->GetPlayer(), 4, 5,"Buy 5 Level at Exaltor!");
+						return true;
+					}break;
+
+					case 302:
+					{
+						CharacterSystem->givePlayerLevelWithCurrency(player->GetSession()->GetPlayer(), 10,  80, "Buy full Levelup to 80 at Exaltor!");
+						return true;
+					}break;
+
 
 
 					//Bergbau

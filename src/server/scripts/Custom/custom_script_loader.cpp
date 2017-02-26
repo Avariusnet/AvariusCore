@@ -107,7 +107,7 @@ void AddSC_ex_testcommands();
 //Custom XP COmmands
 void AddSC_ex_customxpcommands();
 
-void AddSC_port_item();
+void AddSC_Custom_Items();
 
 //Playtime Rewards
 void AddSC_PlayTimeRewards();
@@ -121,6 +121,7 @@ void AddSC_logscript();
 
 //Question and Answer commands
 void AddSC_Question_and_Answer_Commands();
+
 
 void AddCustomScripts()
 {
@@ -140,7 +141,7 @@ void AddCustomScripts()
 
 
 	//port_item
-	AddSC_port_item();
+	AddSC_Custom_Items();
 
 	//galadriel
 	AddSC_boss_galadriel();

@@ -3850,7 +3850,7 @@ Wander.Volk = 1
 #
 #
 
-XP.Weekend.Active = 0
+XP.Weekend.Active = 1
 
 #
 #
@@ -3904,7 +3904,7 @@ GM.Security = 1
 
 GM.Ban = 1
 
-#		Define count for automatic Ban
+#		Define counter for automatic GM Ban. On every single Command this Counter will be be checked!
 #		Default:    50 
 #
 #
@@ -3943,8 +3943,6 @@ Characterhelper.NPC = 1
 Teleport.NPC = 1
 
 Custom.Commands = 1
-
-
 
 Congrats.Level = 1
 
@@ -3998,10 +3996,20 @@ Exaltor.Activate = 1
 
 #
 #
-#		Activate and Deactive First and Guild Character!
 #
+#		Activate or Deactive Exaltor Features in general! This Option exclude the First Character for single or Guilds!
 #		Default:     0 - (Disabled)
 #                    1 - (Enabled)
+#
+
+Exaltor.Features = 1
+
+#
+#		Activate and Deactive First and Guild Character!
+#		Default:     0 - (Disabled)
+#                    1 - (Enabled)
+#
+#
 #
 
 Exaltor.Character = 1
@@ -4020,13 +4028,6 @@ Exaltor.Coupon.Generate = 1
 #		
 #
 #
-#		Activate or Deactive Exaltor Features in general!
-#		Default:     0 - (Disabled)
-#                    1 - (Enabled)
-#
-
-Exaltor.Features = 1
-
 #
 #		Activate or Deactive Exaltor Professions! Players can buy Professions MaxSkill!
 #		Default:     0 - (Disabled)
@@ -4053,6 +4054,27 @@ Exaltor.Level = 1
 
 
 ###################################################################################################
+#	Coupon System 
+#
+#
+#	Option how much the Coupon generation costs in general. Price is in Gold! So default is 5000 Gold!
+#
+#
+#
+
+Coupon.Generate.Cost = 5000
+
+#
+#
+#
+#
+#
+#
+#
+###################################################################################################
+
+
+###################################################################################################
 #VIP VENDOR
 #
 #			Activate or Deactive Exaltor Level. Player can buy Levels for Credits.
@@ -4063,6 +4085,20 @@ Exaltor.Level = 1
 Vip.Vendor = 1
 
 #
+#			The Item ID which should be the VIP Currency. Item should not be dropped in regular game!
+#
+#
+
+Vip.Vendor.CurrencyID = 38186
+
+#
+#
+#			How much Gold one Token is cost! Amount in Gold! So 1000 means 1000 Gold !
+#
+#
+
+Vip.Vendor.CurrencyCost = 1000
+
 #
 #
 #

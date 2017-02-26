@@ -15,8 +15,11 @@ public:
 	 int getCouponRewardbyID(int modulo);
 
 	 void playerRedeemCommand(Player * player, const char* args);
-	 void couponGeneration(Player * player, const char* args);
-	
+	 void couponGenerationperCommand(Player * player, const char* args);
+	 void playerCouponGenerationAndRedeeming(Player * player, std::string logmessage);
+	 void playerCouponGerationForAFriend(Player * player, std::string logmessage);
+
+
 };
 
 

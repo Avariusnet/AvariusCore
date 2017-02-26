@@ -19,13 +19,14 @@
 
 void CharacterDatabaseConnection::DoPrepareStatements()
 {
-    if (!m_reconnecting)
+    //if (!m_reconnecting)
         m_stmts.resize(MAX_CHARACTERDATABASE_STATEMENTS);
 
 
 	/* EXI CUSTOM */
 
 	PrepareStatement(CHAR_SEL_UNIX_TIMESTAMP, "SELECT UNIX_TIMESTAMP(NOW())", CONNECTION_SYNCH);
+
 
 	//Question Answer System
 	PrepareStatement(CHAR_INS_PLAYER_ALREADY_ANSWERED_QUESTIONS, "INSERT INTO player_already_answered_questions (accountid, accountname, questionnr,actiontime) VALUES (?,?,?,NOW())", CONNECTION_ASYNC);
@@ -59,7 +60,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 
 	//PLayerlog
 	PrepareStatement(CHAR_INS_PLAYERLOG, "INSERT INTO player_log (charactername,guid,accountname,accountid,action_done,actiondate) VALUES(?,?,?,?,?, NOW())", CONNECTION_ASYNC);
-	PrepareStatement(CHAR_INS_CURRENCYLOG, "INSERT INTO player_vip_currencylog (charactername,characterguid,accountname, accountid,currencyitemid,amount,buydate,buy_action) VALUES (?,?,?,?,?,?,NOW(),?)", CONNECTION_ASYNC);
+	PrepareStatement(CHAR_INS_CURRENCYLOG, "INSERT INTO player_vip_currencylog (charactername,characterguid,accountname, accountid,currencyitemid,amount,amountcost,buydate,buy_action) VALUES (?,?,?,?,?,?,?,NOW(),?)", CONNECTION_ASYNC);
 
 	//REPORT QUEST SYSTEM
 	PrepareStatement(CHAR_INS_REPORT_QUEST, "Insert into `reported_quest` (questname, questid, anzahl, aktiv) VALUES (?,?,?,?)", CONNECTION_ASYNC);

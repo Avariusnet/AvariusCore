@@ -6,6 +6,7 @@
 
 #include "ScriptPCH.h"
 #include "CustomCouponSystem.h"
+#include "Config.h"
 
 
 enum Belohnungen
@@ -357,7 +358,7 @@ void CustomCouponSystem::playerRedeemCommand(Player * player, const char * args)
 
 }
 
-void CustomCouponSystem::couponGeneration(Player * player, const char * args)
+void CustomCouponSystem::couponGenerationperCommand(Player * player, const char * args)
 {
 
 	CustomWorldSystem * WorldSystem = 0;
@@ -441,6 +442,102 @@ void CustomCouponSystem::couponGeneration(Player * player, const char * args)
 	ChatHandler(player->GetSession()).PSendSysMessage("Coupon Useable: %u", codeuseable);
 	ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
 
+	return;
+}
+
+void CustomCouponSystem::playerCouponGerationForAFriend(Player * player, std::string logmessage)
+{
+	CustomCharacterSystem * CharacterSystem = 0;
+	CustomPlayerLog * PlayerLog = 0;
+
+	int32 couponcost = sConfigMgr->GetIntDefault("Coupon.Generate.Cost", 5000);
+
+
+	if (player->HasEnoughMoney(couponcost * GOLD)) {
+		player->ModifyMoney(-couponcost * GOLD);
+		std::string couponcode = "";
+		couponcode = createNewCouponCode();
+		int rewarditem = getFortuneItem();
+		uint32 quantity = 1 + (std::rand() % (15 - 1 + 1));
+		insertNewCouponCodeinDB(couponcode, rewarditem, quantity,0,1);
+		std::ostringstream mailmessage;
+		mailmessage << "Your created CouponCode is: " << couponcode << " \nThe CouponCode Price was" << couponcost << " Gold. \nThe Server Team wish you a nice Day!";
+		CharacterSystem->sendPlayerMailwithoutanyhing(player->GetSession()->GetPlayer(), "Your Coupon Details", mailmessage.str().c_str());
+		std::string accountname = "";
+		accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+		PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Generate Friends Coupon Code at Exaltor.");
+
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("Your Coupon was created. CouponCode: %s", couponcode,
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("You should have Mail now with all Details.",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("Have fun with it, %s", player->GetSession()->GetPlayerName(),
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+
+		return;
+	}
+
+
+
+	else {
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("Your Bag seems to be very empty! Come again if you had enoungh money to pay me!",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("Actual Price is: %u", couponcost,
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		return;
+	}
+	return;
+}
+
+void CustomCouponSystem::playerCouponGenerationAndRedeeming(Player * player, std::string logmessage)
+{
+	CustomCharacterSystem * CharacterSystem = 0;
+	CustomPlayerLog * PlayerLog = 0;
+
+	int32 couponcost = sConfigMgr->GetIntDefault("Coupon.Generate.Cost", 5000);
+
+	if (player->HasEnoughMoney(couponcost * GOLD)) {
+		player->ModifyMoney(-couponcost * GOLD);
+		std::string couponcode = "";
+		couponcode = createNewCouponCode();
+		int rewarditem = getFortuneItem();
+		uint32 quantity = 1 + (std::rand() % (15 - 1 + 1));
+		insertNewCouponCodeinDB(couponcode, rewarditem, quantity, 1, 1);
+		CharacterSystem->sendPlayerMailwithItem(rewarditem, quantity, "Your CouponCode", "Here is your CouponCode\n Have fun with your Reward. \n Feel free to do all what you want with it!", player->GetSession()->GetPlayer());
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), logmessage);
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("Your Coupon was created and redeemed.",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("You should have Mail right now.",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("Have fun with it, %s", player->GetSession()->GetPlayerName(),
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+
+		return;
+	}
+
+	else {
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("Your Bag seems to be very empty! Come again if you had enoungh money to pay me!",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("Actual Price is: %u",couponcost,
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		return;
+	}
 	return;
 }
 

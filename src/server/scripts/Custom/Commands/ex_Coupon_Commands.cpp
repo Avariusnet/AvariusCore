@@ -61,7 +61,7 @@ public:
 	static bool HandlegutscheinerstellenCommand(ChatHandler* handler, const char* args)
 	{
 		CustomCouponSystem * CouponSystem = 0;
-		CouponSystem->couponGeneration(handler->GetSession()->GetPlayer(), args);
+		CouponSystem->couponGenerationperCommand(handler->GetSession()->GetPlayer(), args);
 		return true;
 
 	};

@@ -33,41 +33,33 @@
 #include "ScriptedCreature.h"
 #include "Spell.h"
 #include "Player.h"
+#include <Custom/Logic/CustomPlayerLog.h>
 
 
-class port_item : public ItemScript
+#define item_id 44115
+
+class tele_item : public ItemScript
 {
-	public:
-		port_item() : ItemScript("teleportitem"){}
+public:
+	tele_item() : ItemScript("tele_item") { }
 
-		bool Onuse(Player * /*player*/, Item * /*item*/, SpellCastTargets const& /*targets*/)
+	bool OnUse(Player* player, Item* item, const SpellCastTargets &)
+	{
+		CustomPlayerLog * PlayerLog = 0;
+		if (player->IsInCombat())
 		{
-			//player->ADD_GOSSIP_ITEM(7, "Teleportiert mich zu den Sammlern!", GOSSIP_SENDER_MAIN, 0);
-			//player->SEND_GOSSIP_MENU(1, item->GetGUID());
-			return true;
+			player->GetSession()->SendNotification("You cannot use this in Combat!");
+			return false;
 		}
-
-		void OnGossipSelect(Player* player, Item* /*item*/, uint32 /*sender*/, uint32 uiAction){
-
-			switch (uiAction)
-			{
-
-				case 0:
-				{
-					player->TeleportTo(0, -9773.22f, 2125.16f, 15.49f, 3.47f, 0.0f);
-				}break;
-
-				default:
-				{
-					return;
-				}
-
-			}
-		}
+		
+		player->TeleportTo(530, 10338.54f, -6353.21f, 31.94f, 2.92f);
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(),"Used Teleportitem");
+		return true;
+	}
 };
 
 
-void AddSC_port_item()
+void AddSC_Custom_Items()
 {
-	new port_item;
+	new tele_item;
 }

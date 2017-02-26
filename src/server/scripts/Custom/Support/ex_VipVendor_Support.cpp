@@ -33,11 +33,7 @@
 #include <Custom/Logic/CustomCharacterSystem.h>
 
 
-enum Belohnungen
-{
-	CURRENCYITEM = 38186,
-	COST = 1000
-};
+
 
 
 class vipvendor : public CreatureScript
@@ -70,51 +66,9 @@ public: vipvendor() : CreatureScript("vipvendor") { }
 				
 			case 1:
 			{
-
-				std::string eingabe = code;
-				if (eingabe == "") {
-					creature->Say("Without amount. No Trading!", LANG_UNIVERSAL, nullptr);
-					return true;
-				}
-
-
-				CustomPlayerLog * PlayerLog = 0;
 				CustomCharacterSystem * CharacterSystem = 0;
-				int amount = (uint32)atoi(code);
-				int32 gesgold = COST * GOLD;
-				int32 overallcost = gesgold * amount;
-
-				if (player->GetSession()->GetSecurity() >= 2) {
-					ChatHandler(player->GetSession()).PSendSysMessage("Debug: gesgold: %u",gesgold,
-						player->GetName());
-					ChatHandler(player->GetSession()).PSendSysMessage("Debug: amount: %u",amount,
-						player->GetName());
-					ChatHandler(player->GetSession()).PSendSysMessage("Debug: overallcost: %u", overallcost,
-						player->GetName());
-				}
-
-				if (player->HasEnoughMoney(overallcost)) {
-					player->ModifyMoney(-overallcost);
-					player->AddItem(CURRENCYITEM, amount);
-					creature->Say("Here! Your Tokens are in your Bag!", LANG_UNIVERSAL, nullptr);
-					std::string accountname = "";
-					accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-					PlayerLog->insertNewCurrencyLog(player->GetSession()->GetPlayerName(),player->GetGUID(),accountname, player->GetSession()->GetAccountId(), CURRENCYITEM,amount,"VIP_CURRENCY_BUY at VIP_VENDOR");
-					PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "VIP_CURRENCY_BUY at VIP_VENDOR");
-					ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
-						player->GetName());
-					ChatHandler(player->GetSession()).PSendSysMessage("You have bought %u Tokens and payed %u Gold.", amount ,overallcost * GOLD,
-						player->GetName());
-					ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
-						player->GetName());
-					return true;
-				}
-
-				creature->Say("Not enough money to pay me!", LANG_UNIVERSAL, nullptr);
-			
+				CharacterSystem->sellPlayerVIPCurrency(player->GetSession()->GetPlayer(), code);
 				return true;
-
-
 			}break;
 
 			case 2: {

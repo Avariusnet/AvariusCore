@@ -1,4 +1,5 @@
 #include "CustomPlayerLog.h"
+#include <Custom/Logic/CustomCharacterSystem.h>
 
 void CustomPlayerLog::insertNewPlayerLog(std::string charactername,int guid, std::string accountname, int accountid, std::string action_done)
 {
@@ -12,7 +13,7 @@ void CustomPlayerLog::insertNewPlayerLog(std::string charactername,int guid, std
 
 }
 
-void CustomPlayerLog::insertNewCurrencyLog(std::string charactername, int guid, std::string accountname, int accountid, int currencyitemid, int amount, std::string buy_action)
+void CustomPlayerLog::insertNewCurrencyLog(std::string charactername, int guid, std::string accountname, int accountid, int currencyitemid, int amount,int amountcost, std::string buy_action)
 {
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_CURRENCYLOG);
 	stmt->setString(0, charactername);
@@ -21,6 +22,23 @@ void CustomPlayerLog::insertNewCurrencyLog(std::string charactername, int guid, 
 	stmt->setInt32(3, accountid);
 	stmt->setInt32(4, currencyitemid);
 	stmt->setInt32(5, amount);
-	stmt->setString(6, buy_action);
+	stmt->setInt32(6, amountcost);
+	stmt->setString(7, buy_action);
 	CharacterDatabase.Execute(stmt);
+}
+
+void CustomPlayerLog::addCompletePlayerLog(Player * player, std::string log_message)
+{
+	CustomCharacterSystem * CharacterSystem = 0;
+	std::string accountname = "";
+	accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+	insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), log_message);
+}
+
+void CustomPlayerLog::addCompleteCurrencyLog(Player * player, int currencyid, int amount, int amountcost, std::string buy_action)
+{
+	CustomCharacterSystem * CharacterSystem = 0;
+	std::string accountname = "";
+	accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+	insertNewCurrencyLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), currencyid, amount, amountcost, buy_action);
 }

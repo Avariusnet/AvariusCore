@@ -5,7 +5,9 @@ class CustomPlayerLog {
 public:
 
 	void insertNewPlayerLog(std::string charactername, int guid, std::string accountname, int accountid, std::string action_done);
-	void insertNewCurrencyLog(std::string charactername, int guid, std::string accountname, int accountid, int currencyitemid, int amount, std::string buy_action);
+	void insertNewCurrencyLog(std::string charactername, int guid, std::string accountname, int accountid, int currencyitemid, int amount,int amountcost, std::string buy_action);
+	void addCompletePlayerLog(Player * player, std::string log_message);
+	void addCompleteCurrencyLog(Player* player,int currencyid, int amount, int amountcost,std::string buy_action);
 
 };
 
