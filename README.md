@@ -3,9 +3,9 @@
 
 ## Build Status
 
-AvariusCore
-[![Build Status](https://travis-ci.org/AvariusProject/AvariusCore.svg?branch=master)](https://travis-ci.org/AvariusProject/AvariusCore)
-
+master | dev
+:------------: | :------------:
+[![Build Status](https://travis-ci.org/AvariusProject/AvariusCore.svg?branch=master)](https://travis-ci.org/AvariusProject/AvariusCore) | [![Build Status](https://travis-ci.org/AvariusProject/AvariusCore.svg?branch=dev)](https://travis-ci.org/AvariusProject/AvariusCore)
 
 ## Introduction
 
