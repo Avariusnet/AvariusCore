@@ -1,20 +1,17 @@
-# ![logo](https://community.trinitycore.org/public/style_images/1_trinitycore.png) TrinityCore (3.3.5)
+# ![logo](http://exitare.de/avariuslogo.png) AvariusCore
 
-[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/TrinityCore/TrinityCore.svg)](http://isitmaintained.com/project/TrinityCore/TrinityCore "Average time to resolve an issue") [![Percentage of issues still open](http://isitmaintained.com/badge/open/TrinityCore/TrinityCore.svg)](http://isitmaintained.com/project/TrinityCore/TrinityCore "Percentage of issues still open")
 
 ## Build Status
 
-master | 3.3.5
+master | dev
 :------------: | :------------:
-[![master Build Status](https://travis-ci.org/TrinityCore/TrinityCore.svg?branch=master)](https://travis-ci.org/TrinityCore/TrinityCore) | [![3.3.5 Build Status](https://travis-ci.org/TrinityCore/TrinityCore.svg?branch=3.3.5)](https://travis-ci.org/TrinityCore/TrinityCore)
-[![master Build status](https://ci.appveyor.com/api/projects/status/54d0u1fxe50ad80o/branch/master?svg=true)](https://ci.appveyor.com/project/DDuarte/trinitycore/branch/master) | [![Build status](https://ci.appveyor.com/api/projects/status/54d0u1fxe50ad80o/branch/3.3.5?svg=true)](https://ci.appveyor.com/project/DDuarte/trinitycore/branch/3.3.5)
-[![Coverity Scan Build Status](https://scan.coverity.com/projects/435/badge.svg)](https://scan.coverity.com/projects/435) | [![Coverity Scan Build Status](https://scan.coverity.com/projects/4656/badge.svg)](https://scan.coverity.com/projects/4656)
+[![Build Status](https://travis-ci.org/AvariusProject/AvariusCore.svg?branch=master)](https://travis-ci.org/AvariusProject/AvariusCore) | [![Build Status](https://travis-ci.org/AvariusProject/AvariusCore.svg?branch=dev)](https://travis-ci.org/AvariusProject/AvariusCore)
 
 ## Introduction
 
-TrinityCore is a *MMORPG* Framework based mostly in C++.
+AvariusCore is a *MMORPG* Framework based mostly in C++.
 
-It is derived from *MaNGOS*, the *Massive Network Game Object Server*, and is
+It is derived from *TrinityCore*, the *Massive Network Game Object Server*, and is
 based on the code of that project with extensive changes over time to optimize,
 improve and cleanup the codebase at the same time as improving the in-game
 mechanics and functionality.
@@ -22,34 +19,30 @@ mechanics and functionality.
 It is completely open source; community involvement is highly encouraged.
 
 If you wish to contribute ideas or code please visit our site linked below or
-make pull requests to our [Github repository](https://github.com/TrinityCore/TrinityCore/pulls).
+make pull requests to our [Github repository](https://github.com/AvariusProject/AvariusCore/pulls).
 
 For further information on the TrinityCore project, please visit our project
-website at [TrinityCore.org](https://www.trinitycore.org).
+website at [Avarius.net](https://avarius.net).
 
 ## Requirements
 
 
-Software requirements are available in the [wiki](https://www.trinitycore.info/display/tc/Requirements) for
+Software requirements are available in the [wiki](https://www.trinitycore.info/display/tc/Requirements) from TrinityCore for
 Windows, Linux and OS X.
 
 
 ## Install
 
-Detailed installation guides are available in the [wiki](https://www.trinitycore.info/display/tc/Installation+Guide) for
+Detailed installation guides are available in the [wiki](https://www.trinitycore.info/display/tc/Installation+Guide) from TrinityCore for
 Windows, Linux and OS X.
 
 
 ## Reporting issues
 
-Issues can be reported via the [Github issue tracker](https://github.com/TrinityCore/TrinityCore/labels/Branch-3.3.5a).
+Issues can be reported via the [Github issue tracker](https://github.com/AvariusProject/AvariusCore/issues).
 
 Please take the time to review existing issues before submitting your own to
 prevent duplicates.
-
-In addition, thoroughly read through the [issue tracker guide](https://community.trinitycore.org/topic/37-the-trinitycore-issuetracker-and-you/) to ensure
-your report contains the required information. Incorrect or poorly formed
-reports are wasteful and are subject to deletion.
 
 
 ## Submitting fixes
@@ -66,13 +59,8 @@ License: GPL 2.0
 Read file [COPYING](COPYING).
 
 
-## Authors &amp; Contributors
-
-Read file [THANKS](THANKS).
-
-
 ## Links
 
-* [Website](https://www.trinitycore.org)
-* [Wiki](https://www.trinitycore.info)
-* [Forums](https://community.trinitycore.org)
+* [Website](avarius.net)
+* [Wiki](http://avarius.net/index.php/projects/avarius-wotlk-core)
+* [Twitter](https://twitter.com/avarius_info)
