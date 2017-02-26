@@ -98,7 +98,6 @@ class npc_first_char : public CreatureScript
 				{
 					CustomCharacterSystem* CharacterSystem = 0;
 					CustomCouponSystem * CouponSystem = 0;
-					CustomPlayerLog * PlayerLog = 0;
 					switch (uiAction)
 					{
 

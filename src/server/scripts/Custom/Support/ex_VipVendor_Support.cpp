@@ -60,7 +60,7 @@ public: vipvendor() : CreatureScript("vipvendor") { }
 		}
 
 
-		bool OnGossipSelectCode(Player * player, Creature* creature, uint32 /*sender*/, uint32 action, const char* code) {
+		bool OnGossipSelectCode(Player * player, Creature* /*creature*/, uint32 /*sender*/, uint32 action, const char* code) {
 
 			switch (action) {
 				

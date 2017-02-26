@@ -463,10 +463,7 @@ void CustomCouponSystem::playerCouponGerationForAFriend(Player * player, std::st
 		std::ostringstream mailmessage;
 		mailmessage << "Your created CouponCode is: " << couponcode << " \nThe CouponCode Price was" << couponcost << " Gold. \nThe Server Team wish you a nice Day!";
 		CharacterSystem->sendPlayerMailwithoutanyhing(player->GetSession()->GetPlayer(), "Your Coupon Details", mailmessage.str().c_str());
-		std::string accountname = "";
-		accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-		PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Generate Friends Coupon Code at Exaltor.");
-
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), logmessage);
 		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 			player->GetName());
 		ChatHandler(player->GetSession()).PSendSysMessage("Your Coupon was created. CouponCode: %s", couponcode,

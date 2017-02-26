@@ -524,7 +524,6 @@ void CustomCharacterSystem::sellPlayerVIPCurrency(Player * player, const char * 
 
 
 	CustomPlayerLog * PlayerLog = 0;
-	CustomCharacterSystem * CharacterSystem = 0;
 
 	int amount = (uint32)atoi(code);
 	int32 gesgold = cost * GOLD;
