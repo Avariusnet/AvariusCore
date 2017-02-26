@@ -1,6 +1,5 @@
-# ![logo](https://community.trinitycore.org/public/style_images/1_trinitycore.png) TrinityCore (3.3.5)
+# ![logo](http://exitare.de/avariuslogo.png) AvariusCore
 
-[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/TrinityCore/TrinityCore.svg)](http://isitmaintained.com/project/TrinityCore/TrinityCore "Average time to resolve an issue") [![Percentage of issues still open](http://isitmaintained.com/badge/open/TrinityCore/TrinityCore.svg)](http://isitmaintained.com/project/TrinityCore/TrinityCore "Percentage of issues still open")
 
 ## Build Status
 
@@ -58,11 +57,6 @@ For SQL only fixes open a ticket or if a bug report exists for the bug post on e
 License: GPL 2.0
 
 Read file [COPYING](COPYING).
-
-
-## Authors &amp; Contributors
-
-Read file [THANKS](THANKS).
 
 
 ## Links
