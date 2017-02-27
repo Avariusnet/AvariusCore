@@ -260,7 +260,7 @@ void CustomCharacterSystem::playerSetSingleFirstCharacter(Player * player)
 	std::string lastip = "";
 	lastip = getLastIPbyAccount(player->GetSession()->GetAccountId());
 	insertNewFirstCharacterforPlayerCount(player->GetGUID(), player->GetSession()->GetPlayerName(), player->GetSession()->GetAccountId(), accountname, 0, lastip);
-	executeFirstCharacter(player->GetSession()->GetPlayer(), "Create FirstCharacter without guild!");
+	executeFirstCharacter(player->GetSession()->GetPlayer(), "FirstCharacter");
 
 	return;
 }
@@ -350,7 +350,7 @@ void CustomCharacterSystem::playerSetGuildFirstCharacter(Player * player)
 	std::string lastip = "";
 	lastip = getLastIPbyAccount(player->GetSession()->GetAccountId());
 	insertNewFirstCharacterforPlayerCount(player->GetGUID(), player->GetSession()->GetPlayerName(), player->GetSession()->GetAccountId(), accountname, player->GetGuildId(), lastip);
-	executeGuildCharacter(player->GetSession()->GetPlayer(), "Create FirstCharacter with active guild!", guildmember);
+	executeGuildCharacter(player->GetSession()->GetPlayer(), "FirstCharacter", guildmember);
 
 	return;
 }

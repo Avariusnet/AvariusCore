@@ -43,7 +43,7 @@ class tele_item : public ItemScript
 public:
 	tele_item() : ItemScript("tele_item") { }
 
-	bool OnUse(Player* player, Item* item, const SpellCastTargets &)
+	bool OnUse(Player* player, Item* /*item*/, const SpellCastTargets &)
 	{
 		CustomPlayerLog * PlayerLog = 0;
 		if (player->IsInCombat())
