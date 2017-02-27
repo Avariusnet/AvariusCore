@@ -95,6 +95,13 @@ DELETE FROM command WHERE `name`='xprate';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('xprate', 195, '');   
 
 
+/* Autobroadcast*/
+DELETE FROM command WHERE `name`='autobroadcast';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('autobroadcast', 193, ''); 
+
+DELETE FROM command WHERE `name`='autobroadcast set';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('autobroadcast set', 193, ''); 
+
 /*Testcommands */
 DELETE FROM command WHERE `name`='logic';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('logic', 193, ''); 

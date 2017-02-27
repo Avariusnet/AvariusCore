@@ -34,16 +34,16 @@
 #include "Spell.h"
 #include "Player.h"
 #include <Custom/Logic/CustomPlayerLog.h>
+#include <Custom/Logic/CustomCharacterSystem.h>
 
 
-#define item_id 44115
 
-class tele_item : public ItemScript
+class avarius_betatest : public ItemScript
 {
 public:
-	tele_item() : ItemScript("tele_item") { }
+	avarius_betatest() : ItemScript("avarius_betatest") { }
 
-	bool OnUse(Player* player, Item* /*item*/, const SpellCastTargets &)
+	bool OnUse(Player* player, Item* item, const SpellCastTargets &)
 	{
 		CustomPlayerLog * PlayerLog = 0;
 		if (player->IsInCombat())
@@ -51,15 +51,43 @@ public:
 			player->GetSession()->SendNotification("You cannot use this in Combat!");
 			return false;
 		}
-		
+		player->Say("I am a AvariusCore Beta Tester!",LANG_UNIVERSAL,nullptr);
+	
 		player->TeleportTo(530, 10338.54f, -6353.21f, 31.94f, 2.92f);
-		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(),"Used Teleportitem");
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(),"Used AvariusBetatester Item");
 		return true;
 	}
+
 };
+
+
+class exitareshand : public ItemScript
+{
+public:
+	exitareshand() : ItemScript("exitareshand") { }
+
+	bool OnUse(Player* player, Item* item, const SpellCastTargets &)
+	{
+		CustomPlayerLog * PlayerLog = 0;
+		if (player->IsInCombat())
+		{
+			player->GetSession()->SendNotification("You cannot use this in Combat!");
+			return false;
+		}
+
+		player->TeleportTo(530, 10338.54f, -6353.21f, 31.94f, 2.92f);
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Used Teleportitem");
+		return true;
+	}
+
+};
+
+
+
 
 
 void AddSC_Custom_Items()
 {
-	new tele_item;
+	new avarius_betatest;
+	new exitareshand();
 }

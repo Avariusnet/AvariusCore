@@ -1,1 +1,0 @@
-REPLACE INTO `spell_script_names` (`spell_id`, `ScriptName`) VALUES ('-25565', 'spell_clear_all_test');

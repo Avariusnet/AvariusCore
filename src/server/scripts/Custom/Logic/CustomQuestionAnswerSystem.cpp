@@ -85,8 +85,7 @@ void CustomQuestionAnswerSystem::getQuestionForPlayer(Player * player)
 	std::ostringstream tt;
 	tt << "Get Questionnr: " << id;
 	std::string reason = tt.str().c_str();
-	std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-	PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), reason);
+	PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 
 	ChatHandler(player->GetSession()).PSendSysMessage("########################################",
 		player->GetName());
@@ -223,8 +222,7 @@ void CustomQuestionAnswerSystem::checkPlayerAnswer(Player * player, const char *
 	std::ostringstream tt;
 	tt << "Answered Questionnr: " << questionid;
 	std::string reason = tt.str().c_str();
-	std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-	PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), reason);
+	PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 	insertNewAnsweredQuestionforPlayer(questionid, player->GetSession()->GetPlayer());
 	CharacterSystem->sendPlayerMailwithItem(reward, quantity, "Congratulations", "You answered the Question correct. Here is your Reward. Have fun with it!", player->GetSession()->GetPlayer());
 

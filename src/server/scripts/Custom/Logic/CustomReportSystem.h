@@ -14,7 +14,7 @@ public:
 	void UpdateQuantityQuestReportInDB(int quantity, int questid);
 	void setQuestActiveOrInactive(int active, int questid);
 	PreparedQueryResult getReportedQuestDetails(int questid);
-	void insertErrorMessageForQuest(std::string charactername, int guid, std::string accountname, int accountid, int questid, std::string error_message);
+	void insertErrorMessageForQuest(Player* player, int questid, std::string error_message);
 	bool completeQuest(int32 entry, ChatHandler* handler, Player* player);
 
 	bool completeQuestReport(Player*player, ChatHandler * handler, const char* args);

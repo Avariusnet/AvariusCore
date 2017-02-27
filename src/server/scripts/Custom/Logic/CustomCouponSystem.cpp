@@ -347,13 +347,10 @@ void CustomCouponSystem::playerRedeemCommand(Player * player, const char * args)
 
 	//ChatHandler(player->GetSession()).PSendSysMessage("This is your %u Incident. Beware!", newcounter,player->GetName());
 
-	std::string accountname = "";
-	accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
 	std::ostringstream tt;
 	tt << "Coupon redeem with code : " << couponCode;
 	std::string reason = tt.str().c_str();
-	PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), reason);
-
+	PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(),reason);
 	return;
 
 }

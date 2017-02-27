@@ -105,12 +105,11 @@ public:
 				std::string accname = ergfeld[0].GetCString();
 				uint32 spielzeith = totaltime / 60 / 60;
 				uint32 spielzeit = totaltime / 60 / 60 / 24;
-				std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
 
 				std::ostringstream tt;
 				tt << "Search for Character " << charactername;
 				std::string reason = tt.str().c_str();
-				PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), reason);
+				PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 				std::ostringstream pp;
 				pp << "Folgende Daten wurden gefunden \nGuid: " << guid << "\nAccountname: " << accname << "\nSpielzeit in Stunden: " << spielzeith << "\nSpielzeit in Tagen: " << spielzeit;
 					ChatHandler(player->GetSession()).PSendSysMessage(pp.str().c_str(),
@@ -156,38 +155,12 @@ public:
 			uint32 charactersum = felder[0].GetInt32();
 			
 			if (player->GetSession()->GetSecurity() > 0) {
-				PreparedQueryResult result = GMLogic->selectGMPlayerCount(player->GetSession()->GetAccountId());
-				if (result == NULL) {
-					GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(),player->GetSession()->GetPlayer(),"Try to transfer Character to a Lower or Higher Sec Account!");
-					ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
-						player->GetName());
-					ChatHandler(player->GetSession()).PSendSysMessage("Warning: GM should be a supporter not a cheater!",
-						player->GetName());
-					ChatHandler(player->GetSession()).PSendSysMessage("This incident has been logged in DB.",
-						player->GetName());
-					ChatHandler(player->GetSession()).PSendSysMessage("This is your first Incident. Beware!",
-						player->GetName());
-					ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
-						player->GetName());
-					return true;
-				}
-
-				Field* fields = result->Fetch();
-				//int32 id = fields[0].GetInt32();
-				//int32 accountid = fields[1].GetInt32();
-				int32 counter = fields[2].GetInt32();
-
-				int newcounter = 0;
-				newcounter = counter + 1;
-
-				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer(), "Try to transfer Character to a Lower or Higher Sec Account!");
+				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer(), "Try to transfer Character to a Lower or Higher Sec Account!");		
 				ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 					player->GetName());
 				ChatHandler(player->GetSession()).PSendSysMessage("Warning: GM should be a supporter not a cheater!",
 					player->GetName());
 				ChatHandler(player->GetSession()).PSendSysMessage("This incident has been logged in DB.",
-					player->GetName());
-				ChatHandler(player->GetSession()).PSendSysMessage("This is your %u Incident. Beware!", newcounter,
 					player->GetName());
 				ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 					player->GetName());
@@ -203,11 +176,10 @@ public:
 				player->GetSession()->SendNotification("Der Accounttausch wurde vollzogen");
 				ChatHandler(player->GetSession()).PSendSysMessage("Der Accounttausch wurde vollzogen.",
 					player->GetName());
-				std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
 				std::ostringstream tt;
 				tt << "Transfer character to Account " << accountname;
 				std::string reason = tt.str().c_str();
-				PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), reason);
+				PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 				return true;
 			}
 

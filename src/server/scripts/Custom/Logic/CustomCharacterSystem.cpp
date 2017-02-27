@@ -32,9 +32,7 @@ bool CustomCharacterSystem::setProfessionSkill(Player * player, uint32 professio
 	player->LearnDefaultSkill(profession, 6);
 	player->GetPureMaxSkillValue(profession);
 	player->SetSkill(profession, player->GetSkillStep(profession), 450, 450);
-	std::string accountname = "";
-	accountname = CustomCharacterSystem::getAccountName(player->GetSession()->GetAccountId());
-	PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Profession skilled");
+	PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Profession skilled");
 	ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 		player->GetName());
 	ChatHandler(player->GetSession()).PSendSysMessage("Your Proffession was set to Skill 450!",
@@ -191,9 +189,7 @@ void CustomCharacterSystem::executeFirstCharacter(Player * player, std::string p
 	player->UpdateSkillsForLevel();
 	int32 maxhealth = player->GetMaxHealth();
 	player->SetMaxHealth(maxhealth);
-	std::string accountname = "";
-	accountname = CustomCharacterSystem::getAccountName(player->GetSession()->GetAccountId());
-	PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), playerlog);
+	PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(),playerlog);
 	player->SaveRecallPosition();
 }
 
@@ -485,9 +481,7 @@ void CustomCharacterSystem::requestNewFirstCharacter(Player * player, const char
 
 	bool hasPlayeralreadyAFirstCharacter = CharacterSystem->hasPlayerAlreadyAFirstChar(player->GetSession()->GetAccountId(), "FirstCharacter");
 	if (!hasPlayeralreadyAFirstCharacter) {
-		//creature->Say("There is no First Character on your Account! So do not try this again please!", LANG_UNIVERSAL, nullptr);
-		std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-		PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), "Request declined!");
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Request declined!");
 		return;
 	}
 
@@ -498,8 +492,7 @@ void CustomCharacterSystem::requestNewFirstCharacter(Player * player, const char
 	}
 
 	std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-
-	PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), "Request new FirstChar!");
+	PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Request new FirstChar!");
 	std::string generatedCharacterName = CharacterSystem->generateNewCharacterName();
 	std::string prefix = "first_";
 	std::string newCharacterName = prefix + generatedCharacterName;
@@ -643,9 +636,8 @@ void CustomCharacterSystem::executeGuildCharacter(Player * player, std::string p
 	if (membercount > 25) {
 		player->LearnDefaultSkill(762, 4);
 	}
-	std::string accountname = "";
-	accountname = CustomCharacterSystem::getAccountName(player->GetSession()->GetAccountId());
-	PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), playerlog);
+	
+	PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), playerlog);
 	player->SaveRecallPosition();
 }
 

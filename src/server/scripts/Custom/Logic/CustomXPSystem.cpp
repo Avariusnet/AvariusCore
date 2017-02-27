@@ -70,11 +70,9 @@
 			int playerxp = CustomXP->getCustomXPValue(player->GetGUID());
 
 			if (!px) {
-				std::string accountname = "";
-				accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
 				int32 minxprate = sConfigMgr->GetIntDefault("Custom.XP.MinRate", 1);
 				int32 maxxprate = sConfigMgr->GetIntDefault("Custom.XP.MaxRate", 5);
-				PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Show XP Rate");
+				PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Show XPRate");
 				ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
 				ChatHandler(player->GetSession()).PSendSysMessage("Your XP Multiplier is currently: %u", playerxp);
 				ChatHandler(player->GetSession()).PSendSysMessage("To change your Multiplier just type '.xprate 2' for a 2x Multiplier.");
@@ -89,9 +87,7 @@
 			int32 minxprate = sConfigMgr->GetIntDefault("Custom.XP.MinRate", 1);
 			int32 maxxprate = sConfigMgr->GetIntDefault("Custom.XP.MaxRate", 5);
 			if (newxpvalue == 0 || newxpvalue > maxxprate) {
-				std::string accountname = "";
-				accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-				PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Change of XP Rate not possible. Value Problem!");
+				PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Change of XP Rate not possible. Value Problem!");
 				ChatHandler(player->GetSession()).PSendSysMessage("Your Values are invalid. Use only values between %u and %u!", minxprate, maxxprate);
 				return;
 			}
@@ -109,8 +105,7 @@
 				std::ostringstream tt;
 				tt << "Changed XP Rate to: " << newxpvalue;
 				std::string reason = tt.str().c_str();
-				accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-				PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), reason);
+				PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 				CustomXP->setCustomXPEntry(player->GetSession()->GetPlayerName(), player->GetGUID(), newxpvalue);
 				ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
 				ChatHandler(player->GetSession()).PSendSysMessage("Your XP Multiplier is set to %u", newxpvalue);
@@ -118,12 +113,10 @@
 				return;
 			}
 
-			std::string accountname = "";
 			std::ostringstream tt;
 			tt << "Changed XP Rate to: " << newxpvalue;
 			std::string reason = tt.str().c_str();
-			accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-			PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), reason);
+			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 			CustomXP->updateCustomXPEntry(newxpvalue, player->GetGUID());
 			ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
 			ChatHandler(player->GetSession()).PSendSysMessage("Your XP Multiplier is set to %u", newxpvalue);

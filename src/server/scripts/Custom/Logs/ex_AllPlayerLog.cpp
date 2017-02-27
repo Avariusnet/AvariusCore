@@ -52,13 +52,10 @@ public:
 
 	void OnQuestStatusChange(Player* player, uint32 questId) {
 		CustomPlayerLog * PlayerLog = 0;
-		CustomCharacterSystem * CharacterSystem = 0;
-
-		std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
 		std::ostringstream tt;
 		tt << "Queststatus changed: " << questId;
 		std::string reason = tt.str().c_str();
-		PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), reason);
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 		return;
 	
 	}
@@ -74,10 +71,7 @@ public: GraveYardReleaseLog() : PlayerScript("GraveYardReleaseLog") {}
 
 		void OnPlayerRepop(Player* player) { 
 			CustomPlayerLog * PlayerLog = 0;
-			CustomCharacterSystem * CharacterSystem = 0;
-
-			std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-			PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), "Release soul with Release Button!");
+			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Release Soul with Release Button!");
 			return;
 		}
 
@@ -95,14 +89,11 @@ public:
 
 
 	void OnLevelChanged(Player* player, uint8 oldLevel) {
-		CustomCharacterSystem * CharacterSystem = 0;
-
-		std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
 		CustomPlayerLog * PlayerLog = 0;
 		std::ostringstream tt;
 		tt << "Level changed to " << oldLevel + 1;
 		std::string reason = tt.str().c_str();
-		PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), reason);
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 		return;
 
 	}
@@ -117,14 +108,12 @@ public:
 	CreatureKillLog() : PlayerScript("CreatureKillLog") {}
 
 	void OnCreatureKill(Player* player, Creature* killed) {
-		CustomCharacterSystem * CharacterSystem = 0;
-		std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
 		std::string creaturename = killed->GetName();
 		CustomPlayerLog * PlayerLog = 0;
 		std::ostringstream tt;
 		tt <<"Killed: " << creaturename;
 		std::string reason = tt.str().c_str();
-		PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), reason);
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 		return;
 	}
 
@@ -136,11 +125,8 @@ public:
 	ResetTalentLog() : PlayerScript("ResetTalentLog") { }
 
 	void OnTalentsReset(Player* player, bool /*noCost*/) { 
-		CustomCharacterSystem * CharacterSystem = 0;
-
-		std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
 		CustomPlayerLog * PlayerLog = 0;
-		PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID().GetCounter(), accountname, player->GetSession()->GetAccountId(), "Reset Talents");
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Reset Talents");
 		return;
 	}
 

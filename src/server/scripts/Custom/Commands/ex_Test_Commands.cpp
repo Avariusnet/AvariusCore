@@ -110,9 +110,7 @@ public:
 		CustomPlayerLog * PlayerLog = 0;
 		CustomCharacterSystem* CharacterSystem = 0;
 		Player* player = handler->GetSession()->GetPlayer();
-		std::string accountname = "";
-		accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-		PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(),player->GetGUID(),accountname,player->GetSession()->GetAccountId(),"Testeintrag");
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Testeintrag");
 		return true;
 	}
 

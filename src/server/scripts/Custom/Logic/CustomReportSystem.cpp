@@ -132,13 +132,16 @@ PreparedQueryResult CustomReportSystem::getReportedQuestDetails(int questid)
 	return ergebnis;
 }
 
-void CustomReportSystem::insertErrorMessageForQuest(std::string charactername, int guid, std::string accountname, int accountid, int questid, std::string error_message)
+void CustomReportSystem::insertErrorMessageForQuest(Player* player, int questid, std::string error_message)
 {
+	CustomCharacterSystem * CharacterSystem = 0;
+	std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_REPORT_ERROR_MESSAGE);
-	stmt->setString(0, charactername);
-	stmt->setInt32(1, guid);
+	stmt->setString(0, player->GetSession()->GetPlayerName());
+	stmt->setInt32(1, player->GetGUID());
 	stmt->setString(2, accountname);
-	stmt->setInt32(3, accountid);
+	stmt->setInt32(3, player->GetSession()->GetAccountId());
 	stmt->setInt32(4, questid);
 	stmt->setString(5, error_message);
 	CharacterDatabase.Execute(stmt);
@@ -338,15 +341,13 @@ bool CustomReportSystem::completeQuestReport(Player * player, ChatHandler * hand
 			if (player->GetGuildId() != 0) {
 				//Quest is forbidden and should not be activated!
 				if (isQuestForbidden) {
-					std::string accountname = "";
 					std::ostringstream tt;
 					tt << "Quest mit ID " << questid << " geportet";
 					std::string reason = tt.str().c_str();
-					accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-					PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), reason);
+					PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 					ReportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), player->GetGuildName(), player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 					ReportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
-					ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), questid, error_message);
+					ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayer(), questid, error_message);
 					std::string questname = WorldSystem->getQuestNamebyID(questid);
 					handler->PSendSysMessage("##########################################################");
 					handler->PSendSysMessage(REPORT_QUEST_SUCESS);
@@ -358,16 +359,14 @@ bool CustomReportSystem::completeQuestReport(Player * player, ChatHandler * hand
 				}
 
 				//Quest is not forbidden and activating is ok!
-				std::string accountname = "";
 				std::ostringstream tt;
 				tt << "Quest mit ID " << questid << " geportet";
 				std::string reason = tt.str().c_str();
-				accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-				PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), reason);
+				PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 				ReportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), player->GetGuildName(), player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 				ReportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
 				ReportSystem->setQuestActiveOrInactive(1, questid);
-				ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), questid, error_message);
+				ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayer(), questid, error_message);
 				std::string questname = WorldSystem->getQuestNamebyID(questid);
 				handler->PSendSysMessage("##########################################################");
 				handler->PSendSysMessage(REPORT_QUEST_SUCESS);
@@ -379,15 +378,13 @@ bool CustomReportSystem::completeQuestReport(Player * player, ChatHandler * hand
 			}
 
 			//Player has no guild !
-			std::string accountname = "";
 			std::ostringstream tt;
 			tt << "Quest mit ID " << questid << " geportet";
 			std::string reason = tt.str().c_str();
-			accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-			PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), reason);
+			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 			ReportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null", player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 			ReportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
-			ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), questid, error_message);
+			ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayer(), questid, error_message);
 			std::string questname = WorldSystem->getQuestNamebyID(questid);
 			handler->PSendSysMessage("##########################################################");
 			handler->PSendSysMessage(REPORT_QUEST_SUCESS);
@@ -407,16 +404,14 @@ bool CustomReportSystem::completeQuestReport(Player * player, ChatHandler * hand
 
 		//if quest active, complete quest
 		if (aktiv == 1) {
-			std::string accountname = "";
 			std::ostringstream tt;
 			tt << "Quest mit ID " << questid << " geportet";
 			std::string reason = tt.str().c_str();
-			accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-			PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), reason);
+			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 			ReportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null", player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 			ReportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
 			completeQuest(questreportid, handler, player);
-			ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), questid, error_message);
+			ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayer(), questid, error_message);
 			std::string questname = WorldSystem->getQuestNamebyID(questid);
 			handler->PSendSysMessage("##########################################################");
 			handler->PSendSysMessage(REPORT_QUEST_SUCESS);
@@ -429,15 +424,13 @@ bool CustomReportSystem::completeQuestReport(Player * player, ChatHandler * hand
 		}
 
 		//Quest acitve != 0 and quantity < 5
-		std::string accountname = "";
 		std::ostringstream tt;
 		tt << "Quest mit ID " << questid << " geportet";
 		std::string reason = tt.str().c_str();
-		accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-		PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(),reason);
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 		ReportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null", player->GetGUID(), player->GetSession()->GetAccountId(), questid);
 		ReportSystem->UpdateQuantityQuestReportInDB(anzahl + 1, questid);
-		ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), questid, error_message);
+		ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayer(), questid, error_message);
 		std::string questname = WorldSystem->getQuestNamebyID(questid);
 		handler->PSendSysMessage("##########################################################");
 		handler->PSendSysMessage(REPORT_QUEST_SUCESS);
@@ -456,14 +449,12 @@ bool CustomReportSystem::completeQuestReport(Player * player, ChatHandler * hand
 		std::string questname = WorldSystem->getQuestNamebyID(questid);
 		ReportSystem->addNewQuestReportInDB(questname, questid, 1, 0);
 		if (player->GetGuildId() != 0) {
-			std::string accountname = "";
 			std::ostringstream tt;
 			tt << "Quest mit ID " << questid << " geportet";
 			std::string reason = tt.str().c_str();
-			accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-			PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), reason);
+			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 			ReportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), player->GetGuildName(), player->GetGUID(), player->GetSession()->GetAccountId(), questid);
-			ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), questid, error_message);
+			ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayer(), questid, error_message);
 			handler->PSendSysMessage("##########################################################");
 			handler->PSendSysMessage(REPORT_QUEST_SUCESS);
 			handler->PSendSysMessage("QuestID: %u", questid);
@@ -474,14 +465,12 @@ bool CustomReportSystem::completeQuestReport(Player * player, ChatHandler * hand
 			return true;
 		}
 
-		std::string accountname = "";
 		std::ostringstream tt;
 		tt << "Quest mit ID " << questid << " geportet";
 		std::string reason = tt.str().c_str();
-		accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-		PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(),reason);
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 		ReportSystem->addNewPlayerReportInDB(player->GetSession()->GetPlayerName(), "null", player->GetGUID(), player->GetSession()->GetAccountId(), questid);
-		ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), questid, error_message);
+		ReportSystem->insertErrorMessageForQuest(player->GetSession()->GetPlayer(), questid, error_message);
 		handler->PSendSysMessage("##########################################################");
 		handler->PSendSysMessage(REPORT_QUEST_SUCESS);
 		handler->PSendSysMessage("QuestID: %u", questid);

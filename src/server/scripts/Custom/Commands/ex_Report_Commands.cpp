@@ -235,16 +235,10 @@ public:
 			bool isQuestForbidden = true;
 			isQuestForbidden = ReportSystem->checkIfQuestisForbidden(questid);
 			if (isQuestForbidden) {
-				int32 accountid = CharacterSystem->getAccountID(player->GetSession()->GetPlayerName());
-				std::string accountname = CharacterSystem->getAccountName(accountid);
 				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer(), "Try to deactivate a forbidden Quest!");
-				int newcounter = 0;
-				newcounter = GMLogic->getGMPlayerCount(accountid);
-				 
 				handler->PSendSysMessage("##########################################################");
 				handler->PSendSysMessage("Warning: GM should be a supporter not a cheater!");
 				handler->PSendSysMessage("This incident has been logged in DB.");
-				handler->PSendSysMessage("This is your %u Incident. Beware!", newcounter);
 				handler->PSendSysMessage("##########################################################");
 				return true;
 			}
@@ -320,16 +314,10 @@ public:
 			bool isQuestForbidden = true;
 			isQuestForbidden = ReportSystem->checkIfQuestisForbidden(questid);
 			if (isQuestForbidden) {
-				int32 accountid = CharacterSystem->getAccountID(player->GetSession()->GetPlayerName());
-				std::string accountname = CharacterSystem->getAccountName(accountid);
 				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer(), "Try to activate a forbidden Quest!");
-				int newcounter = 0;
-				newcounter = GMLogic->getGMPlayerCount(accountid);
-
 				handler->PSendSysMessage("##########################################################");
 				handler->PSendSysMessage("Warning: GM should be a supporter not a cheater!");
 				handler->PSendSysMessage("This incident has been logged in DB.");
-				handler->PSendSysMessage("This is your %u Incident. Beware!", newcounter);
 				handler->PSendSysMessage("##########################################################");
 				return true;
 			}

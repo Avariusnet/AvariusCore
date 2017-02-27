@@ -107,11 +107,11 @@ void AddSC_ex_testcommands();
 //Custom XP COmmands
 void AddSC_ex_customxpcommands();
 
+//Custom_Items
 void AddSC_Custom_Items();
 
 //Playtime Rewards
 void AddSC_PlayTimeRewards();
-
 
 //XP Scripts
 void AddSC_XPScripts();
@@ -140,7 +140,7 @@ void AddCustomScripts()
 	AddSC_vipvendor();
 
 
-	//port_item
+	//Custom_Items
 	AddSC_Custom_Items();
 
 	//galadriel

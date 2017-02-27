@@ -22,7 +22,7 @@ If you wish to contribute ideas or code please visit our site linked below or
 make pull requests to our [Github repository](https://github.com/AvariusProject/AvariusCore/pulls).
 
 For further information on the TrinityCore project, please visit our project
-website at [Avarius.net](https://avarius.net).
+website at [Avarius.net](http://avarius.net).
 
 ## Requirements
 

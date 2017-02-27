@@ -44,12 +44,9 @@ class Race_Change_NPC : public CreatureScript
 public:
 	Race_Change_NPC() : CreatureScript("racechange") {  }
 
-	void DBeintrag(Player* player, std::string grund){
-		CustomCharacterSystem* CharacterSystem = 0;
+	void DBeintrag(Player* player, std::string reason){
 		CustomPlayerLog * PlayerLog = 0;
-		std::string accountname = "";
-		accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-		PlayerLog->insertNewPlayerLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), grund);
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 		return;
 
 	}
