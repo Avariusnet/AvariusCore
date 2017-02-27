@@ -239,7 +239,6 @@ bool CustomReportSystem::completeQuestReport(Player * player, ChatHandler * hand
 {
 	CustomReportSystem * ReportSystem = 0;
 	CustomWorldSystem * WorldSystem = 0;
-	CustomCharacterSystem * CharacterSystem = 0;
 	CustomPlayerLog * PlayerLog = 0;
 
 

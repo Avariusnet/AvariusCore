@@ -253,7 +253,6 @@ public:
 	{
 		//MALL command
 		CustomPlayerLog * PlayerLog = 0;
-		CustomCharacterSystem * CharacterSystem = 0;
 		Player *chr = handler->GetSession()->GetPlayer();
 
 		if (chr->IsInCombat())

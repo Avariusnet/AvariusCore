@@ -108,7 +108,6 @@ public:
 	
 	static bool HandleLogicPlayerlogTest(ChatHandler* handler, const char* /*args*/) {
 		CustomPlayerLog * PlayerLog = 0;
-		CustomCharacterSystem* CharacterSystem = 0;
 		Player* player = handler->GetSession()->GetPlayer();
 		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Testeintrag");
 		return true;

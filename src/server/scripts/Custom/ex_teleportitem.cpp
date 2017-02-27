@@ -43,7 +43,7 @@ class avarius_betatest : public ItemScript
 public:
 	avarius_betatest() : ItemScript("avarius_betatest") { }
 
-	bool OnUse(Player* player, Item* item, const SpellCastTargets &)
+	bool OnUse(Player* player, Item* /*item*/, const SpellCastTargets &)
 	{
 		CustomPlayerLog * PlayerLog = 0;
 		if (player->IsInCombat())
@@ -66,7 +66,7 @@ class exitareshand : public ItemScript
 public:
 	exitareshand() : ItemScript("exitareshand") { }
 
-	bool OnUse(Player* player, Item* item, const SpellCastTargets &)
+	bool OnUse(Player* player, Item* /*item*/, const SpellCastTargets &)
 	{
 		CustomPlayerLog * PlayerLog = 0;
 		if (player->IsInCombat())

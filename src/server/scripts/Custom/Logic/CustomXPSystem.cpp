@@ -62,7 +62,6 @@
 	{
 		if (sConfigMgr->GetBoolDefault("Custom.XP", 1)) {
 			CustomXP *CustomXP = 0;
-			CustomCharacterSystem* CharacterSystem = 0;
 			CustomPlayerLog * PlayerLog = 0;
 
 			char* px = strtok((char*)args, " ");

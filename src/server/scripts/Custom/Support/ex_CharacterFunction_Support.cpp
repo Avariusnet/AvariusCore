@@ -124,9 +124,7 @@ public:
 		case 2:
 		{
 			CustomPlayerLog * PlayerLog = 0;
-			CustomCharacterSystem * CharacterSystem = 0;
 			CustomGMLogic * GMLogic = 0;
-			//CustomCharacterSystem * CharacterSystem = 0;
 			std::string accountname = code;
 			PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_ACCOUNT_ID_BY_NAME);
 			stmt->setString(0, accountname);

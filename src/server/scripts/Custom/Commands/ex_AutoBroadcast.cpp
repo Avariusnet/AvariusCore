@@ -59,6 +59,7 @@ public:
 	static bool HandleSetAutobroadcast(ChatHandler* handler, const char* args)
 	{
 		int realmid = sConfigMgr->GetIntDefault("RealmID", 1);
+		handler->PSendSysMessage("%u", realmid);
 		return true;
 
 	};

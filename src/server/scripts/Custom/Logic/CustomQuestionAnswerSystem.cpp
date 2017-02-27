@@ -22,7 +22,6 @@ int CustomQuestionAnswerSystem::generateRandomInt(int min, int max)
 void CustomQuestionAnswerSystem::getQuestionForPlayer(Player * player)
 {
 	CustomPlayerLog * PlayerLog = 0;
-	CustomCharacterSystem * CharacterSystem = 0;
 	int max = selectMaxEntryCountofPlayerQuestionsAndAnswers();
 	uint32 rdnquestionnr = generateRandomInt(1, max);
 	int whilecounter = 0;
