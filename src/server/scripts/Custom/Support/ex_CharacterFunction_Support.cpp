@@ -64,131 +64,21 @@ public:
 	}
 
 	bool OnGossipSelectCode(Player * player, Creature* /*creature*/, uint32 /*sender*/, uint32 action, const char* code){
-
+		CustomCharacterSystem * CharacterSystem = 0;
+		CustomPlayerLog * PlayerLog = 0;
 		switch (action){
+			
 
 		case 0:
 		{
-			std::string charactername = code;
-			CustomCharacterSystem * CharacterSystem = 0;
-			CustomPlayerLog * PlayerLog = 0;
-			PreparedStatement* charselbyname = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHARACTER_BYNAME);
-			charselbyname->setString(0, charactername);
-			PreparedQueryResult result = CharacterDatabase.Query(charselbyname);
-
-			if (!result){
-				player->GetSession()->SendNotification(NOCHARACTERFOUND);
-				return true;
-			}
-
-			if (result){
-
-				
-				Field* feld = result->Fetch();
-				uint32 guid = feld[0].GetInt32();
-				uint32 account = feld[1].GetInt32();
-				std::string name = feld[2].GetCString();
-				//uint32 level = feld[3].GetInt32();
-				uint32 totaltime = feld[4].GetInt32();
-				
-				PreparedStatement* getaccountnamebyid = LoginDatabase.GetPreparedStatement(LOGIN_SEL_ACCOUNT_BYID);
-				getaccountnamebyid->setInt32(0, account);
-				PreparedQueryResult ergebnis = LoginDatabase.Query(getaccountnamebyid);
-
-				if (!result){
-					player->GetSession()->SendNotification("Error");
-					return true;
-				}
-
-				
-				Field* ergfeld = ergebnis->Fetch();
-				std::string accname = ergfeld[0].GetCString();
-				uint32 spielzeith = totaltime / 60 / 60;
-				uint32 spielzeit = totaltime / 60 / 60 / 24;
-
-				std::ostringstream tt;
-				tt << "Search for Character " << charactername;
-				std::string reason = tt.str().c_str();
-				PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
-				std::ostringstream pp;
-				pp << "Folgende Daten wurden gefunden \nGuid: " << guid << "\nAccountname: " << accname << "\nSpielzeit in Stunden: " << spielzeith << "\nSpielzeit in Tagen: " << spielzeit;
-					ChatHandler(player->GetSession()).PSendSysMessage(pp.str().c_str(),
-					player->GetName());
-					return true;
-			}
-			return true;
+			CharacterSystem->doesCharacterExist(player->GetSession()->GetPlayer(), code);
 
 		}break;
 
 
 		case 2:
 		{
-			CustomPlayerLog * PlayerLog = 0;
-			CustomGMLogic * GMLogic = 0;
-			std::string accountname = code;
-			PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_ACCOUNT_ID_BY_NAME);
-			stmt->setString(0, accountname);
-			PreparedQueryResult result = LoginDatabase.Query(stmt);
-
-			if (!result){
-				player->GetSession()->SendNotification(NOACCOUNTFOUND);
-				return true;
-			}
-
-
-			Field* feld = result->Fetch();
-			uint32 accid = feld[0].GetInt32();
-
-
-			PreparedStatement* charsum = CharacterDatabase.GetPreparedStatement(CHAR_SEL_SUM_CHARS);
-			charsum->setInt32(0, accid);
-			PreparedQueryResult ergebnis = CharacterDatabase.Query(charsum);
-
-			if (!ergebnis){
-				player->GetSession()->SendNotification("Error beim Counten der Charaktere!");
-				return true;
-			}
-
-			Field* felder = ergebnis->Fetch();
-			uint32 charactersum = felder[0].GetInt32();
-			
-			if (player->GetSession()->GetSecurity() > 0) {
-				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer(), "Try to transfer Character to a Lower or Higher Sec Account!");		
-				ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
-					player->GetName());
-				ChatHandler(player->GetSession()).PSendSysMessage("Warning: GM should be a supporter not a cheater!",
-					player->GetName());
-				ChatHandler(player->GetSession()).PSendSysMessage("This incident has been logged in DB.",
-					player->GetName());
-				ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
-					player->GetName());
-				return true;
-			}
-
-			if (charactersum <= 9 && player->HasEnoughMoney(5000*GOLD)){
-				PreparedStatement* updateacc = CharacterDatabase.GetPreparedStatement(CHAR_UPD_ACCOUNT_ID);
-				updateacc->setInt32(0, accid);
-				updateacc->setInt32(1, player->GetGUID());
-				CharacterDatabase.Execute(updateacc);
-				player->ModifyMoney(-5000 * GOLD);
-				player->GetSession()->SendNotification("Der Accounttausch wurde vollzogen");
-				ChatHandler(player->GetSession()).PSendSysMessage("Der Accounttausch wurde vollzogen.",
-					player->GetName());
-				std::ostringstream tt;
-				tt << "Transfer character to Account " << accountname;
-				std::string reason = tt.str().c_str();
-				PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
-				return true;
-			}
-
-			if (!player->HasEnoughMoney(5000 * GOLD)){
-				player->GetSession()->SendNotification(NOTENOUGHMONEY);
-			}
-
-			if (charactersum == 10){
-				player->GetSession()->SendNotification(TOOMANYCHARACTER);
-				return true;
-			}
+			CharacterSystem->moveCharacterToAnotherAccount(player->GetSession()->GetPlayer(), code);
 			return true;
 		}break;
 
@@ -196,8 +86,6 @@ public:
 		//Request new Firstchar!
 		case 3: 
 		{
-
-			CustomCharacterSystem * CharacterSystem = 0;
 			CharacterSystem->requestNewFirstCharacter(player->GetSession()->GetPlayer(), code);
 			return true;
 

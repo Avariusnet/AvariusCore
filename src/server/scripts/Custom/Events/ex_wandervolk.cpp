@@ -248,14 +248,18 @@ public:
 
 	bool OnGossipHello(Player *player, Creature* creature)
 	{
-
-		player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Hi", GOSSIP_SENDER_MAIN, 0,"",0,false);
-		bool status = player->GetQuestRewardStatus(900810);
-		if (status){
-			player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Beam mich hoch!", GOSSIP_SENDER_MAIN, 1, "", 0, false);
+		if (sConfigMgr->GetBoolDefault("Wander.Volk", true)) {
+			player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Hi", GOSSIP_SENDER_MAIN, 0, "", 0, false);
+			bool status = player->GetQuestRewardStatus(900810);
+			if (status) {
+				player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Beam mich hoch!", GOSSIP_SENDER_MAIN, 1, "", 0, false);
+			}
+			player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "I challenge you!", GOSSIP_SENDER_MAIN, 2, "", 0, false);
 		}
-		player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "I challenge you!", GOSSIP_SENDER_MAIN, 2, "", 0, false);
-		
+
+		else {
+			return true;
+		}
 			
 		
 
@@ -304,23 +308,6 @@ class raetsel : public CreatureScript
 
 public:
 	raetsel() : CreatureScript("raetsel") { }
-
-	int generaterdmint(int min, int max)
-	{
-		
-		unsigned int N = (max - min <= RAND_MAX)
-			? (max - min + 1U)       
-			: (RAND_MAX + 1U);            
-		unsigned int x = (RAND_MAX + 1U) / N;
-		unsigned int y = x * N;
-		unsigned int r;
-		do {
-			r = rand();
-		} while (r >= y);
-
-		return r / x + min;
-	}
-
 
 	bool OnGossipHello(Player *pPlayer, Creature* _creature)
 	{

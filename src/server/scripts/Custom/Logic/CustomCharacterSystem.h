@@ -34,8 +34,7 @@ private:
 	void executeGuildCharacter(Player* player, std::string playerlog, int membercount);
 	void deleteFirstCharacterPlayerLog(int accountid);
 	void updateCharacterToZeroAccount(std::string newname, int guid);
-
-
+	void insertNewPlayerPlayTimeReward(int playtime, std::string charactername, int guid);
 
 	
 
@@ -51,13 +50,15 @@ public:
 	void sendPlayerMailwithGold(std::string title, std::string message, Player* player, int money);
 
 	//PlayTimeRewards
-	void insertNewPlayerPlayTimeReward(int playtime, std::string charactername, int guid);
+	
 	bool checkIfPlayerGetPlayTimeReward(int playtime, int guid);
 	void completeAddPlayTimeReward(int playtime, Player* player, int money);
 
 	//CharacterFunctions
 	int getAccountID(std::string charactername);
 	std::string getAccountName(int accountid);
+	void moveCharacterToAnotherAccount(Player* player, const char* args);
+	void doesCharacterExist(Player * player, const char* args);
 
 	//Execute first Character complete
 	void playerSetSingleFirstCharacter(Player * player);
@@ -68,6 +69,7 @@ public:
 	void givePlayerLevelWithCurrency(Player* player, uint16 cost, uint32 levelup, std::string logmessage);
 	void sellPlayerVIPCurrency(Player* player, const char* code);
 	bool setProfessionSkill(Player* player, uint32 profession, int professioncost);
+
 
 
 };

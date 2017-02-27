@@ -91,7 +91,7 @@ public:
 	void OnLevelChanged(Player* player, uint8 oldLevel) {
 		CustomPlayerLog * PlayerLog = 0;
 		std::ostringstream tt;
-		tt << "Level changed to " << oldLevel + 1;
+		tt << "Level changed from " << oldLevel  << " to " << oldLevel+1 ;
 		std::string reason = tt.str().c_str();
 		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 		return;

@@ -81,10 +81,9 @@ public:
 
 
 	static bool HandleLogicPlayInsertTest(ChatHandler* handler, const char* /*args*/) {
-		CustomCharacterSystem * CharacterSystem = 0;
-		Player* player = handler->GetSession()->GetPlayer();
-		CharacterSystem->insertNewPlayerPlayTimeReward(200, player->GetSession()->GetPlayerName(), player->GetGUID());
-		handler->PSendSysMessage("Command executed!");
+		//Player* player = handler->GetSession()->GetPlayer();
+		//CharacterSystem->insertNewPlayerPlayTimeReward(200, player->GetSession()->GetPlayerName(), player->GetGUID());
+		handler->PSendSysMessage("Command executed but Function is now private!");
 
 		return true;
 	}
