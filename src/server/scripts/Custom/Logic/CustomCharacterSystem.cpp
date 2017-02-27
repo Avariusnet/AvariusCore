@@ -445,7 +445,7 @@ void CustomCharacterSystem::completeAddPlayTimeReward(int playtime, Player* play
 		if (money == 0 && rewarditem != 0) {
 
 			std::ostringstream tt;
-			tt << "Get Reward with Playtime : " << playtime << "and Reward: " << rewarditem;
+			tt << "Get Reward with Playtime: " << playtime << " and Reward: " << rewarditem;
 			std::string reason = tt.str().c_str();
 			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 			sendPlayerMailwithItem(rewarditem, 1, "Playtime Reward", message, player->GetSession()->GetPlayer());

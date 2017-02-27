@@ -73,7 +73,7 @@ public:
 	
 		CustomPlayerLog * PlayerLog = 0;
 		std::ostringstream tt;
-		tt << "Player was killed by: " << killer;
+		tt << "Player was killed by: " << killer->GetName();
 		std::string reason = tt.str().c_str();
 		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 		return;
@@ -103,10 +103,10 @@ public:
 
 
 
-	void OnLevelChanged(Player* player, uint8 oldLevel) {
+	void OnLevelChanged(Player* player, uint8 /*oldLevel*/) {
 		CustomPlayerLog * PlayerLog = 0;
 		std::ostringstream tt;
-		tt << "Level changed from " << player->getLevel()  << " to " << player->getLevel()-1 ;
+		tt << "Level changed from " << player->getLevel()-1  << " to " << player->getLevel() ;
 		std::string reason = tt.str().c_str();
 		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 		return;
