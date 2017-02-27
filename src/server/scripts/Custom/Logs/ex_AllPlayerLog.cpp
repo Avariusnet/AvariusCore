@@ -60,9 +60,24 @@ public:
 	
 	}
 
-		
+};
 
 
+class KilledByLog : public PlayerScript
+{
+
+public:
+	KilledByLog() : PlayerScript("KilleyByLog") {}
+
+	void OnPlayerKilledByCreature(Creature* killer, Player* player) { 
+	
+		CustomPlayerLog * PlayerLog = 0;
+		std::ostringstream tt;
+		tt << "Player was killed by: " << killer;
+		std::string reason = tt.str().c_str();
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
+		return;
+	}
 };
 
 class GraveYardReleaseLog : public PlayerScript
@@ -91,7 +106,7 @@ public:
 	void OnLevelChanged(Player* player, uint8 oldLevel) {
 		CustomPlayerLog * PlayerLog = 0;
 		std::ostringstream tt;
-		tt << "Level changed from " << oldLevel  << " to " << oldLevel+1 ;
+		tt << "Level changed from " << player->getLevel()  << " to " << player->getLevel()-1 ;
 		std::string reason = tt.str().c_str();
 		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 		return;
@@ -133,6 +148,44 @@ public:
 };
 
 
+class PVPKillLog : public PlayerScript {
+public:
+	PVPKillLog() : PlayerScript("PVPKillLog") {}
+
+	void OnPVPKill(Player* killer, Player* killed) { 
+		CustomPlayerLog * PlayerLog = 0;
+		std::ostringstream tt;
+		tt <<  killer << " killed : " << killed;
+		std::string reason = tt.str().c_str();
+
+		std::ostringstream zz;
+		zz << killed << "was killed by " << killer;
+		std::string reasone = zz.str().c_str();
+		PlayerLog->addCompletePlayerLog(killer->GetSession()->GetPlayer(), reason);
+		PlayerLog->addCompletePlayerLog(killed->GetSession()->GetPlayer(), reasone);
+		return;
+	}
+};
+
+class LoginLogoutLog : public PlayerScript {
+public:
+	LoginLogoutLog() : PlayerScript("LoginLogoutLog") {}
+
+	void OnLogin(Player* player, bool /*firstLogin*/) {
+		CustomPlayerLog * PlayerLog = 0;
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Player logged in!");
+		return;
+	}
+	
+	void OnLogout(Player* player) {
+		CustomPlayerLog * PlayerLog = 0;
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Player logged out!");
+		return;
+	}
+
+};
+
+
 void AddSC_logscript()
 {
 	new ResetTalentLog();
@@ -140,4 +193,7 @@ void AddSC_logscript()
 	new QuestLog();
 	new LevelLog();
 	new CreatureKillLog();
+	new KilledByLog();
+	new PVPKillLog();
+	new LoginLogoutLog();
 }

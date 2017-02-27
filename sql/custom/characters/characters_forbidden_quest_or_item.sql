@@ -96,3 +96,4 @@ INSERT INTO `forbidden_quest_or_item` (`questid`, `itemid`) VALUES ('0', '41002'
 
 
 
+

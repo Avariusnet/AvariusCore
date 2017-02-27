@@ -65,7 +65,6 @@ public:
 
 	bool OnGossipSelectCode(Player * player, Creature* /*creature*/, uint32 /*sender*/, uint32 action, const char* code){
 		CustomCharacterSystem * CharacterSystem = 0;
-		CustomPlayerLog * PlayerLog = 0;
 		switch (action){
 			
 

@@ -51,184 +51,69 @@ public:
 
 		if (sConfigMgr->GetBoolDefault("Playtime.Rewards", true)) {
 			CustomCharacterSystem * CharacterSystem = 0;
-			//10h
-			if (time >= 36000 && time <= 71999) {
-				CharacterSystem->completeAddPlayTimeReward(10, player->GetSession()->GetPlayer(), 250);
+			//1h
+			if (time >= 3600 && time <= 43199) {
+				CharacterSystem->completeAddPlayTimeReward(1, player->GetSession()->GetPlayer(), 5,0,"Hi, you reached the first Playtime Reward! Take your Reward and have fun! More Rewards are coming! Just play and get rewarded!  Your Serverteam!");
+				return;
 			}
 
-			//20h
-			if (time >= 72000 && time <= 107999) {
-
-				
-
+			//12h
+			if (time >= 43200 && time <= 86399) {
+				CharacterSystem->completeAddPlayTimeReward(12, player->GetSession()->GetPlayer(), 0, 20400, "Hey, you got it! The next Playtime Reward is yours! Have fun with it.");
+				return;
 			}
 
-			//30h
-			if (time >= 108000 && time <= 143999) {
-
-			
-
+			//24h
+			if (time >= 86400 && time <= 143999) {
+				CharacterSystem->completeAddPlayTimeReward(24, player->GetSession()->GetPlayer(), 0, 34499, "Hey, you got it! The next Playtime Reward is yours! Have fun with it.");
+				return;
 			}
 
-
-
-			//40h
-			if (time >= 144000 && time <= 179999) {
-
-				
-
-			}
-
-
-			//50h
-			if (time >= 180000 && time <= 215999) {
-
-			
-
-			}
-
-			//60h
-			if (time >= 216000 && time <= 251999) {
-
-				
-
-			}
-
-
-			//70h
-			if (time >= 252000 && time <= 279999) {
-
-				
-
-			}
-
-
-			//80h
-			if (time >= 288000 && time <= 323999) {
-
-				
-			}
-
-			//90h
-			if (time >= 324000 && time <= 359999) {
-
-
-			}
-
-
-			//100h
-			if (time >= 360000 && time <= 395999) {
-
-				//QueryResult result = CharacterDatabase.PQuery("SELECT `id`, `zeit`, `spieler`,`uid` `benutzt` FROM `lob` WHERE `zeit` = '%u' AND `uid`= '%u'", 100, player->GetGUID());
-
-				PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PLAYTIME_REWARDS);
-				stmt->setInt32(0, 100);
-				stmt->setInt32(1, player->GetGUID());
-				PreparedQueryResult result = CharacterDatabase.Query(stmt);
-
-				if (!result) {
-					uint32 uid = player->GetGUID();
-
-					Item* item = Item::CreateItem(46802, 1);
-					player->GetSession()->SendNotification("Herzlichen Glueckwunsch zu 100h Spielzeit.");
-					SQLTransaction trans = CharacterDatabase.BeginTransaction();
-					item->SaveToDB(trans);
-					MailDraft(PRESENT, THX).AddItem(item)
-						.SendMailTo(trans, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
-					CharacterDatabase.CommitTransaction(trans);
-
-					CharacterDatabase.PExecute("INSERT INTO lob (zeit,spieler,uid,benutzt) Values ('%u','%s','%u','%u')", 100, player->GetName().c_str(), uid, 1);
-
-				}
-			}
-
-
-			//110h
-			if (time >= 396000 && time <= 431999) {
-
-				
-
-			}
 
 			//120h
-			if (time >= 432000 && time <= 467999) {
-
-				
-
+			if (time >= 144000 && time <= 431999) {
+				CharacterSystem->completeAddPlayTimeReward(120, player->GetSession()->GetPlayer(), 0, 34493, "Hey, you got it! The next Playtime Reward is yours! Have fun with it.");
+				return;
 			}
 
 
-			//130h
-			if (time >= 468000 && time <= 503999) {
+			//240h
+			if (time >= 432000 && time <= 1727999) {	
+				CharacterSystem->completeAddPlayTimeReward(240, player->GetSession()->GetPlayer(), 0, 38186, "Hey, you got it! The next Playtime Reward is yours! Have fun with it.");
+				return;
+			}
 
-				
-
+			//480h
+			if (time >= 1728000 && time <= 4319999) {				
+				CharacterSystem->completeAddPlayTimeReward(480, player->GetSession()->GetPlayer(), 0, 23713, "Hey, you got it! The next Playtime Reward is yours! Have fun with it.");
+				return;
 			}
 
 
-			//140h
-			if (time >= 504000 && time <= 539999) {
-
-				
+			//1200h
+			if (time >= 4320000 && time <= 6479999) {
+				CharacterSystem->completeAddPlayTimeReward(1200, player->GetSession()->GetPlayer(), 0, 43599, "Hey, you are insane! And for insane People there are insane Rewards. Get it and have fun with it!");
+				return;
 			}
 
 
-			//150h
-			if (time >= 540000 && time <= 575999) {
+			//1800h
+			if (time >= 6480000 && time <= 8639999) {
+				CharacterSystem->completeAddPlayTimeReward(1800, player->GetSession()->GetPlayer(), 0, 45047, "Hey, you got it! The next Playtime Reward is yours! Have fun with it.");
+				return;
+			}
 
-				
+			//2400h
+			if (time >= 8640000 && time <= 17279999) {
+				CharacterSystem->completeAddPlayTimeReward(2400, player->GetSession()->GetPlayer(), 0, 33809, "Hey, you are insane! And for insane People there are insame Rewards. Get it and have fun with it!");
+				return;
 			}
 
 
-			//160h
-			if (time >= 576000 && time <= 611999) {
-
-				
-			}
-
-
-			//170h
-			if (time >= 612000 && time <= 647999) {
-
-				
-			}
-
-			//180h
-			if (time >= 648000 && time <= 683999) {
-
-				
-			}
-
-
-			//190h
-			if (time >= 684000 && time <= 719999) {
-
-				
-			}
-
-
-			//200h
-			if (time >= 720000) {
-
-				PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PLAYTIME_REWARDS);
-				stmt->setInt32(0, 200);
-				stmt->setInt32(1, player->GetGUID());
-				PreparedQueryResult result = CharacterDatabase.Query(stmt);
-
-
-				if (!result) {
-
-					Item* item = Item::CreateItem(37719, 1);
-					uint32 uid = player->GetGUID();
-					SQLTransaction trans = CharacterDatabase.BeginTransaction();
-					item->SaveToDB(trans);
-					MailDraft(PRESENT, THX).AddItem(item)
-						.SendMailTo(trans, MailReceiver(player, player->GetGUID()), MailSender(MAIL_NORMAL, 0, MAIL_STATIONERY_GM));
-					CharacterDatabase.CommitTransaction(trans);
-
-					CharacterDatabase.PExecute("INSERT INTO lob (zeit,spieler,uid,benutzt) Values ('%u','%s','%u','%u')", 200, player->GetName().c_str(), uid, 1);
-				}
-
+			//4800h
+			if (time >= 17280000) {
+				CharacterSystem->completeAddPlayTimeReward(24, player->GetSession()->GetPlayer(), 10000, 0, "Hey, you got it! The next Playtime Reward is yours! Have fun with it.");
+				return;
 			}
 
 		}
