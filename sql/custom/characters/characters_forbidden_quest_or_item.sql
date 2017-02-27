@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS `forbidden_quest_or_item` (
 
  /*Items*/
 DELETE FROM `forbidden_quest_or_item` WHERE ID BETWEEN 1 AND 100;
-INSERT INTO `forbidden_quest_or_item` (`questid`, `itemid`) VALUES ('0', '38186'); --Astraler Kredit
-INSERT INTO `forbidden_quest_or_item` (`questid`, `itemid`) VALUES ('0', '49426'); --Frostmarke
-INSERT INTO `forbidden_quest_or_item` (`questid`, `itemid`) VALUES ('0', '49623'); --
+INSERT INTO `forbidden_quest_or_item` (`questid`, `itemid`) VALUES ('0', '38186'); /* Astraler Kredit */
+INSERT INTO `forbidden_quest_or_item` (`questid`, `itemid`) VALUES ('0', '49426'); /* Frostmarke 	  */
+INSERT INTO `forbidden_quest_or_item` (`questid`, `itemid`) VALUES ('0', '49623'); /* Shadowmourne 	  */
+INSERT INTO `forbidden_quest_or_item` (`questid`, `itemid`) VALUES ('0', '38186'); 

@@ -416,8 +416,9 @@ bool CustomCharacterSystem::checkIfPlayerGetPlayTimeReward(int playtime, int gui
 	return false;
 }
 
-void CustomCharacterSystem::completeAddPlayTimeReward(int playtime, Player* player, int money)
+void CustomCharacterSystem::completeAddPlayTimeReward(int playtime, Player* player, int money, int rewarditem, std::string message)
 {
+	CustomPlayerLog * PlayerLog = 0;
 	PreparedStatement *stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_PLAYTIME_REWARDS);
 	stmt->setInt32(0, playtime);
 	stmt->setInt32(1, player->GetGUID());
@@ -425,22 +426,37 @@ void CustomCharacterSystem::completeAddPlayTimeReward(int playtime, Player* play
 
 	if (!result) {
 		insertNewPlayerPlayTimeReward(playtime, player->GetSession()->GetPlayerName(), player->GetGUID());
-		if (playtime == 100) {
-			int itemid = sConfigMgr->GetIntDefault("Playtime.100", 38186);
-			int itemamount = sConfigMgr->GetIntDefault("Playtime.100.Amount", 1);
-			sendPlayerMailwithItem(itemid, itemamount, "Playtime Reward", "Here is you Playtime Reward. Thanks for playing 100h on our Server!", player->GetSession()->GetPlayer());
+		if (playtime == 1200) {
+			int itemid = sConfigMgr->GetIntDefault("Playtime.1200", 38186);
+			int itemamount = sConfigMgr->GetIntDefault("Playtime.1200.Amount", 1);
+			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Player reached 1200h Playtime Reward");
+			sendPlayerMailwithItem(itemid, itemamount, "Playtime Reward", message, player->GetSession()->GetPlayer());
 			return;
 		}
 
-		if (playtime == 200) {
-			int itemid = sConfigMgr->GetIntDefault("Playtime.200", 38186);
-			int itemamount = sConfigMgr->GetIntDefault("Playtime.200.Amount", 1);
-			sendPlayerMailwithItem(itemid, itemamount, "Playtime Reward", "Here is you Playtime Reward. Thanks for playing 200h on our Server!", player->GetSession()->GetPlayer());
+		if (playtime == 2400) {
+			int itemid = sConfigMgr->GetIntDefault("Playtime.2400", 38186);
+			int itemamount = sConfigMgr->GetIntDefault("Playtime.2400.Amount", 1);
+			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Player reached 2400h Playtime Reward");
+			sendPlayerMailwithItem(itemid, itemamount, "Playtime Reward", message, player->GetSession()->GetPlayer());
 			return;
+		}
+
+		if (money == 0 && rewarditem != 0) {
+
+			std::ostringstream tt;
+			tt << "Get Reward with Playtime : " << playtime << "and Reward: " << rewarditem;
+			std::string reason = tt.str().c_str();
+			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
+			sendPlayerMailwithItem(rewarditem, 1, "Playtime Reward", message, player->GetSession()->GetPlayer());
 		}
 
 		else {
-			sendPlayerMailwithGold("Playtime Reward", "Here is you Playtime Reward. Thanks for playing on our Server!", player->GetSession()->GetPlayer(), money);
+			std::ostringstream tt;
+			tt << "Get Reward with Playtime : " << playtime;
+			std::string reason = tt.str().c_str();
+			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
+			sendPlayerMailwithGold("Playtime Reward", message, player->GetSession()->GetPlayer(), money);
 			return;
 		}
 		return;
@@ -487,7 +503,9 @@ void CustomCharacterSystem::requestNewFirstCharacter(Player * player, const char
 
 	bool hasPlayeralreadyAFirstCharacter = CharacterSystem->hasPlayerAlreadyAFirstChar(player->GetSession()->GetAccountId(), "FirstCharacter");
 	if (!hasPlayeralreadyAFirstCharacter) {
-		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Request declined!");
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Firstcharacter Request declined!"); 
+		ChatHandler(player->GetSession()).PSendSysMessage("Your Reqeust for a new Firstcharacter was declined! This is because there i no Firstcharacter on your Account!",
+			player->GetName());
 		return;
 	}
 
@@ -498,7 +516,7 @@ void CustomCharacterSystem::requestNewFirstCharacter(Player * player, const char
 	}
 
 	std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-	PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Request new FirstChar!");
+	PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Request new FirstChar and it is accepted!");
 	std::string generatedCharacterName = CharacterSystem->generateNewCharacterName();
 	std::string prefix = "first_";
 	std::string newCharacterName = prefix + generatedCharacterName;
