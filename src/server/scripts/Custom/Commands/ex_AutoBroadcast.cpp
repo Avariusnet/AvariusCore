@@ -56,7 +56,7 @@ public:
 
 
 	//Gibt dem Eventteam die Moeglichkeit Gutscheine fuer Spieler zu erstellen.
-	static bool HandleSetAutobroadcast(ChatHandler* handler, const char* args)
+	static bool HandleSetAutobroadcast(ChatHandler* handler, const char* /*args*/)
 	{
 		int realmid = sConfigMgr->GetIntDefault("RealmID", 1);
 		handler->PSendSysMessage("%u", realmid);
