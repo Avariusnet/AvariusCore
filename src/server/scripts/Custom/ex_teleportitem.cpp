@@ -51,7 +51,6 @@ public:
 			player->GetSession()->SendNotification("You cannot use this in Combat!");
 			return false;
 		}
-		player->Say("I am a AvariusCore Beta Tester!",LANG_UNIVERSAL,nullptr);
 	
 		player->TeleportTo(530, 10338.54f, -6353.21f, 31.94f, 2.92f);
 		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(),"Used AvariusBetatester Item");
