@@ -35,19 +35,62 @@ class eventnpc : public CreatureScript
 {
 public: eventnpc() : CreatureScript("eventnpc"){ }
 
+		struct eventnpc_AI : public ScriptedAI
+		{
+			eventnpc_AI(Creature* creature) : ScriptedAI(creature) { }
 
+			uint32 ticktimer;
+			uint32 actualplayer = 0;
+
+			void Reset() {
+				ticktimer = 10000;
+			}
+
+			bool checkifEventisActive() {
+				int eventarray[8] = { 70,71,72,73,74,75,76,77 };
+				for each (int event in eventarray) {
+					GameEventMgr::ActiveEvents const& ae = sGameEventMgr->GetActiveEventList();
+					bool active = ae.find(event) != ae.end();
+				}
+				return active;
+			}
+
+			void UpdateAI(uint32 diff)
+			{
+				if (ticktimer <= diff) {
+					if (Player * player = me->SelectNearestPlayer(10.0f)) {
+						if (actualplayer != player->GetGUID()) {
+
+							bool eventactive = checkifEventisActive();
+
+							if (eventactive == true) {
+						}
+
+					}
+				}
+				else {
+					ticktimer -= diff;
+				}
+			}
+
+		};
+
+		CreatureAI * GetAI(Creature * creature) const
+		{
+			return new eventnpc_AI(creature);
+		}
 
 		bool OnGossipHello(Player *pPlayer, Creature* _creature)
 		{
 			if (sConfigMgr->GetBoolDefault("Event.NPC", true)) {
 				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Who I am?", GOSSIP_SENDER_MAIN, 0, "", 0, false);
-				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Weihnachtsevent", GOSSIP_SENDER_MAIN, 1, "", 0, false);
-				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Halloweenevent", GOSSIP_SENDER_MAIN, 2, "", 0, false);
-				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Das Wandervolk", GOSSIP_SENDER_MAIN, 3, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "X-Mas", GOSSIP_SENDER_MAIN, 1, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Halloween", GOSSIP_SENDER_MAIN, 2, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "The Wandervolk", GOSSIP_SENDER_MAIN, 3, "", 0, false);
 				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Jumpevent", GOSSIP_SENDER_MAIN, 4, "", 0, false);
-				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Das Portal", GOSSIP_SENDER_MAIN, 5, "", 0, false);
-				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Neujahrsevent", GOSSIP_SENDER_MAIN, 6, "", 0, false);
-				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Chopperrennen", GOSSIP_SENDER_MAIN, 7, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Portal", GOSSIP_SENDER_MAIN, 5, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "New Year Eve", GOSSIP_SENDER_MAIN, 6, "", 0, false);
+				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "The Chopper Race", GOSSIP_SENDER_MAIN, 7, "", 0, false);
 				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Worldevent", GOSSIP_SENDER_MAIN, 8, "", 0, false);
 
 				pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());

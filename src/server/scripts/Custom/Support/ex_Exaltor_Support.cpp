@@ -61,11 +61,63 @@ enum Kosten
 #define PROFESSION_COST 20
 
 
+
 class npc_first_char : public CreatureScript
 {
 		public: npc_first_char() : CreatureScript("npc_first_char"){ }
     
 			
+				struct npc_first_charAI : public ScriptedAI
+				{
+					npc_first_charAI(Creature* creature) : ScriptedAI(creature) { }
+					
+					uint32 ticktimer;
+					uint32 actualplayer = 0;
+
+					void Reset() {
+						ticktimer = 10000;
+					}
+
+
+					void UpdateAI(uint32 diff) 
+					{
+						if (ticktimer <= diff) {
+							if (Player * player = me->SelectNearestPlayer(10.0f)) {
+								if (actualplayer != player->GetGUID()) {
+									if (player->HasItemCount(34047, 1, false)) {
+										std::ostringstream tt;
+										tt << "Hi " << player->GetSession()->GetPlayerName() << "! You are a Betatester! Let me kneel in front of you!";
+										std::string msg = tt.str().c_str();
+										me->Yell(msg, LANG_UNIVERSAL, nullptr);
+										me->HandleEmoteCommand(EMOTE_STATE_KNEEL);
+										actualplayer = player->GetGUID();
+										return;
+									}
+
+									std::ostringstream tt;
+									tt << "Hi " << player->GetSession()->GetPlayerName();
+									std::string msg = tt.str().c_str();
+									me->Yell(msg, LANG_UNIVERSAL, nullptr);
+									actualplayer = player->GetGUID();
+									return;
+								}
+							
+							}
+						}
+						else {
+							ticktimer -= diff;
+						}
+					}
+
+				};
+
+				CreatureAI * GetAI(Creature * creature) const 
+				{
+					return new npc_first_charAI(creature);
+				}
+
+
+
 				bool OnGossipHello(Player *player, Creature* _creature)
 				{
 					//test if this is possible in Fucntion
