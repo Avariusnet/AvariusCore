@@ -91,7 +91,7 @@ public:
 	static bool HandleLogicPlayTimeTest(ChatHandler* handler, const char* /*args*/) {
 		CustomCharacterSystem * CharacterSystem = 0;
 		Player* player = handler->GetSession()->GetPlayer();
-		CharacterSystem->completeAddPlayTimeReward(10,player->GetSession()->GetPlayer(),250);
+		CharacterSystem->completeAddPlayTimeReward(999,player->GetSession()->GetPlayer(),0,38186,"testcommand executed");
 		handler->PSendSysMessage("Command executed!");
 		return true;
 	}

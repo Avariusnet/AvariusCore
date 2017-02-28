@@ -25,6 +25,10 @@ void LoginDatabaseConnection::DoPrepareStatements()
 	///CUSTOM START
 	PrepareStatement(LOGIN_SEL_ACCOUNT_BYID, "SELECT username from account where id = ? ", CONNECTION_SYNCH);
 
+	//Autobroadcast
+	PrepareStatement(LOGIN_INS_AUTOBROADCAST_NEW, "INSERT INTO autobroadcast (realmid,id,weight, text) VALUES (?,?,?,?)", CONNECTION_ASYNC);
+	PrepareStatement(LOGIN_SEL_AUTOBROADCAST_MAX_COUNT_ID, "SELECT max(id) FROM autobroadcast where realmid = ? ", CONNECTION_SYNCH);
+
 	//FirstNPC
 	PrepareStatement(LOGIN_SEL_ACCOUNT_LAST_IP, "SELECT last_ip FROM account where id = ?", CONNECTION_SYNCH);
 	PrepareStatement(LOGIN_SEL_ACCOUNT_LAST_IP_COUNT, "SELECT count(last_ip) FROM account WHERE last_ip = ?", CONNECTION_SYNCH);

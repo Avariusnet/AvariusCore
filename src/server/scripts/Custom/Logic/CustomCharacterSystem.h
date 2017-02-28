@@ -52,7 +52,7 @@ public:
 	//PlayTimeRewards
 	
 	bool checkIfPlayerGetPlayTimeReward(int playtime, int guid);
-	void completeAddPlayTimeReward(int playtime, Player* player, int money);
+	void completeAddPlayTimeReward(int playtime, Player* player, int money, int rewarditem, std::string message);
 
 	//CharacterFunctions
 	int getAccountID(std::string charactername);

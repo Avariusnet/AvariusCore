@@ -122,9 +122,14 @@ void AddSC_logscript();
 //Question and Answer commands
 void AddSC_Question_and_Answer_Commands();
 
+//Autobroadcast
+void AddSC_AutobroadCast();
 
 void AddCustomScripts()
 {
+	//autobroadcast
+	AddSC_AutobroadCast();
+
 	//Question and Answer command
 	AddSC_Question_and_Answer_Commands();
 

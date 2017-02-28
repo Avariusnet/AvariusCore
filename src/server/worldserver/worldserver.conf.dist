@@ -3854,7 +3854,7 @@ XP.Weekend.Active = 1
 
 #
 #
-#		XP Rate for Xp Weekend 
+#		XP Rate  Multiplier for Xp Weekend. 2 means, that the XP Rate is multiplied by 2. Example: 2x xp normal, with value 2, new Value is 4. -> 2x2!
 #		Default:	1 - Lower
 #					2 - Default
 #					3 - Higher	
@@ -4119,24 +4119,24 @@ Playtime.Rewards = 1
 
 #
 #			Insert the ItemId´s for the Playtime Rewards for 100h and 200h of playing!
-#			Default:     100 - 38186
-#                    	 200 - 38186
+#			Default:     1200 - 38186
+#                    	 2400 - 38186
 #
-#			Amount describes h
-#			Amount: 
-#
-#
-
-Playtime.100 = 38186
-Playtime.100.Amount = 1
-
-#
-#
+#			Amount describes the Quantitiy of the Item send to the Player. Recommended is 1!
+#			Amount:  1 Default!
 #
 #
 
-Playtime.200 = 38186
-Playtime.200.Amount = 1
+Playtime.1200 = 38186
+Playtime.1200.Amount = 1
+
+#
+#
+#
+#
+
+Playtime.2400 = 38186
+Playtime.2400.Amount = 1
 
 #
 #

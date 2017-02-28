@@ -49,6 +49,50 @@ PreparedQueryResult CustomGMLogic::selectGMPlayerCount(int accountid)
 	return result;
 }
 
+void CustomGMLogic::insertNewAutobroadCast(Player* player,const char* args)
+{
+	CustomCharacterSystem * CharacterSystem = 0;
+	char* weightchar = strtok((char*)args, " ");
+	if (!weightchar) {
+		player->GetSession()->SendNotification("Without weight the command will not work!");
+		return;
+	}
+
+	char* message = strtok(NULL, " ");
+	if (!message) {
+		player->GetSession()->SendNotification("Without message the command will not work!");
+		return;
+	}
+
+	uint32 weight = atoi((char*)weightchar);
+	std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+	addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), "Insert new Autobroadcast");
+	int realmid = sConfigMgr->GetIntDefault("RealmID", 1);
+	int idmaxcount = selectMaxCountAutobroadcastID(realmid);
+	PreparedStatement * stmt = LoginDatabase.GetPreparedStatement(LOGIN_INS_AUTOBROADCAST_NEW);
+	stmt->setInt32(0, realmid);
+	stmt->setInt32(1, idmaxcount);
+	stmt->setInt32(2, weight);
+	stmt->setString(3, message);
+	LoginDatabase.Execute(stmt);
+}
+
+int CustomGMLogic::selectMaxCountAutobroadcastID(int realmid)
+{
+	PreparedStatement * stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_AUTOBROADCAST_MAX_COUNT_ID);
+	stmt->setInt32(0, realmid);
+	PreparedQueryResult result = LoginDatabase.Query(stmt);
+
+	if (!result) {
+		return 0;
+	}
+
+	Field* ergebnis = result->Fetch();
+	int32 idmaxcount = ergebnis[0].GetInt32();
+
+	return idmaxcount;
+}
+
 void CustomGMLogic::insertNewCouponGMLog(std::string charactername, int guid,int itemid, std::string couponcode, int quantity)
 {
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_GM_ACTIONS_COUPON_DETAILS);
