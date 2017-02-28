@@ -6,12 +6,12 @@
 class CustomWorldBossSystem {
 
 private:
-	void inserNewKillCounter(int bossid, int counter);
+	void insertNewKillCounter(int bossid, int counter);
 	void updateKillCounter(int bossid, int counter);
 
 public:
 
-
+	void updateCounter(int bossid);
 
 };
 
