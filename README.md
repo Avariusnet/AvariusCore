@@ -1,6 +1,8 @@
 # ![logo](http://exitare.de/avariuslogo.png) AvariusCore
 
 
+## Development is suspended! There is no on this Core anymore! And there will be no more!
+
 ## Build Status
 
 master | dev
