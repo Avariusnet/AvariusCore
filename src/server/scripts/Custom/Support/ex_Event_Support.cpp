@@ -51,8 +51,9 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 				for each (int event in eventarray) {
 					GameEventMgr::ActiveEvents const& ae = sGameEventMgr->GetActiveEventList();
 					bool active = ae.find(event) != ae.end();
+					return active;
 				}
-				return active;
+				
 			}
 
 			void UpdateAI(uint32 diff)
@@ -64,6 +65,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 							bool eventactive = checkifEventisActive();
 
 							if (eventactive == true) {
+							}
 						}
 
 					}
@@ -121,7 +123,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Viel Spass beim Weihnachtsevent wuenscht dir Exitare und das gesammte Team. Der Eventbeginn ist in Dalaran bei Bitty Frostschleuder.",
 							pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
-						pPlayer->TeleportTo(1, 16226.21, 16256.77, 13.19, 1.65);
+						pPlayer->TeleportTo(1, 16226.21f, 16256.77f, 13.19f, 1.65f);
 						if (pPlayer->GetQuestStatus(900001) == QUEST_STATUS_NONE){
 							pPlayer->AddQuest(quest,pCreature);
 						}
@@ -155,7 +157,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 					bool active = ae.find(71) != ae.end();
 					if (active == true){
 						pPlayer->GetGUID();
-						pPlayer->TeleportTo(0, -9739.81, 2162.37, 9.36, 5.72);
+						pPlayer->TeleportTo(0, -9739.81f, 2162.37f, 9.36f, 5.72f);
 						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Viel Spass beim Halloweenevent wuenscht dir Exitare und das gesammte Team.",
 							pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
@@ -202,7 +204,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 					bool active = ae.find(73) != ae.end();
 					if (active == true){
 						pPlayer->GetGUID();
-						pPlayer->TeleportTo(1, 7345.04, -1541.83, 161.32, 0.39);
+						pPlayer->TeleportTo(1, 7345.04f, -1541.83f, 161.32f, 0.39f);
 						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Das Event ist aktuell aktiv. Viel Spass beim Erreichen des Ziels.",
 							pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
@@ -226,7 +228,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 					bool active = ae.find(74) != ae.end();
 					if (active == true){
 						pPlayer->GetGUID();
-						pPlayer->TeleportTo(1, 7345.04, -1541.83, 161.32, 0.39);
+						pPlayer->TeleportTo(1, 7345.04f, -1541.83f, 161.32f, 0.39f);
 						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Das Event ist aktuell aktiv. Viel Spass beim Erreichen des Ziels.",
 							pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
@@ -255,7 +257,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
                         }
 
                         pPlayer->GetGUID();
-						pPlayer->TeleportTo(1, -8455.62, -1321.31, 8.87, 3.29);
+						pPlayer->TeleportTo(1, -8455.62f, -1321.31f, 8.87f, 3.29f);
 						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Das Event ist aktuell aktiv. Viel Spass beim Erreichen des Ziels.",
 							pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
@@ -281,7 +283,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 					bool active = ae.find(76) != ae.end();
 					if (active == true && pPlayer->getLevel() == 1){
 						pPlayer->GetGUID();
-						pPlayer->TeleportTo(0, 2075.54, 2392.44, 131.25, 3.12);
+						pPlayer->TeleportTo(0, 2075.54f, 2392.44f, 131.25f, 3.12f);
 						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Das Event ist aktuell aktiv. Viel Spass beim Erreichen des Ziels.",
 							pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
@@ -309,7 +311,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 					bool active = ae.find(77) != ae.end();
 					if (active == true){
 						pPlayer->GetGUID();
-						pPlayer->TeleportTo(0, -4796.05, -1001.17, 895.85 , 5.82);
+						pPlayer->TeleportTo(0, -4796.05f, -1001.17f, 895.85f , 5.82f);
 						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Das Event ist aktuell aktiv. Viel Spass beim Erreichen des Ziels.",
 							pPlayer->GetName());
 						pPlayer->PlayerTalkClass->SendCloseGossip();
