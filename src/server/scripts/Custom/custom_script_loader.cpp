@@ -223,10 +223,15 @@ void AddCustomScripts()
 	//automatisierungsscripte
 	AddSC_automaticsupport();
 
+	//Report Commands
 	AddSC_ex_reportcommands();
 
+
+	//Testcommands
 	AddSC_ex_testcommands();
 
+
+	//Custom XP Commands
 	AddSC_ex_customxpcommands();
 
 

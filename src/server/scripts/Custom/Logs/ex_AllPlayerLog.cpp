@@ -51,11 +51,16 @@ public:
 
 
 	void OnQuestStatusChange(Player* player, uint32 questId) {
-		CustomPlayerLog * PlayerLog = 0;
-		std::ostringstream tt;
-		tt << "Queststatus changed: " << questId;
-		std::string reason = tt.str().c_str();
-		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
+
+		if (sConfigMgr->GetBoolDefault("QuestStatus.Log", 1)) {
+			CustomPlayerLog * PlayerLog = 0;
+			std::ostringstream tt;
+			tt << "Queststatus changed: " << questId;
+			std::string reason = tt.str().c_str();
+			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
+			return;
+		}
+		
 		return;
 	
 	}
@@ -70,12 +75,15 @@ public:
 	KilledByLog() : PlayerScript("KilleyByLog") {}
 
 	void OnPlayerKilledByCreature(Creature* killer, Player* player) { 
-	
-		CustomPlayerLog * PlayerLog = 0;
-		std::ostringstream tt;
-		tt << "Player was killed by: " << killer->GetName();
-		std::string reason = tt.str().c_str();
-		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
+		if (sConfigMgr->GetBoolDefault("PlayerKilledByCreature.Log", 1)) {
+			CustomPlayerLog * PlayerLog = 0;
+			std::ostringstream tt;
+			tt << "Player was killed by: " << killer->GetName();
+			std::string reason = tt.str().c_str();
+			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
+			return;
+		}
+		
 		return;
 	}
 };
@@ -85,8 +93,12 @@ class GraveYardReleaseLog : public PlayerScript
 public: GraveYardReleaseLog() : PlayerScript("GraveYardReleaseLog") {}
 
 		void OnPlayerRepop(Player* player) { 
-			CustomPlayerLog * PlayerLog = 0;
-			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Release Soul with Release Button!");
+			if (sConfigMgr->GetBoolDefault("PlayerGraveyardRelease.Log", 1)) {
+				CustomPlayerLog * PlayerLog = 0;
+				PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Release Soul with Release Button!");
+				return;
+			}
+
 			return;
 		}
 
@@ -104,11 +116,14 @@ public:
 
 
 	void OnLevelChanged(Player* player, uint8 /*oldLevel*/) {
-		CustomPlayerLog * PlayerLog = 0;
-		std::ostringstream tt;
-		tt << "Level changed from " << player->getLevel()-1  << " to " << player->getLevel() ;
-		std::string reason = tt.str().c_str();
-		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
+		if (sConfigMgr->GetBoolDefault("PlayerLevelChange.Log", 1)) {
+			CustomPlayerLog * PlayerLog = 0;
+			std::ostringstream tt;
+			tt << "Level changed from " << player->getLevel() - 1 << " to " << player->getLevel();
+			std::string reason = tt.str().c_str();
+			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
+			return;
+		}
 		return;
 
 	}
@@ -123,12 +138,15 @@ public:
 	CreatureKillLog() : PlayerScript("CreatureKillLog") {}
 
 	void OnCreatureKill(Player* player, Creature* killed) {
-		std::string creaturename = killed->GetName();
-		CustomPlayerLog * PlayerLog = 0;
-		std::ostringstream tt;
-		tt <<"Killed: " << creaturename;
-		std::string reason = tt.str().c_str();
-		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
+		if (sConfigMgr->GetBoolDefault("PlayerKilledCreature.Log", 1)) {
+			std::string creaturename = killed->GetName();
+			CustomPlayerLog * PlayerLog = 0;
+			std::ostringstream tt;
+			tt << "Killed: " << creaturename;
+			std::string reason = tt.str().c_str();
+			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
+			return;
+		}
 		return;
 	}
 
@@ -140,8 +158,12 @@ public:
 	ResetTalentLog() : PlayerScript("ResetTalentLog") { }
 
 	void OnTalentsReset(Player* player, bool /*noCost*/) { 
-		CustomPlayerLog * PlayerLog = 0;
-		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Reset Talents");
+		if (sConfigMgr->GetBoolDefault("PlayerResetTalents.Log", 1)) {
+			CustomPlayerLog * PlayerLog = 0;
+			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Reset Talents");
+			return;
+		}
+		
 		return;
 	}
 
@@ -153,16 +175,19 @@ public:
 	PVPKillLog() : PlayerScript("PVPKillLog") {}
 
 	void OnPVPKill(Player* killer, Player* killed) { 
-		CustomPlayerLog * PlayerLog = 0;
-		std::ostringstream tt;
-		tt <<  killer << " killed : " << killed;
-		std::string reason = tt.str().c_str();
+		if (sConfigMgr->GetBoolDefault("PlayerPVPKills.Log", 1)) {
+			CustomPlayerLog * PlayerLog = 0;
+			std::ostringstream tt;
+			tt << killer << " killed : " << killed;
+			std::string reason = tt.str().c_str();
 
-		std::ostringstream zz;
-		zz << killed << "was killed by " << killer;
-		std::string reasone = zz.str().c_str();
-		PlayerLog->addCompletePlayerLog(killer->GetSession()->GetPlayer(), reason);
-		PlayerLog->addCompletePlayerLog(killed->GetSession()->GetPlayer(), reasone);
+			std::ostringstream zz;
+			zz << killed << "was killed by " << killer;
+			std::string reasone = zz.str().c_str();
+			PlayerLog->addCompletePlayerLog(killer->GetSession()->GetPlayer(), reason);
+			PlayerLog->addCompletePlayerLog(killed->GetSession()->GetPlayer(), reasone);
+			return;
+		}
 		return;
 	}
 };
@@ -172,22 +197,58 @@ public:
 	LoginLogoutLog() : PlayerScript("LoginLogoutLog") {}
 
 	void OnLogin(Player* player, bool /*firstLogin*/) {
-		CustomPlayerLog * PlayerLog = 0;
-		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Player logged in!");
+		if (sConfigMgr->GetBoolDefault("LoginLogout.Log", 1)) {
+			CustomPlayerLog * PlayerLog = 0;
+			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Player logged in!");
+			return;
+		}
 		return;
 	}
 	
 	void OnLogout(Player* player) {
-		CustomPlayerLog * PlayerLog = 0;
-		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Player logged out!");
+		if (sConfigMgr->GetBoolDefault("LoginLogout.Log", 1)) {
+			CustomPlayerLog * PlayerLog = 0;
+			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Player logged out!");
+			return;
+		}
 		return;
 	}
 
 };
 
 
+
+class DuelLog : public PlayerScript
+{
+public:
+	DuelLog() : PlayerScript("DuelLog") {}
+
+	std::ostringstream ss;
+
+	void OnDuelStart(Player* player1, Player* player2) {
+		if (sConfigMgr->GetBoolDefault("DuelStart.Log", 1)) {
+			ss << "|cff54b5ffDuel wurde gestartet mit den Teilnehmern: |r " << ChatHandler(player1->GetSession()).GetNameLink() << " |cff54b5ff und |r" << ChatHandler(player2->GetSession()).GetNameLink();
+			sWorld->SendGMText(LANG_GM_BROADCAST, ss.str().c_str());
+			
+			CustomPlayerLog * PlayerLog = 0;
+			std::ostringstream tt;
+			tt << player1 << "challenged a Duel with Player " << player2;
+			std::string reason = tt.str().c_str();
+
+			PlayerLog->addCompletePlayerLog(player1->GetSession()->GetPlayer(),reason);
+			return;
+		}
+		return;
+
+	}
+
+};
+
+
+
 void AddSC_logscript()
 {
+	new DuelLog();
 	new ResetTalentLog();
 	new GraveYardReleaseLog();
 	new QuestLog();

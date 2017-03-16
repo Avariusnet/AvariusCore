@@ -626,4 +626,7 @@ public:
 
 typedef DatabaseWorkerPool<CharacterDatabaseConnection> CharacterDatabaseWorkerPool;
 
+
+
+
 #endif

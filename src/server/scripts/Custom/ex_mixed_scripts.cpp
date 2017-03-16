@@ -297,21 +297,6 @@ public:
 
 
 
-class DuelLog : public PlayerScript
-{
-public:
-	DuelLog() : PlayerScript("DuelLog") {}
-
-	std::ostringstream ss;
-
-	void OnDuelStart(Player* player, Player* pPlayer) {
-		ss << "|cff54b5ffDuel wurde gestartet mit den Teilnehmern: |r " << ChatHandler(player->GetSession()).GetNameLink() << " |cff54b5ff und |r" << ChatHandler(pPlayer->GetSession()).GetNameLink();
-		sWorld->SendGMText(LANG_GM_BROADCAST, ss.str().c_str());
-
-	}
-
-};
-
 
 
 class Shutdown : public WorldScript
@@ -339,6 +324,5 @@ void AddSC_mixed_scripts()
 	new fbevent();
 	new Announce_NewPlayer();
 	new Shutdown();
-	new DuelLog();
 	new GMIsland();
 }

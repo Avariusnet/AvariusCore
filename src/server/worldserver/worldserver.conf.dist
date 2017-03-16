@@ -4093,7 +4093,7 @@ Vip.Vendor.CurrencyID = 38186
 
 #
 #
-#			How much Gold one Token is cost! Amount in Gold! So 1000 means 1000 Gold !
+#			How much Gold a Token costs! Amount in Gold! 1000 means 1000 Gold !
 #
 #
 
@@ -4105,6 +4105,79 @@ Vip.Vendor.CurrencyCost = 1000
 #
 #
 ###################################################################################################
+
+###################################################################################################
+#CUSTOM SERVER LOGS
+#	
+#			Activate or Deactive Custom Server Logs. These Logs can give you detailed information about your Players. But be carrefull. With a high amount of Players there is a high load on DB! This can cause Crashes!
+#			Best is to use this on Test or Betaservers!
+#			Default:     0 - (Disabled)
+#                    	 1 - (Enabled)
+#
+#
+#
+#
+#
+#			QuestStatuslog logges every QuestStatus Change for a single Player. You can check if Quest status changes when Player do specific actions!
+#
+
+
+QuestStatus.Log = 1
+
+#
+#			This Log shows you which Creatures killed which Player!
+#
+
+PlayerKilledByCreature.Log = 1
+
+#
+#			When a Player clicks on Release Soul this Log will be triggered.
+#
+
+PlayerGraveyardRelease.Log = 1
+
+#
+#			A Level Change will be logged. 
+#
+
+PlayerLevelChange.Log = 1
+
+#
+#			This log shows which creature was killed by a specific Player!
+#
+
+PlayerKilledCreature.Log = 1
+
+#
+#			When a Player reset his Talents this Log will be called!
+#
+
+PlayerResetTalents.Log = 1
+
+#
+#			Every PVP Kill will be logged!
+#
+
+PlayerPVPKills.Log = 1
+
+#
+#			When a Player logged in or out this will be logged!
+#
+
+LoginLogout.Log = 1
+
+#
+#			A Duel Start is logged here!
+#
+
+DuelStart.Log = 1
+
+#
+#
+#
+#
+###################################################################################################
+
 
 
 ###################################################################################################

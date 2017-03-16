@@ -46,15 +46,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 				ticktimer = 10000;
 			}
 
-			bool checkifEventisActive() {
-				int eventarray[8] = { 70,71,72,73,74,75,76,77 };
-				for each (int event in eventarray) {
-					GameEventMgr::ActiveEvents const& ae = sGameEventMgr->GetActiveEventList();
-					bool active = ae.find(event) != ae.end();
-					return active;
-				}
-				
-			}
+			
 
 			void UpdateAI(uint32 diff)
 			{
@@ -62,7 +54,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 					if (Player * player = me->SelectNearestPlayer(10.0f)) {
 						if (actualplayer != player->GetGUID()) {
 
-							bool eventactive = checkifEventisActive();
+							bool eventactive = false;
 
 							if (eventactive == true) {
 							}
