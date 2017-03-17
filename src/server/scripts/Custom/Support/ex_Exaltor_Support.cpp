@@ -30,34 +30,6 @@
 #include <Custom/Logic/CustomCouponSystem.h>
 
 
-enum Belohnungen
-{
-	ASTRALER_KREDIT = 38186,
-	FROSTMARKEN = 49426,
-	TRIUMPHMARKEN = 47241,
-	TITANSTAHLBARREN = 37663,
-	SARONITBARREN = 36913,
-	GOLDBARREN = 3577,
-	EISENBARREN = 3575,
-	URSARONIT = 49908,
-	TRAUMSPLITTER = 34052,
-	AKRTISCHERPELZ = 44128
-};
-
-
-enum Kosten
-{
-	FIXGUTSCHEIN = 5000,
-	VARGUTSCHEIN = 10000,
-	PREMIUMGUTSCHEIN = 5000,
-	BERUFKOSTEN = 3000,
-	MAXLEVEL = 5000,
-	LEVELUP1 = 1,
-	LEVELUP10 = 5,
-	LEVELUP80 = 40
-
-};
-
 #define PROFESSION_COST 20
 
 
@@ -65,7 +37,8 @@ enum Kosten
 class npc_first_char : public CreatureScript
 {
 		public: npc_first_char() : CreatureScript("npc_first_char"){ }
-    
+		
+				
 			
 				struct npc_first_charAI : public ScriptedAI
 				{
@@ -75,15 +48,27 @@ class npc_first_char : public CreatureScript
 					uint32 actualplayer = 0;
 
 					void Reset() {
-						ticktimer = 10000;
+						ticktimer = 1000;
 					}
 
 
 					void UpdateAI(uint32 diff) 
 					{
+						CustomCharacterSystem * CharacterSystem = 0;
 						if (ticktimer <= diff) {
 							if (Player * player = me->SelectNearestPlayer(10.0f)) {
 								if (actualplayer != player->GetGUID()) {
+									bool playerisQualified = CharacterSystem->checkifPlayerisQualifiedforFirstCharacter(player->GetSession()->GetPlayer());
+									
+									if (playerisQualified) {
+										std::ostringstream tt;
+										tt << "Hi " << player->GetSession()->GetPlayerName() << "! Your First Character is empty! Come to me to get one!";
+										std::string msg = tt.str().c_str();
+										me->Yell(msg, LANG_UNIVERSAL, nullptr);
+										actualplayer = player->GetGUID();
+										return;
+									}
+
 									if (player->HasItemCount(34047, 1, false)) {
 										std::ostringstream tt;
 										tt << "Hi " << player->GetSession()->GetPlayerName() << "! You are a Betatester! Let me kneel in front of you!";
@@ -125,7 +110,6 @@ class npc_first_char : public CreatureScript
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Information and Help", GOSSIP_SENDER_MAIN, 0, "", 0, false);
 						if (sConfigMgr->GetBoolDefault("First.Character", true)) {
 							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Get the First Character!", GOSSIP_SENDER_MAIN, 1, "", 0, false);
-							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Guildtransfer starting 10 Members", GOSSIP_SENDER_MAIN, 2, "", 0, false);
 						}
 
 						if (sConfigMgr->GetBoolDefault("Exaltor.Features", true)) {
@@ -156,19 +140,13 @@ class npc_first_char : public CreatureScript
 						//First Character Single
 					case 1:
 					{
-						CharacterSystem->playerSetSingleFirstCharacter(player->GetSession()->GetPlayer());
+						CharacterSystem->playerGiveFirstCharacter(player->GetSession()->GetPlayer());
 						return true;
 
 					}break;
 
 					//First Character Guild 
-					case 2:
-					{
-						CharacterSystem->playerSetGuildFirstCharacter(player->GetSession()->GetPlayer());
-						return true;
-
-					}break;
-
+				
 					case 3:
 					{
 						player->PlayerTalkClass->ClearMenus();

@@ -86,6 +86,8 @@ public:
 				player->PlayerTalkClass->SendCloseGossip();
 				return true;
 			break;
+
+			//RaceChange
 		case  1:
 			if (player->HasItemCount(ASTRALER_CREDIT, 2) && player->HasEnoughMoney(500*GOLD)){
 				player->DestroyItemCount(49426, 2, true, false);
@@ -108,6 +110,9 @@ public:
 			}
 
 			break;
+
+
+			//Factionchange
 		case  2:
 
 			if (player->HasItemCount(ASTRALER_CREDIT, 2)){
@@ -133,7 +138,7 @@ public:
 
 			break;
 
-
+			//Faction and Race
 		case 3:
 			if (player->HasItemCount(ASTRALER_CREDIT, 4)){
 				player->DestroyItemCount(49426, 4, true, false);
@@ -158,7 +163,7 @@ public:
 				return true;
 			}break;
 
-
+			//RaceChange
 		case 4:
 			if (player->HasEnoughMoney(500 * GOLD)){
 				player->SetAtLoginFlag(AT_LOGIN_RENAME);

@@ -358,6 +358,104 @@ void CustomCharacterSystem::playerSetGuildFirstCharacter(Player * player)
 	return;
 }
 
+void CustomCharacterSystem::playerGiveFirstCharacter(Player * player)
+{
+	bool hasPlayerAlreadyFirstChar = true;
+
+	hasPlayerAlreadyFirstChar = hasPlayerAlreadyAFirstChar(player->GetSession()->GetAccountId(), "FirstCharacter");
+
+	if (hasPlayerAlreadyFirstChar) {
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("You already get a first Character!",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		return;
+	}
+
+	bool twotimescharacter = true;
+	twotimescharacter = countIfPlayerHasLessTotalOf2FirstCharacters(player->GetSession()->GetAccountId());
+	if (twotimescharacter) {
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("You already used this Function more than 2 times!",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		return;
+	}
+
+	bool playerHasAlreadyCharacter = true;
+	playerHasAlreadyCharacter = hasPlayerAlreadyCharacters(player->GetSession()->GetAccountId());
+	if (playerHasAlreadyCharacter) {
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("You already have more than one Character!",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		return;
+	}
+
+	int guildcreatedate = 0;
+	guildcreatedate = getGuildCreateDate(player->GetGuildId());
+
+	if (guildcreatedate == 0) {
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("Not Member of a Guild! You will get a normal FirstCharacter!",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+
+		std::string accountname = "";
+		accountname = getAccountName(player->GetSession()->GetAccountId());
+		std::string lastip = "";
+		lastip = getLastIPbyAccount(player->GetSession()->GetAccountId());
+		insertNewFirstCharacterforPlayerCount(player->GetGUID(), player->GetSession()->GetPlayerName(), player->GetSession()->GetAccountId(), accountname, 0, lastip);
+		executeFirstCharacter(player->GetSession()->GetPlayer(), "FirstCharacter");
+		return;
+	}
+
+	int guildmember = 0;
+	guildmember = getGuildMemberCount(player->GetGuildId());
+
+	if (guildmember < 10) {
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("Not enough Guild Members! Come again with more Guild Members!",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+
+		return;
+	}
+
+
+	int unixtimestamp = 0;
+	unixtimestamp = getUnixTimestamp();
+
+	if (unixtimestamp - guildcreatedate > 1209600) {
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("Your Guild is older than 2 Weeks. Sorry i cannot grant you this Feature!",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		return;
+	}
+
+	std::string accountname = "";
+	accountname = getAccountName(player->GetSession()->GetAccountId());
+	std::string lastip = "";
+	lastip = getLastIPbyAccount(player->GetSession()->GetAccountId());
+	insertNewFirstCharacterforPlayerCount(player->GetGUID(), player->GetSession()->GetPlayerName(), player->GetSession()->GetAccountId(), accountname, player->GetGuildId(), lastip);
+	executeGuildCharacter(player->GetSession()->GetPlayer(), "FirstCharacter", guildmember);
+
+	return;
+}
+
 void CustomCharacterSystem::deleteFirstCharacterPlayerLog(int accountid)
 {
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_FIRST_CHAR_PLAYERLOG);
@@ -529,6 +627,32 @@ void CustomCharacterSystem::requestNewFirstCharacter(Player * player, const char
 
 }
 
+bool CustomCharacterSystem::checkifPlayerisQualifiedforFirstCharacter(Player * player)
+{
+	bool hasPlayerAlreadyFirstChar = true;
+
+	hasPlayerAlreadyFirstChar = hasPlayerAlreadyAFirstChar(player->GetSession()->GetAccountId(), "FirstCharacter");
+
+	if (hasPlayerAlreadyFirstChar) {
+		return false;
+	}
+
+	bool twotimescharacter = true;
+	twotimescharacter = countIfPlayerHasLessTotalOf2FirstCharacters(player->GetSession()->GetAccountId());
+	if (twotimescharacter) {		
+		return false;
+	}
+
+	bool playerHasAlreadyCharacter = true;
+	playerHasAlreadyCharacter = hasPlayerAlreadyCharacters(player->GetSession()->GetAccountId());
+	if (playerHasAlreadyCharacter) {
+		return false;
+	}
+
+
+	return true;
+}
+
 void CustomCharacterSystem::sellPlayerVIPCurrency(Player * player, const char * code)
 {
 	int currencyid = sConfigMgr->GetIntDefault("Vip.Vendor.CurrencyID", 38186);
@@ -655,9 +779,21 @@ void CustomCharacterSystem::executeGuildCharacter(Player * player, std::string p
 	player->UpdateSkillsToMaxSkillsForLevel();
 	player->UpdateSkillsForLevel();
 	if (membercount >= 10 && membercount < 25) {
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("You get a 10 Guild Member First Character!",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
 		player->LearnDefaultSkill(762, 3);
 	}
 	if (membercount > 25) {
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("You get a 25 Guild Member First Character!",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
 		player->LearnDefaultSkill(762, 4);
 	}
 	

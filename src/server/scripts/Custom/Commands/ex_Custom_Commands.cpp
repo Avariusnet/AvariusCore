@@ -67,7 +67,7 @@ public:
 			//Buffer
 			//{ "buffs", SEC_PLAYER, false, &HandleBuffsCommand, ""},
 			//GuildHouse Tele
-			//{ "gh", SEC_PLAYER, false, &HandleGHCommand, "" },
+			{ "gh", SEC_PLAYER, false, &HandleGHCommand, "" },
 			//insel
 			{ "insel", SEC_ADMINISTRATOR, false, &HandleInselCommand, "" },
 

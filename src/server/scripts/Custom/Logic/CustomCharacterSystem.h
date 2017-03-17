@@ -63,7 +63,9 @@ public:
 	//Execute first Character complete
 	void playerSetSingleFirstCharacter(Player * player);
 	void playerSetGuildFirstCharacter(Player * player);
+	void playerGiveFirstCharacter(Player* player);
 	void requestNewFirstCharacter(Player* player, const char* code);
+	bool checkifPlayerisQualifiedforFirstCharacter(Player* player);
 
 	//Character VIP Functions
 	void givePlayerLevelWithCurrency(Player* player, uint16 cost, uint32 levelup, std::string logmessage);

@@ -1,4 +1,4 @@
-/* delete MMOwning Trainer ID 90001 from blizz-realm*/
+/* delete Deckard Cain ID 90001 from blizz-realm*/
 
 DELETE FROM `creature` WHERE `guid`='90001';
 DELETE FROM `creature` WHERE `guid`='798011';
