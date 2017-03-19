@@ -8,6 +8,6 @@ std::string CustomTranslationSyste::checkPlayerLocale(Player * player)
 	ChatHandler(player->GetSession()).PSendSysMessage("GetSessionDBCLocale ", player->GetSession()->GetSessionDbcLocale(),
 		player->GetName());
 
-	std::string rr = ""
+	std::string rr = "";
 	return rr;
 }
