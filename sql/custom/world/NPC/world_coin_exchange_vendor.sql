@@ -60,5 +60,5 @@ REPLACE INTO `npc_vendor` (`entry`, `slot`, `item`, `maxcount`, `incrtime`, `Ext
  (@ENTRY, '036', '41133', '0', '0', @PRICE_50), -- 50 marks Ungeschlüpfter Herr Fröstelich
  (@ENTRY, '037', '13583', '0', '0', @PRICE_50), -- 50 marks Pandahalsband
  (@ENTRY, '038', '49663', '0', '0', @PRICE_50), -- 50 marks Windreiterjunges
- (@ENTRY, '039', '23162', '0', '0', @PRICE_100), -- 100 marks Forors Kiste der endlosen Widerstandsausstattung 
- /*(@ENTRY, '040', '200000', '0', '0', @PRICE_50); -- 50 Gildenhaus Token  */
+ (@ENTRY, '039', '23162', '0', '0', @PRICE_100); -- 100 marks Forors Kiste der endlosen Widerstandsausstattung 
+ /*(@ENTRY, '040', '200000', '0', '0', @PRICE_50) -- 50 Gildenhaus Token  */
