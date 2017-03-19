@@ -1,0 +1,2 @@
+DELETE FROM  `locales_quest` where `id` = 750000;
+INSERT INTO `locales_quest` (`Id`, `Title_loc3`, `Details_loc3`, `Objectives_loc3`) VALUES ('750000', 'Willkommen auf dem Server', 'Willkommen auf unserem Server. Um dir einen besseren Ueberblick ueber alle Funktionen geben zu koennen, ist das hier die Einfuehrungquest. Als Spieler hast du verschiedene Commands zur Verfuegung. Am besten fragst du Exaltor genauer aus. Er weis sicher bescheid.', 'Beende diese Quest fuer deine Belohnung!');

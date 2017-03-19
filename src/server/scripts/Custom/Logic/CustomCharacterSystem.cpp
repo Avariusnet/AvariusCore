@@ -650,6 +650,14 @@ bool CustomCharacterSystem::checkifPlayerisQualifiedforFirstCharacter(Player * p
 	}
 
 
+	int guildmember = 0;
+	guildmember = getGuildMemberCount(player->GetGuildId());
+
+	if (player->GetGuildId() != 0 && guildmember < 10) {
+		return false;
+	}
+
+
 	return true;
 }
 

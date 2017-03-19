@@ -105,11 +105,16 @@ class npc_first_char : public CreatureScript
 
 				bool OnGossipHello(Player *player, Creature* _creature)
 				{
+					CustomCharacterSystem * CharacterSystem = 0;
 					//test if this is possible in Fucntion
 					if (sConfigMgr->GetBoolDefault("Exaltor.Activate", true)) {
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Information and Help", GOSSIP_SENDER_MAIN, 0, "", 0, false);
 						if (sConfigMgr->GetBoolDefault("First.Character", true)) {
-							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Get the First Character!", GOSSIP_SENDER_MAIN, 1, "", 0, false);
+							bool qualified = CharacterSystem->checkifPlayerisQualifiedforFirstCharacter(player->GetSession()->GetPlayer()); 
+							if(qualified){
+								player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Get the First Character!", GOSSIP_SENDER_MAIN, 1, "", 0, false);
+							}
+							
 						}
 
 						if (sConfigMgr->GetBoolDefault("Exaltor.Features", true)) {
@@ -152,7 +157,7 @@ class npc_first_char : public CreatureScript
 						player->PlayerTalkClass->ClearMenus();
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Level 80 Equipment.", GOSSIP_SENDER_MAIN, 4, "", 0, false);
 						if (sConfigMgr->GetBoolDefault("Exaltor.Professions", true)) {
-							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Max your Professions! ", GOSSIP_SENDER_MAIN, 5, "", 0, false);
+							//player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Max your Professions! ", GOSSIP_SENDER_MAIN, 5, "", 0, false);
 						}
 
 						if (sConfigMgr->GetBoolDefault("Exaltor.Coupon.Generate", true)) {
