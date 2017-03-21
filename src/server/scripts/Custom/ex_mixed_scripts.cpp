@@ -310,7 +310,7 @@ public:
 
 		std::ostringstream uu;
 		uu << MOTD;
-		sWorld->SetMotd(uu.str().c_str());
+		
 
 	}
 

@@ -43,6 +43,7 @@
 #include <Custom/Logic/CustomReportSystem.h>
 #include <Custom/Logic/CustomGMLogic.h>
 #include <Custom/Logic/CustomPlayerLog.h>
+#include <Custom/Logic/CustomTranslationSystem.h>
 
 class ex_testcommands : public CommandScript
 {
@@ -66,18 +67,28 @@ public:
 			{ "gmaddlog", SEC_ADMINISTRATOR, false, &HandleLogicGMAddLogTest, "" },
 			{ "playtime", SEC_ADMINISTRATOR, false, &HandleLogicPlayTimeTest, "" },
 			{ "playinsert", SEC_ADMINISTRATOR, false, &HandleLogicPlayInsertTest, "" },
-
-
+			{ "translate", SEC_ADMINISTRATOR, false, &HandleLogicTranslate, "" },
+			
 		};
+
+	
 
 		static std::vector<ChatCommand> commandTable =
 		{
 			{ "logic", SEC_ADMINISTRATOR , false, NULL, "" , logicTable },
-
+			
 		};
 
 		return commandTable;
 	}
+
+	static bool HandleLogicTranslate(ChatHandler* handler, const char* /*args*/) {
+		CustomTranslationSystem * TranslationSystem = 0;
+		std::string teststring = TranslationSystem->getCompleteTranslationsString(1, 1, handler->GetSession()->GetPlayer());
+		handler->PSendSysMessage("%s", teststring);
+		return true;
+	}
+
 
 
 	static bool HandleLogicPlayInsertTest(ChatHandler* handler, const char* /*args*/) {

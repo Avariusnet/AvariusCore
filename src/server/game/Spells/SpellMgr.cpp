@@ -432,10 +432,14 @@ bool SpellMgr::AddSameEffectStackRuleSpellGroups(SpellInfo const* spellInfo, int
 
 SpellGroupStackRule SpellMgr::CheckSpellGroupStackRules(SpellInfo const* spellInfo1, SpellInfo const* spellInfo2) const
 {
+    ASSERT(spellInfo1);
+    ASSERT(spellInfo2);
+
     uint32 spellid_1 = spellInfo1->GetFirstRankSpell()->Id;
     uint32 spellid_2 = spellInfo2->GetFirstRankSpell()->Id;
     if (spellid_1 == spellid_2)
         return SPELL_GROUP_STACK_RULE_DEFAULT;
+
     // find SpellGroups which are common for both spells
     SpellSpellGroupMapBounds spellGroup1 = GetSpellSpellGroupMapBounds(spellid_1);
     std::set<SpellGroup> groups;
@@ -2785,6 +2789,10 @@ void SpellMgr::LoadSpellInfoCorrections()
         // disable proc for magnet auras, they're handled differently
         if (spellInfo->HasAura(SPELL_AURA_SPELL_MAGNET))
             spellInfo->ProcFlags = 0;
+
+        // due to the way spell system works, unit would change orientation in Spell::_cast
+        if (spellInfo->HasAura(SPELL_AURA_CONTROL_VEHICLE))
+            spellInfo->AttributesEx5 |= SPELL_ATTR5_DONT_TURN_DURING_CAST;
 
         if (spellInfo->ActiveIconID == 2158)  // flight
             spellInfo->Attributes |= SPELL_ATTR0_PASSIVE;

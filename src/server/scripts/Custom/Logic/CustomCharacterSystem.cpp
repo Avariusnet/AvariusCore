@@ -559,7 +559,7 @@ void CustomCharacterSystem::completeAddPlayTimeReward(int playtime, Player* play
 		}
 		return;
 	}
-	player->GetSession()->SendAreaTriggerMessage("Result");
+	
 	return;
 
 }

@@ -28,6 +28,14 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 	PrepareStatement(CHAR_SEL_UNIX_TIMESTAMP, "SELECT UNIX_TIMESTAMP(NOW())", CONNECTION_SYNCH);
 
 
+	//TranslationSystem
+	PrepareStatement(CHAR_SEL_TRANSLATION_ENGLISH, "Select english from custom_translations where groupid = ? and translationid =?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_SEL_TRANSLATION_GERMAN, "Select german from custom_translations where groupid = ? and translationid =?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_SEL_TRANSLATION_FRENCH, "Select french from custom_translations where groupid = ? and translationid =?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_SEL_TRANSLATION_SPANISH1, "Select spanish1 from custom_translations where groupid = ? and translationid =?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_SEL_TRANSLATION_SPANISH2, "Select spanish2 from custom_translations where groupid = ? and translationid =?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_SEL_TRANSLATION_RUSSIAN, "Select russian from custom_translations where groupid = ? and translationid =?", CONNECTION_SYNCH);
+
 	//Question Answer System
 	PrepareStatement(CHAR_INS_PLAYER_ALREADY_ANSWERED_QUESTIONS, "INSERT INTO player_already_answered_questions (accountid, accountname, questionnr,actiontime) VALUES (?,?,?,NOW())", CONNECTION_ASYNC);
 	PrepareStatement(CHAR_SEL_PLAYER_ALREADY_ANSWERED_QUESTIONS, "SELECT accountid,accountname,questionnr,actiontime FROM player_already_answered_questions WHERE accountid = ? and questionnr = ?", CONNECTION_SYNCH);

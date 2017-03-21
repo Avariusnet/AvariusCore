@@ -2,17 +2,17 @@
 #define _TRANSLATIONSYSTEM_H
 
 
-class CustomTranslationSyste {
+class CustomTranslationSystem {
 private:
 
-	checkPlayerLocale(Player* player);
+
 
 
 public:
 
-
-
-
+	std::string checkPlayerLocale(Player* player);
+	std::string getCompleteTranslationsString(int groupid, int translationid,Player* player);
+	std::string getTranslationString(CharacterDatabaseStatements statement, int groupid, int translationid);
 
 };
 

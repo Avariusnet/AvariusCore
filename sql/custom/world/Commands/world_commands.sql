@@ -133,6 +133,11 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('logic gmaddlog', 1
 DELETE FROM command WHERE `name`='logic playtime';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('logic playtime', 193, ''); 
 
-
 DELETE FROM command WHERE `name`='logic playinsert';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('logic playinsert', 193, ''); 
+
+DELETE FROM command WHERE `name`='logic locale';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('logic locale', 193, ''); 
+
+DELETE FROM command WHERE `name`='logic translate';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('logic translate', 193, ''); 

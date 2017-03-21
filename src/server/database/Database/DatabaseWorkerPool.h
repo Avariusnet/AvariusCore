@@ -288,7 +288,6 @@ class DatabaseWorkerPool
         char const* GetDatabaseName() const
         {
             return _connectionInfo->database.c_str();
-
         }
 
         //! Queue shared by async worker threads.

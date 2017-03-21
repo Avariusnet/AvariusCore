@@ -28,17 +28,45 @@
 #include <Custom/Logic/CustomCharacterSystem.h>
 #include <Custom/Logic/CustomPlayerLog.h>
 #include <Custom/Logic/CustomCouponSystem.h>
+#include <Custom/Logic/CustomTranslationSystem.h>
 
 
 #define PROFESSION_COST 20
 
+#define GROUPID 1
+
+enum ExaltorNPC {
+
+	INFORMATIONANDHELP = 0,
+	WHOAREU = 1,
+	FIRSTCHARACTERHELP = 2,
+	GETFIRSTCHARACTER = 3,
+	COUPONHELP = 4,
+	COUPONSINGLE = 5,
+	COUPONFRIEND = 6,
+	PROFESSIONHELP = 7,
+	MINING = 8,
+	TAILORING = 9,
+	BLACKSMITHING = 10,
+	HERBALISM = 11,
+	SKINING = 12,
+	LEATHERWORKING = 13,
+	JEWELCRAFTING = 14,
+	ALCHEMY = 15,
+	ENCHANTING = 16,
+	INSCRIPTION = 17,
+	ENGINEERING = 18,
+	
+
+
+};
 
 
 class npc_first_char : public CreatureScript
 {
 		public: npc_first_char() : CreatureScript("npc_first_char"){ }
 		
-				
+			
 			
 				struct npc_first_charAI : public ScriptedAI
 				{
@@ -106,13 +134,17 @@ class npc_first_char : public CreatureScript
 				bool OnGossipHello(Player *player, Creature* _creature)
 				{
 					CustomCharacterSystem * CharacterSystem = 0;
+					CustomTranslationSystem * TranslationSystem = 0;
+
+					std::string informationandhelp = TranslationSystem->getCompleteTranslationsString(GROUPID, INFORMATIONANDHELP, player->GetSession()->GetPlayer());
+					std::string getfirstcharacter = TranslationSystem->getCompleteTranslationsString(GROUPID, GETFIRSTCHARACTER, player->GetSession()->GetPlayer());
 					//test if this is possible in Fucntion
 					if (sConfigMgr->GetBoolDefault("Exaltor.Activate", true)) {
-						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Information and Help", GOSSIP_SENDER_MAIN, 0, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, informationandhelp, GOSSIP_SENDER_MAIN, 0, "", 0, false);
 						if (sConfigMgr->GetBoolDefault("First.Character", true)) {
 							bool qualified = CharacterSystem->checkifPlayerisQualifiedforFirstCharacter(player->GetSession()->GetPlayer()); 
 							if(qualified){
-								player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Get the First Character!", GOSSIP_SENDER_MAIN, 1, "", 0, false);
+								player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, getfirstcharacter, GOSSIP_SENDER_MAIN, 1, "", 0, false);
 							}
 							
 						}
@@ -139,10 +171,27 @@ class npc_first_char : public CreatureScript
 				{
 					CustomCharacterSystem* CharacterSystem = 0;
 					CustomCouponSystem * CouponSystem = 0;
+					CustomTranslationSystem * TranslationSystem = 0;
 					switch (uiAction)
 					{
 
-						//First Character Single
+					//Information Help
+					case 0:
+					{
+						std::string whoareu = TranslationSystem->getCompleteTranslationsString(GROUPID, WHOAREU, player->GetSession()->GetPlayer());
+						std::string firstcharacter = TranslationSystem->getCompleteTranslationsString(GROUPID, FIRSTCHARACTERHELP, player->GetSession()->GetPlayer());
+						
+						player->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
+						player->PlayerTalkClass->ClearMenus();
+
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, whoareu, GOSSIP_SENDER_MAIN, 10000, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, firstcharacter, GOSSIP_SENDER_MAIN, 10000, "", 0, false);
+
+						player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
+						return true;
+					}
+
+					//First Character  Complete
 					case 1:
 					{
 						CharacterSystem->playerGiveFirstCharacter(player->GetSession()->GetPlayer());
@@ -150,19 +199,22 @@ class npc_first_char : public CreatureScript
 
 					}break;
 
-					//First Character Guild 
+					
 				
 					case 3:
 					{
 						player->PlayerTalkClass->ClearMenus();
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Level 80 Equipment.", GOSSIP_SENDER_MAIN, 4, "", 0, false);
 						if (sConfigMgr->GetBoolDefault("Exaltor.Professions", true)) {
-							//player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Max your Professions! ", GOSSIP_SENDER_MAIN, 5, "", 0, false);
+							std::string proffesionsstring = TranslationSystem->getCompleteTranslationsString(GROUPID, PROFESSIONHELP, player->GetSession()->GetPlayer());
+							//player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, proffesionsstring, GOSSIP_SENDER_MAIN, 5, "", 0, false);
 						}
 
 						if (sConfigMgr->GetBoolDefault("Exaltor.Coupon.Generate", true)) {
-							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Generate Coupon", GOSSIP_SENDER_MAIN, 6, "", 0, false);
-							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Generate Coupon for a Friend!", GOSSIP_SENDER_MAIN, 7, "", 0, false);
+							std::string singlecoupon = TranslationSystem->getCompleteTranslationsString(GROUPID, COUPONSINGLE, player->GetSession()->GetPlayer());
+							std::string friendcoupon = TranslationSystem->getCompleteTranslationsString(GROUPID, COUPONFRIEND, player->GetSession()->GetPlayer());
+							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, singlecoupon, GOSSIP_SENDER_MAIN, 6, "", 0, false);
+							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, friendcoupon, GOSSIP_SENDER_MAIN, 7, "", 0, false);
 						}
 
 						if (sConfigMgr->GetBoolDefault("Exaltor.Level", true)) {
@@ -172,9 +224,6 @@ class npc_first_char : public CreatureScript
 						bool checkifPlayerhasGetLob = false;
 						checkifPlayerhasGetLob = CharacterSystem->checkIfPlayerGetPlayTimeReward(200, player->GetGUID());
 
-						if (!checkifPlayerhasGetLob && player->GetTotalPlayedTime() > 720000) {
-							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Please give me the 200h Playtime Reward!", GOSSIP_SENDER_MAIN, 9, "", 0, false);
-						}
 						if (player->GetSession()->GetSecurity() == 3) {
 							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Aufwertungen einsehen", GOSSIP_SENDER_MAIN, 10, "", 0, false);
 							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Wandervolk", GOSSIP_SENDER_MAIN, 9504, "", 11, false);
@@ -193,6 +242,9 @@ class npc_first_char : public CreatureScript
 
 					case 5:
 					{
+						std::string mining = TranslationSystem->getCompleteTranslationsString(GROUPID, MINING, player->GetSession()->GetPlayer());
+						std::string tailoring = TranslationSystem->getCompleteTranslationsString(GROUPID, TAILORING, player->GetSession()->GetPlayer());
+
 						player->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
 						player->PlayerTalkClass->ClearMenus();
 
