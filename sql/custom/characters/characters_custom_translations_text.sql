@@ -37,3 +37,8 @@ INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `germa
 INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('1', '17', 'Inscription', 'Inschriftenkunde');
 INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('1', '18', 'Engineering', 'Ingenieurskunst');
 INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('1', '19', 'Back to Features', 'Zu den Features');
+INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('1', '20', 'Buy Level', 'Level kaufen');
+INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('1', '21', 'Buy Level 80 Equipment!', 'Level 80 Equipment kaufen!');
+INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('1', '22', 'Level up to 80!', 'Auf 80 setzen!');
+INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('1', '1000', 'Your First Character is empty. Come to me and get it!', 'Dein Erstcharakter ist noch frei. Komm her und hol ihn dir jetzt!');
+INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('1', '1001', 'Thanks for your Betatesting!', 'Danke fuer deine Unterstuetzung in der Betaphase!');

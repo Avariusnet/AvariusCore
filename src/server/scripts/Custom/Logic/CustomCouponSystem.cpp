@@ -414,7 +414,7 @@ void CustomCouponSystem::couponGenerationperCommand(Player * player, const char 
 
 		std::string accountname = "";
 		accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-		GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer(), "Tries to create a forbidden Coupon!");
+		GMLogic->addCompleteGMCountLogic( player->GetSession()->GetPlayer(), "Tries to create a forbidden Coupon!");
 		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
 		ChatHandler(player->GetSession()).PSendSysMessage("Warning: GM should be a supporter not a cheater!");
 		ChatHandler(player->GetSession()).PSendSysMessage("This incident has been logged in DB.");

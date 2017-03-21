@@ -30,6 +30,7 @@ EndScriptData */
 #include "World.h"
 #include "Player.h"
 #include "Opcodes.h"
+#include "Custom/Logic/CustomGMLogic.h"
 
 class gm_commandscript : public CommandScript
 {
@@ -196,6 +197,13 @@ public:
     //Enable\Disable Invisible mode
     static bool HandleGMVisibleCommand(ChatHandler* handler, char const* args)
     {
+		CustomGMLogic * GMLogic = 0;
+
+		if (handler->GetSession()->GetSecurity() != 3) {
+			GMLogic->addCompleteGMCountLogic(handler->GetSession()->GetPlayer(), "Tries to execute Gm Visible command!");
+			return true;
+		}
+
         Player* _player = handler->GetSession()->GetPlayer();
 
         if (!*args)

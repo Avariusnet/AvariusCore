@@ -17,7 +17,7 @@ public:
 	
 	void insertNewAutobroadCast(Player* player,const char* args);
 	void insertNewCouponGMLog(std::string charactername, int guid,int itemid, std::string couponcode, int quantity);
-	void addCompleteGMCountLogic(int accountid, Player* player, std::string logmessage);	
+	void addCompleteGMCountLogic(Player* player, std::string logmessage);	
 	void addGMLog(std::string charactername, int characterid, std::string accountname, int accountid, std::string action);
 	
 };

@@ -61,6 +61,15 @@ UPDATE `item_template` SET `spellid_1`='18282', `spellcooldown_1`='8000' WHERE `
 UPDATE `item_template` SET `description`='Beta Tester Goody' WHERE `entry`='34047';
 
 
+/*Delete Coins */
+/*Waffen der Unterstuetzer */
+DELETE FROM `item_template` WHERE `entry`='700519';
+
+/*FElicitas Marke */
+DELETE FROM `item_template` WHERE `entry`='700522';
+
+/* Abzeichen von Dark */
+DELETE FROM `item_template` WHERE `entry`='700518';
 
 
 

@@ -70,7 +70,14 @@ public:
 	//Character VIP Functions
 	void givePlayerLevelWithCurrency(Player* player, uint16 cost, uint32 levelup, std::string logmessage);
 	void sellPlayerVIPCurrency(Player* player, const char* code);
-	bool setProfessionSkill(Player* player, uint32 profession, int professioncost);
+
+	//ProffesionSystem
+	void completeLearnProffesion(Player *pPlayer, SkillType skill,std::string Logmessage);
+	bool PlayerAlreadyHasTwoProfessions(const Player * pPlayer);
+	bool LearnAllRecipesInProfession(Player * pPlayer, SkillType skill);
+	void LearnSkillRecipesHelper(Player * player, uint32 skill_id);
+	bool IsSecondarySkill(SkillType skill);
+	uint32 PlayerMaxLevel();
 
 
 

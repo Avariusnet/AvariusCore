@@ -326,7 +326,7 @@ void CustomQuestionAnswerSystem::insertNewQuestion(Player * player, const char* 
 	if (checkifItemIsForbidden) {
 		std::string accountname = "";
 		accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-		GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer(), "Try to generate a forbidden Item Reward in a question!");
+		GMLogic->addCompleteGMCountLogic(player->GetSession()->GetPlayer(), "Try to generate a forbidden Item Reward in a question!");
 		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################");
 		ChatHandler(player->GetSession()).PSendSysMessage("Warning: GM should be a supporter not a cheater!");
 		ChatHandler(player->GetSession()).PSendSysMessage("This incident has been logged in DB.");

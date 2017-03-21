@@ -2,6 +2,7 @@
 #include <Custom/Logic/CustomPlayerLog.h>
 #include <Custom/Logic/CustomGMLogic.h>
 #include "Config.h"
+#include "Language.h"
 
 
 
@@ -26,31 +27,6 @@ PreparedQueryResult CustomCharacterSystem::getAccountbyID(int accountid)
 }
 
 
-
-bool CustomCharacterSystem::setProfessionSkill(Player * player, uint32 profession, int professioncost)
-{
-	CustomPlayerLog * PlayerLog = 0;
-
-	bool hasPlayerSkill = player->HasSkill(profession);
-	if (!hasPlayerSkill) {
-		player->LearnDefaultSkill(profession, 1);
-	}
-
-	player->LearnDefaultSkill(profession, 6);
-	player->GetPureMaxSkillValue(profession);
-	player->SetSkill(profession, player->GetSkillStep(profession), 450, 450);
-	PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Profession skilled");
-	ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
-		player->GetName());
-	ChatHandler(player->GetSession()).PSendSysMessage("Your Proffession was set to Skill 450!",
-		player->GetName());
-	ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
-		player->GetName());
-	player->ModifyMoney(-professioncost * GOLD);
-	return true;
-	
-
-}
 
 void CustomCharacterSystem::insertNewFirstCharacterforPlayerCount(int guid, std::string charactername, int accountid, std::string accountname, int guildid, std::string ip)
 {
@@ -712,6 +688,170 @@ void CustomCharacterSystem::sellPlayerVIPCurrency(Player * player, const char * 
 
 }
 
+void CustomCharacterSystem::completeLearnProffesion(Player * player, SkillType skill,std::string Logmessage)
+{
+	CustomPlayerLog * PlayerLog = 0;
+	int vipcoin = sConfigMgr->GetIntDefault("Vip.Vendor.CurrencyID", 38186);
+
+	if (player->HasItemCount(vipcoin, 4, false)) {
+		if (PlayerAlreadyHasTwoProfessions(player) && !IsSecondarySkill(skill)) {
+			ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+				player->GetName());
+			ChatHandler(player->GetSession()).PSendSysMessage("You already know two Proffessions!",
+				player->GetName());
+			ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+				player->GetName());
+			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Professionproblem caused with 2 Professions!");
+			return;
+		}
+
+		else
+		{
+			if (!LearnAllRecipesInProfession(player, skill)) {
+				ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+					player->GetName());
+				ChatHandler(player->GetSession()).PSendSysMessage("Internal Server Error. Please try again!",
+					player->GetName());
+				ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+					player->GetName());
+				PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Professionsystem Internal Server Error!");
+				return;
+			}
+
+
+
+
+			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), Logmessage);
+			return;
+		}
+	}
+	else {
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("Not enoug coins!",
+			player->GetName());
+		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
+			player->GetName());
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Not enough coins for proffessions!");
+		return;
+	}
+}
+
+
+
+
+bool CustomCharacterSystem::PlayerAlreadyHasTwoProfessions(const Player *pPlayer)
+{
+	uint32 skillCount = 0;
+
+	if (pPlayer->HasSkill(SKILL_MINING))
+		skillCount++;
+	if (pPlayer->HasSkill(SKILL_SKINNING))
+		skillCount++;
+	if (pPlayer->HasSkill(SKILL_HERBALISM))
+		skillCount++;
+
+	if (skillCount >= 2)
+		return true;
+
+	for (uint32 i = 1; i < sSkillLineStore.GetNumRows(); ++i)
+	{
+		SkillLineEntry const *SkillInfo = sSkillLineStore.LookupEntry(i);
+		if (!SkillInfo)
+			continue;
+
+		if (SkillInfo->categoryId == SKILL_CATEGORY_SECONDARY)
+			continue;
+
+		if ((SkillInfo->categoryId != SKILL_CATEGORY_PROFESSION) || !SkillInfo->canLink)
+			continue;
+
+		const uint32 skillID = SkillInfo->id;
+		if (pPlayer->HasSkill(skillID))
+			skillCount++;
+
+		if (skillCount >= 2)
+			return true;
+	}
+	return false;
+}
+
+bool  CustomCharacterSystem::LearnAllRecipesInProfession(Player *pPlayer, SkillType skill)
+{
+	ChatHandler handler(pPlayer->GetSession());
+	char* skill_name;
+
+	SkillLineEntry const *SkillInfo = sSkillLineStore.LookupEntry(skill);
+	skill_name = SkillInfo->name[handler.GetSessionDbcLocale()];
+
+	if (!SkillInfo)
+	{
+		TC_LOG_ERROR("server.loading", "Profession NPC: received non-valid skill ID (LearnAllRecipesInProfession)");
+	}
+
+	LearnSkillRecipesHelper(pPlayer, SkillInfo->id);
+
+	pPlayer->SetSkill(SkillInfo->id, pPlayer->GetSkillStep(SkillInfo->id), 450, 450);
+	handler.PSendSysMessage(LANG_COMMAND_LEARN_ALL_RECIPES, skill_name);
+
+	return true;
+}
+
+void CustomCharacterSystem::LearnSkillRecipesHelper(Player *player, uint32 skill_id)
+{
+	uint32 classmask = player->getClassMask();
+
+	for (uint32 j = 0; j < sSkillLineAbilityStore.GetNumRows(); ++j)
+	{
+		SkillLineAbilityEntry const *skillLine = sSkillLineAbilityStore.LookupEntry(j);
+		if (!skillLine)
+			continue;
+
+		// wrong skill
+		if (skillLine->skillId != skill_id)
+			continue;
+
+		// not high rank
+		if (skillLine->forward_spellid)
+			continue;
+
+		// skip racial skills
+		if (skillLine->racemask != 0)
+			continue;
+
+		// skip wrong class skills
+		if (skillLine->classmask && (skillLine->classmask & classmask) == 0)
+			continue;
+
+		SpellInfo const * spellInfo = sSpellMgr->GetSpellInfo(skillLine->spellId);
+		if (!spellInfo || !SpellMgr::IsSpellValid(spellInfo, player, false))
+			continue;
+
+		player->LearnSpell(skillLine->spellId, false);
+	}
+}
+
+bool CustomCharacterSystem::IsSecondarySkill(SkillType skill)
+{
+	return skill == SKILL_COOKING || skill == SKILL_FIRST_AID;
+}
+
+
+
+uint32 CustomCharacterSystem::PlayerMaxLevel()
+{
+	return sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL);
+}
+
+bool PlayerHasItemOrSpell(const Player *plr, uint32 itemId, uint32 spellId) 
+{
+	return plr->HasItemCount(itemId, 1, true) || plr->HasSpell(spellId);
+}
+
+
+
+
+
 void CustomCharacterSystem::givePlayerLevelWithCurrency(Player * player, uint16 cost, uint32 levelup,std::string logmessage)
 {
 	CustomPlayerLog * PlayerLog = 0;
@@ -923,7 +1063,7 @@ void CustomCharacterSystem::moveCharacterToAnotherAccount(Player * player, const
 	uint32 charactersum = felder[0].GetInt32();
 
 	if (player->GetSession()->GetSecurity() > 0) {
-		GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer(), "Try to transfer Character to a Lower or Higher Sec Account!");
+		GMLogic->addCompleteGMCountLogic(player->GetSession()->GetPlayer(), "Try to transfer Character to a Lower or Higher Sec Account!");
 		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 			player->GetName());
 		ChatHandler(player->GetSession()).PSendSysMessage("Warning: GM should be a supporter not a cheater!",

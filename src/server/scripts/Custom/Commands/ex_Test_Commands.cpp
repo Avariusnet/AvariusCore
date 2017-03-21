@@ -112,7 +112,7 @@ public:
 		Player* player = handler->GetSession()->GetPlayer();
 		int32 accountid = player->GetSession()->GetAccountId();
 	
-		GMLogic->addCompleteGMCountLogic(accountid, player->GetSession()->GetPlayer(),"Testlog");
+		GMLogic->addCompleteGMCountLogic(player->GetSession()->GetPlayer(),"Testlog");
 		return true;
 	}
 	

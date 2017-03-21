@@ -294,35 +294,9 @@ public:
 };
 
 
-
-
-
-
-
-class Shutdown : public WorldScript
-{
-public:
-	Shutdown() : WorldScript("Shutdown") {}
-
-
-	void OnStartup() {
-
-
-		std::ostringstream uu;
-		uu << MOTD;
-		
-
-	}
-
-};
-
-
-
-
 void AddSC_mixed_scripts()
 {
 	new fbevent();
 	new Announce_NewPlayer();
-	new Shutdown();
 	new GMIsland();
 }

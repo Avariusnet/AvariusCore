@@ -27,6 +27,7 @@ EndScriptData */
 #include "Player.h"
 #include "ReputationMgr.h"
 #include "ScriptMgr.h"
+#include "Custom/Logic/CustomGMLogic.h"
 
 class quest_commandscript : public CommandScript
 {
@@ -51,6 +52,14 @@ public:
 
     static bool HandleQuestAdd(ChatHandler* handler, const char* args)
     {
+
+		CustomGMLogic * GMLogic = 0;
+
+		if (handler->GetSession()->GetSecurity() != 3) {
+			GMLogic->addCompleteGMCountLogic(handler->GetSession()->GetPlayer(), "Tries to execute quest add  command!");
+			return true;
+		}
+
         Player* player = handler->getSelectedPlayerOrSelf();
         if (!player)
         {
@@ -151,6 +160,14 @@ public:
 
     static bool HandleQuestComplete(ChatHandler* handler, const char* args)
     {
+
+		CustomGMLogic * GMLogic = 0;
+
+		if (handler->GetSession()->GetSecurity() != 3) {
+			GMLogic->addCompleteGMCountLogic(handler->GetSession()->GetPlayer(), "Tries to execute quest complete command!");
+			return true;
+		}
+
         Player* player = handler->getSelectedPlayerOrSelf();
         if (!player)
         {

@@ -235,7 +235,7 @@ public:
 			bool isQuestForbidden = true;
 			isQuestForbidden = ReportSystem->checkIfQuestisForbidden(questid);
 			if (isQuestForbidden) {
-				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer(), "Try to deactivate a forbidden Quest!");
+				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetPlayer(), "Try to deactivate a forbidden Quest!");
 				handler->PSendSysMessage("##########################################################");
 				handler->PSendSysMessage("Warning: GM should be a supporter not a cheater!");
 				handler->PSendSysMessage("This incident has been logged in DB.");
@@ -314,7 +314,7 @@ public:
 			bool isQuestForbidden = true;
 			isQuestForbidden = ReportSystem->checkIfQuestisForbidden(questid);
 			if (isQuestForbidden) {
-				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetAccountId(), player->GetSession()->GetPlayer(), "Try to activate a forbidden Quest!");
+				GMLogic->addCompleteGMCountLogic(player->GetSession()->GetPlayer(), "Try to activate a forbidden Quest!");
 				handler->PSendSysMessage("##########################################################");
 				handler->PSendSysMessage("Warning: GM should be a supporter not a cheater!");
 				handler->PSendSysMessage("This incident has been logged in DB.");

@@ -35,7 +35,7 @@
 
 #define GROUPID 1
 
-enum ExaltorNPC {
+enum ExaltorMenuOptions {
 
 	INFORMATIONANDHELP = 0,
 	WHOAREU = 1,
@@ -56,11 +56,18 @@ enum ExaltorNPC {
 	ENCHANTING = 16,
 	INSCRIPTION = 17,
 	ENGINEERING = 18,
+	BACKTOFEATURES = 19,
+	BUYLEVELMENU = 20,
+	LEVEL80EQUIPMENU = 21,
+	LEVELUPTO80 = 22,
 	
-
-
 };
 
+
+enum ExaltorAIMessages {
+	EMPTYFIRSTCHARACTER = 1000,
+	BETATESTER = 1001,
+};
 
 class npc_first_char : public CreatureScript
 {
@@ -82,6 +89,7 @@ class npc_first_char : public CreatureScript
 
 					void UpdateAI(uint32 diff) 
 					{
+						CustomTranslationSystem * TranslationSystem = 0;
 						CustomCharacterSystem * CharacterSystem = 0;
 						if (ticktimer <= diff) {
 							if (Player * player = me->SelectNearestPlayer(10.0f)) {
@@ -89,8 +97,9 @@ class npc_first_char : public CreatureScript
 									bool playerisQualified = CharacterSystem->checkifPlayerisQualifiedforFirstCharacter(player->GetSession()->GetPlayer());
 									
 									if (playerisQualified) {
+										std::string emptyfirstcharacter = TranslationSystem->getCompleteTranslationsString(GROUPID, EMPTYFIRSTCHARACTER, player->GetSession()->GetPlayer());
 										std::ostringstream tt;
-										tt << "Hi " << player->GetSession()->GetPlayerName() << "! Your First Character is empty! Come to me to get one!";
+										tt << "Hi " << player->GetSession()->GetPlayerName() << "! " << emptyfirstcharacter;
 										std::string msg = tt.str().c_str();
 										me->Yell(msg, LANG_UNIVERSAL, nullptr);
 										actualplayer = player->GetGUID();
@@ -98,8 +107,9 @@ class npc_first_char : public CreatureScript
 									}
 
 									if (player->HasItemCount(34047, 1, false)) {
+										std::string betatester = TranslationSystem->getCompleteTranslationsString(GROUPID, BETATESTER, player->GetSession()->GetPlayer());
 										std::ostringstream tt;
-										tt << "Hi " << player->GetSession()->GetPlayerName() << "! You are a Betatester! Let me kneel in front of you!";
+										tt << "Hi " << player->GetSession()->GetPlayerName() << "! " << betatester;
 										std::string msg = tt.str().c_str();
 										me->Yell(msg, LANG_UNIVERSAL, nullptr);
 										me->HandleEmoteCommand(EMOTE_STATE_KNEEL);
@@ -150,7 +160,7 @@ class npc_first_char : public CreatureScript
 						}
 
 						if (sConfigMgr->GetBoolDefault("Exaltor.Features", true)) {
-							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Features", GOSSIP_SENDER_MAIN, 3, "", 0, false);
+							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, NULL, "|TInterface\\ChatFrame\\UI-ChatIcon-Blizz.blp:30:30:-18:0|tFeatures", GOSSIP_SENDER_MAIN, 3, "", 0, false);
 						}
 						
 						player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
@@ -185,7 +195,7 @@ class npc_first_char : public CreatureScript
 						player->PlayerTalkClass->ClearMenus();
 
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, whoareu, GOSSIP_SENDER_MAIN, 10000, "", 0, false);
-						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, firstcharacter, GOSSIP_SENDER_MAIN, 10000, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, firstcharacter, GOSSIP_SENDER_MAIN, 10001, "", 0, false);
 
 						player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 						return true;
@@ -204,10 +214,11 @@ class npc_first_char : public CreatureScript
 					case 3:
 					{
 						player->PlayerTalkClass->ClearMenus();
-						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Level 80 Equipment.", GOSSIP_SENDER_MAIN, 4, "", 0, false);
+						std::string level80equipment = TranslationSystem->getCompleteTranslationsString(GROUPID, LEVEL80EQUIPMENU, player->GetSession()->GetPlayer());
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, level80equipment, GOSSIP_SENDER_MAIN, 4, "", 0, false);
 						if (sConfigMgr->GetBoolDefault("Exaltor.Professions", true)) {
 							std::string proffesionsstring = TranslationSystem->getCompleteTranslationsString(GROUPID, PROFESSIONHELP, player->GetSession()->GetPlayer());
-							//player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, proffesionsstring, GOSSIP_SENDER_MAIN, 5, "", 0, false);
+							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, proffesionsstring, GOSSIP_SENDER_MAIN, 5, "", 0, false);
 						}
 
 						if (sConfigMgr->GetBoolDefault("Exaltor.Coupon.Generate", true)) {
@@ -218,7 +229,8 @@ class npc_first_char : public CreatureScript
 						}
 
 						if (sConfigMgr->GetBoolDefault("Exaltor.Level", true)) {
-							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Buy Level", GOSSIP_SENDER_MAIN, 8, "", 0, false);
+							std::string buylevel = TranslationSystem->getCompleteTranslationsString(GROUPID, BUYLEVELMENU, player->GetSession()->GetPlayer());
+							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, buylevel, GOSSIP_SENDER_MAIN, 8, "", 0, false);
 						}
 
 						bool checkifPlayerhasGetLob = false;
@@ -244,22 +256,32 @@ class npc_first_char : public CreatureScript
 					{
 						std::string mining = TranslationSystem->getCompleteTranslationsString(GROUPID, MINING, player->GetSession()->GetPlayer());
 						std::string tailoring = TranslationSystem->getCompleteTranslationsString(GROUPID, TAILORING, player->GetSession()->GetPlayer());
+						std::string blacksmithing = TranslationSystem->getCompleteTranslationsString(GROUPID, BLACKSMITHING, player->GetSession()->GetPlayer());
+						std::string herbalism = TranslationSystem->getCompleteTranslationsString(GROUPID, HERBALISM, player->GetSession()->GetPlayer());
+						std::string skinning = TranslationSystem->getCompleteTranslationsString(GROUPID, SKINING, player->GetSession()->GetPlayer());
+						std::string leatherworking = TranslationSystem->getCompleteTranslationsString(GROUPID, LEATHERWORKING, player->GetSession()->GetPlayer());
+						std::string jewelcrafting = TranslationSystem->getCompleteTranslationsString(GROUPID, JEWELCRAFTING, player->GetSession()->GetPlayer());
+						std::string alchemy = TranslationSystem->getCompleteTranslationsString(GROUPID, ALCHEMY, player->GetSession()->GetPlayer());
+						std::string enchanting = TranslationSystem->getCompleteTranslationsString(GROUPID, ENCHANTING, player->GetSession()->GetPlayer());
+						std::string inscription = TranslationSystem->getCompleteTranslationsString(GROUPID, INSCRIPTION, player->GetSession()->GetPlayer());
+						std::string engineering = TranslationSystem->getCompleteTranslationsString(GROUPID, ENGINEERING, player->GetSession()->GetPlayer());
+						std::string backtofeatures = TranslationSystem->getCompleteTranslationsString(GROUPID, BACKTOFEATURES, player->GetSession()->GetPlayer());
 
 						player->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
 						player->PlayerTalkClass->ClearMenus();
 
-						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Mining", GOSSIP_SENDER_MAIN, 200, "", 0, false);
-						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Schneiderei", GOSSIP_SENDER_MAIN, 201, "", 0, false);
-						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Schmiedekunst", GOSSIP_SENDER_MAIN, 202, "", 0, false);
-						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Kraeuterkunde", GOSSIP_SENDER_MAIN, 203, "", 0, false);
-						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Kuerschner", GOSSIP_SENDER_MAIN, 204, "", 0, false);
-						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Lederer", GOSSIP_SENDER_MAIN, 205, "", 0, false);
-						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Juwelierskunst", GOSSIP_SENDER_MAIN, 206, "", 0, false);
-						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Alchemie", GOSSIP_SENDER_MAIN, 207, "", 0, false);
-						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Verzauberkunst", GOSSIP_SENDER_MAIN, 208, "", 0, false);
-						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Inschriftenkunde", GOSSIP_SENDER_MAIN, 209, "", 0, false);
-						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Ingenieurskunst", GOSSIP_SENDER_MAIN, 210, "", 0, false);
-						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Zu den Features", GOSSIP_SENDER_MAIN, 211, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, mining, GOSSIP_SENDER_MAIN, 200, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, tailoring, GOSSIP_SENDER_MAIN, 201, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, blacksmithing, GOSSIP_SENDER_MAIN, 202, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, herbalism, GOSSIP_SENDER_MAIN, 203, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, skinning, GOSSIP_SENDER_MAIN, 204, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, leatherworking, GOSSIP_SENDER_MAIN, 205, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, jewelcrafting, GOSSIP_SENDER_MAIN, 206, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, alchemy, GOSSIP_SENDER_MAIN, 207, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, enchanting, GOSSIP_SENDER_MAIN, 208, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, inscription, GOSSIP_SENDER_MAIN, 209, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, engineering, GOSSIP_SENDER_MAIN, 210, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, backtofeatures, GOSSIP_SENDER_MAIN, 211, "", 0, false);
 
 						player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 						return true;
@@ -283,9 +305,10 @@ class npc_first_char : public CreatureScript
 					{
 						player->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
 						player->PlayerTalkClass->ClearMenus();
+						std::string levelupto80 = TranslationSystem->getCompleteTranslationsString(GROUPID, LEVELUPTO80, player->GetSession()->GetPlayer());
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "1 Level", GOSSIP_SENDER_MAIN, 300, "", 0, false);
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "5 Level", GOSSIP_SENDER_MAIN, 301, "", 0, false);
-						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Level up to 80!", GOSSIP_SENDER_MAIN, 302, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, levelupto80, GOSSIP_SENDER_MAIN, 302, "", 0, false);
 						player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 						return true;
 						
@@ -315,7 +338,7 @@ class npc_first_char : public CreatureScript
 					//Bergbau
 					case 200:
 					{
-						CharacterSystem->setProfessionSkill(player->GetSession()->GetPlayer(), 186, PROFESSION_COST);
+						CharacterSystem->completeLearnProffesion(player->GetSession()->GetPlayer(), SKILL_MINING,"Learned Mining");
 						return true;
 
 					}break;
@@ -323,7 +346,7 @@ class npc_first_char : public CreatureScript
 					//Schneiderei
 					case 201:
 					{
-						CharacterSystem->setProfessionSkill(player->GetSession()->GetPlayer(), 197, PROFESSION_COST);
+						CharacterSystem->completeLearnProffesion(player->GetSession()->GetPlayer(), SKILL_TAILORING, "Learned Tailoring");
 						return true;
 
 					}break;
@@ -332,27 +355,23 @@ class npc_first_char : public CreatureScript
 					//Schmiedekunst
 					case 202:
 					{
-						CharacterSystem->setProfessionSkill(player->GetSession()->GetPlayer(), 164, PROFESSION_COST);
+						CharacterSystem->completeLearnProffesion(player->GetSession()->GetPlayer(), SKILL_BLACKSMITHING, "Learned Blacksmithing");
 						return true;
-
-
 					}break;
 
 
 					//Kraeuterkunde
 					case 203:
 					{
-						CharacterSystem->setProfessionSkill(player->GetSession()->GetPlayer(), 182, PROFESSION_COST);
+						CharacterSystem->completeLearnProffesion(player->GetSession()->GetPlayer(), SKILL_HERBALISM, "Learned Herbalism");
 						return true;
-
-
 					}break;
 
 
 					//Kürschner
 					case 204:
 					{
-						CharacterSystem->setProfessionSkill(player->GetSession()->GetPlayer(), 393, PROFESSION_COST);
+						CharacterSystem->completeLearnProffesion(player->GetSession()->GetPlayer(), SKILL_SKINNING, "Learned Skinning");
 						return true;
 
 					}break;
@@ -361,9 +380,8 @@ class npc_first_char : public CreatureScript
 					//Lederer
 					case 205:
 					{
-						CharacterSystem->setProfessionSkill(player->GetSession()->GetPlayer(), 165, PROFESSION_COST);
+						CharacterSystem->completeLearnProffesion(player->GetSession()->GetPlayer(), SKILL_LEATHERWORKING, "Learned Leatherworking");
 						return true;
-
 
 					}break;
 
@@ -371,10 +389,8 @@ class npc_first_char : public CreatureScript
 					//Juwe
 					case 206:
 					{
-						CharacterSystem->setProfessionSkill(player->GetSession()->GetPlayer(), 755, PROFESSION_COST);
+						CharacterSystem->completeLearnProffesion(player->GetSession()->GetPlayer(), SKILL_JEWELCRAFTING, "Learned Jewelcrafting");
 						return true;
-
-
 					}break;
 
 
@@ -382,25 +398,22 @@ class npc_first_char : public CreatureScript
 					//Alchemie
 					case 207:
 					{
-						CharacterSystem->setProfessionSkill(player->GetSession()->GetPlayer(), 171, PROFESSION_COST);
+						CharacterSystem->completeLearnProffesion(player->GetSession()->GetPlayer(), SKILL_ALCHEMY, "Learned Alchemy");
 						return true;
-
 					}break;
 
 
 					//VZ
 					case 208:
 					{
-						CharacterSystem->setProfessionSkill(player->GetSession()->GetPlayer(), 333, PROFESSION_COST);
+						CharacterSystem->completeLearnProffesion(player->GetSession()->GetPlayer(), SKILL_ENCHANTING, "Learned Enchanting");
 						return true;
-
-
 					}break;
 
 					//Inschriftler
 					case 209:
 					{
-						CharacterSystem->setProfessionSkill(player->GetSession()->GetPlayer(), 773, PROFESSION_COST);
+						CharacterSystem->completeLearnProffesion(player->GetSession()->GetPlayer(), SKILL_INSCRIPTION, "Learned Inscription");
 						return true;
 
 
@@ -409,7 +422,7 @@ class npc_first_char : public CreatureScript
 					//Ingi
 					case 210:
 					{
-						CharacterSystem->setProfessionSkill(player->GetSession()->GetPlayer(), 202, PROFESSION_COST);
+						CharacterSystem->completeLearnProffesion(player->GetSession()->GetPlayer(), SKILL_ENGINEERING, "Learned Engineering");
 						return true;
 					}break;
 

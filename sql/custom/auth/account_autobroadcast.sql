@@ -1,4 +1,4 @@
-Delete from `autobroadcast` where id between 99 and 103;
+Delete from `autobroadcast` where `realmid` = 1;
 
 INSERT INTO `autobroadcast` Values (1,99,2,"Report buggy Quests with .report quest [shift+left click on quest]. Then press Return");
 INSERT INTO `autobroadcast` Values (1,100,2,"Please vote for us! ");

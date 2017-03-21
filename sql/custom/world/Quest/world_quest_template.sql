@@ -133,6 +133,69 @@ UPDATE `quest_template` SET `RequiredNpcOrGo2`='0', `RequiredNpcOrGoCount2`='0' 
 UPDATE `quest_template` SET `StartItem`='5917' WHERE `ID`='900835';
 UPDATE `quest_template` SET `RequiredItemId3`='0', `RequiredItemCount3`='0' WHERE `ID`='900840';
 
+/* Questtranslations */
+UPDATE `quest_template` SET `LogTitle`='Kill 100 Players', `LogDescription`='Kill 100 Player. No matter where or how! Do it! Now!', `QuestDescription`='$N, it is really important to slaughter our Enemies. Do it, and i will reward you!', `QuestCompletionLog`='It is up to you, to complete the Quest!' WHERE `ID`='803903';
+UPDATE `quest_template` SET `LogDescription`='Kill 100 Player. No matter where or how you do it! Do it! Now!' WHERE `ID`='803903';
+UPDATE `quest_template` SET `LogTitle`='Kill 50 Players', `LogDescription`='Kill 50 Player. No matter where or how! Do it! Now!', `QuestDescription`='$N, it is really important to slaughter our Enemies. Do it, and i will reward you!', `QuestCompletionLog`='It is up to you, to complete the Quest!' WHERE `ID`='803902';
+UPDATE `quest_template` SET `LogTitle`='Kill 20 Players', `LogDescription`='Kill 20 Player. No matter where or how! Do it! Now!', `QuestDescription`='$N, it is really important to slaughter our Enemies. Do it, and i will reward you!', `QuestCompletionLog`='It is up to you, to complete the Quest!' WHERE `ID`='803901';
+UPDATE `quest_template` SET `LogTitle`='Kill 10 Players', `LogDescription`='Kill 10 Player. No matter where or how! Do it! Now!', `QuestDescription`='$N, it is really important to slaughter our Enemies. Do it, and i will reward you!', `QuestCompletionLog`='It is up to you, to complete the Quest!' WHERE `ID`='803900';
+UPDATE `quest_template` SET `LogDescription`='Kill the Shadow of Exitare', `QuestDescription`='Hi $N, Kill the Shadow of Exitare. His corrupted Soul did a lot of damage to our World. His life is now over!  ', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800537';
+UPDATE `quest_template` SET `LogDescription`='Kill Maltyriun', `QuestDescription`='Hi $N. Maltyriun is a little tiny Beast. He must be annihilated! ', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800547';
+
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='750000';
+UPDATE `quest_template` SET `RewardItem1`='700521', `LogDescription`='Kill the Shadow of Exitare', `QuestDescription`='Hi $N, Kill the Shadow of Exitare. His corrupted Soul damages our natural Life. Now it is time to die! ', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800537';
+UPDATE `quest_template` SET `RewardItem1`='700521', `LogDescription`='Kill Maltyriun.', `QuestDescription`='Hi $N, Kill Maltyriun the Traitor. He must be annihilated!  ', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800547';
+UPDATE `quest_template` SET `RewardItem1`='700521', `LogDescription`='Kill Tyranium.', `QuestDescription`='Hi $N.Tyranium is an evil dragon. Hurry up! His plan is to get control over Ironforge! We must prevent that! ', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800552';
+UPDATE `quest_template` SET `RewardItem1`='700521', `QuestCompletionLog`='Es ist Eure Sache was ihr tut.' WHERE `ID`='800553';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='802008';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='802016';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='802017';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='802027';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='803900';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='803901';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='803902';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='803903';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='890001';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='899000';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='900001';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='900300';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='900301';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='900500';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='900502';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='900503';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='900504';
+UPDATE `quest_template` SET `LogTitle`='The Horde Armaments', `LogDescription`='Bring me 30 Horde Armaments', `QuestDescription`='Hi $N, i need these Armaments! There is a secret plan. Maybe i will tell you the plan in the future!', `QuestCompletionLog`='It´s up to you. Do what you like!', `RequiredItemId1`='35726' WHERE `ID`='800555';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='800555';
+UPDATE `quest_template` SET `LogTitle`='Crystallised Stonechips', `LogDescription`='Gather 60 Pieces of that Stonechips!', `QuestDescription`='Hi $C, it is nice to see you here and alive! My blunt blade needs a repair. So please bring me these Stonechips! ', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800553';
+UPDATE `quest_template` SET `RewardItem1`='700521', `LogTitle`='Prove that you are worthy', `LogDescription`='Gather 30 Coins of Wandervolk!', `QuestDescription`='Hi $C $N, good to see you! I have a quest for you! Bring me 30 Coins of Wandervolk! Unfortunaly some Represantatives of Wandervolk are killed by creatures of the Outland and Azeroth. Search and kill these creatures and bring me the Coins!  ', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800554';
+UPDATE `quest_template` SET `RewardAmount1`='10', `RequiredItemId1`='49426', `RequiredItemCount1`='10' WHERE `ID`='900807';
+UPDATE `quest_template` SET `RewardAmount1`='5', `RequiredItemId2`='47241' WHERE `ID`='900808';
+UPDATE `quest_template` SET `LogTitle`='The 6 Aeonen', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800557';
+UPDATE `quest_template` SET `LogTitle`='Battle: Leandaria', `LogDescription`='Challenge Leandarie and beat here lil ass!', `QuestDescription`='Leandaria is a little girl from the Wandervolk. But her right fist. Well, try it out!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800558';
+UPDATE `quest_template` SET `LogTitle`='Gold for Wandervolk Citicens', `LogDescription`='Donate 2000 Gold for the Wandervolk! ', `QuestDescription`='The Wandervolk needs your help. Donate 2000 Gold and you will get an Reward! Maybe a citizenship?', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800559';
+UPDATE `quest_template` SET `LogTitle`='War against your Enemies', `LogDescription`='Kill 20 of your worst enemies!', `QuestDescription`='Kill your worst enemies! Free your anger and break Bones!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800560';
+UPDATE `quest_template` SET `LogTitle`='The Massacre', `LogDescription`='Kill 20 of your worst enemies!', `QuestDescription`='Stage a massacre! Death, Annhiliation, Blood! Yeah i know you will like that!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800561';
+UPDATE `quest_template` SET `LogTitle`='A long Way', `LogDescription`='Exitare wait for you!', `QuestDescription`='$N, Exitare is waiting for you! You can find him on one of Westfalls isles!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='802008';
+UPDATE `quest_template` SET `LogTitle`='The Returning', `LogDescription`='Go Back to Rumu!', `QuestDescription`='$N, Rumu has your Reward. Meet him and get it!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='802016';
+UPDATE `quest_template` SET `LogDescription`='Gather 20 Copperbars, 10 Ironbars sowie 50 light Leather.', `QuestDescription`='$N,$B I´m Moon Head of Collectors! I have a lots of quests for you!  Gather 20 Copperbars, 10 Ironbars sowie 50 light Leather. ', `AreaDescription`='', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='802017';
+UPDATE `quest_template` SET `LogTitle`='2nd Quiz', `LogDescription`='Solve the Quiz!', `QuestDescription`='$N, go back to Rumu to get your Reward!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='802027';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='803900';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='803901';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='803902';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='803903';
+UPDATE `quest_template` SET `LogDescription`='Gather1000 Emblem of Triumph.', `QuestDescription`='Hi $N, greetings from Exitare and Rumu. This is the Startquest of the Extreme questline! Hugh Amounts of Mats but also hugh amounts of Rewards are the main Part of this Questline! So first, gather1000 Emblem of Triumph.  ', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='890001';
+UPDATE `quest_template` SET `LogTitle`='3rd Quiz', `LogDescription`='Solve the Quiz!', `QuestDescription`='Hi $N, this is the 3rd Quiz. Solve it and face Rumu for your Reward!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='899000';
+UPDATE `quest_template` SET `LogTitle`='Happy X-Mas', `LogDescription`='We wish you a happy X-Mas!', `QuestDescription`='Have fun at our X-Mas Event. Get the Rewards and enjoy the Atmosphere!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='900001';
+UPDATE `quest_template` SET `LogTitle`='Jumpevent', `LogDescription`='Test the Jumpevent, and you will get better and better!', `QuestDescription`='Reach the End of this Event and get a Reward for your performance! ', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='900300';
+UPDATE `quest_template` SET `LogTitle`='Portal Fun', `LogDescription`='Test the Portalevent and you will get better and better!', `QuestDescription`='Reach the End of this Event and get a Reward for your performance! ', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='900301';
+UPDATE `quest_template` SET `LogDescription`='We celebrate Halloween! Here is our homemade Halloweenevent!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='900500';
+UPDATE `quest_template` SET `LogTitle`='Halloween moaning', `LogDescription`='Hey $N, Halloween is the Time for me, to scare the hell out of you. Bring me 100 Copperpowder!', `QuestDescription`='Hi $N, bring me 100 Copperpowder to get the Halloweenrewards!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='900502';
+UPDATE `quest_template` SET `LogDescription`='Hey $N, there should be action at Halloween! Bring me some Gorillasprockets!', `QuestDescription`='Hi $N, bring me the Gorillasprockets!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='900503';
+UPDATE `quest_template` SET `LogDescription`='Hey $N, kill Orrig the Dwarf! This lillte fat dwarf is a good meal for Halloween!', `QuestDescription`='Hi $N, Orrig has a lot of flesh. Mjam! Bring it and we will eat togehter!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='900504';
+UPDATE `quest_template` SET `LogTitle`='The Coins', `LogDescription`='Please bring me 10 Emblem of Frost!', `QuestDescription`='Hi $N, these Emblems are desirable. So please bring me 10 of it!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='900807';
+UPDATE `quest_template` SET `LogTitle`='Give me Coins', `LogDescription`='Bring me 10 Emblem of Triumph and 4 Artic Fur! ', `QuestDescription`='Hi $N, bring me 10 Emblem of Triumps and 4 Artic Fur for your Reward!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='900808';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800555';
+
 
 
 /*!40000 ALTER TABLE `quest_template` ENABLE KEYS */;
