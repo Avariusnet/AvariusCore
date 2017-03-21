@@ -92,39 +92,44 @@ class npc_first_char : public CreatureScript
 						CustomTranslationSystem * TranslationSystem = 0;
 						CustomCharacterSystem * CharacterSystem = 0;
 						if (ticktimer <= diff) {
-							if (Player * player = me->SelectNearestPlayer(10.0f)) {
-								if (actualplayer != player->GetGUID()) {
-									bool playerisQualified = CharacterSystem->checkifPlayerisQualifiedforFirstCharacter(player->GetSession()->GetPlayer());
-									
-									if (playerisQualified) {
-										std::string emptyfirstcharacter = TranslationSystem->getCompleteTranslationsString(GROUPID, EMPTYFIRSTCHARACTER, player->GetSession()->GetPlayer());
+							if (sConfigMgr->GetBoolDefault("Exaltor.Activate", true)) {
+								if (Player * player = me->SelectNearestPlayer(10.0f)) {
+									if (actualplayer != player->GetGUID()) {
+										bool playerisQualified = CharacterSystem->checkifPlayerisQualifiedforFirstCharacter(player->GetSession()->GetPlayer());
+
+										if (playerisQualified) {
+											std::string emptyfirstcharacter = TranslationSystem->getCompleteTranslationsString(GROUPID, EMPTYFIRSTCHARACTER, player->GetSession()->GetPlayer());
+											std::ostringstream tt;
+											tt << "Hi " << player->GetSession()->GetPlayerName() << "! " << emptyfirstcharacter;
+											std::string msg = tt.str().c_str();
+											me->Yell(msg, LANG_UNIVERSAL, nullptr);
+											actualplayer = player->GetGUID();
+											return;
+										}
+
+										if (player->HasItemCount(34047, 1, false)) {
+											std::string betatester = TranslationSystem->getCompleteTranslationsString(GROUPID, BETATESTER, player->GetSession()->GetPlayer());
+											std::ostringstream tt;
+											tt << "Hi " << player->GetSession()->GetPlayerName() << "! " << betatester;
+											std::string msg = tt.str().c_str();
+											me->Yell(msg, LANG_UNIVERSAL, nullptr);
+											me->HandleEmoteCommand(EMOTE_STATE_KNEEL);
+											actualplayer = player->GetGUID();
+											return;
+										}
+
 										std::ostringstream tt;
-										tt << "Hi " << player->GetSession()->GetPlayerName() << "! " << emptyfirstcharacter;
+										tt << "Hi " << player->GetSession()->GetPlayerName();
 										std::string msg = tt.str().c_str();
 										me->Yell(msg, LANG_UNIVERSAL, nullptr);
 										actualplayer = player->GetGUID();
 										return;
 									}
 
-									if (player->HasItemCount(34047, 1, false)) {
-										std::string betatester = TranslationSystem->getCompleteTranslationsString(GROUPID, BETATESTER, player->GetSession()->GetPlayer());
-										std::ostringstream tt;
-										tt << "Hi " << player->GetSession()->GetPlayerName() << "! " << betatester;
-										std::string msg = tt.str().c_str();
-										me->Yell(msg, LANG_UNIVERSAL, nullptr);
-										me->HandleEmoteCommand(EMOTE_STATE_KNEEL);
-										actualplayer = player->GetGUID();
-										return;
-									}
-
-									std::ostringstream tt;
-									tt << "Hi " << player->GetSession()->GetPlayerName();
-									std::string msg = tt.str().c_str();
-									me->Yell(msg, LANG_UNIVERSAL, nullptr);
-									actualplayer = player->GetGUID();
-									return;
 								}
-							
+							}
+							else {
+								return;
 							}
 						}
 						else {
@@ -329,7 +334,7 @@ class npc_first_char : public CreatureScript
 
 					case 302:
 					{
-						CharacterSystem->givePlayerLevelWithCurrency(player->GetSession()->GetPlayer(), 10,  80, "Buy full Levelup to 80 at Exaltor!");
+						CharacterSystem->givePlayerLevelWithCurrency(player->GetSession()->GetPlayer(), 10,  79, "Buy full Levelup to 80 at Exaltor!");
 						return true;
 					}break;
 
