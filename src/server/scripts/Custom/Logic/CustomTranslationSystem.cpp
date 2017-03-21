@@ -14,10 +14,10 @@ std::string CustomTranslationSystem::checkPlayerLocale(Player * player)
 
 std::string CustomTranslationSystem::getCompleteTranslationsString(int groupid, int translationid, Player * player)
 {
-	int playerlocale = player->GetSession()->GetSessionDbLocaleIndex();
+	
 	std::string translation = "";
 
-	switch (playerlocale) {
+	switch (player->GetSession()->GetSessionDbLocaleIndex()) {
 
 	case 0:
 	{

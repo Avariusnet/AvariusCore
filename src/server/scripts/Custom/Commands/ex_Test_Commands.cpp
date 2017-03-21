@@ -110,7 +110,6 @@ public:
 	static bool HandleLogicGMAddLogTest(ChatHandler* handler, const char* /*args*/) {
 		CustomGMLogic * GMLogic = 0;
 		Player* player = handler->GetSession()->GetPlayer();
-		int32 accountid = player->GetSession()->GetAccountId();
 	
 		GMLogic->addCompleteGMCountLogic(player->GetSession()->GetPlayer(),"Testlog");
 		return true;
