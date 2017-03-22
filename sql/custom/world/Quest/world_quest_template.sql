@@ -193,6 +193,25 @@ UPDATE `quest_template` SET `LogDescription`='Hey $N, kill Orrig the Dwarf! This
 UPDATE `quest_template` SET `LogTitle`='The Coins', `LogDescription`='Please bring me 10 Emblem of Frost!', `QuestDescription`='Hi $N, these Emblems are desirable. So please bring me 10 of it!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='900807';
 UPDATE `quest_template` SET `LogTitle`='Give me Coins', `LogDescription`='Bring me 10 Emblem of Triumph and 4 Artic Fur! ', `QuestDescription`='Hi $N, bring me 10 Emblem of Triumps and 4 Artic Fur for your Reward!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='900808';
 UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800555';
+UPDATE `quest_template` SET `LogTitle`='The Wyrm', `LogDescription`='Bring me 20 Coins of the Wandervolk!', `QuestDescription`='Hi $N, to win my favour it is nessecary to collect 20 Coins of Wandervolk! If you collect all of them come back to me to get your Reward!', `QuestCompletionLog`='Do what you like to do!', `RequiredItemId1`='700521', `RequiredItemId2`='0', `RequiredItemId3`='0', `RequiredItemCount2`='0', `RequiredItemCount3`='0' WHERE `ID`='900811';
+
+UPDATE `quest_template` SET `RewardBonusMoney`='2000000', `RequiredItemId1`='700521' WHERE `ID`='800554';
+UPDATE `quest_template` SET `RequiredItemId1`='37663' WHERE `ID`='900821';
+UPDATE `quest_template` SET `LogTitle`='Proof of Trust', `LogDescription`='Bring to me 5 Coins of Wandervolk!', `QuestDescription`='Hi $N, it is an honor that Indomata trusts you. But as you see I am not Indomata. For me, you must bring a Proof of Trust. Now! So bring 5 Coins of Wandervolk to me!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='900836';
+UPDATE `quest_template` SET `LogTitle`='Halloween goes on', `LogDescription`='Hey $N, bring to me 200 Halloweencoins!', `QuestDescription`='Hey $N, have you ever heared about the Collectors? No? Hmm... you should. They own some very special Coins. Bring me 200 of them and you will get a hugh Reward!', `QuestCompletionLog`='Do what you like to do.', `RewardItem1`='0', `RewardAmount1`='0', `RequiredItemId1`='700521', `RequiredItemCount1`='200', `RequiredItemId2`='0', `RequiredItemCount2`='0' WHERE `ID`='900505';
+UPDATE `quest_template` SET `LogTitle`='Astral Creeps', `LogDescription`='Hey $N, bring me the needed Halloweencoins. I can not remeber how many i need! Find it ou!', `QuestDescription`='To complete the Quest bring me the Halloweencoins! Fast! Move ! Huuuurrryyy!', `QuestCompletionLog`='Do what you like to do.', `RewardItem1`='0', `RewardAmount1`='0', `RequiredItemId1`='700520' WHERE `ID`='900506';
+UPDATE `quest_template` SET `LogTitle`='Halloweeny has Quests', `LogDescription`='Hey $N, the first quest for you is a bit tricky! I need Coins! But where can you find them? I ', `QuestDescription`='Hey you! These Coins are made of Steel. Or not? I can not remember it! Whatever! Bring me these coins and get a cool Reward!', `QuestCompletionLog`='Do what you like to do.', `RewardBonusMoney`='2000000', `RequiredItemId1`='700520' WHERE `ID`='900509';
+UPDATE `quest_template` SET `RewardItem1`='0', `RewardAmount1`='0' WHERE `ID`='800554';
+UPDATE `quest_template` SET `LogDescription`='The Enigma starts!', `QuestDescription`='Hi $N, to get the answer of the Identity of Felicitas bring me all I need!', `QuestCompletionLog`='Do what you like to do.', `RewardBonusMoney`='3000000', `RewardItem1`='0', `RewardAmount1`='0' WHERE `ID`='900809';
+UPDATE `quest_template` SET `RewardBonusMoney`='1000' WHERE `ID`='900836';
+UPDATE `quest_template` SET `LogTitle`='The Identity of Felicitas', `LogDescription`='The Secret around Felicitas will be solved.', `QuestDescription`='Hey $N. The secret Felicitas will be solved soon. But first bring to me 5 Titansteel Bars.', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='900821';
+UPDATE `quest_template` SET `RewardItem1`='0' WHERE `ID`='900809';
+UPDATE `quest_template` SET `RewardChoiceItemQuantity1`='1', `RewardChoiceItemQuantity2`='5' WHERE `ID`='900821';
+
+
+
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='900809';
+UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='800556';
 
 
 
