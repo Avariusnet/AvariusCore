@@ -188,6 +188,10 @@ UPDATE `creature_template` SET `HealthModifier`='1' WHERE `entry`='800033';
 UPDATE `creature_template` SET `subname`='Verkaeufer von veralteten Teilen' WHERE `entry`='800019';
 
 
+/*Vio Festung Loottable */
+UPDATE `creature_template` SET `lootid`='30664' WHERE `entry`='30664';
+UPDATE `creature_template` SET `lootid`='30663' WHERE `entry`='30663';
+
 /*!40000 ALTER TABLE `creature_template` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

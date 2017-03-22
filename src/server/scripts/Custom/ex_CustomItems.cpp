@@ -68,8 +68,6 @@ public:
 	bool OnUse(Player* player, Item* item, const SpellCastTargets &)
 	{
 		CustomPlayerLog * PlayerLog = 0;
-		
-
 		Unit* target = player->GetSelectedUnit();
 		SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(36020);
 		player->HandleEmoteCommand(EMOTE_ONESHOT_ATTACK1H);

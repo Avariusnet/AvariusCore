@@ -81,6 +81,9 @@ UPDATE `item_template` SET `BuyPrice`='0' WHERE `entry`='38186';
 UPDATE `item_template` SET `Quality`='7', `Flags`='134221824' WHERE `entry`='34047';
 UPDATE `item_template` SET `MaxDurability`='0' WHERE `entry`='34047';
 
+/* Exitares Hand*/
+UPDATE `item_template` SET `MaxDurability`='0' WHERE `entry`='34046';
+
 /*Wandervolk update*/
 UPDATE `item_template` SET `name`='Wandervolk Coin', `description`='Property of Wandervolk' WHERE `entry`='700521';
 
