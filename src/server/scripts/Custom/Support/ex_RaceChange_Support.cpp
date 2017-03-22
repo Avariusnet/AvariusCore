@@ -184,9 +184,9 @@ public:
 
 			//RaceChange
 		case 4:
-			if (player->HasEnoughMoney(500 * GOLD)){
+			if (player->HasItemCount(vipCoin, 1)) {
 				player->SetAtLoginFlag(AT_LOGIN_RENAME);
-				player->ModifyMoney(-500 * GOLD);
+				player->DestroyItemCount(49426, 4, true, false);
 				std::ostringstream ss;
 				DBeintrag(player->GetSession()->GetPlayer(), "Rename of Character");
 				ss << "|cff54b5ffEine Namensaenderung wurde durchgefuehrt von : |r " << ChatHandler(player->GetSession()).GetNameLink();

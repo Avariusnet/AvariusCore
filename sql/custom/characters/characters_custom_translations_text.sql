@@ -43,9 +43,14 @@ INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `germa
 INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('1', '20', 'Buy Level', 'Level kaufen');
 INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('1', '21', 'Buy Level 80 Equipment!', 'Level 80 Equipment kaufen!');
 INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('1', '22', 'Level up to 80!', 'Auf 80 setzen!');
+INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('1', '23', 'New Commands', 'Neue Befehle');
+
 INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('1', '1000', 'Your First Character is empty. Come to me and get it!', 'Dein Erstcharakter ist noch frei. Komm her und hol ihn dir jetzt!');
 INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('1', '1001', 'Thanks for your Betatesting!', 'Danke fuer deine Unterstuetzung in der Betaphase!');
 
+INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('1', '2000', 'The AvariusCore includes several new commands. .xprate , .report, .coupon redeem, .question get.', 'Die AvariusCore bietet einige neue Befehle. .xprate , .report, .coupon redeem, .question get.');
+INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('1', '2001', 'I am Exaltor. I know some special Features for you. But these feature must be activated , to be useful for you!', 'Ich bin Exaltor. Ich kenne verschiedene spezielle Features. Aber diese muessen aktiv sein, damit sie dir etwas nuetzen! ');
+INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('1', '2002', 'A First Character or Start Character is a Feature of AvariusCore. If you get an First Character you will get Level 80, 5k Gold , 4 Bags and a possibilty to buy your Equip!', 'Ein First Charakter oder auch Start Charakter ist ein Features der AvariusCore. Wenn du einen First Charakter bekommst, dann bekommst du Level80, 5K Gold,4 Taschen sowie die Moeglichkeit dir dein Equipment zu kaufen.');
 /* Race and Faction Change */
 INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('2', '1', 'You have not enough Credits!', 'Du hast nicht genug Astrale Kredite!');
 INSERT INTO `custom_translations` (`groupid`, `translationid`, `english`, `german`) VALUES ('2', '2', 'Please logout now!', 'Bitte logge dich aus um die Aenderungen vorzunehmen!');
