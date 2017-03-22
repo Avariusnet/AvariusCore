@@ -68,16 +68,13 @@ public:
 	bool OnUse(Player* player, Item* item, const SpellCastTargets &)
 	{
 		CustomPlayerLog * PlayerLog = 0;
-		if (player->IsInCombat())
-		{
-			player->GetSession()->SendNotification(LANG_YOU_IN_COMBAT);
-			return false;
-		}
-
 		
+
+		Unit* target = player->GetSelectedUnit();
+		SpellInfo const* spellInfo = sSpellMgr->GetSpellInfo(36020);
 		player->HandleEmoteCommand(EMOTE_ONESHOT_ATTACK1H);
-		//player->CastSpell();
-		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Used Teleportitem");
+		player->CastSpell(target, spellInfo, TRIGGERED_IGNORE_CAST_ITEM, item,nullptr, player->GetGUID());
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Used Exitares Hand");
 		return true;
 	}
 

@@ -32,7 +32,7 @@ public:
 		int phase;
 		int percentPassed;
 
-		void Reset()
+		void Reset() override
 		{
 			me->SetHealth(me->GetMaxHealth());
 			phase = 1;
@@ -40,11 +40,11 @@ public:
 			Frostshock_Timer = 8000;
 			Chill_Timer = 3000;
 		}
-		void EnterCombat(Unit * /*who*/)
+		void EnterCombat(Unit * /*who*/) override
 		{
 			percentPassed = 1;
 		}
-		void JustDied(Unit* )
+		void JustDied(Unit* ) override
 		{
 			char msg[250];
 			snprintf(msg, 250, "|cffff0000[Event System]|r Die|cffff6060 Horde|r hat das Event gewonnen!");
