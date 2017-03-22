@@ -7,3 +7,7 @@ INSERT INTO `locales_item` (`entry`, `name_loc3`, `description_loc3`) VALUES ('3
 
 DELETE from `locales_item` where `entry` = 700521;
 INSERT INTO `locales_item` (`entry`, `name_loc3`, `description_loc3`) VALUES ('700521', 'Wandervolkmarke', 'Im Besitz des Wandervolkes!');
+
+
+DELETE from `locales_item` where `entry` = 700526;
+INSERT INTO `locales_item` (`entry`, `name_loc3`, `description_loc3`) VALUES ('700526', 'VIP Dust', 'Tausche den Staubt gegen VIP Marken ein!');
