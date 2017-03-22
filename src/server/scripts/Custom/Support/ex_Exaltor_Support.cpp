@@ -165,7 +165,7 @@ class npc_first_char : public CreatureScript
 						}
 
 						if (sConfigMgr->GetBoolDefault("Exaltor.Features", true)) {
-							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, NULL, "|TInterface\\ChatFrame\\UI-ChatIcon-Blizz.blp:30:30:-18:0|tFeatures", GOSSIP_SENDER_MAIN, 3, "", 0, false);
+							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, NULL, "Features", GOSSIP_SENDER_MAIN, 3, "", 0, false);
 						}
 						
 						player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());

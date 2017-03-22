@@ -11,7 +11,7 @@
  #define VER_COMPANYNAME_STR        "AvariusCore"
  #define VER_LEGALCOPYRIGHT_STR     "(c)2016-2017 AvariusCore"
  #define VER_FILEVERSION            0,0,0
- #define VER_FILEVERSION_STR        "27.02.2017 20:15 AvariusCore Version 2.2"
+ #define VER_FILEVERSION_STR        "22.03.2017 15:00 AvariusCore Version 2.2"
  #define VER_PRODUCTVERSION         VER_FILEVERSION
  #define VER_PRODUCTVERSION_STR     VER_FILEVERSION_STR
 #endif // __REVISION_DATA_H__

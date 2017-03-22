@@ -72,6 +72,9 @@ DELETE FROM `item_template` WHERE `entry`='700522';
 DELETE FROM `item_template` WHERE `entry`='700518';
 
 
+UPDATE `item_template` SET `name`='Hand of Exitare' WHERE `entry`='34046';
+
+
 
 /*!40000 ALTER TABLE `item_template` ENABLE KEYS */;
 UNLOCK TABLES;

@@ -63,40 +63,7 @@ public:
 	
 	}
 
-	bool OnGossipSelectCode(Player * player, Creature* /*creature*/, uint32 /*sender*/, uint32 action, const char* code){
-		CustomCharacterSystem * CharacterSystem = 0;
-		switch (action){
-			
-
-		case 0:
-		{
-			CharacterSystem->doesCharacterExist(player->GetSession()->GetPlayer(), code);
-
-		}break;
-
-
-		case 2:
-		{
-			CharacterSystem->moveCharacterToAnotherAccount(player->GetSession()->GetPlayer(), code);
-			return true;
-		}break;
-
-
-		//Request new Firstchar!
-		case 3: 
-		{
-			CharacterSystem->requestNewFirstCharacter(player->GetSession()->GetPlayer(), code);
-			return true;
-
-		}break;
-
-
-		return true;
-
-		}
-
-		return true;
-	}
+	
 
 
 	bool OnGossipSelect(Player * player, Creature * creature, uint32 /*uiSender*/, uint32 uiAction){
