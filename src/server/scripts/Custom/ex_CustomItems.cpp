@@ -48,11 +48,11 @@ public:
 		CustomPlayerLog * PlayerLog = 0;
 		if (player->IsInCombat())
 		{
-			player->GetSession()->SendNotification("You cannot use this in Combat!");
+			player->GetSession()->SendNotification(LANG_YOU_IN_COMBAT);
 			return false;
 		}
 	
-		player->TeleportTo(530, 10338.54f, -6353.21f, 31.94f, 2.92f);
+		player->DurabilityRepairAll(false, 0.0f, false);
 		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(),"Used AvariusBetatester Item");
 		return true;
 	}
@@ -65,16 +65,18 @@ class exitareshand : public ItemScript
 public:
 	exitareshand() : ItemScript("exitareshand") { }
 
-	bool OnUse(Player* player, Item* /*item*/, const SpellCastTargets &)
+	bool OnUse(Player* player, Item* item, const SpellCastTargets &)
 	{
 		CustomPlayerLog * PlayerLog = 0;
 		if (player->IsInCombat())
 		{
-			player->GetSession()->SendNotification("You cannot use this in Combat!");
+			player->GetSession()->SendNotification(LANG_YOU_IN_COMBAT);
 			return false;
 		}
 
-		player->TeleportTo(530, 10338.54f, -6353.21f, 31.94f, 2.92f);
+		
+		player->HandleEmoteCommand(EMOTE_ONESHOT_ATTACK1H);
+		//player->CastSpell();
 		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Used Teleportitem");
 		return true;
 	}

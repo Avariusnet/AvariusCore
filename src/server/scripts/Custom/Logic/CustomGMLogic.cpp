@@ -131,6 +131,8 @@ void CustomGMLogic::addCompleteGMCountLogic(Player* player, std::string logmessa
 
 	if (!result) {
 		addGMPlayerCount(player->GetSession()->GetAccountId());
+		std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
+		addGMLog(player->GetSession()->GetPlayerName(), player->GetGUID(), accountname, player->GetSession()->GetAccountId(), logmessage);
 		return;
 	}
 

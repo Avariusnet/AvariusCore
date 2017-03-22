@@ -173,6 +173,13 @@ DELETE FROM `creature` WHERE `guid` = 800103;
 INSERT INTO `creature` (`guid`,`id`,`map`,`spawnMask`,`phaseMask`,`modelid`,`equipment_id`,`position_x`,`position_y`,`position_z`,`orientation`,`spawntimesecs`,`spawndist`,`currentwaypoint`,`curhealth`,`curmana`,`MovementType`) VALUES 
 ('800103','800103','0','1','1','22940','0','-12836.36','-1377.93','112.77','0.83','21600','0','0','1000000','250000','0');
 
+DELETE FROM `creature` where guid IN (15000190,15000191,15000192);
+INSERT INTO `creature` (guid, id, map, zoneId, areaId, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags, VerifiedBuild) VALUES 
+('15000190', '800104', '1', '0', '0', '1', '1', '0', '0', '1622.87', '-4393.4', '11.3995', '4.55919', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('15000191', '800104', '0', '0', '0', '1', '1', '0', '0', '-8824.13', '650.711', '94.897', '5.35423', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('15000192', '800104', '571', '0', '0', '1', '1', '0', '0', '5781.72', '634.65', '647.371', '0.359191', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0');
+
+
 /*!40000 ALTER TABLE `creature` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

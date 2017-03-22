@@ -3,7 +3,7 @@
 
 std::string CustomTranslationSystem::checkPlayerLocale(Player * player)
 {
-	int locale = player->GetSession()->GetSessionDbLocaleIndex();
+	
 
 	ChatHandler(player->GetSession()).PSendSysMessage("GetSessionDBCLocale %u ", player->GetSession()->GetSessionDbcLocale(),
 		player->GetName());

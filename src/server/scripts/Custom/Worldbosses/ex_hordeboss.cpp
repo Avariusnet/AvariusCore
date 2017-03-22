@@ -50,7 +50,7 @@ public:
 			snprintf(msg, 250, "|cffff0000[Event System]|r Die |cff00ccff Allianz|r hat das Event gewonnen!");  
 			sWorld->SendGlobalText(msg, NULL);
 		}
-		void UpdateAI(const uint32 uiDiff) 
+		void UpdateAI(const uint32 uiDiff) override
 		{
 			ScriptedAI::UpdateAI(uiDiff);
 

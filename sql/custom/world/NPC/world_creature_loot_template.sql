@@ -34,93 +34,7 @@ REPLACE INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `
 VALUES ('28860', '700525', '0', '15', '0', '1', '3', '1', '3');
 
 
-/* Mal des Sageras */
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23403' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='20046' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22873' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22884' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22957' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='17898' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='17908' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22844' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22962' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='17899' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='17907' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='17895' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='17897' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='17905' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='17916' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='17906' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='20045' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23239' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22879' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22945' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22964' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23018' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22965' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='20050' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22959' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='20039' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23196' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='20038' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='20049' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22954' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22876' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23232' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='20043' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23237' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23147' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='20031' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22846' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22946' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23337' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='20036' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22880' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='20033' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23049' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23172' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='20032' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22883' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23236' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='20048' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22882' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='20041' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22875' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22878' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23047' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23400' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='20044' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23028' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='20035' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22939' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23330' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22955' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22956' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22847' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22869' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='20052' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23339' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23374' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22881' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='20040' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23030' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23235' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22877' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22853' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22845' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22953' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22855' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23402' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23222' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22963' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23223' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='25867' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='25599' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='25593' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='25595' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23394' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='23397' and`Item`='32897';
-UPDATE `creature_loot_template` SET `Chance`='33' WHERE `Entry`='22885' and`Item`='32897';
+
 
 
 /* NETHERDRACHE LOOTTABLE REMOVE */
@@ -181,9 +95,6 @@ REPLACE INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `
 VALUES ('800039', '38186', '0', '70', '0', '1', '3', '1', '7');
 
 
-/* Kristallfragmente Loottable */
-DELETE FROM `creature_loot_template` WHERE `entry` = 22275 AND `item` = 24189;
-INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('22275', '24189', '0', '100', '0', '1', '0', '1', '1', 'Apexiswächter');
 
 /* BOSSLOOT TOLREOS */
 UPDATE `creature_loot_template` SET `MinCount`='2', `MaxCount`='2' WHERE `Entry`='800058' and`Item`='47241';
@@ -272,7 +183,7 @@ REPLACE INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `
 UPDATE `creature_loot_template` SET `Chance`='33.3', `MinCount`='5', `MaxCount`='10' WHERE `Entry`='800035' and`Item`='38186';
 
 
-/* MMO Bosse MArken */
+/* MMO Bosse Marken */
 REPLACE INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('800010', '49426', '0', '25', '0', '1', '0', '1', '2');
 REPLACE INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('800025', '49426', '0', '25', '0', '1', '0', '1', '2');
 REPLACE INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('800035', '49426', '0', '25', '0', '1', '0', '1', '2');
@@ -301,7 +212,7 @@ UPDATE `creature_loot_template` SET `Chance`='10' WHERE `Entry`='29312' and`Item
 UPDATE `creature_loot_template` SET `Chance`='10' WHERE `Entry`='29313' and`Item`='700498';
 UPDATE `creature_loot_template` SET `Chance`='10' WHERE `Entry`='31134' and`Item`='700498';
 UPDATE `creature_loot_template` SET `Chance`='10' WHERE `Entry`='15990' and`Item`='700498';
-UPDATE `creature_loot_template` SET `Chance`='15' WHERE `Entry`='36502' and`Item`='700499';
+UPDATE `creature_loot_template` SET `Chance`='10' WHERE `Entry`='36502' and`Item`='700499';
 
 /* LIGHT HARDMODE LOOTANPASSUNG */
 REPLACE INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('800063', '46964', '0', '25', '0', '4', '5', '1', '1');
@@ -314,26 +225,49 @@ UPDATE `creature_loot_template` SET `LootMode`='5' WHERE `Entry`='800063' and`It
 REPLACE INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) 
 VALUES ('800055', '700524', '0', '100', '0', '1', '1', '1', '1');
 
-DELETE FROM `creature_loot_template` WHERE `Entry` = 24613 AND `ITEM` = 700519;
-INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('24613', '700519', '0', '25', '0', '1', '0', '1', '2', 'Waffen der Unterstuetzer');
+/*WANDERVOLK WORLD DROPS */
+DELETE FROM `creature_loot_template` WHERE `ITEM` = 700521 AND `ENTRY` IN (24613,25758,26482,27270,37011,36724,37012,3114,2522,31236,21878,16880,31233,25217,25215,25216,4474,4475,4334,4328,4323,23326,23169,17149,17150,17981,30664,30663);
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('24613', '700521', '0', '20', '0', '1', '0', '1', '2', '');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('25758', '700521', '0', '20', '0', '1', '0', '1', '2', '');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('26482', '700521', '0', '20', '0', '1', '0', '1', '2', '');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('27270', '700521', '0', '20', '0', '1', '0', '1', '2', '');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('37011', '700521', '0', '20', '0', '1', '0', '1', '2', '');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('36724', '700521', '0', '20', '0', '1', '0', '1', '2', '');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('37012', '700521', '0', '20', '0', '1', '0', '1', '2', '');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('3114', '700521', '0', '5', '0', '1', '0', '1', '2', 'Gnoll im Brachland');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('2522', '700521', '0', '15', '0', '1', '0', '1', '2', 'Jagueropirscher');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('31236', '700521', '0', '15', '0', '1', '0', '1', '2', 'Scheckiger Hirsch');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('21878', '700521', '0', '25', '0', '1', '0', '1', '2', 'Teufelseber');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('16880', '700521', '0', '15', '0', '1', '0', '1', '2', 'Bulliger Eber');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('31233', '700521', '0', '25', '0', '1', '0', '1', '2', 'Kräftiger Wolf');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('25217', '700521', '0', '15', '0', '1', '0', '1', '2', 'Krieger der Winterflosse');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('25215', '700521', '0', '15', '0', '1', '0', '1', '2', 'Kuestenschlaeger der Winterflosse');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('25216', '700521', '0', '15', '0', '1', '0', '1', '2', 'Orakel der Winderflossen');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('4474', '700521', '0', '10', '0', '1', '0', '1', '2', 'FAulender Kadaver');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('4475', '700521', '0', '10', '0', '1', '0', '1', '2', 'Verseuchter Kadaver');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('4334', '700521', '0', '8', '0', '1', '0', '1', '2', 'Flammenrufer der Feuermaehnen');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('4328', '700521', '0', '8', '0', '1', '0', '1', '2', 'Bannschuppe der Feuermaehnen');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('4323', '700521', '0', '8', '0', '1', '0', '1', '2', 'Sengendes Jungiter');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('23326', '700521', '0', '20', '0', '1', '0', '1', '2', 'Netherminenhetzer');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('23169', '700521', '0', '20', '0', '1', '0', '1', '2', 'Netherminenschinder');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('17149', '700521', '0', '20', '0', '1', '0', '1', '2', 'Raeuber der Firani');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('17150', '700521', '0', '20', '0', '1', '0', '1', '2', 'Arkanist der Firani');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('17981', '700521', '0', '20', '0', '1', '0', '1', '2', 'Ausgeburt der Leere');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('30664', '700521', '0', '50', '0', '1', '0', '1', '2', 'Azurblauer Magietoeter');
+INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('30663', '700521', '0', '50', '0', '1', '0', '1', '2', 'Azurblauer Binder');
 
-DELETE FROM `creature_loot_template` WHERE `Entry` = 25758 AND `ITEM` = 700519;
-INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('25758', '700519', '0', '25', '0', '1', '0', '1', '2', 'Waffen der Unterstuetzer');
 
-DELETE FROM `creature_loot_template` WHERE `Entry` = 26482 AND `ITEM` = 700519;
-INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('26482', '700519', '0', '25', '0', '1', '0', '1', '2', 'Waffen der Unterstuetzer');
 
-DELETE FROM `creature_loot_template` WHERE `Entry` = 27270 AND `ITEM` = 700519;
-INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('27270', '700519', '0', '25', '0', '1', '0', '1', '2', 'Waffen der Unterstuetzer');
 
-DELETE FROM `creature_loot_template` WHERE `Entry` = 37011 AND `ITEM` = 700519;
-INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('37011', '700519', '0', '75', '0', '1', '0', '1', '2', 'Waffen der Unterstuetzer');
 
-DELETE FROM `creature_loot_template` WHERE `Entry` = 36724 AND `ITEM` = 700519;
-INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('36724', '700519', '0', '25', '0', '1', '0', '1', '2', 'Waffen der Unterstuetzer');
 
-DELETE FROM `creature_loot_template` WHERE `Entry` = 37012 AND `ITEM` = 700519;
-INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`, `Comment`) VALUES ('37012', '700519', '0', '25', '0', '1', '0', '1', '2', 'Waffen der Unterstuetzer');
+
+
+
+
+
+
+
 
 /*UPDATE KAYOULA LOOT TABLE */
 UPDATE  `creature_loot_template` SET `LootMode`='31' WHERE `Entry`='800037' and`Item`='38186';

@@ -178,7 +178,7 @@ class npc_first_char : public CreatureScript
 						}
 
 						if (sConfigMgr->GetBoolDefault("Exaltor.Features", true)) {
-							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, NULL, "Features", GOSSIP_SENDER_MAIN, 3, "", 0, false);
+							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Features", GOSSIP_SENDER_MAIN, 3, "", 0, false);
 						}
 						
 						player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
@@ -453,7 +453,7 @@ class npc_first_char : public CreatureScript
 							player->GetName());
 						ChatHandler(player->GetSession()).PSendSysMessage("########################################",
 							player->GetName());
-						return true;
+						
 					}break;
 
 					case 10001:
@@ -462,6 +462,7 @@ class npc_first_char : public CreatureScript
 						ChatHandler(player->GetSession()).PSendSysMessage("%s", firstcharacterexp,
 							player->GetName());
 						return true;
+						
 					}break;
 
 					case 10002:
@@ -470,6 +471,7 @@ class npc_first_char : public CreatureScript
 						ChatHandler(player->GetSession()).PSendSysMessage("%s", newcommands,
 							player->GetName());
 						return true;
+						
 					}break;
 
 					return true;

@@ -500,11 +500,12 @@ void CustomCouponSystem::playerCouponGenerationAndRedeeming(Player * player, std
 
 	if (player->HasEnoughMoney(couponcost * GOLD)) {
 		player->ModifyMoney(-couponcost * GOLD);
-		std::string couponcode = "";
-		couponcode = createNewCouponCode();
+		std::string couponCode = "";
+		couponCode = createNewCouponCode();
 		int rewarditem = getFortuneItem();
 		uint32 quantity = 1 + (std::rand() % (15 - 1 + 1));
-		insertNewCouponCodeinDB(couponcode, rewarditem, quantity, 1, 1);
+		insertNewCouponCodeinDB(couponCode, rewarditem, quantity, 1, 1);
+		insertNewPlayerUsedCode(player->GetSession()->GetPlayerName(), player->GetSession()->GetAccountId(), couponCode);
 		CharacterSystem->sendPlayerMailwithItem(rewarditem, quantity, "Your CouponCode", "Here is your CouponCode\n Have fun with your Reward. \n Feel free to do all what you want with it!", player->GetSession()->GetPlayer());
 		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), logmessage);
 		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
