@@ -17,9 +17,9 @@ if(NOT BUILDDIR)
 endif()
 
 if(WITHOUT_GIT)
-  set(rev_date "1970-01-01 00:00:00 +0000")
+  set(rev_date "2017-01-01 20:15:00 +0000")
   set(rev_hash "unknown")
-  set(rev_branch "Archived")
+  set(rev_branch "Master")
 else()
   if(GIT_EXECUTABLE)
     # Create a revision-string that we can use

@@ -220,7 +220,8 @@ INSERT INTO `locales_quest` (`Id`, `Title_loc3`, `Details_loc3`, `Objectives_loc
 
 
 INSERT INTO `locales_quest` (`Id`, `Title_loc3`, `Details_loc3`, `Objectives_loc3`, `CompletedText_loc3`)
-VALUES ('750000', 'Willkommen auf dem Server', 'Willkommen auf unserem Server. Um dir einen besseren Ueberblick ueber alle Funktionen geben zu koennen, ist das hier die Einfuehrungquest. Als Spieler hast du verschiedene Commands zur Verfuegung. Am besten fragst du Exaltor genauer aus. Er weis sicher bescheid.', 'Beende diese Quest fuer deine Belohnung!', 'Es ist Eure Sache was Ihr tut!');
+VALUES ('750000', 'Willkommen auf dem Server', 'Willkommen auf unserem Server. Um dir einen besseren Ueberblick ueber alle Funktionen geben zu koennen, ist das hier die Einfuehrungquest. Als Spieler hast du verschiedene Commands zur Verfuegung. Am besten fragst du Exaltor genauer aus. Er weis sicher Bescheid. Wenn du dir alles durchgelesen hast, beende die Quest in Orgrimmar bzw. Sturmwind!', 'Beende diese Quest fuer deine Belohnung!', 'Es ist Eure Sache was Ihr tut!');
+
 INSERT INTO `locales_quest` (`Id`, `Title_loc3`, `Details_loc3`, `Objectives_loc3`, `CompletedText_loc3`)
 VALUES ('803903', 'Toetet 100 Spieler', '$N, Ich moechte das Ihr 100 Feinde abschlachtet. Nehmt keine Ruecksicht auf Verluste. Ihr seid Meister der Vernichtung. Ihr werdet Euren Feinden das Fuerchten lehren. Geht jetzt.',
 'Toetet 100 Spieler. Egal wo. Egal wie! Toetet sie einfach.', 'Es ist Eure Sache was Ihr tut!');

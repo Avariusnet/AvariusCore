@@ -180,6 +180,12 @@ INSERT INTO `creature` (guid, id, map, zoneId, areaId, spawnMask, phaseMask, mod
 ('15000192', '800104', '571', '0', '0', '1', '1', '0', '0', '5781.72', '634.65', '647.371', '0.359191', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0');
 
 
+DELETE FROM `creature` where id = 800105;
+INSERT INTO `creature` (guid, id, map, zoneId, areaId, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags, VerifiedBuild) VALUES
+('800105', '800105', '1', '0', '0', '1', '1', '0', '0', '1598.58', '-4417.74', '10.1118', '3.6672', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('800106', '800105', '0', '0', '0', '1', '1', '0', '0', '-8842.59', '598.062', '93.6486', '2.41933', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0');
+
+
 /*!40000 ALTER TABLE `creature` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
