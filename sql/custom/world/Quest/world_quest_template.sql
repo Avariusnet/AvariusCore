@@ -207,6 +207,68 @@ UPDATE `quest_template` SET `RewardBonusMoney`='1000' WHERE `ID`='900836';
 UPDATE `quest_template` SET `LogTitle`='The Identity of Felicitas', `LogDescription`='The Secret around Felicitas will be solved.', `QuestDescription`='Hey $N. The secret Felicitas will be solved soon. But first bring to me 5 Titansteel Bars.', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='900821';
 UPDATE `quest_template` SET `RewardItem1`='0' WHERE `ID`='900809';
 UPDATE `quest_template` SET `RewardChoiceItemQuantity1`='1', `RewardChoiceItemQuantity2`='5' WHERE `ID`='900821';
+UPDATE `quest_template` SET `LogTitle`='The fake Forging', `LogDescription`='Begin your Journey and find the little woman, which has circulate this fake!', `QuestDescription`='$C, it seems that a fake forging is circulation around the world.$B$BFind the vermin which has brought it into this World!' WHERE `ID`='799996';
+UPDATE `quest_template` SET `LogTitle`='The female Stone', `LogDescription`='Find my lost stone and bring it back to me!', `QuestDescription`='Greetings $N, i have lost my stone. The last thing i can remeber is that i am running away from the Devourer of Souls. I think he has taken the stone. Please bring it back to me! Maybe a lilttle reward is waiting for you!' WHERE `ID`='799997';
+UPDATE `quest_template` SET `LogTitle`='The mysterious Object', `LogDescription`='Find the man with the mysterious Object!', `QuestDescription`='Hey, you! $BAre you lazy? Hmm fine! There is a quest for you. Lately there some rumours about a man with a curious and mysterious Object. You do not realise that? His home is  somewhere in the Outland. A further Detail is, that he is living in Netherstorm. And he loves to be on high places. Oh and wait. Here is a replic of this object! ' WHERE `ID`='799998';
+UPDATE `quest_template` SET `LogTitle`='The correct Object', `LogDescription`='Deliever this Object to a vendor in Dalaran. Hurry up!', `QuestDescription`='$N, deliver this Object to a Vendor in Dalaran. His last home was the canalization of Dalaran. But he is restless. Now go and deliver it savely!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='799999';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='799996';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='799997';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='799998';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800000';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800001';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800002';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800003';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800004';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800005';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800006';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800007';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800009';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800010';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800011';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800012';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800014';
+UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800013';
+
+
+
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='800537';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='800547';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='800552';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='800553';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='800555';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='800556';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='800557';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='800558';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='800559';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='800560';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='800561';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='802008';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='802016';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='802017';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='802027';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='803900';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='803901';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='803902';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='803903';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='890001';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='899000';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='900001';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='900300';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='900301';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='900500';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='900502';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='900503';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='900504';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='900807';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='900808';
+UPDATE `quest_template` SET `RewardItem1`='7147', `RequiredItemId1`='7147' WHERE `ID`='900809';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='802037';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='802040';
+UPDATE `quest_template` SET `RequiredItemId1`='7147' WHERE `ID`='800554';
+UPDATE `quest_template` SET `RequiredItemId1`='7147' WHERE `ID`='900505';
+UPDATE `quest_template` SET `RequiredItemId1`='7147' WHERE `ID`='900811';
+UPDATE `quest_template` SET `RequiredItemId1`='7147' WHERE `ID`='800007';
+UPDATE `quest_template` SET `LogDescription`='Bringt dem Spezialhaendler 5 Embleme des Triumphs und 20Wandervolkmarken.', `RequiredItemId2`='7147' WHERE `ID`='900804';
 
 
 

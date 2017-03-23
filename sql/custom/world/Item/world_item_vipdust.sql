@@ -1,3 +1,3 @@
-DELETE FROM `item_template` where `entry` = 700526;
-INSERT INTO `item_template` (`entry`, `class`, `subclass`, `SoundOverrideSubclass`, `name`, `displayid`, `Quality`, `Flags`, `AllowableClass`, `AllowableRace`, `ItemLevel`, `RequiredLevel`, `RequiredReputationFaction`, `maxcount`, `stackable`, `ContainerSlots`, `description`, `Material`, `MaxDurability`, `ItemLimitCategory`) VALUES ('700526', '12', '0', '-1', 'VIP Dust', '6396', '5', '73', '2047', '1791', '80', '80', '1770', '1', '100', '1', 'Change this for VIP Tokens!', '0', '0', '0');
-UPDATE `item_template` SET `BuyCount`='0', `maxcount`='0' WHERE `entry`='700526';
+DELETE FROM `item_template` where `entry` = 33788;
+INSERT INTO `item_template` (`entry`, `class`, `subclass`, `SoundOverrideSubclass`, `name`, `displayid`, `Quality`, `Flags`, `AllowableClass`, `AllowableRace`, `ItemLevel`, `RequiredLevel`, `RequiredReputationFaction`, `maxcount`, `stackable`, `ContainerSlots`, `description`, `Material`, `MaxDurability`, `ItemLimitCategory`) VALUES ('33788', '12', '0', '-1', 'VIP Bones', '6396', '5', '134221896', '2047', '1791', '80', '80', '1770', '1', '100', '1', 'Change this for VIP Tokens at the VIP Vendor!', '0', '0', '0');
+UPDATE `item_template` SET `BuyCount`='0', `maxcount`='0' WHERE `entry`='33788';

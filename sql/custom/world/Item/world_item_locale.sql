@@ -5,9 +5,9 @@ UPDATE `locales_item` SET `description_loc3`='Die Hand ist immer noch blutuebers
 DELETE from `locales_item` where `entry` = 34047;
 INSERT INTO `locales_item` (`entry`, `name_loc3`, `description_loc3`) VALUES ('34047', 'Beta Tester Belohnung', 'Hat die Betaphase der AvariusCore unterstuetzt!');
 
-DELETE from `locales_item` where `entry` = 700521;
-INSERT INTO `locales_item` (`entry`, `name_loc3`, `description_loc3`) VALUES ('700521', 'Wandervolkmarke', 'Im Besitz des Wandervolkes!');
+DELETE from `locales_item` where `entry` = 7147;
+INSERT INTO `locales_item` (`entry`, `name_loc3`, `description_loc3`) VALUES ('7147', 'Wandervolkmarke', 'Im Besitz des Wandervolkes!');
 
 
-DELETE from `locales_item` where `entry` = 700526;
-INSERT INTO `locales_item` (`entry`, `name_loc3`, `description_loc3`) VALUES ('700526', 'VIP Dust', 'Tausche den Staubt gegen VIP Marken ein!');
+DELETE from `locales_item` where `entry` = 33788;
+INSERT INTO `locales_item` (`entry`, `name_loc3`, `description_loc3`) VALUES ('33788', 'VIP Bones', 'Tausche die Knochen gegen VIP Marken ein!');

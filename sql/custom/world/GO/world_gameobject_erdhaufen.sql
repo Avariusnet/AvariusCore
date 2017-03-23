@@ -7,7 +7,7 @@ INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, 
 
 INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('500115', '200000', '0', '0.1', '0', '1', '0', '1', '1');
 
-INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('500115', '700526', '0', '10', '0', '1', '0', '1', '5');
+INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('500115', '33788', '0', '10', '0', '1', '0', '1', '5');
 
 UPDATE `gameobject_template` SET `Data0`='1785', `Data1`='500115', `Data4`='1', `Data5`='1', `VerifiedBuild`='0' WHERE `entry`='500115';
 UPDATE `gameobject_template` SET `Data0`='1785', `Data1`='500115', `Data4`='1', `Data5`='1', `VerifiedBuild`='12340' WHERE `entry`='500115';

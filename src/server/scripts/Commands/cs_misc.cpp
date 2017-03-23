@@ -38,8 +38,6 @@
 #include "DisableMgr.h"
 #include "SpellHistory.h"
 #include "Transport.h"
-#include "Custom/Logic/CustomGMLogic.h"
-#include "Custom/Logic/CustomReportSystem.h"
 
 class misc_commandscript : public CommandScript
 {
@@ -563,7 +561,7 @@ public:
 
             // before GM
             float x, y, z;
-            handler->GetSession()->GetPlayer()->GetClosePoint(x, y, z, target->GetObjectSize());
+            handler->GetSession()->GetPlayer()->GetClosePoint(x, y, z, target->GetCombatReach());
             target->TeleportTo(handler->GetSession()->GetPlayer()->GetMapId(), x, y, z, target->GetOrientation());
             target->SetPhaseMask(handler->GetSession()->GetPlayer()->GetPhaseMask(), true);
         }
@@ -599,12 +597,6 @@ public:
 
     static bool HandleDieCommand(ChatHandler* handler, char const* /*args*/)
     {
-		CustomGMLogic * GMLogic = 0;
-		if (handler->GetSession()->GetSecurity() != 3) {
-				GMLogic->addCompleteGMCountLogic(handler->GetSession()->GetPlayer(), "Tries to execute .die command!");
-				return true;
-			}
-
         Unit* target = handler->getSelectedUnit();
 
         if (!target || !handler->GetSession()->GetPlayer()->GetTarget())
@@ -631,13 +623,6 @@ public:
 
     static bool HandleReviveCommand(ChatHandler* handler, char const* args)
     {
-
-		CustomGMLogic * GMLogic = 0;
-
-		if (handler->GetSession()->GetSecurity() != 3) {
-			GMLogic->addCompleteGMCountLogic(handler->GetSession()->GetPlayer(), "Tries to execute revive command!");
-			return true;
-		}
         Player* target;
         ObjectGuid targetGuid;
         if (!handler->extractPlayerTarget((char*)args, &target, &targetGuid))
@@ -1202,8 +1187,6 @@ public:
 
     static bool HandleAddItemCommand(ChatHandler* handler, char const* args)
     {
-		CustomGMLogic * GMLogic = 0;
-		CustomReportSystem * ReportSystem = 0;
         if (!*args)
             return false;
 
@@ -1229,14 +1212,6 @@ public:
                     return false;
                 }
                 itemId = result->Fetch()->GetUInt32();
-
-				bool checkifitemisforbidden = ReportSystem->checkIfItemisForbidden(itemId);
-
-				if (checkifitemisforbidden) {
-					GMLogic->addCompleteGMCountLogic(handler->GetSession()->GetPlayer(),"Tried to add a forbidden Item");
-					return true;
-				}
-				
             }
             else
                 return false;
@@ -1247,12 +1222,6 @@ public:
             if (!id)
                 return false;
             itemId = atoul(id);
-			bool checkifitemisforbidden = ReportSystem->checkIfItemisForbidden(itemId);
-
-			if (checkifitemisforbidden) {
-				GMLogic->addCompleteGMCountLogic(handler->GetSession()->GetPlayer(), "Tried to add a forbidden Item");
-				return true;
-			}
         }
 
         char const* ccount = strtok(NULL, " ");
@@ -1327,15 +1296,6 @@ public:
 
     static bool HandleAddItemSetCommand(ChatHandler* handler, char const* args)
     {
-		CustomGMLogic * GMLogic = 0;
-
-		if (handler->GetSession()->GetSecurity() != 3) {
-			GMLogic->addCompleteGMCountLogic(handler->GetSession()->GetPlayer(), "Tries to execute additemset command!");
-			return true;
-		}
-			
-		
-
         if (!*args)
             return false;
 
@@ -1450,13 +1410,6 @@ public:
 
     static bool HandleMaxSkillCommand(ChatHandler* handler, char const* /*args*/)
     {
-
-		CustomGMLogic * GMLogic = 0;
-
-		if (handler->GetSession()->GetSecurity() != 3) {
-			GMLogic->addCompleteGMCountLogic(handler->GetSession()->GetPlayer(), "Tries to execute MaxSkill command!");
-			return true;
-		}
         Player* player = handler->getSelectedPlayerOrSelf();
         if (!player)
         {
@@ -2449,13 +2402,6 @@ public:
 
     static bool HandleRepairitemsCommand(ChatHandler* handler, char const* args)
     {
-
-		CustomGMLogic * GMLogic = 0;
-
-		if (handler->GetSession()->GetSecurity() != 3) {
-			GMLogic->addCompleteGMCountLogic(handler->GetSession()->GetPlayer(), "Tries to execute repair command!");
-			return true;
-		}
         Player* target;
         if (!handler->extractPlayerTarget((char*)args, &target))
             return false;
@@ -2690,14 +2636,6 @@ public:
 
     static bool HandlePossessCommand(ChatHandler* handler, char const* /*args*/)
     {
-
-		CustomGMLogic * GMLogic = 0;
-
-		if (handler->GetSession()->GetSecurity() != 3) {
-			GMLogic->addCompleteGMCountLogic(handler->GetSession()->GetPlayer(), "Tries to execute posses command!");
-			return true;
-		}
-
         Unit* unit = handler->getSelectedUnit();
         if (!unit)
             return false;
