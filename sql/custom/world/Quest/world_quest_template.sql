@@ -644,22 +644,22 @@ UPDATE `quest_template` SET `LogDescription`='Bring me back my Book!' WHERE `ID`
 UPDATE `quest_template` SET `LogDescription`='Kill the Flame in Ungoro!' WHERE `ID`='802002';
 UPDATE `quest_template` SET `LogDescription`='Bring me the Pages 1,4,6,8,10.' WHERE `ID`='802000';
 UPDATE `quest_template` SET `LogDescription`='Bring the PAges 11,14,16,18,20 ' WHERE `ID`='802001';
-UPDATE `wotlkworld`.`quest_template` SET `LogDescription`='Gather the Materials to continue your Journey!' WHERE `ID`='900823';
-UPDATE `wotlkworld`.`quest_template` SET `LogDescription`='Bring me 5 Emblems of Triumph and 20 Wandervolkcoins' WHERE `ID`='900804';
-UPDATE `wotlkworld`.`quest_template` SET `LogDescription`='Bring me 50 Cooper Powder.' WHERE `ID`='900803';
-UPDATE `wotlkworld`.`quest_template` SET `LogDescription`='Take the Port to the Wandervolk and speak to the first cititen you meet!' WHERE `ID`='900802';
-UPDATE `wotlkworld`.`quest_template` SET `LogDescription`='The Wandervolk is an interesting nation. Bring me 2 auctionpapers!' WHERE `ID`='900801';
-UPDATE `wotlkworld`.`quest_template` SET `LogDescription`='We wish you a happy X-Mas' WHERE `ID`='900000';
-UPDATE `wotlkworld`.`quest_template` SET `LogDescription`='Gather 600 Kingsink, 600 Lions Ink and 450 Oceonink!' WHERE `ID`='890002';
-UPDATE `wotlkworld`.`quest_template` SET `LogDescription`='Say Hello to Orca!' WHERE `ID`='890000';
-UPDATE `wotlkworld`.`quest_template` SET `LogDescription`='Bring me back my shade!' WHERE `ID`='870100';
-UPDATE `wotlkworld`.`quest_template` SET `LogDescription`='Walk to the Princess and listen to her stories!' WHERE `ID`='870003';
-UPDATE `wotlkworld`.`quest_template` SET `LogDescription`='Bring me 100 Thoriumcartridges and 25 Frostgranades!' WHERE `ID`='870000';
-UPDATE `wotlkworld`.`quest_template` SET `LogDescription`='Travel to collectors outstand and meet Moon´s deputy!' WHERE `ID`='870002';
-UPDATE `wotlkworld`.`quest_template` SET `LogDescription`='Bring the 5 Essences to Sophie Mondhain.' WHERE `ID`='800007';
-UPDATE `wotlkworld`.`quest_template` SET `LogDescription`='Bring 3 Blocks of Sulforon and 3000 Honorpoints to Sophie Mondhain' WHERE `ID`='800006';
-UPDATE `wotlkworld`.`quest_template` SET `LogDescription`='Bring me 20 Skins, 20 Teeths  and 30 silk Cloths!' WHERE `ID`='800002';
-UPDATE `wotlkworld`.`quest_template` SET `LogDescription`='Gather 200 rough Stones, 5 parts of Meat, 2 dwarf Beer and kill 10 cows.' WHERE `ID`='800010';
+UPDATE `quest_template` SET `LogDescription`='Gather the Materials to continue your Journey!' WHERE `ID`='900823';
+UPDATE `quest_template` SET `LogDescription`='Bring me 5 Emblems of Triumph and 20 Wandervolkcoins' WHERE `ID`='900804';
+UPDATE `quest_template` SET `LogDescription`='Bring me 50 Cooper Powder.' WHERE `ID`='900803';
+UPDATE `quest_template` SET `LogDescription`='Take the Port to the Wandervolk and speak to the first cititen you meet!' WHERE `ID`='900802';
+UPDATE `quest_template` SET `LogDescription`='The Wandervolk is an interesting nation. Bring me 2 auctionpapers!' WHERE `ID`='900801';
+UPDATE `quest_template` SET `LogDescription`='We wish you a happy X-Mas' WHERE `ID`='900000';
+UPDATE `quest_template` SET `LogDescription`='Gather 600 Kingsink, 600 Lions Ink and 450 Oceonink!' WHERE `ID`='890002';
+UPDATE `quest_template` SET `LogDescription`='Say Hello to Orca!' WHERE `ID`='890000';
+UPDATE `quest_template` SET `LogDescription`='Bring me back my shade!' WHERE `ID`='870100';
+UPDATE `quest_template` SET `LogDescription`='Walk to the Princess and listen to her stories!' WHERE `ID`='870003';
+UPDATE `quest_template` SET `LogDescription`='Bring me 100 Thoriumcartridges and 25 Frostgranades!' WHERE `ID`='870000';
+UPDATE `quest_template` SET `LogDescription`='Travel to collectors outstand and meet Moon´s deputy!' WHERE `ID`='870002';
+UPDATE `quest_template` SET `LogDescription`='Bring the 5 Essences to Sophie Mondhain.' WHERE `ID`='800007';
+UPDATE `quest_template` SET `LogDescription`='Bring 3 Blocks of Sulforon and 3000 Honorpoints to Sophie Mondhain' WHERE `ID`='800006';
+UPDATE `quest_template` SET `LogDescription`='Bring me 20 Skins, 20 Teeths  and 30 silk Cloths!' WHERE `ID`='800002';
+UPDATE `quest_template` SET `LogDescription`='Gather 200 rough Stones, 5 parts of Meat, 2 dwarf Beer and kill 10 cows.' WHERE `ID`='800010';
 
 
 

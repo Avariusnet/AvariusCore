@@ -16,3 +16,4 @@ INSERT INTO `autobroadcast` Values (2,102,2,"Use .dalaran and get a free Port to
 INSERT INTO `autobroadcast` Values (2,103,2,"Change your XPRate how you like it. Type .xprate and have fun!");
 INSERT INTO `autobroadcast` Values (2,104,2,"Type .command to see all available commands!");
 INSERT INTO `autobroadcast` Values (2,105,2,"Beta Test Rewards will be given to Beta Testers 23.03.2017!");
+INSERT INTO `autobroadcast` Values (2,106,2,"Please notice that Patch Day is Tuesday around 20:00 - 22:00!");
