@@ -52,8 +52,8 @@ namespace fs = boost::filesystem;
 #if PLATFORM == PLATFORM_WINDOWS
 #include "ServiceWin32.h"
 char serviceName[] = "authserver";
-char serviceLongName[] = "TrinityCore auth service";
-char serviceDescription[] = "TrinityCore World of Warcraft emulator auth service";
+char serviceLongName[] = "AvariusCore auth service";
+char serviceDescription[] = "AvariusCore World of Warcraft emulator auth service";
 /*
 * -1 - not in service mode
 *  0 - stopped

@@ -74,7 +74,7 @@ DELETE FROM `item_template` WHERE `entry`='700518';
 
 UPDATE `item_template` SET `name`='Hand of Exitare' WHERE `entry`='34046';
 
-/*Astraler KRedit */
+/*Astraler Kredit */
 UPDATE `item_template` SET `BuyPrice`='0' WHERE `entry`='38186';
 
 /*Beta Item */

@@ -3,8 +3,8 @@ DELETE FROM `gameobject_loot_template` where `entry` = 500115;
 
 INSERT INTO `gameobject_template` (`entry`, `type`, `displayId`, `name`, `size`, `Data0`, `Data1`, `Data2`, `Data3`, `Data4`, `Data5`, `Data6`, `Data7`, `Data17`, `Data18`, `Data19`, `Data20`, `Data21`, `Data22`, `Data23`, `AIName`, `ScriptName`, `VerifiedBuild`) VALUES ('500115', '10', '8275', 'Gravel', '0.6', '0', '0', '0', '0', '0', '0', '-1', '0', '0', '0', '0', '0', '0', '0', '0', 'SmartGameObjectAI', '0', '1');
 UPDATE `gameobject_template` SET `type`='3', `displayId`='49', `size`='2', `Data0`='43', `Data1`='10039', `Data3`='1', `AIName`='', `VerifiedBuild`='10039' WHERE `entry`='500115';
-INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('500115', '7147', '0', '7.5', '0', '1', '0', '1', '2');
-INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('500115', '200000', '0', '5', '0', '1', '0', '1', '1');
+INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('500115', '7147', '0', '10', '0', '1', '0', '1', '2');
+INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('500115', '200000', '0', '0.1', '0', '1', '0', '1', '1');
 INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('500115', '38186', '0', '1', '0', '1', '0', '1', '1');
 INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('500115', '7075', '0', '100', '0', '1', '0', '1', '5');
 

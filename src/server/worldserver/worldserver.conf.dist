@@ -4093,11 +4093,23 @@ Vip.Vendor.CurrencyID = 38186
 
 #
 #
-#			How much Gold a Token costs! Amount in Gold! 1000 means 1000 Gold !
+#		The Itemid which is the Tradeitem for the Vip Coin!
+#
+#
 #
 #
 
-Vip.Vendor.CurrencyCost = 1000
+
+Vip.Vendor.ChangeItem = 33788
+
+
+
+#
+#			How much Gold a Token costs! Amount of the Changeitem! 1000 means 1000 Times the Item !
+#
+#
+
+Vip.Vendor.CurrencyCost = 2
 
 #
 #
@@ -4183,7 +4195,7 @@ DuelStart.Log = 1
 ###################################################################################################
 #PLAYTIME REWARD
 #
-#			Activate or Deactive Exaltor Level. Player can buy Levels for Credits.
+#			Activate or Deactive Playtime Rewards. 
 #			Default:     0 - (Disabled)
 #                    	 1 - (Enabled)
 #
@@ -4200,7 +4212,7 @@ Playtime.Rewards = 1
 #
 #
 
-Playtime.1200 = 38186
+Playtime.1200 = 43599
 Playtime.1200.Amount = 1
 
 #
@@ -4208,8 +4220,25 @@ Playtime.1200.Amount = 1
 #
 #
 
-Playtime.2400 = 38186
+Playtime.2400 = 33809
 Playtime.2400.Amount = 1
+
+#
+#
+###################################################################################################
+
+
+
+###################################################################################################
+#Accountwide Achievements
+#
+#
+#			Activate or Deactive Accountwide Achievements. Player will get all Achievements they have on Account!
+#			Default:     0 - (Disabled)
+#                    	 1 - (Enabled)
+#
+
+Accountwide.Achievements = 0
 
 #
 #

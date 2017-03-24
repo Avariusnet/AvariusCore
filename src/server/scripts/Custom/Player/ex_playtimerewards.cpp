@@ -92,7 +92,7 @@ public:
 
 			//1200h
 			if (time >= 4320000 && time <= 6479999) {
-				CharacterSystem->completeAddPlayTimeReward(1200, player->GetSession()->GetPlayer(), 0, 43599, "Hey, you are insane! And for insane People there are insane Rewards. Get it and have fun with it!");
+				CharacterSystem->completeAddPlayTimeReward(1200, player->GetSession()->GetPlayer(), 0, sConfigMgr->GetIntDefault("Playtime.1200", 43599), "Hey, you are insane! And for insane People there are insane Rewards. Get it and have fun with it!");
 				return;
 			}
 
@@ -105,7 +105,7 @@ public:
 
 			//2400h
 			if (time >= 8640000 && time <= 17279999) {
-				CharacterSystem->completeAddPlayTimeReward(2400, player->GetSession()->GetPlayer(), 0, 33809, "Hey, you are insane! And for insane People there are insame Rewards. Get it and have fun with it!");
+				CharacterSystem->completeAddPlayTimeReward(2400, player->GetSession()->GetPlayer(), 0, sConfigMgr->GetIntDefault("Playtime.2400",33809), "Hey, you are insane! And for insane People there are insame Rewards. Get it and have fun with it!");
 				return;
 			}
 

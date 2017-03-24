@@ -61,16 +61,18 @@ enum ExaltorMenuOptions {
 	LEVEL80EQUIPMENU = 21,
 	LEVELUPTO80 = 22,
 	NEWCOMMANDSMENU = 23,
+	HOWTOGETFIRSTCHARAKTERMENUE = 24,
 
 	
 };
 
 enum HELPMESSAGES {
-	
-	
+
+
 	NEWCOMMANDEXPLANATION = 2000,
 	WHOAREUEXP = 2001,
 	FIRSTCHARACTEREXP = 2002,
+	HOWTOGETNEWFIRSTCHARAKTER = 2003,
 
 };
 
@@ -159,13 +161,18 @@ class npc_first_char : public CreatureScript
 
 
 
-				bool OnGossipHello(Player *player, Creature* _creature)
+				bool OnGossipHello(Player *player, Creature* creature)
 				{
 					CustomCharacterSystem * CharacterSystem = 0;
 					CustomTranslationSystem * TranslationSystem = 0;
 
 					std::string informationandhelp = TranslationSystem->getCompleteTranslationsString(GROUPID, INFORMATIONANDHELP, player->GetSession()->GetPlayer());
 					std::string getfirstcharacter = TranslationSystem->getCompleteTranslationsString(GROUPID, GETFIRSTCHARACTER, player->GetSession()->GetPlayer());
+			
+					if (creature->IsQuestGiver()) {
+						player->PrepareQuestMenu(creature->GetGUID());
+					}
+
 					//test if this is possible in Fucntion
 					if (sConfigMgr->GetBoolDefault("Exaltor.Activate", true)) {
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, informationandhelp, GOSSIP_SENDER_MAIN, 0, "", 0, false);
@@ -181,15 +188,15 @@ class npc_first_char : public CreatureScript
 							player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Features", GOSSIP_SENDER_MAIN, 3, "", 0, false);
 						}
 						
-						player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+						player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 						return true;
 
 					}
 
 
 					else {
-						_creature->SetPhaseMask(2, true);
-						player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+						creature->SetPhaseMask(2, true);
+						player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 						return true;
 					}
 				}
@@ -208,13 +215,16 @@ class npc_first_char : public CreatureScript
 					{
 						std::string whoareu = TranslationSystem->getCompleteTranslationsString(GROUPID, WHOAREUMENU, player->GetSession()->GetPlayer());
 						std::string firstcharacter = TranslationSystem->getCompleteTranslationsString(GROUPID, FIRSTCHARACTERMENU, player->GetSession()->GetPlayer());
+						std::string newfirstcharacter = TranslationSystem->getCompleteTranslationsString(GROUPID, HOWTOGETFIRSTCHARAKTERMENUE, player->GetSession()->GetPlayer());
 						std::string newcommandmenue = TranslationSystem->getCompleteTranslationsString(GROUPID, NEWCOMMANDSMENU, player->GetSession()->GetPlayer());
 						
+
 						player->PlayerTalkClass->SendGossipMenu(DEFAULT_GOSSIP_MESSAGE, creature->GetGUID());
 						player->PlayerTalkClass->ClearMenus();
 
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, whoareu, GOSSIP_SENDER_MAIN, 10000, "", 0, false);
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, firstcharacter, GOSSIP_SENDER_MAIN, 10001, "", 0, false);
+						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, newfirstcharacter, GOSSIP_SENDER_MAIN, 10003, "", 0, false);
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, newcommandmenue, GOSSIP_SENDER_MAIN, 10002, "", 0, false);
 
 						player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
@@ -472,6 +482,16 @@ class npc_first_char : public CreatureScript
 							player->GetName());
 						return true;
 						
+					}break;
+
+
+					case 10003:
+					{
+						std::string newfirstcharacter = TranslationSystem->getCompleteTranslationsString(GROUPID, HOWTOGETNEWFIRSTCHARAKTER, player->GetSession()->GetPlayer());
+						ChatHandler(player->GetSession()).PSendSysMessage("%s", newfirstcharacter,
+							player->GetName());
+						return true;
+
 					}break;
 
 					return true;

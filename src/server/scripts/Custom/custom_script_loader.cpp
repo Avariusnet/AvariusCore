@@ -125,8 +125,19 @@ void AddSC_Question_and_Answer_Commands();
 //Autobroadcast
 void AddSC_AutobroadCast();
 
+//Acountwide Achievements
+void AddSC_accountachievement();
+
+
+//Testscruot
+void AddSC_testscript();
+
 void AddCustomScripts()
 {
+
+	AddSC_testscript();
+	//Accountwide Achievements
+	AddSC_accountachievement();
 	//autobroadcast
 	AddSC_AutobroadCast();
 

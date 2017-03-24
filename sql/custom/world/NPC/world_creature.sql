@@ -181,9 +181,120 @@ INSERT INTO `creature` (guid, id, map, zoneId, areaId, spawnMask, phaseMask, mod
 
 
 DELETE FROM `creature` where id = 800105;
+
+/* delete (Racechange-NPC) Worgrain ID: 800047 from blizz-realm*/
+
+DELETE FROM  `creature` WHERE `guid`='800047';
+DELETE FROM  `creature` WHERE `guid`='798010';
+
+/* Worgrain in der Mitte von Dalaran neben Astralen Seelenhändler*/
+
+DELETE FROM `creature` WHERE `guid` ='2000002';
+
 INSERT INTO `creature` (guid, id, map, zoneId, areaId, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags, VerifiedBuild) VALUES
-('800105', '800105', '1', '0', '0', '1', '1', '0', '0', '1598.58', '-4417.74', '10.1118', '3.6672', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
-('800106', '800105', '0', '0', '0', '1', '1', '0', '0', '-8842.59', '598.062', '93.6486', '2.41933', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0');
+('2000002', '800047', '571', '0', '0', '1', '1', '0', '0', '5806.38', '661.418', '647.731', '4.79129', '300', '0', '0', '5808', '0', '0', '0', '0', '0', '0');
+
+
+/* Transmog-NPC wird anderweitig platziert -> ist nun komplett deaktiviert */
+
+DELETE FROM `creature` WHERE `guid`='798012';
+DELETE FROM `creature` WHERE `guid`='1600002';
+DELETE FROM `creature` WHERE `guid`='798023';
+
+
+
+/* Support-NPC (ID:800057) wird anderweitig platziert -> steht nun in allen Hauptstädten */
+
+DELETE FROM `creature` WHERE `guid`='798009';
+DELETE FROM `creature` WHERE `guid`='800057';
+
+/* in allen Hauptstädten platziert, ausgenommen Shattrath */
+DELETE FROM `creature` where `id` = 800057;
+INSERT INTO `creature` (guid, id, map, zoneId, areaId, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags, VerifiedBuild) VALUES
+('2000012', '800057', '571', '0', '0', '1', '1', '0', '0', '5815.41', '578.094', '650.242', '5.35406', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('2000013', '800057', '530', '0', '0', '1', '1', '0', '0', '9493.89', '-7298.64', '14.3813', '3.12441', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('2000014', '800057', '1', '0', '0', '1', '1', '0', '0', '9939.36', '2310.83', '1336.55', '0.0146001', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('2000015', '800057', '530', '0', '0', '1', '1', '0', '0', '-3874.83', '-11733.2', '-106.348', '5.25815', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('2000016', '800057', '0', '0', '0', '1', '1', '0', '0', '-8830.79', '647.614', '95.1116', '5.25891', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('2000017', '800057', '0', '0', '0', '1', '1', '0', '0', '-4972.33', '-889.949', '501.599', '2.25893', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('2000018', '800057', '0', '0', '0', '1', '1', '0', '0', '1671.83', '234.597', '62.5956', '0.797779', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('2000019', '800057', '1', '0', '0', '1', '1', '0', '0', '-1275.1', '117.038', '131.078', '2.18587', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('2000020', '800057', '1', '0', '0', '1', '1', '0', '0', '1621.35', '-4393.3', '11.0735', '4.31634', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0');
+
+
+/* delete MMOwning Schlüsselmeister ID 800011 from blizz-realm*/
+
+DELETE FROM `creature` WHERE `guid`='800011';
+DELETE FROM `creature` WHERE `guid`='800012';
+DELETE FROM `creature` WHERE `guid`='795000';
+
+/* delete MMOwning Reseller ID 99321 from blizz-realm*/
+
+DELETE FROM `creature` WHERE `guid`='798015';
+DELETE FROM `creature` WHERE `guid`='798017';
+DELETE FROM `creature` WHERE `guid`='798018';
+DELETE FROM `creature` WHERE `guid`='798020';
+
+
+/* Miniband und Teleporter wurden entfernt */ 
+
+DELETE FROM `creature` WHERE `guid`='798014';
+DELETE FROM `creature` WHERE `guid`='798021';
+DELETE FROM `creature` WHERE `guid`='15000176';
+DELETE FROM `creature` WHERE `guid`='15000177';
+DELETE FROM `creature` WHERE `guid`='15000178';
+DELETE FROM `creature` WHERE `guid`='15000179';
+DELETE FROM `creature` WHERE `guid`='15000180';
+DELETE FROM `creature` WHERE `guid`='15000181';
+DELETE FROM `creature` WHERE `guid`='15000182';
+DELETE FROM `creature` WHERE `guid`='15000183';
+DELETE FROM `creature` WHERE `guid`='15000184';
+DELETE FROM `creature` WHERE `guid`='15000185';
+DELETE FROM `creature` WHERE `guid`='15000186';
+DELETE FROM `creature` WHERE `guid`='15000187';
+
+/* Event-NPC (ID: 60003) wird anderweitig platziert -> steht nun in allen Hauptstädten */
+
+DELETE FROM `creature` WHERE `guid`='500999';
+DELETE FROM `creature` WHERE `guid`='500998';
+DELETE FROM `creature` WHERE `guid`='500997';
+
+/* in allen Hauptstädten platziert, ausgenommen Shattrath */
+DELETE FROM `creature` where `id` = 60003;
+INSERT INTO `creature` (guid, id, map, zoneId, areaId, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags, VerifiedBuild) VALUES 
+('2000003', '60003', '1', '0', '0', '1', '1', '0', '0', '-1272.58', '118.731', '131.218', '2.25918', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('2000004', '60003', '530', '0', '0', '1', '1', '0', '0', '9494.05', '-7301.91', '14.3946', '3.15234', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('2000005', '60003', '1', '0', '0', '1', '1', '0', '0', '9939.04', '2314.07', '1336.55', '0.0390361', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('2000006', '60003', '0', '0', '0', '1', '1', '0', '0', '-8828.13', '649.533', '94.8972', '5.19259', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('2000007', '60003', '571', '0', '0', '1', '1', '0', '0', '5817.79', '580.751', '650.28', '5.46228', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('2000008', '60003', '530', '0', '0', '1', '1', '0', '0', '-3872.22', '-11731.5', '-106.263', '5.314', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('2000009', '60003', '0', '0', '0', '1', '1', '0', '0', '1673.4', '232.871', '62.5956', '0.797779', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('2000010', '60003', '1', '0', '0', '1', '1', '0', '0', '1619.3', '-4392.44', '10.602', '4.29888', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
+('2000011', '60003', '0', '0', '0', '1', '1', '0', '0', '-4975.71', '-892.954', '501.598', '2.36365', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0');
+
+/* delete Deckard Cain ID 90001 from blizz-realm*/
+
+DELETE FROM `creature` WHERE `guid`='90001';
+DELETE FROM `creature` WHERE `guid`='798011';
+DELETE FROM `creature` WHERE `guid`='798016';
+DELETE FROM `creature` WHERE `guid`='798019';
+DELETE FROM `creature` WHERE `guid`='798024';
+DELETE FROM `creature` WHERE `guid`='798030';
+
+/* delete astraler Seelenhändler ID 600900 from blizz-realm*/
+
+DELETE FROM `creature` WHERE `guid`='798013';
+DELETE FROM `creature` WHERE `guid`='798022';
+
+/* Astraler Seelenhändler in der Mitte von Dalaran, derzeit nicht gespawned, erst freischalten wenn die Items angepasst wurden
+
+DELETE FROM `creature` WHERE `guid` ='2000001';
+
+INSERT INTO `creature` (guid, id, map, zoneId, areaId, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags, VerifiedBuild) VALUES
+('2000001', '600900', '571', '0', '0', '1', '1', '0', '0', '5802.48', '660.302', '647.807', '4.92167', '300', '0', '0', '1', '0', '0', '0', '0', '0', '0');
+
+
+
 
 
 /*!40000 ALTER TABLE `creature` ENABLE KEYS */;

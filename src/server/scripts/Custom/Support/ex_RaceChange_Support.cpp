@@ -41,7 +41,8 @@ enum Translation {
 	FACTION_AND_RACE_CHANGE = 6,
 	HELPMENU  = 7 ,
 	HELPEXPLANATION = 8,
-
+	ACTUALCOSTMENU = 9,
+	ACTUALCOSTEXP = 10,
 
 };
 
@@ -68,8 +69,11 @@ public:
 			std::string factionchange = TranslationSystem->getCompleteTranslationsString(GROUPID, FACTION_CHANGE, player->GetSession()->GetPlayer());
 			std::string factionandracechange = TranslationSystem->getCompleteTranslationsString(GROUPID, FACTION_AND_RACE_CHANGE, player->GetSession()->GetPlayer());
 			std::string rename = TranslationSystem->getCompleteTranslationsString(GROUPID, NAME_CHANGE, player->GetSession()->GetPlayer());
+			std::string actualcostmenu = TranslationSystem->getCompleteTranslationsString(GROUPID, ACTUALCOSTMENU, player->GetSession()->GetPlayer());
+			
 
 			player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, GOSSIP_ICON_CHAT,howdoesthiswork, GOSSIP_SENDER_MAIN, 0, "", 0, false);
+			player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, GOSSIP_ICON_CHAT, actualcostmenu, GOSSIP_SENDER_MAIN, 5, "", 0, false);
 			player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, GOSSIP_ICON_CHAT, racechange, GOSSIP_SENDER_MAIN, 1, "", 0, false);
 			player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, GOSSIP_ICON_CHAT, factionchange, GOSSIP_SENDER_MAIN, 2, "", 0, false);
 			player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, GOSSIP_ICON_CHAT, factionandracechange, GOSSIP_SENDER_MAIN, 3, "", 0, false);
@@ -90,26 +94,28 @@ public:
 		CustomTranslationSystem * TranslationSystem = 0;
 		std::string helpexplanation = TranslationSystem->getCompleteTranslationsString(GROUPID, HELPEXPLANATION, player->GetSession()->GetPlayer());
 		std::string logoutnow = TranslationSystem->getCompleteTranslationsString(GROUPID, PLEASE_LOGOUT, player->GetSession()->GetPlayer());
+		std::string actualcostexp = TranslationSystem->getCompleteTranslationsString(GROUPID, ACTUALCOSTEXP, player->GetSession()->GetPlayer());
+
 		int vipCoin = sConfigMgr->GetIntDefault("Vip.Vendor.CurrencyID", 38186);
 		if (sender != GOSSIP_SENDER_MAIN) {
 			return false;
 		}
 			
 
-		switch (action){
+		switch (action) {
 		case  0:
-			
-			ChatHandler(player->GetSession()).PSendSysMessage("%s",helpexplanation,
-					player->GetName());
-				player->PlayerTalkClass->SendCloseGossip();
-				return true;
+
+			ChatHandler(player->GetSession()).PSendSysMessage("%s", helpexplanation,
+				player->GetName());
+			player->PlayerTalkClass->SendCloseGossip();
+			return true;
 			break;
 
 			//RaceChange
 		case  1:
-			
-			if (player->HasItemCount(vipCoin, 2) && player->HasEnoughMoney(500*GOLD)){
-				player->DestroyItemCount(49426, 2, true, false);
+
+			if (player->HasItemCount(vipCoin, 2)) {
+				player->DestroyItemCount(vipCoin, 2, true, false);
 				player->SetAtLoginFlag(AT_LOGIN_CHANGE_RACE);
 				player->GetGUID();
 				std::ostringstream ss;
@@ -122,9 +128,9 @@ public:
 				return true;
 			}
 
-			else{
+			else {
 				std::string notenoughcredit = TranslationSystem->getCompleteTranslationsString(GROUPID, NOT_ENOUGH_CREDITS, player->GetSession()->GetPlayer());
-				creature->Say(notenoughcredit, LANG_UNIVERSAL,nullptr);
+				creature->Say(notenoughcredit, LANG_UNIVERSAL, nullptr);
 				return true;
 			}
 
@@ -134,8 +140,8 @@ public:
 			//Factionchange
 		case  2:
 
-			if (player->HasItemCount(vipCoin, 2)){
-				player->DestroyItemCount(49426, 2, true);
+			if (player->HasItemCount(vipCoin, 4)) {
+				player->DestroyItemCount(vipCoin, 4, true);
 				player->SetAtLoginFlag(AT_LOGIN_CHANGE_FACTION);
 				player->GetGUID();
 				std::ostringstream ss;
@@ -149,21 +155,21 @@ public:
 			}
 
 
-		else{
-			std::string notenoughcredit = TranslationSystem->getCompleteTranslationsString(GROUPID, NOT_ENOUGH_CREDITS, player->GetSession()->GetPlayer());
-			creature->Say(notenoughcredit, LANG_UNIVERSAL, nullptr);
-			return true;
-		}
+			else {
+				std::string notenoughcredit = TranslationSystem->getCompleteTranslationsString(GROUPID, NOT_ENOUGH_CREDITS, player->GetSession()->GetPlayer());
+				creature->Say(notenoughcredit, LANG_UNIVERSAL, nullptr);
+				return true;
+			}
 
 			break;
 
 			//Faction and Race
 		case 3:
-			if (player->HasItemCount(vipCoin, 4)){
-				player->DestroyItemCount(49426, 4, true, false);
+			if (player->HasItemCount(vipCoin, 6)) {
+				player->DestroyItemCount(vipCoin, 6, true, false);
 				player->SetAtLoginFlag(AT_LOGIN_CHANGE_FACTION);
 				player->SetAtLoginFlag(AT_LOGIN_CHANGE_RACE);
-				
+
 				player->GetGUID();
 				std::ostringstream ss;
 				DBeintrag(player->GetSession()->GetPlayer(), "Faction and Race change");
@@ -176,7 +182,7 @@ public:
 			}
 
 
-			else{
+			else {
 				std::string notenoughcredit = TranslationSystem->getCompleteTranslationsString(GROUPID, NOT_ENOUGH_CREDITS, player->GetSession()->GetPlayer());
 				creature->Say(notenoughcredit, LANG_UNIVERSAL, nullptr);
 				return true;
@@ -184,9 +190,10 @@ public:
 
 			//RaceChange
 		case 4:
+		{
 			if (player->HasItemCount(vipCoin, 1)) {
 				player->SetAtLoginFlag(AT_LOGIN_RENAME);
-				player->DestroyItemCount(49426, 4, true, false);
+				player->DestroyItemCount(vipCoin, 1, true, false);
 				std::ostringstream ss;
 				DBeintrag(player->GetSession()->GetPlayer(), "Rename of Character");
 				ss << "|cff54b5ffEine Namensaenderung wurde durchgefuehrt von : |r " << ChatHandler(player->GetSession()).GetNameLink();
@@ -199,12 +206,20 @@ public:
 
 			}
 
-			else{
+			else {
 
 				std::string notenoughcredit = TranslationSystem->getCompleteTranslationsString(GROUPID, NOT_ENOUGH_CREDITS, player->GetSession()->GetPlayer());
 				creature->Say(notenoughcredit, LANG_UNIVERSAL, nullptr);
 				return true;
-			}break;
+			}
+		}break;
+
+		case 5:
+		{
+			ChatHandler(player->GetSession()).PSendSysMessage("%s", actualcostexp,
+				player->GetName());
+			player->PlayerTalkClass->SendCloseGossip();
+		}break;
 
 		}
 		return true;

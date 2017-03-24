@@ -639,8 +639,9 @@ bool CustomCharacterSystem::checkifPlayerisQualifiedforFirstCharacter(Player * p
 
 void CustomCharacterSystem::sellPlayerVIPCurrency(Player * player, const char * code)
 {
-	int currencyid = sConfigMgr->GetIntDefault("Vip.Vendor.CurrencyID", 38186);
-	int cost = sConfigMgr->GetIntDefault("Vip.Vendor.CurrencyCost", 1000);
+	int vipCoin = sConfigMgr->GetIntDefault("Vip.Vendor.CurrencyID", 38186);
+	int cost = sConfigMgr->GetIntDefault("Vip.Vendor.CurrencyCost", 2);
+	int changeitem = sConfigMgr->GetIntDefault("Vip.Vendor.ChangeItem", 33788);
 
 	std::string eingabe = code;
 	if (eingabe == "") {
@@ -651,27 +652,17 @@ void CustomCharacterSystem::sellPlayerVIPCurrency(Player * player, const char * 
 	CustomPlayerLog * PlayerLog = 0;
 
 	int amount = (uint32)atoi(code);
-	int32 gesgold = cost * GOLD;
-	int32 overallcost = gesgold * amount;
+	int bonescost = amount * cost;
 
-	if (player->GetSession()->GetSecurity() >= 2) {
-		ChatHandler(player->GetSession()).PSendSysMessage("Debug: gesgold: %u", gesgold / 10000,
-			player->GetName());
-		ChatHandler(player->GetSession()).PSendSysMessage("Debug: amount: %u", amount,
-			player->GetName());
-		ChatHandler(player->GetSession()).PSendSysMessage("Debug: overallcost: %u", overallcost / GOLD,
-			player->GetName());
-	}
-
-	if (player->HasEnoughMoney(overallcost)) {
-		player->ModifyMoney(-overallcost);
-		player->AddItem(currencyid, amount);
-		PlayerLog->addCompleteCurrencyLog(player->GetSession()->GetPlayer(), currencyid, amount, gesgold / GOLD, "VIP_CURRENCY_BUY at VIP_VENDOR");
-		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "VIP_CURRENCY_BUY at VIP_VENDOR");
+	if (player->HasItemCount(changeitem, bonescost)){
+		player->DestroyItemCount(changeitem, bonescost, true);
+		player->AddItem(vipCoin, amount);
+		PlayerLog->addCompleteCurrencyLog(player->GetSession()->GetPlayer(), vipCoin, amount, bonescost, "VIP_CURRENCY_CREDIT at VIP_VENDOR");
+		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "VIP_CURRENCY_CREDIT at VIP_VENDOR");
 
 		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 			player->GetName());
-		ChatHandler(player->GetSession()).PSendSysMessage("You have bought %u Tokens and payed %u Gold.", amount, overallcost / GOLD,
+		ChatHandler(player->GetSession()).PSendSysMessage("You have bought %u Tokens and payed %u Bones.", amount, bonescost,
 			player->GetName());
 		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 			player->GetName());
@@ -680,7 +671,7 @@ void CustomCharacterSystem::sellPlayerVIPCurrency(Player * player, const char * 
 
 	ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 		player->GetName());
-	ChatHandler(player->GetSession()).PSendSysMessage("For %u of our VIP Tokens you need %u Gold!", amount, overallcost / GOLD,
+	ChatHandler(player->GetSession()).PSendSysMessage("For %u of our VIP Tokens you need %u Bones!", amount, bonescost,
 		player->GetName());
 	ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 		player->GetName());
@@ -688,12 +679,14 @@ void CustomCharacterSystem::sellPlayerVIPCurrency(Player * player, const char * 
 
 }
 
+
 void CustomCharacterSystem::completeLearnProffesion(Player * player, SkillType skill,std::string Logmessage)
 {
 	CustomPlayerLog * PlayerLog = 0;
-	int vipcoin = sConfigMgr->GetIntDefault("Vip.Vendor.CurrencyID", 38186);
+	int vipCoin = sConfigMgr->GetIntDefault("Vip.Vendor.CurrencyID", 38186);
 
-	if (player->HasItemCount(vipcoin, 4, false)) {
+	if (player->HasItemCount(vipCoin, 4, false)) {
+		player->DestroyItemCount(vipCoin, 4, true);
 		if (PlayerAlreadyHasTwoProfessions(player) && !IsSecondarySkill(skill)) {
 			ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 				player->GetName());

@@ -53,11 +53,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 				if (ticktimer <= diff) {
 					if (Player * player = me->SelectNearestPlayer(10.0f)) {
 						if (actualplayer != player->GetGUID()) {
-
-							bool eventactive = false;
-
-							if (eventactive == true) {
-							}
+							
 						}
 
 					}

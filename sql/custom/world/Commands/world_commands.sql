@@ -78,8 +78,7 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('coupon generate', 
 DELETE FROM command WHERE `name`='werbung';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('werbung', 195, '');   
 
-/* Report Quest */
-
+/* Report System*/
 DELETE FROM command WHERE `name`='report';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('report', 195, '');  
 
@@ -93,10 +92,24 @@ DELETE FROM command WHERE `name`='report activate';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('report activate', 193, '');  
 
 
+/* Gildenhaus */
+DELETE FROM `trinity_string` WHERE `entry`='11500';
+INSERT INTO `trinity_string` (`entry`,`content_default`) VALUES (11500, 'Deine Gilde besitzt noch kein Gildenhaus.');
+DELETE FROM `command` WHERE `name`='gh';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('gh', 195, 'Syntax: .gh Teleportiert dich zu eurem Gildenhaus (Kann nicht im Kampf, Flug oder auf einem Mount verwendet werden)');
+
 
 /* Custom Xp Rate */
 DELETE FROM command WHERE `name`='xprate';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('xprate', 195, '');   
+
+
+/* Firstcharacter */
+DELETE FROM command WHERE `name`='firstcharacter';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('firstcharacter', 195, ''); 
+
+DELETE FROM command WHERE `name`='firstcharacter get';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('firstcharacter get', 195, ''); 
 
 
 /* Autobroadcast*/
@@ -105,6 +118,14 @@ INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('autobroadcast', 19
 
 DELETE FROM command WHERE `name`='autobroadcast set';
 INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('autobroadcast set', 193, ''); 
+
+
+/* Testsciprt */
+DELETE FROM command WHERE `name`='testscript';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('testscript', 193, ''); 
+
+DELETE FROM command WHERE `name`='testscript one';
+INSERT INTO `command` (`name`, `permission`, `help`) VALUES ('testscript one', 193, ''); 
 
 /*Testcommands */
 DELETE FROM command WHERE `name`='logic';

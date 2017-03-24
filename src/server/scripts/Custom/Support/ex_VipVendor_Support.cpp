@@ -38,13 +38,12 @@
 enum Translations {
 	HELPMENU = 1,
 	BUYVIPTOKENMENU = 2,
-	CHANGEVIPDUSTMENU = 3,
 	WHATAREVIPTOKENMENU = 4,
 	AMOUNTOFTOKENS = 5,
 	ACTUALTOKENCOSTMENU = 6,
 	VIPTOKENEXPLANATION = 7,
 	VIPTOKENACTUALCOST = 8,
-	AMOUNTOFDUSTTOCHANGE = 9,
+
 	
 };
 
@@ -61,13 +60,10 @@ public: vipvendor() : CreatureScript("vipvendor") { }
 			if (sConfigMgr->GetBoolDefault("Vip.Vendor", true)) {
 				std::string helpmenu = TranslationSystem->getCompleteTranslationsString(GROUPID, HELPMENU, player->GetSession()->GetPlayer());
 				std::string buytokens = TranslationSystem->getCompleteTranslationsString(GROUPID, BUYVIPTOKENMENU, player->GetSession()->GetPlayer());
-				std::string exchangedust = TranslationSystem->getCompleteTranslationsString(GROUPID, CHANGEVIPDUSTMENU, player->GetSession()->GetPlayer());
 				std::string howmanytokenyouwantbuy = TranslationSystem->getCompleteTranslationsString(GROUPID, AMOUNTOFTOKENS, player->GetSession()->GetPlayer());
-				std::string howmanydustyouwanttochange = TranslationSystem->getCompleteTranslationsString(GROUPID, AMOUNTOFDUSTTOCHANGE, player->GetSession()->GetPlayer());
 
 				player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, helpmenu, GOSSIP_SENDER_MAIN, 2, "", 0, false);
 				player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, buytokens, GOSSIP_SENDER_MAIN, 1 , howmanytokenyouwantbuy, 0, true);
-				player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, exchangedust, GOSSIP_SENDER_MAIN, 3, howmanydustyouwanttochange , 0, true);
 				player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
 				return true;
 			}
@@ -129,15 +125,7 @@ public: vipvendor() : CreatureScript("vipvendor") { }
 				return true;
 			}break;
 
-			case 3: 
-			{
-				std::string placeholder = "Feature for next release";
-				ChatHandler(player->GetSession()).PSendSysMessage("%s", placeholder, 
-					player->GetName());
-				return true;
-			}break;
-
-		
+			
 
 			return true;
 

@@ -135,7 +135,10 @@ INSERT INTO `npc_vendor` (`entry`, `slot`, `item`, `maxcount`, `incrtime`, `Exte
 /*(99321, 0, ??, 0, 0 ,2723); //15 эмблем триумфа */
 
 
+/*löscht den Gildenhaustoken und den Astralen Kredit raus */
 
+DELETE FROM `npc_vendor` WHERE `entry`='600900' and`item`='200000' and`ExtendedCost`='2411'; 	-- Gildenhaustoken
+DELETE FROM `npc_vendor` WHERE `entry`='600900' and`item`='38186' and`ExtendedCost`='0';		-- Astraler Kredit
 
 
 /*!40000 ALTER TABLE `npc_vendor` ENABLE KEYS */;
