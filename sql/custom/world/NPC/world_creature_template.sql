@@ -192,6 +192,10 @@ UPDATE `creature_template` SET `subname`='Verkaeufer von veralteten Teilen' WHER
 UPDATE `creature_template` SET `lootid`='30664' WHERE `entry`='30664';
 UPDATE `creature_template` SET `lootid`='30663' WHERE `entry`='30663';
 
+/* Correct StartUp Errors */
+UPDATE creature_template set unit_class = 1, speed_walk = 1 where entry > 800000;
+UPDATE creature_template set unit_class = 1, speed_walk = 1 where entry IN (60001,60003,60002);
+
 /*!40000 ALTER TABLE `creature_template` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

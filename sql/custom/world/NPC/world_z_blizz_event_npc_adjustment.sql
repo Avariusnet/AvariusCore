@@ -5,7 +5,7 @@ DELETE FROM `creature` WHERE `guid`='500998';
 DELETE FROM `creature` WHERE `guid`='500997';
 
 /* in allen Hauptstädten platziert, ausgenommen Shattrath */
-
+DELETE FROM `creature` where `id` = 60003;
 INSERT INTO `creature` (guid, id, map, zoneId, areaId, spawnMask, phaseMask, modelid, equipment_id, position_x, position_y, position_z, orientation, spawntimesecs, spawndist, currentwaypoint, curhealth, curmana, MovementType, npcflag, unit_flags, dynamicflags, VerifiedBuild) VALUES 
 ('2000003', '60003', '1', '0', '0', '1', '1', '0', '0', '-1272.58', '118.731', '131.218', '2.25918', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),
 ('2000004', '60003', '530', '0', '0', '1', '1', '0', '0', '9494.05', '-7301.91', '14.3946', '3.15234', '300', '0', '0', '5342', '0', '0', '0', '0', '0', '0'),

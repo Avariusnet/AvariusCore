@@ -42,10 +42,16 @@ MotionMaster::~MotionMaster()
     // clear ALL movement generators (including default)
     while (!empty())
     {
-        MovementGenerator *curr = top();
+        MovementGenerator* movement = top();
         pop();
-        if (curr && !IsStatic(curr))
-            delete curr;    // Skip finalizing on delete, it might launch new movement
+        if (movement && !IsStatic(movement))
+            delete movement;
+    }
+
+    while (!_expireList.empty())
+    {
+        delete _expireList.back();
+        _expireList.pop_back();
     }
 }
 
@@ -88,13 +94,15 @@ void MotionMaster::UpdateMotion(uint32 diff)
     ASSERT(!empty());
 
     _cleanFlag |= MMCF_UPDATE;
-    bool isMoveGenUpdateSuccess = top()->Update(_owner, diff);
-    _cleanFlag &= ~MMCF_UPDATE;
-
-    if (!isMoveGenUpdateSuccess)
+    if (!top()->Update(_owner, diff))
+    {
+        _cleanFlag &= ~MMCF_UPDATE;
         MovementExpired();
+    }
+    else
+        _cleanFlag &= ~MMCF_UPDATE;
 
-    if (_expireList)
+    if (!_expireList.empty())
         ClearExpireList();
 }
 
@@ -114,14 +122,10 @@ void MotionMaster::Clear(bool reset /*= true*/)
 
 void MotionMaster::ClearExpireList()
 {
-    for (size_t i = 0; i < _expireList->size(); ++i)
-    {
-        MovementGenerator* mg = (*_expireList)[i];
-        DirectDelete(mg);
-    }
+    for (auto itr : _expireList)
+        DirectDelete(itr);
 
-    delete _expireList;
-    _expireList = nullptr;
+    _expireList.clear();
 
     if (empty())
         Initialize();
@@ -158,7 +162,7 @@ MovementGeneratorType MotionMaster::GetCurrentMovementGeneratorType() const
 MovementGeneratorType MotionMaster::GetMotionSlotType(int slot) const
 {
     if (!_slot[slot])
-        return NULL_MOTION_TYPE;
+        return MAX_MOTION_TYPE;
     else
         return _slot[slot]->GetMovementGeneratorType();
 }
@@ -816,7 +820,6 @@ void MotionMaster::DelayedDelete(MovementGenerator* curr)
     TC_LOG_FATAL("misc", "Unit (Entry %u) is trying to delete its updating Movement Generator (Type %u)!", _owner->GetEntry(), curr->GetMovementGeneratorType());
     if (IsStatic(curr))
         return;
-    if (!_expireList)
-        _expireList = new ExpireList();
-    _expireList->push_back(curr);
+
+    _expireList.push_back(curr);
 }

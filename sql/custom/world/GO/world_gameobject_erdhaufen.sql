@@ -7,9 +7,18 @@ INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, 
 INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('500115', '200000', '0', '0.1', '0', '1', '0', '1', '1');
 INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('500115', '38186', '0', '1', '0', '1', '0', '1', '1');
 INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('500115', '7075', '0', '100', '0', '1', '0', '1', '5');
+INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Reference`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('500115', '34071', '0', '20', '0', '1', '0', '1', '1');
+INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('500115', '44832', '30', '0', '1', '4', '1', '1');
+INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('500115', '48416', '40', '0', '1', '3', '1', '1');
+INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('500115', '33570', '50', '0', '1', '2', '1', '1');
+INSERT INTO `gameobject_loot_template` (`Entry`, `Item`, `Chance`, `QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES ('500115', '33572', '60', '0', '1', '1', '1', '1');
 
 UPDATE `gameobject_template` SET `Data0`='1785', `Data1`='500115', `Data4`='1', `Data5`='1', `VerifiedBuild`='0' WHERE `entry`='500115';
 UPDATE `gameobject_template` SET `Data0`='1785', `Data1`='500115', `Data4`='1', `Data5`='1', `VerifiedBuild`='12340' WHERE `entry`='500115';
 UPDATE `gameobject_template` SET `Data4`='0', `Data5`='0' WHERE `entry`='500115';
 UPDATE `gameobject_template` SET `name`='Erdhaufen', `Data0`='43', `Data4`='1', `Data5`='1' WHERE `entry`='500115';
+UPDATE `gameobject_loot_template` SET `Chance`='0.1' WHERE `Entry`='500115' and`Item`='200000';
+UPDATE `gameobject_loot_template` SET `Item`='38685', `Chance`='20', `GroupId`='5' WHERE `Entry`='500115' and`Item`='34071';
+
+
 

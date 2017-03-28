@@ -91,6 +91,10 @@ UPDATE `item_template` SET `name`='Wandervolk Coin', `description`='Property of 
 DELETE FROM `item_template` where `entry` = 7147;
 UPDATE `item_template` SET `entry`='7147' WHERE `entry`='700521';
 
+/* Correct Startup Errors */
+UPDATE `item_template` SET `displayid`='47293' WHERE `entry`='34047';
+UPDATE `item_template` SET `class`='0', `SoundOverrideSubclass`='0', `displayid`='47219', `BuyCount`='1', `RequiredReputationFaction`='0', `stackable`='1' WHERE `entry`='34046';
+
 
 /*!40000 ALTER TABLE `item_template` ENABLE KEYS */;
 UNLOCK TABLES;
