@@ -31,7 +31,17 @@ class halloween : public CreatureScript
 public:
 	halloween() : CreatureScript("halloween") { }
 
+	bool OnGossipHello(Player *player, Creature* creature){
+		if (creature->IsQuestGiver())
+			player->PrepareQuestMenu(creature->GetGUID());
+
+
+		player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
+		return true;
+	}
+
 	bool OnQuestReward(Player* player, Creature* creature, Quest const* quest, uint32 /*opt*/){
+			
 		if (quest->GetQuestId() == 900510){
 			player->AddAura(44185, player);
 			creature->HandleEmoteCommand(EMOTE_ONESHOT_APPLAUD);

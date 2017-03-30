@@ -45,6 +45,8 @@ public:
     
 		bool OnGossipHello(Player* player, Creature* creature)
         {
+			if (creature->IsQuestGiver())
+				player->PrepareQuestMenu(creature->GetGUID());
 
 			if (sConfigMgr->GetBoolDefault("Support.NPC", true)) {
 				player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, GOSSIP_ICON_CHAT, "Help for new Players!", GOSSIP_SENDER_MAIN, 100, "", 0, false);

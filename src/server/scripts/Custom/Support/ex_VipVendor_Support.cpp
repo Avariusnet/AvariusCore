@@ -53,10 +53,14 @@ class vipvendor : public CreatureScript
 public: vipvendor() : CreatureScript("vipvendor") { }
 
 
-		bool OnGossipHello(Player *player, Creature* _creature)
+		bool OnGossipHello(Player *player, Creature* creature)
 		{
+			if (creature->IsQuestGiver())
+				player->PrepareQuestMenu(creature->GetGUID());
+
+
 			CustomTranslationSystem * TranslationSystem = 0;
-			//test if this is possible in Fucntion
+			
 			if (sConfigMgr->GetBoolDefault("Vip.Vendor", true)) {
 				std::string helpmenu = TranslationSystem->getCompleteTranslationsString(GROUPID, HELPMENU, player->GetSession()->GetPlayer());
 				std::string buytokens = TranslationSystem->getCompleteTranslationsString(GROUPID, BUYVIPTOKENMENU, player->GetSession()->GetPlayer());
@@ -64,14 +68,14 @@ public: vipvendor() : CreatureScript("vipvendor") { }
 
 				player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, helpmenu, GOSSIP_SENDER_MAIN, 2, "", 0, false);
 				player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, buytokens, GOSSIP_SENDER_MAIN, 1 , howmanytokenyouwantbuy, 0, true);
-				player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+				player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 				return true;
 			}
 
 
 			else {
-				_creature->SetPhaseMask(2, true);
-				player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+				creature->SetPhaseMask(2, true);
+				player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 				return true;
 			}
 		}

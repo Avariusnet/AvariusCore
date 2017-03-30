@@ -29,7 +29,17 @@
 #include <sstream>
 #include <string>
 #include <stdlib.h>
+#include <Custom/Logic/CustomCharacterSystem.h>
 
+enum Events {
+	HALLOWEENEVENT = 99,
+	JUMPEVENT = 95,
+	PORTALEVENT = 96,
+	WANDERVOLK = 91,
+	WINTERFEST = 90,
+	FBEVENT = 98,
+	CHOPPEREVENT = 97
+};
 
 class eventnpc : public CreatureScript
 {
@@ -38,10 +48,10 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 		struct eventnpc_AI : public ScriptedAI
 		{
 			eventnpc_AI(Creature* creature) : ScriptedAI(creature) { }
-
+			CustomCharacterSystem * CharacterSystem = 0;
 			uint32 ticktimer;
 			uint32 actualplayer = 0;
-
+			
 			void Reset() {
 				ticktimer = 10000;
 			}
@@ -53,7 +63,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 				if (ticktimer <= diff) {
 					if (Player * player = me->SelectNearestPlayer(10.0f)) {
 						if (actualplayer != player->GetGUID()) {
-							
+							CharacterSystem->eventNPCAI(HALLOWEENEVENT, me->ToCreature());
 						}
 
 					}
@@ -103,9 +113,8 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 				case 1: {
 					Quest const* quest;
 					quest = sObjectMgr->GetQuestTemplate(900001);
-                
 					GameEventMgr::ActiveEvents const& ae = sGameEventMgr->GetActiveEventList();
-					bool active = ae.find(70) != ae.end();
+					bool active = ae.find(WINTERFEST) != ae.end();
 					if (active == true){
 						pPlayer->GetGUID();
 						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Viel Spass beim Weihnachtsevent wuenscht dir Exitare und das gesammte Team. Der Eventbeginn ist in Dalaran bei Bitty Frostschleuder.",
@@ -142,7 +151,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 				case 2:
 				{
 					GameEventMgr::ActiveEvents const& ae = sGameEventMgr->GetActiveEventList();
-					bool active = ae.find(71) != ae.end();
+					bool active = ae.find(HALLOWEENEVENT) != ae.end();
 					if (active == true){
 						pPlayer->GetGUID();
 						pPlayer->TeleportTo(0, -9739.81f, 2162.37f, 9.36f, 5.72f);
@@ -166,7 +175,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 				case 3:
 				{
 					GameEventMgr::ActiveEvents const& ae = sGameEventMgr->GetActiveEventList();
-					bool active = ae.find(72) != ae.end();
+					bool active = ae.find(WANDERVOLK) != ae.end();
 					if (active == true){
 						pPlayer->GetGUID();
 						ChatHandler(pPlayer->GetSession()).PSendSysMessage("Das Event ist aktuell aktiv. Bitte lies dir die Questtexte aufmerksam durch oder frage deine Mitspieler wenn du nicht weiterkommst. Wir wuenschen viel Spass.",
@@ -189,7 +198,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 				case 4:
 				{
 					GameEventMgr::ActiveEvents const& ae = sGameEventMgr->GetActiveEventList();
-					bool active = ae.find(73) != ae.end();
+					bool active = ae.find(JUMPEVENT) != ae.end();
 					if (active == true){
 						pPlayer->GetGUID();
 						pPlayer->TeleportTo(1, 7345.04f, -1541.83f, 161.32f, 0.39f);
@@ -213,7 +222,7 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 				case 5:
 				{
 					GameEventMgr::ActiveEvents const& ae = sGameEventMgr->GetActiveEventList();
-					bool active = ae.find(74) != ae.end();
+					bool active = ae.find(PORTALEVENT) != ae.end();
 					if (active == true){
 						pPlayer->GetGUID();
 						pPlayer->TeleportTo(1, 7345.04f, -1541.83f, 161.32f, 0.39f);
@@ -264,11 +273,11 @@ public: eventnpc() : CreatureScript("eventnpc"){ }
 				}break;
 
 
-				//Neujahrsevent
+				//Chopperevent
 				case 7:
 				{
 					GameEventMgr::ActiveEvents const& ae = sGameEventMgr->GetActiveEventList();
-					bool active = ae.find(76) != ae.end();
+					bool active = ae.find(CHOPPEREVENT) != ae.end();
 					if (active == true && pPlayer->getLevel() == 1){
 						pPlayer->GetGUID();
 						pPlayer->TeleportTo(0, 2075.54f, 2392.44f, 131.25f, 3.12f);

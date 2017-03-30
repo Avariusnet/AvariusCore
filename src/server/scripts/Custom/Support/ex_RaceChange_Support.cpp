@@ -61,6 +61,9 @@ public:
 
 	bool OnGossipHello(Player* player, Creature* creature)
 	{
+		if (creature->IsQuestGiver())
+			player->PrepareQuestMenu(creature->GetGUID());
+
 		
 		if (sConfigMgr->GetBoolDefault("Race.Change", true)) {
 			CustomTranslationSystem * TranslationSystem = 0;

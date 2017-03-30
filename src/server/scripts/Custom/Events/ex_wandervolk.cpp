@@ -71,22 +71,27 @@ class wandervolk : public CreatureScript
 public:
 	wandervolk() : CreatureScript("wandervolk") { }
 
-	bool OnGossipHello(Player *pPlayer, Creature* _creature)
+	bool OnGossipHello(Player *player, Creature* creature)
 	{
+		if (creature->IsQuestGiver())
+			player->PrepareQuestMenu(creature->GetGUID());
+
+
 		if (sConfigMgr->GetBoolDefault("Wander.Volk", true)) {
-			bool status = pPlayer->GetQuestRewardStatus(900801);
+			bool status = player->GetQuestRewardStatus(900801);
 			if (status) {
-				pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Bring me up to Wandervolk!", GOSSIP_SENDER_MAIN, 0, "", 0, false);
+				player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Bring me to the Home of Wandervolk!", GOSSIP_SENDER_MAIN, 0, "", 0, false);
 			}
 
-			pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Who are you?", GOSSIP_SENDER_MAIN, 1, "", 0, false);
-			pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+			player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Who are you?", GOSSIP_SENDER_MAIN, 1, "", 0, false);
+			player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 			return true;
 		}
 		
 		else {
-			_creature->SetPhaseMask(2, true);
-			pPlayer->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+			
+			creature->SetPhaseMask(2, true);
+			player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 			return true;
 		}
 	}
@@ -248,6 +253,9 @@ public:
 
 	bool OnGossipHello(Player *player, Creature* creature)
 	{
+		if (creature->IsQuestGiver())
+			player->PrepareQuestMenu(creature->GetGUID());
+		
 		if (sConfigMgr->GetBoolDefault("Wander.Volk", true)) {
 			player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Hi", GOSSIP_SENDER_MAIN, 0, "", 0, false);
 			bool status = player->GetQuestRewardStatus(900810);
@@ -311,7 +319,8 @@ public:
 
 	bool OnGossipHello(Player *pPlayer, Creature* _creature)
 	{
-		
+		if (_creature->IsQuestGiver())
+			pPlayer->PrepareQuestMenu(_creature->GetGUID());
 		
 		pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "Das zweite Raetsel", GOSSIP_SENDER_MAIN, 0, "", 0, false);
 		pPlayer->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,7, "What are u doing here?", GOSSIP_SENDER_MAIN, 1, "", 0, false);
@@ -360,6 +369,18 @@ public:
 class indomatanpc : public CreatureScript
 {
 public: indomatanpc() : CreatureScript("indomatanpc"){ }
+
+
+		bool OnGossipHello(Player *player, Creature* creature)
+		{
+			
+			if (creature->IsQuestGiver())
+				player->PrepareQuestMenu(creature->GetGUID());
+
+			player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
+			return true;
+		}
+		
 
 		bool OnQuestReward(Player* /*player*/, Creature* creature, Quest const* quest, uint32 /*opt*/) {
 			if (quest->GetQuestId() == 900808){

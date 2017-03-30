@@ -1,4 +1,7 @@
+SET @CEntry := 24350;
+
 DELETE FROM `creature_loot_template` where `item` = 33788;
+
 UPDATE `creature_template` SET `lootid`='28407' WHERE `entry`='28407';
 
 INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`,`QuestRequired`, `LootMode`, `GroupId`, `MinCount`, `MaxCount`) VALUES 
@@ -38,5 +41,7 @@ INSERT INTO `creature_loot_template` (`Entry`, `Item`, `Reference`, `Chance`,`Qu
 ('36499', '33788', '0', '10', '0', '1', '0', '1', '1'),
 ('36564', '33788', '0', '10', '0', '1', '0', '1', '1'),
 ('36478', '33788', '0', '10', '0', '1', '0', '1', '1'),
-('36666', '33788', '0', '15', '0', '1', '0', '1', '1');
-
+('5856', '33788', '0', '6', '0', '1', '0', '1', '1'),
+('5857', '33788', '0', '5', '0', '1', '0', '1', '1'),
+('5855', '33788', '0', '5', '0', '1', '0', '1', '1'),
+('5853', '33788', '0', '5', '0', '1', '0', '1', '1');

@@ -26,13 +26,15 @@ enum Belohnungen
 
 void CustomCouponSystem::insertNewCouponCodeinDB(std::string code, int itemid, int itemquantity, int used, int useablequantity)
 {
+	SQLTransaction trans = CharacterDatabase.BeginTransaction();
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_ITEMCODE);
 	stmt->setString(0, code);
 	stmt->setUInt32(1, itemid);
 	stmt->setUInt32(2, itemquantity);
 	stmt->setUInt32(3, used);
 	stmt->setUInt32(4, useablequantity);
-	CharacterDatabase.Execute(stmt);
+	trans->Append(stmt);
+	CharacterDatabase.CommitTransaction(trans);
 
 }
 
@@ -56,12 +58,13 @@ std::string CustomCouponSystem::createNewCouponCode()
 
 void CustomCouponSystem::insertNewPlayerUsedCode(std::string charactername, int accountid, std::string couponcode)
 {
-
+	SQLTransaction trans = CharacterDatabase.BeginTransaction();
 	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_ITEMCODEACCOUNT);
 	stmt->setString(0, charactername);
 	stmt->setUInt32(1, accountid);
 	stmt->setString(2, couponcode);
-	CharacterDatabase.Execute(stmt);
+	trans->Append(stmt);
+	CharacterDatabase.CommitTransaction(trans);
 }
 
 PreparedQueryResult CustomCouponSystem::getRequestedCodeData(std::string couponcode)
@@ -115,10 +118,12 @@ bool CustomCouponSystem::isItemCodeStillValid(std::string couponcode)
 
 void CustomCouponSystem::updateCouponCodeUsed(int used, std::string couponcode)
 {
+	SQLTransaction trans = CharacterDatabase.BeginTransaction();
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_ITEMCODEUSED);
 	stmt->setInt32(0, used);
 	stmt->setString(1, couponcode);
-	CharacterDatabase.Execute(stmt);
+	trans->Append(stmt);
+	CharacterDatabase.CommitTransaction(trans);
 }
 
 int CustomCouponSystem::getFortuneItem()

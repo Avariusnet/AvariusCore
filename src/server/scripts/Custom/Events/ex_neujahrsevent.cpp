@@ -31,6 +31,9 @@ public:
 
 	bool OnGossipHello(Player* player, Creature* creature)
 	{
+		if (creature->IsQuestGiver())
+			player->PrepareQuestMenu(creature->GetGUID());
+
 		player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1,GOSSIP_ICON_CHAT, "Was bin ich?", GOSSIP_SENDER_MAIN, 0, "", 0, false);
 		
 		if (player->GetQuestRewardStatus(900100) == true){

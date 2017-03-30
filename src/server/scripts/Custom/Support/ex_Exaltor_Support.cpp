@@ -169,9 +169,9 @@ class npc_first_char : public CreatureScript
 					std::string informationandhelp = TranslationSystem->getCompleteTranslationsString(GROUPID, INFORMATIONANDHELP, player->GetSession()->GetPlayer());
 					std::string getfirstcharacter = TranslationSystem->getCompleteTranslationsString(GROUPID, GETFIRSTCHARACTER, player->GetSession()->GetPlayer());
 			
-					if (creature->IsQuestGiver()) {
+					if (creature->IsQuestGiver()) 
 						player->PrepareQuestMenu(creature->GetGUID());
-					}
+					
 
 					//test if this is possible in Fucntion
 					if (sConfigMgr->GetBoolDefault("Exaltor.Activate", true)) {

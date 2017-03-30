@@ -10,11 +10,8 @@ INSERT INTO `locales_item` (`entry`, `name_loc3`, `description_loc3`) VALUES ('7
 
 
 DELETE from `locales_item` where `entry` = 33788;
-INSERT INTO `locales_item` (`entry`, `name_loc3`, `description_loc3`) VALUES ('33788', 'Astrale Knochen', 'Tausche die Knochen gegen VIP Marken ein!');
+INSERT INTO `locales_item` (`entry`, `name_loc3`, `description_loc3`) VALUES ('33788', 'Astrale Knochen', 'Tausche die Knochen gegen Astrale Kredite ein!');
 
-
-DELETE from `locales_item` where `entry` = 33788;
-INSERT INTO `locales_item` (`entry`, `name_loc3`, `description_loc3`) VALUES ('33788', 'Astrale Knochen', 'Tausche die Knochen gegen VIP Marken ein!');
 
 Delete from `locales_item` where `entry` in  (34071,38685,44832,48416,33570,33572);
 INSERT INTO `locales_item` (`entry`, `name_loc3`, `description_loc3`) VALUES 

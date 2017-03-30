@@ -1,0 +1,1 @@
+DELETE FROM updates_include where path = '$/sql/progress/world' and state = 'RELEASED';

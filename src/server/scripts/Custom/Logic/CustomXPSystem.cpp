@@ -7,11 +7,13 @@
 
 	void CustomXP::setCustomXPEntry(std::string charactername, int characterguid, int xpvalue)
 	{
+		SQLTransaction trans = CharacterDatabase.BeginTransaction();
 		PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_CUSTOM_XP);
 		stmt->setString(0, charactername);
 		stmt->setInt32(1, characterguid);
 		stmt->setInt32(2, xpvalue);
-		CharacterDatabase.Execute(stmt);
+		trans->Append(stmt);
+		CharacterDatabase.CommitTransaction(trans);
 	}
 
 	//Returns the name of the player, if an DB entry exist. If Not "0" is Returnvalue
@@ -34,10 +36,12 @@
 	//Update Custom XP Rate for a specified Player
 	void CustomXP::updateCustomXPEntry(int xpvalue, int characterguid)
 	{
+		SQLTransaction trans = CharacterDatabase.BeginTransaction();
 		PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_CUSTOM_XP);
 		stmt->setInt32(0, xpvalue);
 		stmt->setInt32(1, characterguid);
-		CharacterDatabase.Execute(stmt);
+		trans->Append(stmt);
+		CharacterDatabase.CommitTransaction(trans);
 	}
 
 	//Select Custom XP Rate from a specified Player

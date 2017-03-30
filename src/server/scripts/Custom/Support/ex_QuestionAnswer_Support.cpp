@@ -40,10 +40,13 @@ public:
         
     
    
-    bool OnGossipHello(Player *player, Creature* _creature)
+    bool OnGossipHello(Player *player, Creature* creature)
     {
+		if (creature->IsQuestGiver())
+			player->PrepareQuestMenu(creature->GetGUID());
+
         player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Please insert your Answer!" , GOSSIP_SENDER_MAIN, 2, "Type your answer: ", 0,true);
-        player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+        player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
         return true;
     }
     

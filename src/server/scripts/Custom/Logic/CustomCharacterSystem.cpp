@@ -31,6 +31,7 @@ PreparedQueryResult CustomCharacterSystem::getAccountbyID(int accountid)
 void CustomCharacterSystem::insertNewFirstCharacterforPlayerCount(int guid, std::string charactername, int accountid, std::string accountname, int guildid, std::string ip)
 {
 	//PrepareStatement(CHAR_INS_PLAYER_FIRST_CHARACTER_COUNT, "INSERT INTO player_first_character_count (guid,charname, account, accname, time, guildid,ip) VALUES (?,?,?,?,UNIX_TIMESTAMP(),?,?)", CONNECTION_ASYNC);
+	SQLTransaction trans = CharacterDatabase.BeginTransaction();
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_FIRST_CHARACTER_COUNT);
 	stmt->setInt32(0, guid);
 	stmt->setString(1, charactername);
@@ -38,7 +39,8 @@ void CustomCharacterSystem::insertNewFirstCharacterforPlayerCount(int guid, std:
 	stmt->setString(3, accountname);
 	stmt->setInt32(4, guildid);
 	stmt->setString(5, ip);
-	CharacterDatabase.Execute(stmt);
+	trans->Append(stmt);
+	CharacterDatabase.CommitTransaction(trans);
 }
 
 
@@ -434,18 +436,22 @@ void CustomCharacterSystem::playerGiveFirstCharacter(Player * player)
 
 void CustomCharacterSystem::deleteFirstCharacterPlayerLog(int accountid)
 {
+	SQLTransaction trans = CharacterDatabase.BeginTransaction();
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_FIRST_CHAR_PLAYERLOG);
 	stmt->setInt32(0, accountid);
 	stmt->setString(1, "FirstCharacter");
-	CharacterDatabase.Execute(stmt);
+	trans->Append(stmt);
+	CharacterDatabase.CommitTransaction(trans);
 }
 
 void CustomCharacterSystem::updateCharacterToZeroAccount(std::string newname,int guid)
 {
+	SQLTransaction trans = CharacterDatabase.BeginTransaction();
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_FIRSTCHARACTER_TO_ZEROACCOUNT);
 	stmt->setString(0, newname);
 	stmt->setInt32(1, guid);
-	CharacterDatabase.Execute(stmt);
+	trans->Append(stmt);
+	CharacterDatabase.CommitTransaction(trans);
 }
 
 std::string CustomCharacterSystem::generateNewCharacterName()
@@ -469,11 +475,13 @@ std::string CustomCharacterSystem::generateNewCharacterName()
 //Insert a new Record in player_playtime_rewards for Playtime goodies
 void CustomCharacterSystem::insertNewPlayerPlayTimeReward(int playtime, std::string charactername, int guid)
 {	
+	SQLTransaction trans = CharacterDatabase.BeginTransaction();
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYTIME_REWARDS);
 	stmt->setInt32(0, playtime);
 	stmt->setString(1, charactername);
 	stmt->setInt32(2, guid);
-	CharacterDatabase.Execute(stmt);
+	trans->Append(stmt);
+	CharacterDatabase.CommitTransaction(trans);
 }
 
 bool CustomCharacterSystem::checkIfPlayerGetPlayTimeReward(int playtime, int guid)
@@ -836,12 +844,56 @@ uint32 CustomCharacterSystem::PlayerMaxLevel()
 	return sWorld->getIntConfig(CONFIG_MAX_PLAYER_LEVEL);
 }
 
-bool PlayerHasItemOrSpell(const Player *plr, uint32 itemId, uint32 spellId) 
+int CustomCharacterSystem::countFBEventAccounts(Player * player)
+{
+	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_SEL_FB_ACCOUNT_COUNT);
+	stmt->setInt32(0, player->GetSession()->GetAccountId());
+	PreparedQueryResult result = CharacterDatabase.Query(stmt);
+
+	if (!result) {
+		return 0;
+	}
+
+	Field* ergebnis = result->Fetch();
+	int accountcount = ergebnis[0].GetInt32();
+
+	return accountcount;
+}
+
+void CustomCharacterSystem::insFBEvent(Player * player)
+{
+	std::string accountname = getAccountName(player->GetSession()->GetAccountId());
+	SQLTransaction trans = CharacterDatabase.BeginTransaction();
+
+	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_FB_ACCOUNT);
+	stmt->setString(0, player->GetSession()->GetPlayerName());
+	stmt->setInt32(1, player->GetGUID());
+	stmt->setString(2, accountname);
+	stmt->setInt32(3, player->GetSession()->GetAccountId());
+	trans->Append(stmt);
+	CharacterDatabase.CommitTransaction(trans);
+}
+
+
+bool PlayerHasItemOrSpell(const Player *plr, uint32 itemId, uint32 spellId)
 {
 	return plr->HasItemCount(itemId, 1, true) || plr->HasSpell(spellId);
 }
 
+bool CustomCharacterSystem::isEventActive(int eventid)
+{
+	GameEventMgr::ActiveEvents const& ae = sGameEventMgr->GetActiveEventList();
+	bool active = ae.find(eventid) != ae.end();
+	return active;
+}
 
+void CustomCharacterSystem::eventNPCAI(int eventid,  Creature * creature)
+{
+	bool active = isEventActive(eventid);
+	if (active) {
+		creature->Yell("Halloween is on!", LANG_UNIVERSAL, nullptr);
+	}
+}
 
 
 

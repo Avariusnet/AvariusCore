@@ -1,28 +1,4 @@
--- MySQL dump 10.13  Distrib 5.6.24, for Win64 (x86_64)
---
--- Host: localhost    Database: gildenhausworld
--- ------------------------------------------------------
--- Server version	5.5.49-0ubuntu0.14.04.1
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `quest_template`
---
-
-
---
--- Dumping data for table `quest_template`
---
 
 LOCK TABLES `quest_template` WRITE;
 /*!40000 ALTER TABLE `quest_template` DISABLE KEYS */;
@@ -81,10 +57,10 @@ UPDATE `quest_template` SET `QuestType`='62' WHERE `ID`='800551';
 UPDATE `quest_template` SET `QuestType`='62' WHERE `ID`='800552';
 
 /* Torvan der Pirat */
-UPDATE `quest_template` SET `RewardMoney`='-300000000', `RewardBonusMoney`='250000000' WHERE `ID`='802308';
+UPDATE `quest_template` SET `RewardMoney`='-300000000', `RewardBonusMoney`='25' WHERE `ID`='802308';
 
 /* WAndervolk 900801 */
-UPDATE `quest_template` SET `LogDescription`='Das Wandervolk ist ein interessantes Volk. Um das Volk kennenzulernen braucht ihr 2 Auktionspapiere und 50 Feine Gewuerze', `QuestDescription`='Hallo $N, das Wandervolk ist ein interessantes Volk, welches im Dunkel der Welten hausst. Erfuellt die Quest und ihr steht in ihrer Gunst.', `RequiredItemCount2`='50' WHERE `ID`='900801';
+UPDATE `quest_template` SET `RequiredItemCount2`='50' WHERE `ID`='900801';
 
 /* MEHR HILFE FUER DAS VOLK 800500 */
 UPDATE `quest_template` SET `Flags`='32768' WHERE `ID`='800500';
@@ -105,11 +81,10 @@ UPDATE `quest_template` SET `Flags`='64' WHERE `ID`= '900828';
 UPDATE `quest_template` SET `QuestInfoID`='62' WHERE `ID` ='900828';
 
 /* QUest 802021 Sammlung Teil4 */
-UPDATE `quest_template` SET `LogDescription`='Bringt Moon 50 Spinnenseide, 100 Seidenstoffe und toetet 20 Domestizierter Krabbler und 20 verseuchte Baeren.', `QuestDescription`='$N,$Bbringt mir 50 Spinnenseide, 100 Seidenstoffe und toetet 20 Domestizierter Krabbler und 20 verseuchte Baeren. Ihr findet alles im Vorgebirge des Huegellandes.', `RequiredNpcOrGo2`='0', `RequiredNpcOrGo3`='0', `RequiredNpcOrGo4`='2351', `RequiredNpcOrGoCount2`='0', `RequiredNpcOrGoCount3`='0', `RequiredNpcOrGoCount4`='20' WHERE `ID`='802021';
+UPDATE `quest_template` SET `RequiredNpcOrGo2`='0', `RequiredNpcOrGo3`='0', `RequiredNpcOrGo4`='2351', `RequiredNpcOrGoCount2`='0', `RequiredNpcOrGoCount3`='0', `RequiredNpcOrGoCount4`='20' WHERE `ID`='802021';
 
 
 /* QUEST 802003 GOldanpassung */
-UPDATE `quest_template` SET `QuestDescription`='$N, Ich habe mir vor langer Zeit ein Buch von einem alten Bekannten ausgeliehen.Koenntet ihr es zurueck bringen? Sie befindet sich an der Kueste in Desolace am Sartherisstrand.' WHERE `ID` = 802003 ;
 UPDATE `quest_template` SET `RewardMoney`='1500000' WHERE `ID`='802003';
 
 /* QUest 800509 auf weekly gesetzt */
@@ -124,8 +99,7 @@ UPDATE `quest_template` SET `Flags`='32768' WHERE `ID`='900509';
 UPDATE `quest_template` SET `RequiredItemCount1`='30' WHERE `ID`='800513';
 
 
-/*--Beschreibung Halloweenquest 900503*/
-UPDATE `quest_template` SET `LogDescription`='Hey $N, wir wollen ein bisschen Action zu Halloween oder nicht ? Bringt mir 20 Grobes Gorillahaar und 15 Gorillafangzaehne. Geht danach zu Orrig vor Orgrimmar.' WHERE `ID`='900503';
+
 
 UPDATE `quest_template` SET `RequiredNpcOrGo2`='0', `RequiredNpcOrGoCount2`='0' WHERE `ID`='800005';
 
@@ -194,7 +168,6 @@ UPDATE `quest_template` SET `LogTitle`='The Coins', `LogDescription`='Please bri
 UPDATE `quest_template` SET `LogTitle`='Give me Coins', `LogDescription`='Bring me 10 Emblem of Triumph and 4 Artic Fur! ', `QuestDescription`='Hi $N, bring me 10 Emblem of Triumps and 4 Artic Fur for your Reward!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='900808';
 UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800555';
 UPDATE `quest_template` SET `LogTitle`='The Wyrm', `LogDescription`='Bring me 20 Coins of the Wandervolk!', `QuestDescription`='Hi $N, to win my favour it is nessecary to collect 20 Coins of Wandervolk! If you collect all of them come back to me to get your Reward!', `QuestCompletionLog`='Do what you like to do!', `RequiredItemId1`='700521', `RequiredItemId2`='0', `RequiredItemId3`='0', `RequiredItemCount2`='0', `RequiredItemCount3`='0' WHERE `ID`='900811';
-
 UPDATE `quest_template` SET `RewardBonusMoney`='2000000', `RequiredItemId1`='700521' WHERE `ID`='800554';
 UPDATE `quest_template` SET `RequiredItemId1`='37663' WHERE `ID`='900821';
 UPDATE `quest_template` SET `LogTitle`='Proof of Trust', `LogDescription`='Bring to me 5 Coins of Wandervolk!', `QuestDescription`='Hi $N, it is an honor that Indomata trusts you. But as you see I am not Indomata. For me, you must bring a Proof of Trust. Now! So bring 5 Coins of Wandervolk to me!', `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='900836';
@@ -408,6 +381,7 @@ UPDATE `quest_template` SET `LogTitle`='The Enchanting' WHERE `ID`='900837';
 UPDATE `quest_template` SET `LogTitle`='The Lapidation' WHERE `ID`='900838';
 UPDATE `quest_template` SET `LogTitle`='The Embalming' WHERE `ID`='900839';
 UPDATE `quest_template` SET `LogTitle`='The Mummification' WHERE `ID`='900840';
+UPDATE `quest_template` SET `LogTitle`='Forgemaster' WHERE `ID`='800556';
 UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800500';
 UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800501';
 UPDATE `quest_template` SET `QuestCompletionLog`='Do what you like to do.' WHERE `ID`='800502';
@@ -704,23 +678,26 @@ UPDATE `quest_template` SET `RequiredItemId2`='7147' WHERE `ID`='900804';
 
 
 
-UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='900809';
-UPDATE `quest_template` SET `RewardItem1`='700521' WHERE `ID`='800556';
+UPDATE `quest_template` SET `RewardItem1`='7147' WHERE `ID`='900809';
 
 /* Welcome QUest */
 UPDATE `quest_template` SET `RewardMoney`='1000000', `RewardItem1`='38186' WHERE `ID`='750000';
 
+/*Portalquest Change RewardItem */
+UPDATE `quest_template` SET `RewardItem1`=38186 WHERE `ID`=900301;
+UPDATE `quest_template` SET `RewardItem1`=38186 WHERE `ID`=900300;
 
-/*!40000 ALTER TABLE `quest_template` ENABLE KEYS */;
+
+UPDATE `quest_template` SET `RewardAmount1`=5 WHERE `ID`=900504;
+
+
+/* Halloweenquest NON Raid */
+UPDATE `quest_template` SET `QuestInfoID`=0 WHERE `ID`=900504;
+UPDATE `quest_template` SET `QuestInfoID`=0 WHERE `ID`=900503;
+
+
+
+
+
 UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2016-06-16 22:24:10

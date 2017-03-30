@@ -71,14 +71,15 @@ bool CustomReportSystem::checkIfPlayerHasAlreadyReportedQuest(int accountid, int
 
 void CustomReportSystem::addNewPlayerReportInDB(std::string playername, std::string guildname, int guid, int accountid, int questid)
 {
-
+	SQLTransaction trans = CharacterDatabase.BeginTransaction();
 	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_PLAYER_REPORT_QUEST);
 	stmt->setString(0, playername);
 	stmt->setString(1, guildname);
 	stmt->setInt32(2, guid);
 	stmt->setInt32(3, accountid);
 	stmt->setInt32(4, questid);
-	CharacterDatabase.Execute(stmt);
+	trans->Append(stmt);
+	CharacterDatabase.CommitTransaction(trans);
 
 }
 
@@ -86,13 +87,14 @@ void CustomReportSystem::addNewPlayerReportInDB(std::string playername, std::str
 //Insert an new reported Quest in DB if the quest isn´t already reported!
 void CustomReportSystem::addNewQuestReportInDB(std::string questname, int questid, int quantity, int active)
 {
-
+	SQLTransaction trans = CharacterDatabase.BeginTransaction();
 	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_REPORT_QUEST);
 	stmt->setString(0, questname);
 	stmt->setInt32(1, questid);
 	stmt->setInt32(2, quantity);
 	stmt->setInt32(3, active);
-	CharacterDatabase.Execute(stmt);
+	trans->Append(stmt);
+	CharacterDatabase.CommitTransaction(trans);
 }
 
 
@@ -100,21 +102,24 @@ void CustomReportSystem::addNewQuestReportInDB(std::string questname, int questi
 //Update quantity of a speicifc questid
 void CustomReportSystem::UpdateQuantityQuestReportInDB(int quantity, int questid)
 {
-
+	SQLTransaction trans = CharacterDatabase.BeginTransaction();
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST_COUNT);
 	stmt->setInt32(0, quantity);
 	stmt->setInt32(1, questid);
-	CharacterDatabase.Execute(stmt);
+	trans->Append(stmt);
+	CharacterDatabase.CommitTransaction(trans);
 }
 
 
 //Activate or Deactivate a reported Quest with specific questid
 void CustomReportSystem::setQuestActiveOrInactive(int active, int questid)
 {
+	SQLTransaction trans = CharacterDatabase.BeginTransaction();
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_REPORT_QUEST_SET_QUEST_ACTIVE);
 	stmt->setInt32(0, active);
 	stmt->setInt32(1, questid);
-	CharacterDatabase.Execute(stmt);
+	trans->Append(stmt);
+	CharacterDatabase.CommitTransaction(trans);
 }
 
 //Get Questdetails about a specific reported quest.
@@ -136,7 +141,7 @@ void CustomReportSystem::insertErrorMessageForQuest(Player* player, int questid,
 {
 	CustomCharacterSystem * CharacterSystem = 0;
 	std::string accountname = CharacterSystem->getAccountName(player->GetSession()->GetAccountId());
-
+	SQLTransaction trans = CharacterDatabase.BeginTransaction();
 	PreparedStatement * stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_REPORT_ERROR_MESSAGE);
 	stmt->setString(0, player->GetSession()->GetPlayerName());
 	stmt->setInt32(1, player->GetGUID());
@@ -144,7 +149,8 @@ void CustomReportSystem::insertErrorMessageForQuest(Player* player, int questid,
 	stmt->setInt32(3, player->GetSession()->GetAccountId());
 	stmt->setInt32(4, questid);
 	stmt->setString(5, error_message);
-	CharacterDatabase.Execute(stmt);
+	trans->Append(stmt);
+	CharacterDatabase.CommitTransaction(trans);
 }
 
 bool CustomReportSystem::completeQuest(int32 entry, ChatHandler * handler, Player * player)
@@ -222,13 +228,15 @@ bool CustomReportSystem::completeQuest(int32 entry, ChatHandler * handler, Playe
 
 	if (sWorld->getBoolConfig(CONFIG_QUEST_ENABLE_QUEST_TRACKER)) // check if Quest Tracker is enabled
 	{
+		SQLTransaction trans = CharacterDatabase.BeginTransaction();
 		// prepare Quest Tracker datas
 		PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_QUEST_TRACK_GM_COMPLETE);
 		stmt->setUInt32(0, quest->GetQuestId());
 		stmt->setUInt32(1, player->GetGUID().GetCounter());
 
 		// add to Quest Tracker
-		CharacterDatabase.Execute(stmt);
+		trans->Append(stmt);
+		CharacterDatabase.CommitTransaction(trans);
 	}
 
 	player->CompleteQuest(entry);
@@ -506,16 +514,20 @@ bool CustomReportSystem::checkIfQuestIsAlreadyReported(int questid) {
 
 void CustomReportSystem::insertQuestIntoForbiddenTable(int questid)
 {
+	SQLTransaction trans = CharacterDatabase.BeginTransaction();
 	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_QUEST_IN_FORBIDDEN_TABLE);
 	stmt->setInt32(0, questid);
-	CharacterDatabase.Execute(stmt);
+	trans->Append(stmt);
+	CharacterDatabase.CommitTransaction(trans);
 }
 
 void CustomReportSystem::insertItemIntoForbiddenTable(int itemid)
 {
+	SQLTransaction trans = CharacterDatabase.BeginTransaction();
 	PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_ITEM_IN_FORBIDDEN_TABLE);
 	stmt->setInt32(0, itemid);
-	CharacterDatabase.Execute(stmt);
+	trans->Append(stmt);
+	CharacterDatabase.CommitTransaction(trans);
 }
 
 bool CustomReportSystem::checkIfQuestisForbidden(int questid)

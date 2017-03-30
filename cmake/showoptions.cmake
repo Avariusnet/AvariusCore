@@ -126,4 +126,17 @@ if (BUILD_SHARED_LIBS)
   WarnAboutSpacesInBuildPath()
 endif()
 
+
+if(PROGRESS_REALM)
+	message("")
+	file(COPY
+	${CMAKE_CURRENT_SOURCE_DIR}/sql/progress/world_updates_included.sql/ 
+	DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/sql/custom/world/AC/)
+endif()
+
+if(NOT PROGRESS_REALM)
+	file(REMOVE
+	${CMAKE_CURRENT_SOURCE_DIR}/sql/custom/world/AC/world_updates_included.sql)
+endif()	
+
 message("")

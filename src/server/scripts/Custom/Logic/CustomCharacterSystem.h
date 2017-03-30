@@ -79,6 +79,13 @@ public:
 	bool IsSecondarySkill(SkillType skill);
 	uint32 PlayerMaxLevel();
 
+	//FBEvent
+	int countFBEventAccounts(Player*player);
+	void insFBEvent(Player* player);
+
+	//EVENTNPC
+	bool isEventActive(int eventid);
+	void eventNPCAI(int eventid, Creature * creature);
 
 
 };

@@ -27,6 +27,11 @@ void CharacterDatabaseConnection::DoPrepareStatements()
 
 	PrepareStatement(CHAR_SEL_UNIX_TIMESTAMP, "SELECT UNIX_TIMESTAMP(NOW())", CONNECTION_SYNCH);
 
+	//FBEVENT
+	PrepareStatement(CHAR_SEL_FB_ACCOUNT_COUNT, " SELECT count(accountid) FROM fb_event WHERE accountid = ?", CONNECTION_SYNCH);
+	PrepareStatement(CHAR_INS_FB_ACCOUNT, "INSERT INTO fb_event (name,guid,accountname,accountid,date) Values (?,?,?,?,NOW())", CONNECTION_ASYNC);
+
+
 
 	//TranslationSystem
 	PrepareStatement(CHAR_SEL_TRANSLATION_ENGLISH, "Select english from custom_translations where groupid = ? and translationid =?", CONNECTION_SYNCH);

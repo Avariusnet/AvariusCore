@@ -24,6 +24,6 @@ INSERT INTO `quest_template_addon` (`ID`, `MaxLevel`, `AllowableClasses`, `Sourc
   /*  ProvidedItemCount  */ 0,
   /*   SpecialFlags */ 0);
 
-DELETE FROM `creature_questender` where id in(800044) AND quest = 750000;
+DELETE FROM `creature_questender` where id = 800044 AND quest = 750000;
 INSERT INTO creature_questender (id, quest) VALUES
 ('800044', '750000');

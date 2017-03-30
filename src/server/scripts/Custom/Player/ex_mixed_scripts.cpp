@@ -176,8 +176,13 @@
 #define MSG_COLOR_WHITESMOKE           "|cFFF5F5F5"
 #define MSG_COLOR_YELLOW               "|cFFFFFF00"
 
-#define Servername "Blacknetwork"
-#define MOTD	"Welcome on Blacknetwork"
+
+
+
+enum Events {
+	XMASEVENT = 90,
+	FBEVENT = 98
+};
 
 class Announce_NewPlayer : public PlayerScript
 {
@@ -198,6 +203,7 @@ public:
 		uint32 charresultint = felder[0].GetUInt32();
 		const Quest* quest = sObjectMgr->GetQuestTemplate(750000);
 
+
 		if (sConfigMgr->GetIntDefault("Welcome.Quest", 1) && firstlogin) {
 			player->AddQuest(quest, nullptr);
 			player->CompleteQuest(750000);
@@ -206,7 +212,7 @@ public:
 		if (sConfigMgr->GetBoolDefault("Welcome.Message", true)) {
 			if (player->GetTotalPlayedTime() < 1 && charresultint == 1)
 			{
-				ss << "|cff54b5ff Welcome on " << Servername << ": |r " << ChatHandler(player->GetSession()).GetNameLink();
+				ss << "|cff54b5ff Welcome on the Server: " << ChatHandler(player->GetSession()).GetNameLink();
 				sWorld->SendServerMessage(SERVER_MSG_STRING, ss.str().c_str());
 				return;
 			}
@@ -225,7 +231,7 @@ public:
 
 
 		GameEventMgr::ActiveEvents const& ae = sGameEventMgr->GetActiveEventList();
-		bool active = ae.find(70) != ae.end();
+		bool active = ae.find(XMASEVENT) != ae.end();
 
 		if (active == true) {
 			return;
@@ -255,7 +261,7 @@ public:
 	void OnCreate(Player* player) {
 
 		GameEventMgr::ActiveEvents const& ae = sGameEventMgr->GetActiveEventList();
-		bool active = ae.find(78) != ae.end();
+		bool active = ae.find(FBEVENT) != ae.end();
 
 		QueryResult anzahl;
 		anzahl = CharacterDatabase.PQuery("SELECT count(accountid) FROM fb_event WHERE accountid = '%u'", player->GetSession()->GetAccountId());
@@ -278,6 +284,8 @@ public:
 			player->SetFullHealth();
 			QueryResult accountname = LoginDatabase.PQuery("SELECT username FROM account where id = %u", player->GetSession()->GetAccountId());
 			std::string accname = (*accountname)[0].GetString();
+
+
 
 			CharacterDatabase.PExecute("INSERT INTO fb_event (name,guid,accountname,accountid,date) Values ('%s','%u','%s','%u','%u')", player->GetSession()->GetPlayerName(), player->GetGUID(), accname, player->GetSession()->GetAccountId(), zeit);
 		}

@@ -1,0 +1,1 @@
+INSERT INTO `game_event_creature_quest` (`eventEntry`, `id`, `quest`) VALUES ('71', '800002', '900504');

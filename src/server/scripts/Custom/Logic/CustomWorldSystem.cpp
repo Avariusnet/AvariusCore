@@ -90,14 +90,3 @@ std::string CustomWorldSystem::getQuestNamebyID(int questid)
 	return questname;
 }
 
-
-
-void CustomWorldSystem::setBossKillCounter(int /*counter*/, int /*bossid*/)
-{
-
-}
-
-int CustomWorldSystem::getBossKillCounter(int /*bossid*/)
-{
-	return 0;
-}

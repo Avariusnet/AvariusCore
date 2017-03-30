@@ -199,9 +199,11 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 		}
 
 
-		bool OnGossipHello(Player *player, Creature* _creature)
+		bool OnGossipHello(Player *player, Creature* creature)
 		{
-			
+			if (creature->IsQuestGiver())
+				player->PrepareQuestMenu(creature->GetGUID());
+
 			if (sConfigMgr->GetBoolDefault("GuildHouse.Vendor", true)) {
 				uint32 test = player->GetGuildId();
 				if (test != 0) {
@@ -218,14 +220,14 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Gildenhaus kaufen", GOSSIP_SENDER_MAIN, 0, "", 0, false);
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Gildenhaus verkaufen", GOSSIP_SENDER_MAIN, 1, "", 0, false);
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Gildenhaus ansehen", GOSSIP_SENDER_MAIN, 120, "", 0, false);
-						player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+						player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 						return true;
 
 					}
 
 					else if (guid != leaderid) {
 						player->PlayerTalkClass->GetGossipMenu().AddMenuItem(-1, 7, "Gildenhaus ansehen", GOSSIP_SENDER_MAIN, 120, "", 0, false);
-						player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+						player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 						player->GetSession()->SendNotification("Du bist nicht der Leiter deiner Gilde, daher kannst du dir nur Gildenhaeuser ansehen.");
 						return true;
 					}
@@ -238,15 +240,15 @@ public: gildenvendor() : CreatureScript("gildenvendor"){ }
 
 				if (test == 0) {
 					//player->PlayerTalkClass->GetGossipMenu().AddMenuItem(7, "Gildenhaus ansehen", GOSSIP_SENDER_MAIN, 120);
-					player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+					player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 					player->GetSession()->SendNotification("Du bist in keiner Gilde,daher kannst du dir die Haeuser nur ansehen.");
 					return true;
 				}
 			}
 
 			else {
-				_creature->SetPhaseMask(2, true);
-				player->PlayerTalkClass->SendGossipMenu(907, _creature->GetGUID());
+				creature->SetPhaseMask(2, true);
+				player->PlayerTalkClass->SendGossipMenu(907, creature->GetGUID());
 				return true;
 			}
 			
