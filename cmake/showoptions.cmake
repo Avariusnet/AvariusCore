@@ -127,16 +127,25 @@ if (BUILD_SHARED_LIBS)
 endif()
 
 
-if(PROGRESS_REALM)
+if(REALM_TYPE STREQUAL "progress")
 	message("")
+	file(REMOVE_RECURSE ${CMAKE_CURRENT_SOURCE_DIR}/sql/custom/world/)
 	file(COPY
-	${CMAKE_CURRENT_SOURCE_DIR}/sql/progress/world_updates_included.sql/ 
-	DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/sql/custom/world/AC/)
+	${CMAKE_CURRENT_SOURCE_DIR}/realmsetup/progress/sql/world/ 
+	DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/sql/custom/world/)
 endif()
 
-if(NOT PROGRESS_REALM)
-	file(REMOVE
-	${CMAKE_CURRENT_SOURCE_DIR}/sql/custom/world/AC/world_updates_included.sql)
+if(REALM_TYPE STREQUAL "normal")
+	file(REMOVE_RECURSE ${CMAKE_CURRENT_SOURCE_DIR}/sql/custom/world)
+	file(COPY
+	${CMAKE_CURRENT_SOURCE_DIR}/realmsetup/normal/sql/world/ 
+	DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/sql/custom/world/)
+endif()	
+
+if(REALM_TYPE STREQUAL "fun")
+	file(COPY
+	${CMAKE_CURRENT_SOURCE_DIR}/realmsetup/fun/sql/world/ 
+	DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/sql/custom/world/)
 endif()	
 
 message("")

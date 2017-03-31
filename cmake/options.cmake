@@ -1,4 +1,4 @@
-# Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+# Copyright (C) 2014-2017 AvariusCore <http://avarius.net>
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -51,4 +51,5 @@ option(WITH_COREDEBUG   "Include additional debug-code in core"                 
 set(WITH_SOURCE_TREE    "hierarchical" CACHE STRING "Build the source tree for IDE's.")
 set_property(CACHE WITH_SOURCE_TREE PROPERTY STRINGS no flat hierarchical hierarchical-folders)
 option(WITHOUT_GIT      "Disable the GIT testing routines"                            0)
-option(PROGRESS_REALM 	"Setup the Server as a Progress Realm"						  0)
+set(REALM_TYPE 		"normal" CACHE STRING "Changes the Way your Server will be Setup.")
+set_property(CACHE REALM_TYPE PROPERTY STRINGS normal fun progress)

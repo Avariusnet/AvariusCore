@@ -1,18 +1,18 @@
-REVOKE ALL PRIVILEGES ON * . * FROM 'trinity'@'localhost';
+REVOKE ALL PRIVILEGES ON * . * FROM 'avarius'@'localhost';
 
-REVOKE ALL PRIVILEGES ON `world` . * FROM 'trinity'@'localhost';
+REVOKE ALL PRIVILEGES ON `world` . * FROM 'avarius'@'localhost';
 
-REVOKE GRANT OPTION ON `world` . * FROM 'trinity'@'localhost';
+REVOKE GRANT OPTION ON `world` . * FROM 'avarius'@'localhost';
 
-REVOKE ALL PRIVILEGES ON `characters` . * FROM 'trinity'@'localhost';
+REVOKE ALL PRIVILEGES ON `characters` . * FROM 'avarius'@'localhost';
 
-REVOKE GRANT OPTION ON `characters` . * FROM 'trinity'@'localhost';
+REVOKE GRANT OPTION ON `characters` . * FROM 'avarius'@'localhost';
 
-REVOKE ALL PRIVILEGES ON `auth` . * FROM 'trinity'@'localhost';
+REVOKE ALL PRIVILEGES ON `auth` . * FROM 'avarius'@'localhost';
 
-REVOKE GRANT OPTION ON `auth` . * FROM 'trinity'@'localhost';
+REVOKE GRANT OPTION ON `auth` . * FROM 'avarius'@'localhost';
 
-DROP USER 'trinity'@'localhost';
+DROP USER 'avarius'@'localhost';
 
 DROP DATABASE IF EXISTS `world`;
 
