@@ -131,7 +131,7 @@ if(REALM_TYPE STREQUAL "progress")
 	message("")
 	file(REMOVE_RECURSE ${CMAKE_CURRENT_SOURCE_DIR}/src/server/scripts/custom/custom_script_loader.cpp)		
 	file(COPY
-	${CMAKE_CURRENT_SOURCE_DIR}/realmsetup/progress/src/custom_script_loader.cpp/ 
+	${CMAKE_CURRENT_SOURCE_DIR}/realmsetup/progress/src/custom_script_loader.cpp 
 	DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/server/scripts/custom/)
 	
 	file(REMOVE_RECURSE ${CMAKE_CURRENT_BINARY_DIR}/sql/custom/world)
@@ -148,7 +148,7 @@ if(REALM_TYPE STREQUAL "normal")
 	
 	file(REMOVE_RECURSE ${CMAKE_CURRENT_SOURCE_DIR}/src/server/scripts/custom/custom_script_loader.cpp)
 	file(COPY
-	${CMAKE_CURRENT_SOURCE_DIR}/realmsetup/normal/src/custom_script_loader.cpp/ 
+	${CMAKE_CURRENT_SOURCE_DIR}/realmsetup/normal/src/custom_script_loader.cpp
 	DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/server/scripts/custom/)
 	
 	
