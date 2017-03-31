@@ -31,7 +31,7 @@ public:
 
 	};
 
-	bool OnGossipHello(Player* player, Creature* npc)
+	bool OnGossipHello(Player* player, Creature* npc) override
 	{
 		AddGossipItemFor(player, 0, "Start Event !", GOSSIP_SENDER_MAIN, 1);
 		SendGossipMenuFor(player, DEFAULT_GOSSIP_MESSAGE, npc);
