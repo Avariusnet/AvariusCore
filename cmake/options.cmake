@@ -51,5 +51,4 @@ option(WITH_COREDEBUG   "Include additional debug-code in core"                 
 set(WITH_SOURCE_TREE    "hierarchical" CACHE STRING "Build the source tree for IDE's.")
 set_property(CACHE WITH_SOURCE_TREE PROPERTY STRINGS no flat hierarchical hierarchical-folders)
 option(WITHOUT_GIT      "Disable the GIT testing routines"                            0)
-set(REALM_TYPE 		"normal" CACHE STRING "Changes the Way your Server will be Setup.")
-set_property(CACHE REALM_TYPE PROPERTY STRINGS normal fun progress)
+
