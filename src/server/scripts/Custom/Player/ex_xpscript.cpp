@@ -69,7 +69,7 @@ public:
 							int xpvalue = XPSystem->getCustomXPValue(player->GetGUID());
 
 							amount = (amount *xpvalue)* xpweekendrate;
-							ChatHandler(player->GetSession()).PSendSysMessage("XP Weekend actice. You get: %u", amount,
+							ChatHandler(player->GetSession()).PSendSysMessage("XP Weekend active. You get: %u", amount,
 								player->GetName());
 
 							return;

@@ -38,7 +38,7 @@ public:
 		return true;
 	}
 
-	bool OnGossipSelect(Player* player, Creature* npc, uint32 sender, uint32 uiAction)
+	bool OnGossipSelect(Player* player, Creature* npc, uint32 /*sender*/, uint32 uiAction) override
 	{
 		if (!player)
 			return false;

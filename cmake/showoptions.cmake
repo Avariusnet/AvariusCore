@@ -127,44 +127,5 @@ if (BUILD_SHARED_LIBS)
 endif()
 
 
-if(REALM_TYPE STREQUAL "progress")
-	message("")
-	file(REMOVE_RECURSE ${CMAKE_CURRENT_SOURCE_DIR}/src/server/scripts/custom/custom_script_loader.cpp)		
-	file(COPY
-	${CMAKE_CURRENT_SOURCE_DIR}/realmsetup/progress/src/custom_script_loader.cpp 
-	DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/server/scripts/custom/)
-	
-	file(REMOVE_RECURSE ${CMAKE_CURRENT_BINARY_DIR}/sql/custom/world)
-	file(COPY
-	${CMAKE_CURRENT_SOURCE_DIR}/realmsetup/progress/sql/world/ 
-	DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/sql/custom/world/)
-endif()
-
-if(REALM_TYPE STREQUAL "normal")
-	file(REMOVE_RECURSE ${CMAKE_CURRENT_BINARY_DIR}/sql/custom/world)
-	file(COPY
-	${CMAKE_CURRENT_SOURCE_DIR}/realmsetup/normal/sql/world/ 
-	DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/sql/custom/world/)
-	
-	file(REMOVE_RECURSE ${CMAKE_CURRENT_SOURCE_DIR}/src/server/scripts/custom/custom_script_loader.cpp)
-	file(COPY
-	${CMAKE_CURRENT_SOURCE_DIR}/realmsetup/normal/src/custom_script_loader.cpp
-	DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/server/scripts/custom/)
-	
-	
-endif()	
-
-if(REALM_TYPE STREQUAL "fun")
-
-	file(REMOVE_RECURSE ${CMAKE_CURRENT_BINARY_DIR}/sql/custom/world)
-	file(COPY
-	${CMAKE_CURRENT_SOURCE_DIR}/realmsetup/fun/sql/world/ 
-	DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/sql/custom/world/)
-	
-	file(REMOVE_RECURSE ${CMAKE_CURRENT_SOURCE_DIR}/src/server/scripts/custom/custom_script_loader.cpp)
-	file(COPY
-	${CMAKE_CURRENT_SOURCE_DIR}/realmsetup/fun/src/custom_script_loader.cpp
-	DESTINATION ${CMAKE_CURRENT_SOURCE_DIR}/src/server/scripts/custom/)
-endif()	
 
 message("")
