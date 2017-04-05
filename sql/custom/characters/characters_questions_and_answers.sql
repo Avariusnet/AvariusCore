@@ -14,6 +14,6 @@ DELETE FROM `player_questions_and_answers` WHERE `id` BETWEEN 0 AND 10;
   
 INSERT INTO `player_questions_and_answers` (`id`, `frage`, `antwort`, `belohnung`, `anzahl`, `insertdate`, `creatorname`,`creatorid`) 
 VALUES 
-('1', 'Was ist Todesschwinge?', 'Drache', '38186', '2' , '0000-00-00 00:00:00', 'AvariusCore', '0'),
-('2', 'Wer ist der Gruender des Wandervolkes?', 'Exitare', '38186', '2', '0000-00-00 00:00:00' , 'AvariusCore', '0'),
-('3', 'Welchen ehemaligen Nachtelf schlug Arthas auf Nordend?', 'Illidan', '38186', '2', '0000-00-00 00:00:00', 'AvariusCore', '0');
+('1', 'Was ist Todesschwinge?', 'Drache', '38186', '2' , '1970-01-01 01:01:01', 'AvariusCore', '0'),
+('2', 'Wer ist der Gruender des Wandervolkes?', 'Exitare', '38186', '2', '1970-01-01 01:01:01' , 'AvariusCore', '0'),
+('3', 'Welchen ehemaligen Nachtelf schlug Arthas auf Nordend?', 'Illidan', '38186', '2', '1970-01-01 01:01:01', 'AvariusCore', '0');
