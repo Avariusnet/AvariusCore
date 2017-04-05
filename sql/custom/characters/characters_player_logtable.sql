@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS `player_log` (
   `accountname` VARCHAR(45) NULL,
   `accountid` INT NULL,
   `action_done` VARCHAR(90) NULL,
-  `actiondate` timestamp NOT NULL DEFAULT '1970-01-01 00:00:00',
+  `actiondate` timestamp NOT NULL DEFAULT '1970-01-01 01:01:01',
   PRIMARY KEY (`id`));

@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS `player_questions_and_answers` (
   `antwort` VARCHAR(45) NOT NULL COMMENT '',
   `belohnung` INT NOT NULL COMMENT '',
   `anzahl` INT NOT NULL COMMENT '',
-  `insertdate` timestamp NOT NULL DEFAULT '1970-01-01 00:00:00',
+  `insertdate` timestamp NOT NULL DEFAULT '1970-01-01 01:01:01',
   `creatorname` VARCHAR(45) NOT NULL COMMENT '',
   `creatorid` INT NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '');
