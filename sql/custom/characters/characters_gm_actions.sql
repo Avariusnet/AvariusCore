@@ -5,5 +5,5 @@ CREATE TABLE IF NOT EXISTS `gm_actions` (
   `accountname` VARCHAR(45) NULL,
   `accountID` INT NULL,
   `action_done` VARCHAR(250) NULL,
-  `action_timestamp` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `action_timestamp` timestamp NOT NULL DEFAULT '1970-01-01 00:00:00',
   PRIMARY KEY (`id`));

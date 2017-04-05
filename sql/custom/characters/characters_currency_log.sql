@@ -7,6 +7,6 @@ CREATE TABLE IF NOT EXISTS `player_vip_currencylog` (
   `currencyitemid` INT NULL,
   `amount` INT NULL,
   `amountcost` INT NULL,
-  `buydate` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `buydate` timestamp NOT NULL DEFAULT '1970-01-01 00:00:00',
   `buy_action` VARCHAR(45) NULL,
   PRIMARY KEY (`id`));
