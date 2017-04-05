@@ -19,7 +19,7 @@ public:
 	{
 		EventstarterAI(Creature* creature) : ScriptedAI(creature) {}
 
-		void UpdateAI(uint32 diff) override
+		void UpdateAI(uint32 /*diff*/) override
 		{
 			if (endevent)
 			{
