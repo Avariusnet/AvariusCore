@@ -115,7 +115,7 @@ public:
 		{
 			
 
-			if (type == 1 && data == 1)
+			if (type == (uint32)1 && data == (uint32)1)
 				Events.ScheduleEvent(1, 15000);
 			for (int i = 2; i < 16; i++)
 			{
