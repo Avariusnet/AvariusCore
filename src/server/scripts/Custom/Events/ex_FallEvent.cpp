@@ -114,15 +114,19 @@ public:
 		void SetData(uint32 type, uint32 data) override
 		{
 			
+			uint32 comparevalue1 = 1;
+			uint32 comparevalue2 = 2;
+			uint32 comparevalue16 = 16;
 
-			if (type == (uint32)1 && data == (uint32)1)
+			if (type == comparevalue1 && data == comparevalue1)
 				Events.ScheduleEvent(1, 15000);
-			for (int i = 2; i < 16; i++)
+
+			for (uint32 i = comparevalue2; i < comparevalue16; i++)
 			{
 
-				if (type == 1 && data == i)
+				if (type == comparevalue1 && data == i)
 				{
-					if (i == 2)
+					if (i == comparevalue2)
 						timer = 25000;
 					else
 						timer += 10000;
@@ -130,7 +134,7 @@ public:
 				}
 			}
 			
-			if (type==1 && data == 16)
+			if (type== comparevalue1 && data == comparevalue16)
 				Events.ScheduleEvent(2, 185000);
 		}
 
