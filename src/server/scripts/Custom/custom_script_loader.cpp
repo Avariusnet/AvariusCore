@@ -128,8 +128,6 @@ void AddSC_AutobroadCast();
 //Acountwide Achievements
 void AddSC_accountachievement();
 
-//fallevent
-void AddSC_FallEvent();
 
 //Testscruot
 void AddSC_testscript();
@@ -137,8 +135,7 @@ void AddSC_testscript();
 void AddCustomScripts()
 {
 	
-	//fallevent
-	AddSC_FallEvent();
+	
 
 	AddSC_testscript();
 	//Accountwide Achievements
