@@ -23,11 +23,11 @@
 
 enum CharacterDatabaseStatements
 {
-	/*  Naming standard for defines:
-		{DB}_{SEL/INS/UPD/DEL/REP}_{Summary of data changed}
-		When updating more than one field, consider looking at the calling function
-		name for a suiting suffix.
-	*/
+    /*  Naming standard for defines:
+        {DB}_{SEL/INS/UPD/DEL/REP}_{Summary of data changed}
+        When updating more than one field, consider looking at the calling function
+        name for a suiting suffix.
+    */
 
 	/* Exi Custom */
 	CHAR_SEL_UNIX_TIMESTAMP,
@@ -44,7 +44,7 @@ enum CharacterDatabaseStatements
 	CHAR_SEL_TRANSLATION_SPANISH1,
 	CHAR_SEL_TRANSLATION_SPANISH2,
 	CHAR_SEL_TRANSLATION_RUSSIAN,
-	
+
 
 	//QuestionAnswer System
 	CHAR_INS_PLAYER_ALREADY_ANSWERED_QUESTIONS,
@@ -123,6 +123,7 @@ enum CharacterDatabaseStatements
 	CHAR_INS_GM_ACTIONS_COUPON_DETAILS,
 
 	/*CUSTOM ENDE */
+
 
     CHAR_DEL_QUEST_POOL_SAVE,
     CHAR_INS_QUEST_POOL_SAVE,
@@ -360,7 +361,6 @@ enum CharacterDatabaseStatements
     CHAR_REP_CREATURE_RESPAWN,
     CHAR_DEL_CREATURE_RESPAWN,
     CHAR_DEL_CREATURE_RESPAWN_BY_INSTANCE,
-    CHAR_SEL_MAX_CREATURE_RESPAWNS,
 
     CHAR_SEL_GO_RESPAWNS,
     CHAR_REP_GO_RESPAWN,
@@ -412,6 +412,8 @@ enum CharacterDatabaseStatements
     CHAR_DEL_GROUP_INSTANCE_BY_GUID,
     CHAR_REP_GROUP_INSTANCE,
     CHAR_UPD_INSTANCE_RESETTIME,
+    CHAR_INS_GLOBAL_INSTANCE_RESETTIME,
+    CHAR_DEL_GLOBAL_INSTANCE_RESETTIME,
     CHAR_UPD_GLOBAL_INSTANCE_RESETTIME,
     CHAR_UPD_CHAR_ONLINE,
     CHAR_UPD_CHAR_NAME_AT_LOGIN,
@@ -638,8 +640,5 @@ public:
 };
 
 typedef DatabaseWorkerPool<CharacterDatabaseConnection> CharacterDatabaseWorkerPool;
-
-
-
 
 #endif

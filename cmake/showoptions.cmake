@@ -1,8 +1,8 @@
 # output generic information about the core and buildtype chosen
 message("")
-message("* AvariusCore : ${rev_hash} ${rev_date} (${rev_branch} branch)")
+message("* TrinityCore revision   : ${rev_hash} ${rev_date} (${rev_branch} branch)")
 if( UNIX )
-  message("* AvariusCore buildtype  : ${CMAKE_BUILD_TYPE}")
+  message("* TrinityCore buildtype  : ${CMAKE_BUILD_TYPE}")
 endif()
 message("")
 
@@ -27,6 +27,15 @@ if(SCRIPTS AND (NOT SCRIPTS STREQUAL "none"))
   message("* Build with scripts     : Yes (${SCRIPTS})")
 else()
   message("* Build with scripts     : No")
+endif()
+
+if( ELUNA )
+  message("* Build Eluna LuaEngine  : Yes (default)")
+  add_definitions(-DELUNA)
+  add_definitions(-DTRINITY)
+  add_definitions(-DWOTLK)
+else()
+  message("* Build Eluna LuaEngine  : No")
 endif()
 
 if( TOOLS )
@@ -125,7 +134,5 @@ if (BUILD_SHARED_LIBS)
 
   WarnAboutSpacesInBuildPath()
 endif()
-
-
 
 message("")

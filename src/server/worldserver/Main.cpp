@@ -66,8 +66,8 @@ namespace fs = boost::filesystem;
 #ifdef _WIN32
 #include "ServiceWin32.h"
 char serviceName[] = "worldserver";
-char serviceLongName[] = "AvariusCore world service";
-char serviceDescription[] = "AvariusCore World of Warcraft emulator world service";
+char serviceLongName[] = "TrinityCore world service";
+char serviceDescription[] = "TrinityCore World of Warcraft emulator world service";
 /*
  * -1 - not in service mode
  *  0 - stopped
@@ -523,10 +523,10 @@ bool StartDB()
 
     // Load databases
     DatabaseLoader loader("server.worldserver", DatabaseLoader::DATABASE_NONE);
-	loader
-		.AddDatabase(LoginDatabase, "Login")
-		.AddDatabase(CharacterDatabase, "Character")
-		.AddDatabase(WorldDatabase, "World");
+    loader
+        .AddDatabase(LoginDatabase, "Login")
+        .AddDatabase(CharacterDatabase, "Character")
+        .AddDatabase(WorldDatabase, "World");
 
     if (!loader.Load())
         return false;

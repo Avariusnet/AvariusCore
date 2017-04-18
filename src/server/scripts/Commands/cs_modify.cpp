@@ -29,7 +29,7 @@ EndScriptData */
 #include "Player.h"
 #include "ReputationMgr.h"
 #include "ScriptMgr.h"
-#include "Custom/Logic/CustomGMLogic.h"
+
 
 class modify_commandscript : public CommandScript
 {
@@ -755,14 +755,6 @@ public:
     //Edit Player money
     static bool HandleModifyMoneyCommand(ChatHandler* handler, const char* args)
     {
-
-		CustomGMLogic * GMLogic = 0;
-
-		if (handler->GetSession()->GetSecurity() != 3) {
-			GMLogic->addCompleteGMCountLogic(handler->GetSession()->GetPlayer(), "Tries to execute money command!");
-			return true;
-		}
-
         if (!*args)
             return false;
 
@@ -1098,13 +1090,6 @@ public:
 
     static bool HandleModifyGenderCommand(ChatHandler* handler, const char* args)
     {
-
-		CustomGMLogic * GMLogic = 0;
-
-		if (handler->GetSession()->GetSecurity() != 3) {
-			GMLogic->addCompleteGMCountLogic(handler->GetSession()->GetPlayer(), "Tries to execute gender command!");
-			return true;
-		}
         if (!*args)
             return false;
 
@@ -1166,13 +1151,6 @@ public:
 //demorph player or unit
     static bool HandleDeMorphCommand(ChatHandler* handler, const char* /*args*/)
     {
-		CustomGMLogic * GMLogic = 0;
-
-		if (handler->GetSession()->GetSecurity() != 3) {
-			GMLogic->addCompleteGMCountLogic(handler->GetSession()->GetPlayer(), "Tries to execute morph command!");
-			return true;
-		}
-
         Unit* target = handler->getSelectedUnit();
         if (!target)
             target = handler->GetSession()->GetPlayer();
@@ -1189,13 +1167,6 @@ public:
     // mod xp command
     static bool HandleModifyXPCommand(ChatHandler *handler, const char* args)
     {
-
-		CustomGMLogic * GMLogic = 0;
-
-		if (handler->GetSession()->GetSecurity() != 3) {
-			GMLogic->addCompleteGMCountLogic(handler->GetSession()->GetPlayer(), "Tries to execute mod xp command!");
-			return true;
-		}
         if (!*args)
             return false;
 
