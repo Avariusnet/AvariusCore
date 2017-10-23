@@ -1,6 +1,10 @@
 # ![logo](http://exitare.de/avariuslogo.png) AvariusCore
 
 
+# IMPORTANT NOTICE
+
+AVARIUSCORE is deprecated. The actual Project is AvariusCore2.0
+
 ## Build Status
 
 master | dev
