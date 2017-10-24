@@ -1,6 +1,8 @@
 # ![logo](http://exitare.de/avariuslogo.png) AvariusCore
 
 
+## NEW PROJECT AVARIUSCORE2.0 (https://github.com/AvariusProject/AvariusCore-2.0)
+
 ## Build Status
 
 master | dev
