@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -24,10 +23,14 @@ SDCategory: Blackfathom Deeps
 EndScriptData */
 
 #include "ScriptMgr.h"
-#include "InstanceScript.h"
 #include "blackfathom_deeps.h"
+#include "Creature.h"
+#include "GameObject.h"
+#include "InstanceScript.h"
+#include "Map.h"
+#include "Random.h"
 
-const Position LorgusPosition[4] =
+Position const LorgusPosition[4] =
 {
     { -458.500610f, -38.343079f, -33.474445f, 0.0f },
     { -469.423615f, -88.400513f, -39.265102f, 0.0f },
@@ -35,7 +38,7 @@ const Position LorgusPosition[4] =
     { -759.640564f,  16.658913f, -29.159529f, 0.0f }
 };
 
-const Position SpawnsLocation[] =
+Position const SpawnsLocation[] =
 {
     {-775.431f, -153.853f, -25.871f, 3.207f},
     {-775.404f, -174.132f, -25.871f, 3.185f},
@@ -47,7 +50,7 @@ const Position SpawnsLocation[] =
 class instance_blackfathom_deeps : public InstanceMapScript
 {
 public:
-    instance_blackfathom_deeps() : InstanceMapScript("instance_blackfathom_deeps", 48) { }
+    instance_blackfathom_deeps() : InstanceMapScript(BFDScriptName, 48) { }
 
     InstanceScript* GetInstanceScript(InstanceMap* map) const override
     {

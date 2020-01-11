@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2006-2007 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -24,9 +23,12 @@ SDCategory: Zul'Aman
 EndScriptData */
 
 #include "ScriptMgr.h"
+#include "InstanceScript.h"
+#include "MotionMaster.h"
+#include "ObjectAccessor.h"
 #include "ScriptedCreature.h"
 #include "SpellScript.h"
-#include "SpellAuraEffects.h"
+#include "TemporarySummon.h"
 #include "zulaman.h"
 
 enum Yells
@@ -220,7 +222,7 @@ struct boss_hexlord_addAI : public ScriptedAI
 
     void Reset() override { }
 
-    void EnterCombat(Unit* /*who*/) override
+    void JustEngagedWith(Unit* /*who*/) override
     {
         DoZoneInCombat();
     }
@@ -288,9 +290,9 @@ class boss_hexlord_malacrass : public CreatureScript
                 me->SetByteValue(UNIT_FIELD_BYTES_2, 0, SHEATH_STATE_MELEE);
             }
 
-            void EnterCombat(Unit* /*who*/) override
+            void JustEngagedWith(Unit* /*who*/) override
             {
-                _EnterCombat();
+                _JustEngagedWith();
                 Talk(YELL_AGGRO);
 
                 for (uint8 i = 0; i < 4; ++i)
@@ -328,14 +330,14 @@ class boss_hexlord_malacrass : public CreatureScript
                 {
                     Unit* Temp = ObjectAccessor::GetUnit(*me, AddGUID[i]);
                     if (Temp && Temp->IsAlive())
-                        Temp->DealDamage(Temp, Temp->GetHealth(), NULL, DIRECT_DAMAGE, SPELL_SCHOOL_MASK_NORMAL, NULL, false);
+                        Temp->KillSelf();
                 }
             }
 
             void SelectAddEntry()
             {
                 std::list<uint32> addList(&AddEntryList[0], &AddEntryList[AddCount]);
-                Trinity::Containers::RandomResizeList(addList, 4);
+                Trinity::Containers::RandomResize(addList, 4);
 
                 uint8 i = 0;
                 for (auto itr = addList.begin(); itr != addList.end(); ++itr, ++i)
@@ -358,7 +360,7 @@ class boss_hexlord_malacrass : public CreatureScript
                     else
                     {
                         creature->AI()->EnterEvadeMode();
-                        creature->SetPosition(Pos_X[i], POS_Y, POS_Z, ORIENT);
+                        creature->UpdatePosition(Pos_X[i], POS_Y, POS_Z, ORIENT);
                         creature->StopMoving();
                     }
                 }
@@ -440,7 +442,7 @@ class boss_hexlord_malacrass : public CreatureScript
 
                         PlayerGUID = target->GetGUID();
                         PlayerAbility_Timer = urand(8000, 10000);
-                        PlayerClass = target->getClass() - 1;
+                        PlayerClass = target->GetClass() - 1;
 
                         if (PlayerClass == CLASS_DRUID - 1)
                             PlayerClass = CLASS_DRUID;
@@ -471,7 +473,7 @@ class boss_hexlord_malacrass : public CreatureScript
             void UseAbility()
             {
                 uint8 random = urand(0, 2);
-                Unit* target = NULL;
+                Unit* target = nullptr;
                 switch (PlayerAbility[PlayerClass][random].target)
                 {
                     case ABILITY_TARGET_SELF:
@@ -611,7 +613,7 @@ class boss_alyson_antille : public CreatureScript
                     if (me->Attack(who, false))
                     {
                         me->GetMotionMaster()->MoveChase(who, 20);
-                        me->AddThreat(who, 0.0f);
+                        AddThreat(who, 0.0f);
                     }
                 }
             }
@@ -871,7 +873,7 @@ class boss_slither : public CreatureScript
                     if (me->Attack(who, false))
                     {
                         me->GetMotionMaster()->MoveChase(who, 20);
-                        me->AddThreat(who, 0.0f);
+                        AddThreat(who, 0.0f);
                     }
                 }
             }
@@ -1015,15 +1017,13 @@ class spell_hexlord_unstable_affliction : public SpellScriptLoader
 
             bool Validate(SpellInfo const* /*spell*/) override
             {
-                if (!sSpellMgr->GetSpellInfo(SPELL_WL_UNSTABLE_AFFL_DISPEL))
-                    return false;
-                return true;
+                return ValidateSpellInfo({ SPELL_WL_UNSTABLE_AFFL_DISPEL });
             }
 
             void HandleDispel(DispelInfo* dispelInfo)
             {
                 if (Unit* caster = GetCaster())
-                    caster->CastSpell(dispelInfo->GetDispeller(), SPELL_WL_UNSTABLE_AFFL_DISPEL, true, NULL, GetEffect(EFFECT_0));
+                    caster->CastSpell(dispelInfo->GetDispeller(), SPELL_WL_UNSTABLE_AFFL_DISPEL, GetEffect(EFFECT_0));
             }
 
             void Register() override
@@ -1051,4 +1051,3 @@ void AddSC_boss_hex_lord_malacrass()
     new boss_alyson_antille();
     new spell_hexlord_unstable_affliction();
 }
-

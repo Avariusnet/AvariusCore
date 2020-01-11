@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -19,6 +18,9 @@
 #ifndef DEF_TOC_H
 #define DEF_TOC_H
 
+#include "CreatureAIImpl.h"
+
+#define ToCScriptName "instance_trial_of_the_champion"
 #define DataHeader "TC"
 
 enum TCData
@@ -126,5 +128,11 @@ enum TCVehicles
 
     VEHICLE_BLACK_KNIGHT                            = 35491
 };
+
+template <class AI, class T>
+inline AI* GetTrialOfTheChampionAI(T* obj)
+{
+    return GetInstanceAI<AI>(obj, ToCScriptName);
+}
 
 #endif

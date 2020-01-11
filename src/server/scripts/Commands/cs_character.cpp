@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -22,14 +22,20 @@ Comment: All character related commands
 Category: commandscripts
 EndScriptData */
 
+#include "ScriptMgr.h"
 #include "AccountMgr.h"
 #include "CharacterCache.h"
 #include "Chat.h"
+#include "DatabaseEnv.h"
+#include "DBCStores.h"
+#include "Log.h"
+#include "ObjectAccessor.h"
 #include "ObjectMgr.h"
-#include "PlayerDump.h"
 #include "Player.h"
+#include "PlayerDump.h"
 #include "ReputationMgr.h"
-#include "ScriptMgr.h"
+#include "World.h"
+#include "WorldSession.h"
 
 class character_commandscript : public CommandScript
 {
@@ -57,7 +63,7 @@ public:
             { "changefaction", rbac::RBAC_PERM_COMMAND_CHARACTER_CHANGEFACTION,   true,  &HandleCharacterChangeFactionCommand,  "", },
             { "changerace",    rbac::RBAC_PERM_COMMAND_CHARACTER_CHANGERACE,      true,  &HandleCharacterChangeRaceCommand,     "", },
             { "changeaccount", rbac::RBAC_PERM_COMMAND_CHARACTER_CHANGEACCOUNT,   true,  &HandleCharacterChangeAccountCommand,  "", },
-            { "deleted",       rbac::RBAC_PERM_COMMAND_CHARACTER_DELETED,         true,  NULL,                                  "", characterDeletedCommandTable },
+            { "deleted",       rbac::RBAC_PERM_COMMAND_CHARACTER_DELETED,         true,  nullptr,                                  "", characterDeletedCommandTable },
             { "erase",         rbac::RBAC_PERM_COMMAND_CHARACTER_ERASE,           true,  &HandleCharacterEraseCommand,          "", },
             { "level",         rbac::RBAC_PERM_COMMAND_CHARACTER_LEVEL,           true,  &HandleCharacterLevelCommand,          "", },
             { "rename",        rbac::RBAC_PERM_COMMAND_CHARACTER_RENAME,          true,  &HandleCharacterRenameCommand,         "", },
@@ -67,9 +73,9 @@ public:
 
         static std::vector<ChatCommand> commandTable =
         {
-            { "character",     rbac::RBAC_PERM_COMMAND_CHARACTER,                 true,  NULL,                                  "", characterCommandTable },
+            { "character",     rbac::RBAC_PERM_COMMAND_CHARACTER,                 true,  nullptr,                                  "", characterCommandTable },
             { "levelup",       rbac::RBAC_PERM_COMMAND_LEVELUP,                   false, &HandleLevelUpCommand,                 "" },
-            { "pdump",         rbac::RBAC_PERM_COMMAND_PDUMP,                     true,  NULL,                                  "", pdumpCommandTable },
+            { "pdump",         rbac::RBAC_PERM_COMMAND_PDUMP,                     true,  nullptr,                                  "", pdumpCommandTable },
         };
         return commandTable;
     }
@@ -233,7 +239,7 @@ public:
         {
             player->GiveLevel(newLevel);
             player->InitTalentForLevel();
-            player->SetUInt32Value(PLAYER_XP, 0);
+            player->SetXP(0);
 
             if (handler->needReportToTarget(player))
             {
@@ -275,7 +281,7 @@ public:
 
             if (titleInfo && target->HasTitle(titleInfo))
             {
-                std::string name = target->getGender() == GENDER_MALE ? titleInfo->nameMale[loc] : titleInfo->nameFemale[loc];
+                std::string name = target->GetNativeGender() == GENDER_MALE ? titleInfo->nameMale[loc] : titleInfo->nameFemale[loc];
                 if (name.empty())
                     continue;
 
@@ -306,7 +312,7 @@ public:
         if (!handler->extractPlayerTarget((char*)args, &target, &targetGuid, &targetName))
             return false;
 
-        char const* newNameStr = strtok(NULL, " ");
+        char const* newNameStr = strtok(nullptr, " ");
 
         if (newNameStr)
         {
@@ -324,7 +330,7 @@ public:
             else
             {
                 // check offline security
-                if (handler->HasLowerSecurity(NULL, targetGuid))
+                if (handler->HasLowerSecurity(nullptr, targetGuid))
                     return false;
 
                 sCharacterCache->GetCharacterNameByGuid(targetGuid, playerOldName);
@@ -410,7 +416,7 @@ public:
             else
             {
                 // check offline security
-                if (handler->HasLowerSecurity(NULL, targetGuid))
+                if (handler->HasLowerSecurity(nullptr, targetGuid))
                     return false;
 
                 std::string oldNameLink = handler->playerLink(targetName);
@@ -447,7 +453,7 @@ public:
         if (!handler->extractPlayerTarget(nameStr, &target, &targetGuid, &targetName))
             return false;
 
-        int32 oldlevel = target ? target->getLevel() : sCharacterCache->GetCharacterLevelByGuid(targetGuid);
+        int32 oldlevel = target ? target->GetLevel() : sCharacterCache->GetCharacterLevelByGuid(targetGuid);
         int32 newlevel = levelStr ? atoi(levelStr) : oldlevel;
 
         if (newlevel < 1)
@@ -892,7 +898,7 @@ public:
         if (levelStr && isalpha(levelStr[0]))
         {
             nameStr = levelStr;
-            levelStr = NULL;                                    // current level will be used
+            levelStr = nullptr;                                    // current level will be used
         }
 
         Player* target;
@@ -901,7 +907,7 @@ public:
         if (!handler->extractPlayerTarget(nameStr, &target, &targetGuid, &targetName))
             return false;
 
-        int32 oldlevel = target ? target->getLevel() : sCharacterCache->GetCharacterLevelByGuid(targetGuid);
+        int32 oldlevel = target ? target->GetLevel() : sCharacterCache->GetCharacterLevelByGuid(targetGuid);
         int32 addlevel = levelStr ? atoi(levelStr) : 1;
         int32 newlevel = oldlevel + addlevel;
 
@@ -931,7 +937,7 @@ public:
         if (!fileStr)
             return false;
 
-        char* accountStr = strtok(NULL, " ");
+        char* accountStr = strtok(nullptr, " ");
         if (!accountStr)
             return false;
 
@@ -962,8 +968,8 @@ public:
             return false;
         }
 
-        char* guidStr = NULL;
-        char* nameStr = strtok(NULL, " ");
+        char* guidStr = nullptr;
+        char* nameStr = strtok(nullptr, " ");
 
         std::string name;
         if (nameStr)
@@ -984,7 +990,7 @@ public:
                 return false;
             }
 
-            guidStr = strtok(NULL, " ");
+            guidStr = strtok(nullptr, " ");
         }
 
         ObjectGuid::LowType guid = 0;
@@ -1039,7 +1045,7 @@ public:
             return false;
 
         char* fileStr = strtok((char*)args, " ");
-        char* playerStr = strtok(NULL, " ");
+        char* playerStr = strtok(nullptr, " ");
 
         if (!fileStr || !playerStr)
             return false;

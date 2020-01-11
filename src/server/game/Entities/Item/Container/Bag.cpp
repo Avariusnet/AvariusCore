@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -98,7 +97,7 @@ bool Bag::Create(ObjectGuid::LowType guidlow, uint32 itemid, Player const* owner
     for (uint8 i = 0; i < MAX_BAG_SIZE; ++i)
     {
         SetGuidValue(CONTAINER_FIELD_SLOT_1 + (i*2), ObjectGuid::Empty);
-        m_bagslot[i] = NULL;
+        m_bagslot[i] = nullptr;
     }
 
     return true;
@@ -121,7 +120,7 @@ bool Bag::LoadFromDB(ObjectGuid::LowType guid, ObjectGuid owner_guid, Field* fie
     {
         SetGuidValue(CONTAINER_FIELD_SLOT_1 + (i * 2), ObjectGuid::Empty);
         delete m_bagslot[i];
-        m_bagslot[i] = NULL;
+        m_bagslot[i] = nullptr;
     }
 
     return true;
@@ -151,9 +150,9 @@ void Bag::RemoveItem(uint8 slot, bool /*update*/)
     ASSERT(slot < MAX_BAG_SIZE);
 
     if (m_bagslot[slot])
-        m_bagslot[slot]->SetContainer(NULL);
+        m_bagslot[slot]->SetContainer(nullptr);
 
-    m_bagslot[slot] = NULL;
+    m_bagslot[slot] = nullptr;
     SetGuidValue(CONTAINER_FIELD_SLOT_1 + (slot * 2), ObjectGuid::Empty);
 }
 
@@ -161,7 +160,7 @@ void Bag::StoreItem(uint8 slot, Item* pItem, bool /*update*/)
 {
     ASSERT(slot < MAX_BAG_SIZE);
 
-    if (pItem && pItem->GetGUID() != this->GetGUID())
+    if (pItem && pItem->GetGUID() != GetGUID())
     {
         m_bagslot[slot] = pItem;
         SetGuidValue(CONTAINER_FIELD_SLOT_1 + (slot * 2), pItem->GetGUID());
@@ -243,6 +242,12 @@ Item* Bag::GetItemByPos(uint8 slot) const
     if (slot < GetBagSize())
         return m_bagslot[slot];
 
-    return NULL;
+    return nullptr;
 }
 
+std::string Bag::GetDebugInfo() const
+{
+    std::stringstream sstr;
+    sstr << Item::GetDebugInfo();
+    return sstr.str();
+}

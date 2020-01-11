@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -29,10 +28,10 @@ npc_ringo
 EndContentData */
 
 #include "ScriptMgr.h"
-#include "ScriptedCreature.h"
+#include "ObjectAccessor.h"
+#include "Player.h"
 #include "ScriptedEscortAI.h"
 #include "ScriptedFollowerAI.h"
-#include "Player.h"
 #include "SpellInfo.h"
 
 enum AmeData
@@ -57,27 +56,9 @@ class npc_ame : public CreatureScript
 public:
     npc_ame() : CreatureScript("npc_ame") { }
 
-    bool OnQuestAccept(Player* player, Creature* creature, Quest const* quest) override
+    struct npc_ameAI : public EscortAI
     {
-        if (quest->GetQuestId() == QUEST_CHASING_AME)
-        {
-            ENSURE_AI(npc_escortAI, (creature->AI()))->Start(false, false, player->GetGUID());
-            creature->AI()->Talk(SAY_READY, player);
-            creature->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
-            // Change faction so mobs attack
-            creature->setFaction(113);
-        }
-        return true;
-    }
-
-    CreatureAI* GetAI(Creature* creature) const override
-    {
-        return new npc_ameAI(creature);
-    }
-
-    struct npc_ameAI : public npc_escortAI
-    {
-        npc_ameAI(Creature* creature) : npc_escortAI(creature)
+        npc_ameAI(Creature* creature) : EscortAI(creature)
         {
             Initialize();
         }
@@ -89,7 +70,7 @@ public:
 
         uint32 DemoralizingShoutTimer;
 
-        void WaypointReached(uint32 waypointId) override
+        void WaypointReached(uint32 waypointId, uint32 /*pathId*/) override
         {
             if (Player* player = GetPlayerForEscort())
             {
@@ -136,7 +117,7 @@ public:
 
         void UpdateAI(uint32 diff) override
         {
-            npc_escortAI::UpdateAI(diff);
+            EscortAI::UpdateAI(diff);
             if (!UpdateVictim())
                 return;
 
@@ -146,7 +127,24 @@ public:
                 DemoralizingShoutTimer = 70000;
             } else DemoralizingShoutTimer -= diff;
         }
+
+        void QuestAccept(Player* player, Quest const* quest) override
+        {
+            if (quest->GetQuestId() == QUEST_CHASING_AME)
+            {
+                Start(false, false, player->GetGUID());
+                Talk(SAY_READY, player);
+                me->SetUInt32Value(UNIT_FIELD_BYTES_1, 0);
+                // Change faction so mobs attack
+                me->SetFaction(FACTION_ESCORTEE_N_NEUTRAL_PASSIVE);
+            }
+        }
     };
+
+    CreatureAI* GetAI(Creature* creature) const override
+    {
+        return new npc_ameAI(creature);
+    }
 };
 
 /*####
@@ -172,33 +170,13 @@ enum Ringo
 
     SPELL_REVIVE_RINGO          = 15591,
     QUEST_A_LITTLE_HELP         = 4491,
-    NPC_SPRAGGLE                = 9997,
-    FACTION_ESCORTEE            = 113
+    NPC_SPRAGGLE                = 9997
 };
 
 class npc_ringo : public CreatureScript
 {
 public:
     npc_ringo() : CreatureScript("npc_ringo") { }
-
-    bool OnQuestAccept(Player* player, Creature* creature, const Quest* quest) override
-    {
-        if (quest->GetQuestId() == QUEST_A_LITTLE_HELP)
-        {
-            if (npc_ringoAI* ringoAI = CAST_AI(npc_ringo::npc_ringoAI, creature->AI()))
-            {
-                creature->SetStandState(UNIT_STAND_STATE_STAND);
-                ringoAI->StartFollow(player, FACTION_ESCORTEE, quest);
-            }
-        }
-
-        return true;
-    }
-
-    CreatureAI* GetAI(Creature* creature) const override
-    {
-        return new npc_ringoAI(creature);
-    }
 
     struct npc_ringoAI : public FollowerAI
     {
@@ -247,7 +225,7 @@ public:
             }
         }
 
-        void SpellHit(Unit* /*pCaster*/, const SpellInfo* pSpell) override
+        void SpellHit(Unit* /*pCaster*/, SpellInfo const* pSpell) override
         {
             if (HasFollowState(STATE_FOLLOW_INPROGRESS | STATE_FOLLOW_PAUSED) && pSpell->Id == SPELL_REVIVE_RINGO)
                 ClearFaint();
@@ -355,7 +333,21 @@ public:
 
             DoMeleeAttackIfReady();
         }
+
+        void QuestAccept(Player* player, Quest const* quest) override
+        {
+            if (quest->GetQuestId() == QUEST_A_LITTLE_HELP)
+            {
+                me->SetStandState(UNIT_STAND_STATE_STAND);
+                StartFollow(player, FACTION_ESCORTEE_N_NEUTRAL_PASSIVE, QUEST_A_LITTLE_HELP);
+            }
+        }
     };
+
+    CreatureAI* GetAI(Creature* creature) const override
+    {
+        return new npc_ringoAI(creature);
+    }
 };
 
 void AddSC_ungoro_crater()

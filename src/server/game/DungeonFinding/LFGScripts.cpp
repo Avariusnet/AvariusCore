@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -19,14 +19,16 @@
  * Interaction between core and LFGScripts
  */
 
-#include "Common.h"
-#include "SharedDefines.h"
-#include "Player.h"
-#include "Group.h"
 #include "LFGScripts.h"
+#include "Common.h"
+#include "Group.h"
 #include "LFGMgr.h"
-#include "ScriptMgr.h"
+#include "Log.h"
+#include "Map.h"
+#include "Player.h"
 #include "ObjectAccessor.h"
+#include "ScriptMgr.h"
+#include "SharedDefines.h"
 #include "WorldSession.h"
 
 namespace lfg
@@ -93,7 +95,7 @@ void LFGPlayerScript::OnMapChanged(Player* player)
             return;
         }
 
-        for (GroupReference* itr = group->GetFirstMember(); itr != NULL; itr = itr->next())
+        for (GroupReference* itr = group->GetFirstMember(); itr != nullptr; itr = itr->next())
             if (Player* member = itr->GetSource())
                 player->GetSession()->SendNameQueryOpcode(member->GetGUID());
 
@@ -187,6 +189,8 @@ void LFGGroupScript::OnRemoveMember(Group* group, ObjectGuid guid, RemoveMethod 
         if (method == GROUP_REMOVEMETHOD_LEAVE && state == LFG_STATE_DUNGEON &&
             players >= LFG_GROUP_KICK_VOTES_NEEDED)
             player->CastSpell(player, LFG_SPELL_DUNGEON_DESERTER, true);
+        else if (method == GROUP_REMOVEMETHOD_KICK_LFG)
+            player->RemoveAurasDueToSpell(LFG_SPELL_DUNGEON_COOLDOWN);
         //else if (state == LFG_STATE_BOOT)
             // Update internal kick cooldown of kicked
 

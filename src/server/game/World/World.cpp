@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -21,14 +20,16 @@
 */
 
 #include "World.h"
+#include "AccountMgr.h"
 #include "AchievementMgr.h"
+#include "AddonMgr.h"
 #include "ArenaTeamMgr.h"
 #include "AuctionHouseBot.h"
 #include "AuctionHouseMgr.h"
 #include "BattlefieldMgr.h"
 #include "BattlegroundMgr.h"
 #include "CalendarMgr.h"
-#include "Channel.h"
+#include "ChannelMgr.h"
 #include "CharacterCache.h"
 #include "CharacterDatabaseCleaner.h"
 #include "Chat.h"
@@ -40,41 +41,53 @@
 #include "DisableMgr.h"
 #include "GameEventMgr.h"
 #include "GameObjectModel.h"
+#include "GameTime.h"
 #include "GitRevision.h"
 #include "GridNotifiersImpl.h"
 #include "GroupMgr.h"
 #include "GuildMgr.h"
 #include "InstanceSaveMgr.h"
+#include "IPLocation.h"
 #include "Language.h"
 #include "LFGMgr.h"
+#include "Log.h"
 #include "LootItemStorage.h"
+#include "LootMgr.h"
+#include "M2Stores.h"
 #include "MapManager.h"
 #include "Memory.h"
+#include "Metric.h"
 #include "MMapFactory.h"
+#include "ObjectAccessor.h"
 #include "ObjectMgr.h"
 #include "OutdoorPvPMgr.h"
+#include "PetitionMgr.h"
 #include "Player.h"
+#include "PlayerDump.h"
 #include "PoolMgr.h"
 #include "QueryCallback.h"
+#include "QuestPools.h"
+#include "Realm.h"
 #include "ScriptMgr.h"
 #include "ScriptReloadMgr.h"
 #include "ServerMotd.h"
 #include "SkillDiscovery.h"
 #include "SkillExtraItems.h"
-#include "SmartAI.h"
-#include "Metric.h"
+#include "SmartScriptMgr.h"
+#include "SpellMgr.h"
 #include "TicketMgr.h"
 #include "TransportMgr.h"
 #include "Unit.h"
-#include "VMapFactory.h"
-#include "WardenCheckMgr.h"
-#include "WaypointMovementGenerator.h"
-#include "WeatherMgr.h"
-#include "WorldSession.h"
-#include "M2Stores.h"
-#include "WhoListStorage.h"
-#include "GameTime.h"
 #include "UpdateTime.h"
+#include "VMapFactory.h"
+#include "VMapManager2.h"
+#include "WardenCheckMgr.h"
+#include "WaypointManager.h"
+#include "WeatherMgr.h"
+#include "WhoListStorage.h"
+#include "WorldSession.h"
+
+#include <boost/asio/ip/address.hpp>
 
 TC_GAME_API std::atomic<bool> World::m_stopEvent(false);
 TC_GAME_API uint8 World::m_ExitCode = SHUTDOWN_EXIT_CODE;
@@ -106,6 +119,7 @@ World::World()
     m_NextWeeklyQuestReset = 0;
     m_NextMonthlyQuestReset = 0;
     m_NextRandomBGReset = 0;
+    m_NextCalendarOldEventsDeletionTime = 0;
     m_NextGuildReset = 0;
 
     m_defaultDbcLocale = LOCALE_enUS;
@@ -122,6 +136,11 @@ World::World()
     memset(m_int_configs, 0, sizeof(m_int_configs));
     memset(m_bool_configs, 0, sizeof(m_bool_configs));
     memset(m_float_configs, 0, sizeof(m_float_configs));
+
+    _guidWarn = false;
+    _guidAlert = false;
+    _warnDiff = 0;
+    _warnShutdownTime = GameTime::GetGameTime();
 }
 
 /// World destructor
@@ -135,7 +154,7 @@ World::~World()
         m_sessions.erase(m_sessions.begin());
     }
 
-    CliCommandHolder* command = NULL;
+    CliCommandHolder* command = nullptr;
     while (cliCmdQueue.next(command))
         delete command;
 
@@ -168,7 +187,7 @@ Player* World::FindPlayerInZone(uint32 zone)
         if (player->IsInWorld() && player->GetZoneId() == zone)
             return player;
     }
-    return NULL;
+    return nullptr;
 }
 
 bool World::IsClosed() const
@@ -184,15 +203,87 @@ void World::SetClosed(bool val)
     sScriptMgr->OnOpenStateChange(!val);
 }
 
+void World::LoadDBAllowedSecurityLevel()
+{
+    PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_REALMLIST_SECURITY_LEVEL);
+    stmt->setInt32(0, int32(realm.Id.Realm));
+    PreparedQueryResult result = LoginDatabase.Query(stmt);
+
+    if (result)
+        SetPlayerSecurityLimit(AccountTypes(result->Fetch()->GetUInt8()));
+}
+
+void World::SetPlayerSecurityLimit(AccountTypes _sec)
+{
+    AccountTypes sec = _sec < SEC_CONSOLE ? _sec : SEC_PLAYER;
+    bool update = sec > m_allowedSecurityLevel;
+    m_allowedSecurityLevel = sec;
+    if (update)
+        KickAllLess(m_allowedSecurityLevel);
+}
+
+void World::TriggerGuidWarning()
+{
+    // Lock this only to prevent multiple maps triggering at the same time
+    std::lock_guard<std::mutex> lock(_guidAlertLock);
+
+    time_t gameTime = GameTime::GetGameTime();
+    time_t today = (gameTime / DAY) * DAY;
+
+    // Check if our window to restart today has passed. 5 mins until quiet time
+    while (gameTime >= GetLocalHourTimestamp(today, getIntConfig(CONFIG_RESPAWN_RESTARTQUIETTIME)) - 1810)
+        today += DAY;
+
+    // Schedule restart for 30 minutes before quiet time, or as long as we have
+    _warnShutdownTime = GetLocalHourTimestamp(today, getIntConfig(CONFIG_RESPAWN_RESTARTQUIETTIME)) - 1800;
+
+    _guidWarn = true;
+    SendGuidWarning();
+}
+
+void World::TriggerGuidAlert()
+{
+    // Lock this only to prevent multiple maps triggering at the same time
+    std::lock_guard<std::mutex> lock(_guidAlertLock);
+
+    DoGuidAlertRestart();
+    _guidAlert = true;
+    _guidWarn = false;
+}
+
+void World::DoGuidWarningRestart()
+{
+    if (m_ShutdownTimer)
+        return;
+
+    ShutdownServ(1800, SHUTDOWN_MASK_RESTART, RESTART_EXIT_CODE);
+    _warnShutdownTime += HOUR;
+}
+
+void World::DoGuidAlertRestart()
+{
+    if (m_ShutdownTimer)
+        return;
+
+    ShutdownServ(300, SHUTDOWN_MASK_RESTART, RESTART_EXIT_CODE, _alertRestartReason);
+}
+
+void World::SendGuidWarning()
+{
+    if (!m_ShutdownTimer && _guidWarn && getIntConfig(CONFIG_RESPAWN_GUIDWARNING_FREQUENCY) > 0)
+        SendServerMessage(SERVER_MSG_STRING, _guidWarningMsg.c_str());
+    _warnDiff = 0;
+}
+
 /// Find a session by its id
 WorldSession* World::FindSession(uint32 id) const
 {
     SessionMap::const_iterator itr = m_sessions.find(id);
 
     if (itr != m_sessions.end())
-        return itr->second;                                 // also can return NULL for kicked session
+        return itr->second;                                 // also can return nullptr for kicked session
     else
-        return NULL;
+        return nullptr;
 }
 
 /// Remove a given session
@@ -292,7 +383,7 @@ bool World::HasRecentlyDisconnected(WorldSession* session)
     {
         for (DisconnectMap::iterator i = m_disconnects.begin(); i != m_disconnects.end();)
         {
-            if (difftime(i->second, time(NULL)) < tolerance)
+            if (difftime(i->second, GameTime::GetGameTime()) < tolerance)
             {
                 if (i->first == session->GetAccountId())
                     return true;
@@ -341,7 +432,7 @@ bool World::RemoveQueuedPlayer(WorldSession* sess)
         if (*iter == sess)
         {
             sess->SetInQueue(false);
-            sess->ResetTimeOutTime();
+            sess->ResetTimeOutTime(false);
             iter = m_QueuedPlayer.erase(iter);
             found = true;                                   // removing queued session
             break;
@@ -453,6 +544,10 @@ void World::LoadConfigSettings(bool reload)
     rate_values[RATE_XP_BG_KILL]  = sConfigMgr->GetFloatDefault("Rate.XP.BattlegroundKill", 1.0f);
     rate_values[RATE_XP_QUEST]    = sConfigMgr->GetFloatDefault("Rate.XP.Quest", 1.0f);
     rate_values[RATE_XP_EXPLORE]  = sConfigMgr->GetFloatDefault("Rate.XP.Explore", 1.0f);
+
+    m_int_configs[CONFIG_XP_BOOST_DAYMASK] = sConfigMgr->GetIntDefault("XP.Boost.Daymask", 0);
+    rate_values[RATE_XP_BOOST] = sConfigMgr->GetFloatDefault("XP.Boost.Rate", 2.0f);
+
     rate_values[RATE_REPAIRCOST]  = sConfigMgr->GetFloatDefault("Rate.RepairCost", 1.0f);
     if (rate_values[RATE_REPAIRCOST] < 0.0f)
     {
@@ -503,19 +598,6 @@ void World::LoadConfigSettings(bool reload)
     }
     for (uint8 i = 0; i < MAX_MOVE_TYPE; ++i) playerBaseMoveSpeed[i] = baseMoveSpeed[i] * rate_values[RATE_MOVESPEED];
     rate_values[RATE_CORPSE_DECAY_LOOTED] = sConfigMgr->GetFloatDefault("Rate.Corpse.Decay.Looted", 0.5f);
-
-    rate_values[RATE_TARGET_POS_RECALCULATION_RANGE] = sConfigMgr->GetFloatDefault("TargetPosRecalculateRange", 1.5f);
-    if (rate_values[RATE_TARGET_POS_RECALCULATION_RANGE] < CONTACT_DISTANCE)
-    {
-        TC_LOG_ERROR("server.loading", "TargetPosRecalculateRange (%f) must be >= %f. Using %f instead.", rate_values[RATE_TARGET_POS_RECALCULATION_RANGE], CONTACT_DISTANCE, CONTACT_DISTANCE);
-        rate_values[RATE_TARGET_POS_RECALCULATION_RANGE] = CONTACT_DISTANCE;
-    }
-    else if (rate_values[RATE_TARGET_POS_RECALCULATION_RANGE] > NOMINAL_MELEE_RANGE)
-    {
-        TC_LOG_ERROR("server.loading", "TargetPosRecalculateRange (%f) must be <= %f. Using %f instead.",
-            rate_values[RATE_TARGET_POS_RECALCULATION_RANGE], NOMINAL_MELEE_RANGE, NOMINAL_MELEE_RANGE);
-        rate_values[RATE_TARGET_POS_RECALCULATION_RANGE] = NOMINAL_MELEE_RANGE;
-    }
 
     rate_values[RATE_DURABILITY_LOSS_ON_DEATH]  = sConfigMgr->GetFloatDefault("DurabilityLoss.OnDeath", 10.0f);
     if (rate_values[RATE_DURABILITY_LOSS_ON_DEATH] < 0.0f)
@@ -598,6 +680,7 @@ void World::LoadConfigSettings(bool reload)
     m_int_configs[CONFIG_MAIL_LEVEL_REQ] = sConfigMgr->GetIntDefault("LevelReq.Mail", 1);
     m_bool_configs[CONFIG_PRESERVE_CUSTOM_CHANNELS] = sConfigMgr->GetBoolDefault("PreserveCustomChannels", false);
     m_int_configs[CONFIG_PRESERVE_CUSTOM_CHANNEL_DURATION] = sConfigMgr->GetIntDefault("PreserveCustomChannelDuration", 14);
+    m_int_configs[CONFIG_PRESERVE_CUSTOM_CHANNEL_INTERVAL] = sConfigMgr->GetIntDefault("PreserveCustomChannelInterval", 5);
     m_bool_configs[CONFIG_GRID_UNLOAD] = sConfigMgr->GetBoolDefault("GridUnload", true);
     m_bool_configs[CONFIG_BASEMAP_LOAD_GRIDS] = sConfigMgr->GetBoolDefault("BaseMapLoadAllGrids", false);
     if (m_bool_configs[CONFIG_BASEMAP_LOAD_GRIDS] && m_bool_configs[CONFIG_GRID_UNLOAD])
@@ -651,11 +734,35 @@ void World::LoadConfigSettings(bool reload)
     else
         m_int_configs[CONFIG_PORT_WORLD] = sConfigMgr->GetIntDefault("WorldServerPort", 8085);
 
-    m_int_configs[CONFIG_SOCKET_TIMEOUTTIME] = sConfigMgr->GetIntDefault("SocketTimeOutTime", 900000);
+    // Config values are in "milliseconds" but we handle SocketTimeOut only as "seconds" so divide by 1000
+    m_int_configs[CONFIG_SOCKET_TIMEOUTTIME] = sConfigMgr->GetIntDefault("SocketTimeOutTime", 900000) / 1000;
+    m_int_configs[CONFIG_SOCKET_TIMEOUTTIME_ACTIVE] = sConfigMgr->GetIntDefault("SocketTimeOutTimeActive", 60000) / 1000;
+
     m_int_configs[CONFIG_SESSION_ADD_DELAY] = sConfigMgr->GetIntDefault("SessionAddDelay", 10000);
 
     m_float_configs[CONFIG_GROUP_XP_DISTANCE] = sConfigMgr->GetFloatDefault("MaxGroupXPDistance", 74.0f);
     m_float_configs[CONFIG_MAX_RECRUIT_A_FRIEND_DISTANCE] = sConfigMgr->GetFloatDefault("MaxRecruitAFriendBonusDistance", 100.0f);
+
+    m_int_configs[CONFIG_MIN_QUEST_SCALED_XP_RATIO] = sConfigMgr->GetIntDefault("MinQuestScaledXPRatio", 0);
+    if (m_int_configs[CONFIG_MIN_QUEST_SCALED_XP_RATIO] > 100)
+    {
+        TC_LOG_ERROR("server.loading", "MinQuestScaledXPRatio (%i) must be in range 0..100. Set to 0.", m_int_configs[CONFIG_MIN_QUEST_SCALED_XP_RATIO]);
+        m_int_configs[CONFIG_MIN_QUEST_SCALED_XP_RATIO] = 0;
+    }
+
+    m_int_configs[CONFIG_MIN_CREATURE_SCALED_XP_RATIO] = sConfigMgr->GetIntDefault("MinCreatureScaledXPRatio", 0);
+    if (m_int_configs[CONFIG_MIN_CREATURE_SCALED_XP_RATIO] > 100)
+    {
+        TC_LOG_ERROR("server.loading", "MinCreatureScaledXPRatio (%i) must be in range 0..100. Set to 0.", m_int_configs[CONFIG_MIN_CREATURE_SCALED_XP_RATIO]);
+        m_int_configs[CONFIG_MIN_CREATURE_SCALED_XP_RATIO] = 0;
+    }
+
+    m_int_configs[CONFIG_MIN_DISCOVERED_SCALED_XP_RATIO] = sConfigMgr->GetIntDefault("MinDiscoveredScaledXPRatio", 0);
+    if (m_int_configs[CONFIG_MIN_DISCOVERED_SCALED_XP_RATIO] > 100)
+    {
+        TC_LOG_ERROR("server.loading", "MinDiscoveredScaledXPRatio (%i) must be in range 0..100. Set to 0.", m_int_configs[CONFIG_MIN_DISCOVERED_SCALED_XP_RATIO]);
+        m_int_configs[CONFIG_MIN_DISCOVERED_SCALED_XP_RATIO] = 0;
+    }
 
     /// @todo Add MonsterSight (with meaning) in worldserver.conf or put them as define
     m_float_configs[CONFIG_SIGHT_MONSTER] = sConfigMgr->GetFloatDefault("MonsterSight", 50.0f);
@@ -865,7 +972,20 @@ void World::LoadConfigSettings(bool reload)
     m_bool_configs[CONFIG_CAST_UNSTUCK] = sConfigMgr->GetBoolDefault("CastUnstuck", true);
     m_int_configs[CONFIG_INSTANCE_RESET_TIME_HOUR]  = sConfigMgr->GetIntDefault("Instance.ResetTimeHour", 4);
     m_int_configs[CONFIG_INSTANCE_UNLOAD_DELAY] = sConfigMgr->GetIntDefault("Instance.UnloadDelay", 30 * MINUTE * IN_MILLISECONDS);
+    
     m_int_configs[CONFIG_DAILY_QUEST_RESET_TIME_HOUR] = sConfigMgr->GetIntDefault("Quests.DailyResetTime", 3);
+    if (m_int_configs[CONFIG_DAILY_QUEST_RESET_TIME_HOUR] > 23)
+    {
+        TC_LOG_ERROR("server.loading", "Quests.DailyResetTime (%i) must be in range 0..23. Set to 3.", m_int_configs[CONFIG_DAILY_QUEST_RESET_TIME_HOUR]);
+        m_int_configs[CONFIG_DAILY_QUEST_RESET_TIME_HOUR] = 3;
+    }
+    
+    m_int_configs[CONFIG_WEEKLY_QUEST_RESET_TIME_WDAY] = sConfigMgr->GetIntDefault("Quests.WeeklyResetWDay", 3);
+    if (m_int_configs[CONFIG_WEEKLY_QUEST_RESET_TIME_WDAY] > 6)
+    {
+        TC_LOG_ERROR("server.loading", "Quests.WeeklyResetDay (%i) must be in range 0..6. Set to 3 (Wednesday).", m_int_configs[CONFIG_WEEKLY_QUEST_RESET_TIME_WDAY]);
+        m_int_configs[CONFIG_WEEKLY_QUEST_RESET_TIME_WDAY] = 3;
+    }
 
     m_int_configs[CONFIG_MAX_PRIMARY_TRADE_SKILL] = sConfigMgr->GetIntDefault("MaxPrimaryTradeSkill", 2);
     m_int_configs[CONFIG_MIN_PETITION_SIGNS] = sConfigMgr->GetIntDefault("MinPetitionSigns", 9);
@@ -903,6 +1023,12 @@ void World::LoadConfigSettings(bool reload)
     m_int_configs[CONFIG_GROUP_VISIBILITY] = sConfigMgr->GetIntDefault("Visibility.GroupMode", 1);
 
     m_int_configs[CONFIG_MAIL_DELIVERY_DELAY] = sConfigMgr->GetIntDefault("MailDeliveryDelay", HOUR);
+    m_int_configs[CONFIG_CLEAN_OLD_MAIL_TIME] = sConfigMgr->GetIntDefault("CleanOldMailTime", 4);
+    if (m_int_configs[CONFIG_CLEAN_OLD_MAIL_TIME] > 23)
+    {
+        TC_LOG_ERROR("server.loading", "CleanOldMailTime (%u) must be an hour, between 0 and 23. Set to 4.", m_int_configs[CONFIG_CLEAN_OLD_MAIL_TIME]);
+        m_int_configs[CONFIG_CLEAN_OLD_MAIL_TIME] = 4;
+    }
 
     m_int_configs[CONFIG_UPTIME_UPDATE] = sConfigMgr->GetIntDefault("UpdateUptimeInterval", 10);
     if (int32(m_int_configs[CONFIG_UPTIME_UPDATE]) <= 0)
@@ -958,13 +1084,6 @@ void World::LoadConfigSettings(bool reload)
         m_int_configs[CONFIG_MAX_OVERSPEED_PINGS] = 2;
     }
 
-    m_bool_configs[CONFIG_SAVE_RESPAWN_TIME_IMMEDIATELY] = sConfigMgr->GetBoolDefault("SaveRespawnTimeImmediately", true);
-    if (!m_bool_configs[CONFIG_SAVE_RESPAWN_TIME_IMMEDIATELY])
-    {
-        TC_LOG_WARN("server.loading", "SaveRespawnTimeImmediately triggers assertions when disabled, overridden to Enabled");
-        m_bool_configs[CONFIG_SAVE_RESPAWN_TIME_IMMEDIATELY] = true;
-    }
-
     m_bool_configs[CONFIG_WEATHER] = sConfigMgr->GetBoolDefault("ActivateWeather", true);
 
     m_int_configs[CONFIG_DISABLE_BREATHING] = sConfigMgr->GetIntDefault("DisableWaterBreath", SEC_CONSOLE);
@@ -1011,6 +1130,13 @@ void World::LoadConfigSettings(bool reload)
     {
         TC_LOG_ERROR("server.loading", "Battleground.Random.ResetHour (%i) can't be load. Set to 6.", m_int_configs[CONFIG_RANDOM_BG_RESET_HOUR]);
         m_int_configs[CONFIG_RANDOM_BG_RESET_HOUR] = 6;
+    }
+
+    m_int_configs[CONFIG_CALENDAR_DELETE_OLD_EVENTS_HOUR] = sConfigMgr->GetIntDefault("Calendar.DeleteOldEventsHour", 6);
+    if (m_int_configs[CONFIG_CALENDAR_DELETE_OLD_EVENTS_HOUR] > 23)
+    {
+        TC_LOG_ERROR("misc", "Calendar.DeleteOldEventsHour (%i) can't be load. Set to 6.", m_int_configs[CONFIG_CALENDAR_DELETE_OLD_EVENTS_HOUR]);
+        m_int_configs[CONFIG_CALENDAR_DELETE_OLD_EVENTS_HOUR] = 6;
     }
 
     m_int_configs[CONFIG_GUILD_RESET_HOUR] = sConfigMgr->GetIntDefault("Guild.ResetHour", 6);
@@ -1074,6 +1200,7 @@ void World::LoadConfigSettings(bool reload)
     m_bool_configs[CONFIG_BG_XP_FOR_KILL]                            = sConfigMgr->GetBoolDefault("Battleground.GiveXPForKills", false);
     m_int_configs[CONFIG_ARENA_MAX_RATING_DIFFERENCE]                = sConfigMgr->GetIntDefault ("Arena.MaxRatingDifference", 150);
     m_int_configs[CONFIG_ARENA_RATING_DISCARD_TIMER]                 = sConfigMgr->GetIntDefault ("Arena.RatingDiscardTimer", 10 * MINUTE * IN_MILLISECONDS);
+    m_int_configs[CONFIG_ARENA_PREV_OPPONENTS_DISCARD_TIMER]         = sConfigMgr->GetIntDefault ("Arena.PreviousOpponentsDiscardTimer", 2 * MINUTE * IN_MILLISECONDS);
     m_int_configs[CONFIG_ARENA_RATED_UPDATE_TIMER]                   = sConfigMgr->GetIntDefault ("Arena.RatedUpdateTimer", 5 * IN_MILLISECONDS);
     m_bool_configs[CONFIG_ARENA_AUTO_DISTRIBUTE_POINTS]              = sConfigMgr->GetBoolDefault("Arena.AutoDistributePoints", false);
     m_int_configs[CONFIG_ARENA_AUTO_DISTRIBUTE_INTERVAL_DAYS]        = sConfigMgr->GetIntDefault ("Arena.AutoDistributeInterval", 7);
@@ -1179,15 +1306,59 @@ void World::LoadConfigSettings(bool reload)
        m_int_configs[CONFIG_NO_GRAY_AGGRO_BELOW] = m_int_configs[CONFIG_NO_GRAY_AGGRO_ABOVE];
     }
 
+    // Respawn Settings
+    m_int_configs[CONFIG_RESPAWN_MINCHECKINTERVALMS] = sConfigMgr->GetIntDefault("Respawn.MinCheckIntervalMS", 5000);
+    m_int_configs[CONFIG_RESPAWN_DYNAMICMODE] = sConfigMgr->GetIntDefault("Respawn.DynamicMode", 0);
+    if (m_int_configs[CONFIG_RESPAWN_DYNAMICMODE] > 1)
+    {
+        TC_LOG_ERROR("server.loading", "Invalid value for Respawn.DynamicMode (%u). Set to 0.", m_int_configs[CONFIG_RESPAWN_DYNAMICMODE]);
+        m_int_configs[CONFIG_RESPAWN_DYNAMICMODE] = 0;
+    }
+    m_bool_configs[CONFIG_RESPAWN_DYNAMIC_ESCORTNPC] = sConfigMgr->GetBoolDefault("Respawn.DynamicEscortNPC", false);
+    m_int_configs[CONFIG_RESPAWN_GUIDWARNLEVEL] = sConfigMgr->GetIntDefault("Respawn.GuidWarnLevel", 12000000);
+    if (m_int_configs[CONFIG_RESPAWN_GUIDWARNLEVEL] > 16777215)
+    {
+        TC_LOG_ERROR("server.loading", "Respawn.GuidWarnLevel (%u) cannot be greater than maximum GUID (16777215). Set to 12000000.", m_int_configs[CONFIG_RESPAWN_GUIDWARNLEVEL]);
+        m_int_configs[CONFIG_RESPAWN_GUIDWARNLEVEL] = 12000000;
+    }
+    m_int_configs[CONFIG_RESPAWN_GUIDALERTLEVEL] = sConfigMgr->GetIntDefault("Respawn.GuidAlertLevel", 16000000);
+    if (m_int_configs[CONFIG_RESPAWN_GUIDALERTLEVEL] > 16777215)
+    {
+        TC_LOG_ERROR("server.loading", "Respawn.GuidWarnLevel (%u) cannot be greater than maximum GUID (16777215). Set to 16000000.", m_int_configs[CONFIG_RESPAWN_GUIDALERTLEVEL]);
+        m_int_configs[CONFIG_RESPAWN_GUIDALERTLEVEL] = 16000000;
+    }
+    m_int_configs[CONFIG_RESPAWN_RESTARTQUIETTIME] = sConfigMgr->GetIntDefault("Respawn.RestartQuietTime", 3);
+    if (m_int_configs[CONFIG_RESPAWN_RESTARTQUIETTIME] > 23)
+    {
+        TC_LOG_ERROR("server.loading", "Respawn.RestartQuietTime (%u) must be an hour, between 0 and 23. Set to 3.", m_int_configs[CONFIG_RESPAWN_RESTARTQUIETTIME]);
+        m_int_configs[CONFIG_RESPAWN_RESTARTQUIETTIME] = 3;
+    }
+    m_float_configs[CONFIG_RESPAWN_DYNAMICRATE_CREATURE] = sConfigMgr->GetFloatDefault("Respawn.DynamicRateCreature", 10.0f);
+    if (m_float_configs[CONFIG_RESPAWN_DYNAMICRATE_CREATURE] < 0.0f)
+    {
+        TC_LOG_ERROR("server.loading", "Respawn.DynamicRateCreature (%f) must be positive. Set to 10.", m_float_configs[CONFIG_RESPAWN_DYNAMICRATE_CREATURE]);
+        m_float_configs[CONFIG_RESPAWN_DYNAMICRATE_CREATURE] = 10.0f;
+    }
+    m_int_configs[CONFIG_RESPAWN_DYNAMICMINIMUM_CREATURE] = sConfigMgr->GetIntDefault("Respawn.DynamicMinimumCreature", 10);
+    m_float_configs[CONFIG_RESPAWN_DYNAMICRATE_GAMEOBJECT] = sConfigMgr->GetFloatDefault("Respawn.DynamicRateGameObject", 10.0f);
+    if (m_float_configs[CONFIG_RESPAWN_DYNAMICRATE_GAMEOBJECT] < 0.0f)
+    {
+        TC_LOG_ERROR("server.loading", "Respawn.DynamicRateGameObject (%f) must be positive. Set to 10.", m_float_configs[CONFIG_RESPAWN_DYNAMICRATE_GAMEOBJECT]);
+        m_float_configs[CONFIG_RESPAWN_DYNAMICRATE_GAMEOBJECT] = 10.0f;
+    }
+    m_int_configs[CONFIG_RESPAWN_DYNAMICMINIMUM_GAMEOBJECT] = sConfigMgr->GetIntDefault("Respawn.DynamicMinimumGameObject", 10);
+    _guidWarningMsg = sConfigMgr->GetStringDefault("Respawn.WarningMessage", "There will be an unscheduled server restart at 03:00. The server will be available again shortly after.");
+    _alertRestartReason = sConfigMgr->GetStringDefault("Respawn.AlertRestartReason", "Urgent Maintenance");
+    m_int_configs[CONFIG_RESPAWN_GUIDWARNING_FREQUENCY] = sConfigMgr->GetIntDefault("Respawn.WarningFrequency", 1800);
     ///- Read the "Data" directory from the config file
     std::string dataPath = sConfigMgr->GetStringDefault("DataDir", "./");
     if (dataPath.empty() || (dataPath.at(dataPath.length()-1) != '/' && dataPath.at(dataPath.length()-1) != '\\'))
         dataPath.push_back('/');
 
-#if PLATFORM == PLATFORM_UNIX || PLATFORM == PLATFORM_APPLE
+#if TRINITY_PLATFORM == TRINITY_PLATFORM_UNIX || TRINITY_PLATFORM == TRINITY_PLATFORM_APPLE
     if (dataPath[0] == '~')
     {
-        const char* home = getenv("HOME");
+        char const* home = getenv("HOME");
         if (home)
             dataPath.replace(0, 1, home);
     }
@@ -1344,6 +1515,9 @@ void World::LoadConfigSettings(bool reload)
     // Allow to cache data queries
     m_bool_configs[CONFIG_CACHE_DATA_QUERIES] = sConfigMgr->GetBoolDefault("CacheDataQueries", true);
 
+    // Whether to use LoS from game objects
+    m_bool_configs[CONFIG_CHECK_GOBJECT_LOS] = sConfigMgr->GetBoolDefault("CheckGameObjectLoS", true);
+
     // call ScriptMgr if we're reloading the configuration
     if (reload)
         sScriptMgr->OnConfigLoad(reload);
@@ -1352,11 +1526,14 @@ void World::LoadConfigSettings(bool reload)
 /// Initialize the World
 void World::SetInitialWorldSettings()
 {
+    if (uint32 realmId = sConfigMgr->GetIntDefault("RealmID", 0)) // 0 reserved for auth
+        sLog->SetRealmId(realmId);
+
     ///- Server startup begin
     uint32 startupBegin = getMSTime();
 
     ///- Initialize the random number generator
-    srand((unsigned int)time(NULL));
+    srand((unsigned int)GameTime::GetGameTime());
 
     ///- Initialize detour memory management
     dtAllocSetCustom(dtCustomAlloc, dtCustomFree);
@@ -1421,6 +1598,9 @@ void World::SetInitialWorldSettings()
     // Load cinematic cameras
     LoadM2Cameras(m_dataPath);
 
+    // Load IP Location Database
+    sIPLocation->Load();
+
     std::vector<uint32> mapIds;
     for (uint32 mapId = 0; mapId < sMapStore.GetNumRows(); mapId++)
         if (sMapStore.LookupEntry(mapId))
@@ -1431,6 +1611,12 @@ void World::SetInitialWorldSettings()
 
     MMAP::MMapManager* mmmgr = MMAP::MMapFactory::createOrGetMMapManager();
     mmmgr->InitializeThreadUnsafe(mapIds);
+
+    TC_LOG_INFO("server.loading", "Initializing PlayerDump tables...");
+    PlayerDump::InitializeTables();
+
+    ///- Initialize static helper structures
+    AIRegistry::Initialize();
 
     TC_LOG_INFO("server.loading", "Loading SpellInfo store...");
     sSpellMgr->LoadSpellInfoStore();
@@ -1450,6 +1636,9 @@ void World::SetInitialWorldSettings()
     TC_LOG_INFO("server.loading", "Loading SpellInfo immunity infos...");
     sSpellMgr->LoadSpellInfoImmunities();
 
+    TC_LOG_INFO("server.loading", "Loading Player Totem models...");
+    sObjectMgr->LoadPlayerTotemModels();
+
     TC_LOG_INFO("server.loading", "Loading GameObject models...");
     LoadGameObjectModelList(m_dataPath);
 
@@ -1459,7 +1648,7 @@ void World::SetInitialWorldSettings()
     TC_LOG_INFO("server.loading", "Loading Instance Template...");
     sObjectMgr->LoadInstanceTemplate();
 
-    // Must be called before `creature_respawn`/`gameobject_respawn` tables
+    // Must be called before `respawn` data
     TC_LOG_INFO("server.loading", "Loading instances...");
     sInstanceSaveMgr->LoadInstances();
 
@@ -1478,10 +1667,13 @@ void World::SetInitialWorldSettings()
     sObjectMgr->LoadItemLocales();
     sObjectMgr->LoadItemSetNameLocales();
     sObjectMgr->LoadQuestLocales();
+    sObjectMgr->LoadQuestOfferRewardLocale();
+    sObjectMgr->LoadQuestRequestItemsLocale();
     sObjectMgr->LoadNpcTextLocales();
     sObjectMgr->LoadPageTextLocales();
     sObjectMgr->LoadGossipMenuItemsLocales();
     sObjectMgr->LoadPointOfInterestLocales();
+    sObjectMgr->LoadQuestGreetingLocales();
 
     sObjectMgr->SetDBCLocaleIndex(GetDefaultDbcLocale());        // Get once for all the locale index of DBC language (console/broadcasts)
     TC_LOG_INFO("server.loading", ">> Localization strings loaded in %u ms", GetMSTimeDiffToNow(oldMSTime));
@@ -1500,6 +1692,9 @@ void World::SetInitialWorldSettings()
 
     TC_LOG_INFO("server.loading", "Loading Transport templates...");
     sTransportMgr->LoadTransportTemplates();
+
+    TC_LOG_INFO("server.loading", "Loading Transport animations and rotations...");
+    sTransportMgr->LoadTransportAnimationAndRotation();
 
     TC_LOG_INFO("server.loading", "Loading Spell Rank Data...");
     sSpellMgr->LoadSpellRanks();
@@ -1523,7 +1718,7 @@ void World::SetInitialWorldSettings()
     sSpellMgr->LoadSpellProcs();
 
     TC_LOG_INFO("server.loading", "Loading Spell Bonus Data...");
-    sSpellMgr->LoadSpellBonusess();
+    sSpellMgr->LoadSpellBonuses();
 
     TC_LOG_INFO("server.loading", "Loading Aggro Spells Definitions...");
     sSpellMgr->LoadSpellThreats();
@@ -1576,6 +1771,12 @@ void World::SetInitialWorldSettings()
     TC_LOG_INFO("server.loading", "Loading Creature Base Stats...");
     sObjectMgr->LoadCreatureClassLevelStats();
 
+    TC_LOG_INFO("server.loading", "Loading Spawn Group Templates...");
+    sObjectMgr->LoadSpawnGroupTemplates();
+
+    TC_LOG_INFO("server.loading", "Loading instance spawn groups...");
+    sObjectMgr->LoadInstanceSpawnGroups();
+
     TC_LOG_INFO("server.loading", "Loading Creature Data...");
     sObjectMgr->LoadCreatures();
 
@@ -1591,11 +1792,20 @@ void World::SetInitialWorldSettings()
     TC_LOG_INFO("server.loading", "Loading Creature Addon Data...");
     sObjectMgr->LoadCreatureAddons();                            // must be after LoadCreatureTemplates() and LoadCreatures()
 
+    TC_LOG_INFO("server.loading", "Loading Creature Movement Overrides...");
+    sObjectMgr->LoadCreatureMovementOverrides();                 // must be after LoadCreatures()
+
     TC_LOG_INFO("server.loading", "Loading Gameobject Data...");
-    sObjectMgr->LoadGameobjects();
+    sObjectMgr->LoadGameObjects();
+
+    TC_LOG_INFO("server.loading", "Loading Spawn Group Data...");
+    sObjectMgr->LoadSpawnGroups();
 
     TC_LOG_INFO("server.loading", "Loading GameObject Addon Data...");
-    sObjectMgr->LoadGameObjectAddons();                          // must be after LoadGameObjectTemplate() and LoadGameobjects()
+    sObjectMgr->LoadGameObjectAddons();                          // must be after LoadGameObjects()
+
+    TC_LOG_INFO("server.loading", "Loading GameObject faction and flags overrides...");
+    sObjectMgr->LoadGameObjectOverrides();                       // must be after LoadGameObjects()
 
     TC_LOG_INFO("server.loading", "Loading GameObject Quest Items...");
     sObjectMgr->LoadGameObjectQuestItems();
@@ -1621,11 +1831,17 @@ void World::SetInitialWorldSettings()
     TC_LOG_INFO("server.loading", "Loading Quests Starters and Enders...");
     sObjectMgr->LoadQuestStartersAndEnders();                    // must be after quest load
 
+    TC_LOG_INFO("server.loading", "Loading Quests Greetings...");
+    sObjectMgr->LoadQuestGreetings();                           // must be loaded after creature_template, gameobject_template tables
+
     TC_LOG_INFO("server.loading", "Loading Objects Pooling Data...");
     sPoolMgr->LoadFromDB();
+    TC_LOG_INFO("server.loading", "Loading Quest Pooling Data...");
+    sQuestPoolMgr->LoadFromDB();                                // must be after quest templates
 
     TC_LOG_INFO("server.loading", "Loading Game Event Data...");               // must be after loading pools fully
-    sGameEventMgr->LoadFromDB();
+    sGameEventMgr->LoadHolidayDates();                           // Must be after loading DBC
+    sGameEventMgr->LoadFromDB();                                 // Must be after loading holiday dates
 
     TC_LOG_INFO("server.loading", "Loading UNIT_NPC_FLAG_SPELLCLICK Data..."); // must be after LoadQuests
     sObjectMgr->LoadNPCSpellClickSpells();
@@ -1754,17 +1970,20 @@ void World::SetInitialWorldSettings()
     TC_LOG_INFO("server.loading", "Loading GameTeleports...");
     sObjectMgr->LoadGameTele();
 
+    TC_LOG_INFO("server.loading", "Loading Trainers...");       // must be after LoadCreatureTemplates
+    sObjectMgr->LoadTrainers();
+
+    TC_LOG_INFO("server.loading", "Loading Creature default trainers...");
+    sObjectMgr->LoadCreatureDefaultTrainers();
+
     TC_LOG_INFO("server.loading", "Loading Gossip menu...");
     sObjectMgr->LoadGossipMenu();
 
     TC_LOG_INFO("server.loading", "Loading Gossip menu options...");
-    sObjectMgr->LoadGossipMenuItems();
+    sObjectMgr->LoadGossipMenuItems();                           // must be after LoadTrainers
 
     TC_LOG_INFO("server.loading", "Loading Vendors...");
     sObjectMgr->LoadVendors();                                   // must be after load CreatureTemplate and ItemTemplate
-
-    TC_LOG_INFO("server.loading", "Loading Trainers...");
-    sObjectMgr->LoadTrainerSpell();                              // must be after load CreatureTemplate
 
     TC_LOG_INFO("server.loading", "Loading Waypoints...");
     sWaypointMgr->Load();
@@ -1842,6 +2061,12 @@ void World::SetInitialWorldSettings()
     TC_LOG_INFO("server.loading", "Loading Calendar data...");
     sCalendarMgr->LoadFromDB();
 
+    TC_LOG_INFO("server.loading", "Loading Petitions...");
+    sPetitionMgr->LoadPetitions();
+
+    TC_LOG_INFO("server.loading", "Loading Signatures...");
+    sPetitionMgr->LoadSignatures();
+
     TC_LOG_INFO("server.loading", "Loading Item loot...");
     sLootItemStorage->LoadStorageFromDB();
 
@@ -1855,7 +2080,6 @@ void World::SetInitialWorldSettings()
     LoginDatabase.PExecute("INSERT INTO uptime (realmid, starttime, uptime, revision) VALUES(%u, %u, 0, '%s')",
                             realm.Id.Realm, uint32(GameTime::GetStartTime()), GitRevision::GetFullVersion());       // One-time query
 
-    m_timers[WUPDATE_WEATHERS].SetInterval(1*IN_MILLISECONDS);
     m_timers[WUPDATE_AUCTIONS].SetInterval(MINUTE*IN_MILLISECONDS);
     m_timers[WUPDATE_AUCTIONS_PENDING].SetInterval(250);
     m_timers[WUPDATE_UPTIME].SetInterval(m_int_configs[CONFIG_UPTIME_UPDATE]*MINUTE*IN_MILLISECONDS);
@@ -1876,6 +2100,8 @@ void World::SetInitialWorldSettings()
 
     m_timers[WUPDATE_WHO_LIST].SetInterval(5 * IN_MILLISECONDS); // update who list cache every 5 seconds
 
+    m_timers[WUPDATE_CHANNEL_SAVE].SetInterval(getIntConfig(CONFIG_PRESERVE_CUSTOM_CHANNEL_INTERVAL) * MINUTE * IN_MILLISECONDS);
+
     //to set mailtimer to return mails every day between 4 and 5 am
     //mailtimer is increased when updating auctions
     //one second is 1000 -(tested on win system)
@@ -1883,13 +2109,11 @@ void World::SetInitialWorldSettings()
     tm localTm;
     time_t gameTime = GameTime::GetGameTime();
     localtime_r(&gameTime, &localTm);
-    mail_timer = ((((localTm.tm_hour + 20) % 24)* HOUR * IN_MILLISECONDS) / m_timers[WUPDATE_AUCTIONS].GetInterval());
+    uint8 CleanOldMailsTime = getIntConfig(CONFIG_CLEAN_OLD_MAIL_TIME);
+    mail_timer = ((((localTm.tm_hour + (24 - CleanOldMailsTime)) % 24)* HOUR * IN_MILLISECONDS) / m_timers[WUPDATE_AUCTIONS].GetInterval());
                                                             //1440
     mail_timer_expires = ((DAY * IN_MILLISECONDS) / (m_timers[WUPDATE_AUCTIONS].GetInterval()));
     TC_LOG_INFO("server.loading", "Mail timer set to: " UI64FMTD ", mail return is called every " UI64FMTD " minutes", uint64(mail_timer), uint64(mail_timer_expires));
-
-    ///- Initilize static helper structures
-    AIRegistry::Initialize();
 
     ///- Initialize MapManager
     TC_LOG_INFO("server.loading", "Starting Map System");
@@ -1905,8 +2129,8 @@ void World::SetInitialWorldSettings()
     TC_LOG_INFO("server.loading", "Initialize AuctionHouseBot...");
     sAuctionBot->Initialize();
 
-    // Delete all custom channels which haven't been used for PreserveCustomChannelDuration days.
-    Channel::CleanOldChannelsInDB();
+    TC_LOG_INFO("server.loading", "Initializing chat channels...");
+    ChannelMgr::LoadFromDB();
 
     TC_LOG_INFO("server.loading", "Initializing Opcodes...");
     opcodeTable.Initialize();
@@ -1942,17 +2166,15 @@ void World::SetInitialWorldSettings()
     TC_LOG_INFO("server.loading", "Deleting expired bans...");
     LoginDatabase.Execute("DELETE FROM ip_banned WHERE unbandate <= UNIX_TIMESTAMP() AND unbandate<>bandate");      // One-time query
 
-    TC_LOG_INFO("server.loading", "Calculate next daily quest reset time...");
-    InitDailyQuestResetTime();
-
-    TC_LOG_INFO("server.loading", "Calculate next weekly quest reset time...");
-    InitWeeklyQuestResetTime();
-
-    TC_LOG_INFO("server.loading", "Calculate next monthly quest reset time...");
-    InitMonthlyQuestResetTime();
+    TC_LOG_INFO("server.loading", "Initializing quest reset times...");
+    InitQuestResetTimes();
+    CheckQuestResetTimes();
 
     TC_LOG_INFO("server.loading", "Calculate random battleground reset time...");
     InitRandomBGResetTime();
+
+    TC_LOG_INFO("server.loading", "Calculate deletion of old calendar events time...");
+    InitCalendarOldEventsDeletionTime();
 
     TC_LOG_INFO("server.loading", "Calculate guild limitation(s) reset time...");
     InitGuildResetTime();
@@ -1975,9 +2197,6 @@ void World::SetInitialWorldSettings()
     TC_LOG_INFO("server.worldserver", "World initialized in %u minutes %u seconds", (startupDuration / 60000), ((startupDuration % 60000) / 1000));
 
     TC_METRIC_EVENT("events", "World initialized", "World initialized in " + std::to_string(startupDuration / 60000) + " minutes " + std::to_string((startupDuration % 60000) / 1000) + " seconds");
-
-    if (uint32 realmId = sConfigMgr->GetIntDefault("RealmID", 0)) // 0 reserved for auth
-        sLog->SetRealmId(realmId);
 }
 
 void World::DetectDBCLang()
@@ -2085,23 +2304,27 @@ void World::Update(uint32 diff)
         sWhoListStorageMgr->Update();
     }
 
-    /// Handle daily quests reset time
-    if (currentGameTime > m_NextDailyQuestReset)
+    if (IsStopped() || m_timers[WUPDATE_CHANNEL_SAVE].Passed())
     {
-        ResetDailyQuests();
-        InitDailyQuestResetTime(false);
+        m_timers[WUPDATE_CHANNEL_SAVE].Reset();
+
+        if (sWorld->getBoolConfig(CONFIG_PRESERVE_CUSTOM_CHANNELS))
+        {
+            ChannelMgr* mgr1 = ASSERT_NOTNULL(ChannelMgr::forTeam(ALLIANCE));
+            mgr1->SaveToDB();
+            ChannelMgr* mgr2 = ASSERT_NOTNULL(ChannelMgr::forTeam(HORDE));
+            if (mgr1 != mgr2)
+                mgr2->SaveToDB();
+        }
     }
 
-    /// Handle weekly quests reset time
-    if (currentGameTime > m_NextWeeklyQuestReset)
-        ResetWeeklyQuests();
-
-    /// Handle monthly quests reset time
-    if (currentGameTime > m_NextMonthlyQuestReset)
-        ResetMonthlyQuests();
+    CheckQuestResetTimes();
 
     if (currentGameTime > m_NextRandomBGReset)
         ResetRandomBG();
+
+    if (currentGameTime > m_NextCalendarOldEventsDeletionTime)
+        CalendarDeleteOldEvents();
 
     if (currentGameTime > m_NextGuildReset)
         ResetGuildCap();
@@ -2148,13 +2371,6 @@ void World::Update(uint32 diff)
     sWorldUpdateTime.RecordUpdateTimeReset();
     UpdateSessions(diff);
     sWorldUpdateTime.RecordUpdateTimeDuration("UpdateSessions");
-
-    /// <li> Handle weather updates when the timer has passed
-    if (m_timers[WUPDATE_WEATHERS].Passed())
-    {
-        m_timers[WUPDATE_WEATHERS].Reset();
-        WeatherMgr::Update(uint32(m_timers[WUPDATE_WEATHERS].GetInterval()));
-    }
 
     /// <li> Update uptime table
     if (m_timers[WUPDATE_UPTIME].Passed())
@@ -2222,6 +2438,9 @@ void World::Update(uint32 diff)
         Player::DeleteOldCharacters();
     }
 
+    sGroupMgr->Update(diff);
+    sWorldUpdateTime.RecordUpdateTimeDuration("UpdateGroupMgr");
+
     sLFGMgr->Update(diff);
     sWorldUpdateTime.RecordUpdateTimeDuration("UpdateLFGMgr");
 
@@ -2261,6 +2480,16 @@ void World::Update(uint32 diff)
     // update the instance reset times
     sInstanceSaveMgr->Update();
 
+    // Check for shutdown warning
+    if (_guidWarn && !_guidAlert)
+    {
+        _warnDiff += diff;
+        if (GameTime::GetGameTime() >= _warnShutdownTime)
+            DoGuidWarningRestart();
+        else if (_warnDiff > getIntConfig(CONFIG_RESPAWN_GUIDWARNING_FREQUENCY) * IN_MILLISECONDS)
+            SendGuidWarning();
+    }
+
     // And last, but not least handle the issued cli commands
     ProcessCliCommands();
 
@@ -2280,7 +2509,7 @@ void World::ForceGameEventUpdate()
 }
 
 /// Send a packet to all players (except self if mentioned)
-void World::SendGlobalMessage(WorldPacket* packet, WorldSession* self, uint32 team)
+void World::SendGlobalMessage(WorldPacket const* packet, WorldSession* self, uint32 team)
 {
     SessionMap::const_iterator itr;
     for (itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
@@ -2297,7 +2526,7 @@ void World::SendGlobalMessage(WorldPacket* packet, WorldSession* self, uint32 te
 }
 
 /// Send a packet to all GMs (except self if mentioned)
-void World::SendGlobalGMMessage(WorldPacket* packet, WorldSession* self, uint32 team)
+void World::SendGlobalGMMessage(WorldPacket const* packet, WorldSession* self, uint32 team)
 {
     for (SessionMap::const_iterator itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
     {
@@ -2323,7 +2552,7 @@ namespace Trinity
     {
         public:
             typedef std::vector<WorldPacket*> WorldPacketList;
-            explicit WorldWorldTextBuilder(uint32 textId, va_list* args = NULL) : i_textId(textId), i_args(args) { }
+            explicit WorldWorldTextBuilder(uint32 textId, va_list* args = nullptr) : i_textId(textId), i_args(args) { }
             void operator()(WorldPacketList& data_list, LocaleConstant loc_idx)
             {
                 char const* text = sObjectMgr->GetTrinityString(i_textId, loc_idx);
@@ -2344,14 +2573,14 @@ namespace Trinity
                     do_helper(data_list, (char*)text);
             }
         private:
-            char* lineFromMessage(char*& pos) { char* start = strtok(pos, "\n"); pos = NULL; return start; }
+            char* lineFromMessage(char*& pos) { char* start = strtok(pos, "\n"); pos = nullptr; return start; }
             void do_helper(WorldPacketList& data_list, char* text)
             {
                 char* pos = text;
                 while (char* line = lineFromMessage(pos))
                 {
                     WorldPacket* data = new WorldPacket();
-                    ChatHandler::BuildChatPacket(*data, CHAT_MSG_SYSTEM, LANG_UNIVERSAL, NULL, NULL, line);
+                    ChatHandler::BuildChatPacket(*data, CHAT_MSG_SYSTEM, LANG_UNIVERSAL, nullptr, nullptr, line);
                     data_list.push_back(data);
                 }
             }
@@ -2407,7 +2636,7 @@ void World::SendGMText(uint32 string_id, ...)
 }
 
 /// DEPRECATED, only for debug purpose. Send a System Message to all players (except self if mentioned)
-void World::SendGlobalText(const char* text, WorldSession* self)
+void World::SendGlobalText(char const* text, WorldSession* self)
 {
     WorldPacket data;
 
@@ -2417,7 +2646,7 @@ void World::SendGlobalText(const char* text, WorldSession* self)
 
     while (char* line = ChatHandler::LineFromMessage(pos))
     {
-        ChatHandler::BuildChatPacket(data, CHAT_MSG_SYSTEM, LANG_UNIVERSAL, NULL, NULL, line);
+        ChatHandler::BuildChatPacket(data, CHAT_MSG_SYSTEM, LANG_UNIVERSAL, nullptr, nullptr, line);
         SendGlobalMessage(&data, self);
     }
 
@@ -2425,7 +2654,7 @@ void World::SendGlobalText(const char* text, WorldSession* self)
 }
 
 /// Send a packet to all players (or players selected team) in the zone (except self if mentioned)
-bool World::SendZoneMessage(uint32 zone, WorldPacket* packet, WorldSession* self, uint32 team)
+bool World::SendZoneMessage(uint32 zone, WorldPacket const* packet, WorldSession* self, uint32 team)
 {
     bool foundPlayerToSend = false;
     SessionMap::const_iterator itr;
@@ -2448,10 +2677,10 @@ bool World::SendZoneMessage(uint32 zone, WorldPacket* packet, WorldSession* self
 }
 
 /// Send a System Message to all players in the zone (except self if mentioned)
-void World::SendZoneText(uint32 zone, const char* text, WorldSession* self, uint32 team)
+void World::SendZoneText(uint32 zone, char const* text, WorldSession* self, uint32 team)
 {
     WorldPacket data;
-    ChatHandler::BuildChatPacket(data, CHAT_MSG_SYSTEM, LANG_UNIVERSAL, NULL, NULL, text);
+    ChatHandler::BuildChatPacket(data, CHAT_MSG_SYSTEM, LANG_UNIVERSAL, nullptr, nullptr, text);
     SendZoneMessage(zone, &data, self, team);
 }
 
@@ -2484,8 +2713,12 @@ BanReturn World::BanAccount(BanMode mode, std::string const& nameOrIP, std::stri
 /// Ban an account or ban an IP address, duration is in seconds if positive, otherwise permban
 BanReturn World::BanAccount(BanMode mode, std::string const& nameOrIP, uint32 duration_secs, std::string const& reason, std::string const& author)
 {
-    PreparedQueryResult resultAccounts = PreparedQueryResult(NULL); //used for kicking
-    PreparedStatement* stmt = NULL;
+    PreparedQueryResult resultAccounts = PreparedQueryResult(nullptr); //used for kicking
+    PreparedStatement* stmt = nullptr;
+
+    // Prevent banning an already banned account
+    if (mode == BAN_ACCOUNT && AccountMgr::IsBannedAccount(nameOrIP))
+        return BAN_EXISTS;
 
     ///- Update the database with ban information
     switch (mode)
@@ -2561,7 +2794,7 @@ BanReturn World::BanAccount(BanMode mode, std::string const& nameOrIP, uint32 du
 /// Remove a ban from an account or IP address
 bool World::RemoveBanAccount(BanMode mode, std::string const& nameOrIP)
 {
-    PreparedStatement* stmt = NULL;
+    PreparedStatement* stmt = nullptr;
     if (mode == BAN_IP)
     {
         stmt = LoginDatabase.GetPreparedStatement(LOGIN_DEL_IP_NOT_BANNED);
@@ -2606,18 +2839,20 @@ BanReturn World::BanCharacter(std::string const& name, std::string const& durati
     }
     else
         guid = banned->GetGUID().GetCounter();
-
+    //Use transaction in order to ensure the order of the queries
+    SQLTransaction trans = CharacterDatabase.BeginTransaction();
     // make sure there is only one active ban
     PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_UPD_CHARACTER_BAN);
     stmt->setUInt32(0, guid);
-    CharacterDatabase.Execute(stmt);
+    trans->Append(stmt);
 
     stmt = CharacterDatabase.GetPreparedStatement(CHAR_INS_CHARACTER_BAN);
     stmt->setUInt32(0, guid);
     stmt->setUInt32(1, duration_secs);
     stmt->setString(2, author);
     stmt->setString(3, reason);
-    CharacterDatabase.Execute(stmt);
+    trans->Append(stmt);
+    CharacterDatabase.CommitTransaction(trans);
 
     if (banned)
         banned->GetSession()->KickPlayer();
@@ -2692,14 +2927,9 @@ void World::ShutdownServ(uint32 time, uint32 options, uint8 exitcode, const std:
     m_ShutdownMask = options;
     m_ExitCode = exitcode;
 
-    ///- If the shutdown time is 0, set m_stopEvent (except if shutdown is 'idle' with remaining sessions)
+    ///- If the shutdown time is 0, evaluate shutdown on next tick (no message)
     if (time == 0)
-    {
-        if (!(options & SHUTDOWN_MASK_IDLE) || GetActiveAndQueuedSessionCount() == 0)
-            m_stopEvent = true;                             // exist code already set
-        else
-            m_ShutdownTimer = 1;                            //So that the session count is re-evaluated at next world tick
-    }
+        m_ShutdownTimer = 1;
     ///- Else set the shutdown timer and warn users
     else
     {
@@ -2739,7 +2969,7 @@ void World::ShutdownMsg(bool show, Player* player, const std::string& reason)
 /// Cancel a planned server shutdown
 uint32 World::ShutdownCancel()
 {
-    // nothing cancel or too later
+    // nothing cancel or too late
     if (!m_ShutdownTimer || m_stopEvent)
         return 0;
 
@@ -2766,7 +2996,7 @@ void World::SendServerMessage(ServerMessageType type, const char *text, Player* 
         data << text;
 
     if (player)
-        player->GetSession()->SendPacket(&data);
+        player->SendDirectMessage(&data);
     else
         SendGlobalMessage(&data);
 }
@@ -2774,7 +3004,7 @@ void World::SendServerMessage(ServerMessageType type, const char *text, Player* 
 void World::UpdateSessions(uint32 diff)
 {
     ///- Add new sessions
-    WorldSession* sess = NULL;
+    WorldSession* sess = nullptr;
     while (addSessQueue.next(sess))
         AddSession_ (sess);
 
@@ -2791,7 +3021,7 @@ void World::UpdateSessions(uint32 diff)
         if (!pSession->Update(diff, updater))    // As interval = 0
         {
             if (!RemoveQueuedPlayer(itr->second) && itr->second && getIntConfig(CONFIG_INTERVAL_DISCONNECT_TOLERANCE))
-                m_disconnects[itr->second->GetAccountId()] = time(NULL);
+                m_disconnects[itr->second->GetAccountId()] = GameTime::GetGameTime();
             RemoveQueuedPlayer(pSession);
             m_sessions.erase(itr);
             delete pSession;
@@ -2803,9 +3033,9 @@ void World::UpdateSessions(uint32 diff)
 // This handles the issued and queued CLI commands
 void World::ProcessCliCommands()
 {
-    CliCommandHolder::Print* zprint = NULL;
-    void* callbackArg = NULL;
-    CliCommandHolder* command = NULL;
+    CliCommandHolder::Print zprint = nullptr;
+    void* callbackArg = nullptr;
+    CliCommandHolder* command = nullptr;
     while (cliCmdQueue.next(command))
     {
         TC_LOG_INFO("misc", "CLI command under processing...");
@@ -2908,63 +3138,133 @@ void World::_UpdateRealmCharCount(PreparedQueryResult resultCharCount)
     }
 }
 
-void World::InitWeeklyQuestResetTime()
+void World::InitQuestResetTimes()
 {
-    time_t wstime = uint64(sWorld->getWorldState(WS_WEEKLY_QUEST_RESET_TIME));
-    time_t curtime = time(NULL);
-    m_NextWeeklyQuestReset = wstime < curtime ? curtime : time_t(wstime);
+    m_NextDailyQuestReset = sWorld->getWorldState(WS_DAILY_QUEST_RESET_TIME);
+    m_NextWeeklyQuestReset = sWorld->getWorldState(WS_WEEKLY_QUEST_RESET_TIME);
+    m_NextMonthlyQuestReset = sWorld->getWorldState(WS_MONTHLY_QUEST_RESET_TIME);
 }
 
-void World::InitDailyQuestResetTime(bool loading)
+static time_t GetNextDailyResetTime(time_t t)
 {
-    time_t mostRecentQuestTime = 0;
-
-    if (loading)
-    {
-        QueryResult result = CharacterDatabase.Query("SELECT MAX(time) FROM character_queststatus_daily");
-        if (result)
-        {
-            Field* fields = result->Fetch();
-            mostRecentQuestTime = time_t(fields[0].GetUInt32());
-        }
-    }
-
-    // FIX ME: client not show day start time
-    time_t curTime = time(NULL);
-    tm localTm;
-    localtime_r(&curTime, &localTm);
-    localTm.tm_hour = getIntConfig(CONFIG_DAILY_QUEST_RESET_TIME_HOUR);
-    localTm.tm_min  = 0;
-    localTm.tm_sec  = 0;
-
-    // current day reset time
-    time_t curDayResetTime = mktime(&localTm);
-
-    // last reset time before current moment
-    time_t resetTime = (curTime < curDayResetTime) ? curDayResetTime - DAY : curDayResetTime;
-
-    // need reset (if we have quest time before last reset time (not processed by some reason)
-    if (mostRecentQuestTime && mostRecentQuestTime <= resetTime)
-        m_NextDailyQuestReset = mostRecentQuestTime;
-    else // plan next reset time
-        m_NextDailyQuestReset = (curTime >= curDayResetTime) ? curDayResetTime + DAY : curDayResetTime;
+    return GetLocalHourTimestamp(t, sWorld->getIntConfig(CONFIG_DAILY_QUEST_RESET_TIME_HOUR), true);
 }
 
-void World::InitMonthlyQuestResetTime()
+void World::ResetDailyQuests()
 {
-    time_t wstime = uint64(sWorld->getWorldState(WS_MONTHLY_QUEST_RESET_TIME));
-    time_t curtime = time(NULL);
-    m_NextMonthlyQuestReset = wstime < curtime ? curtime : time_t(wstime);
+    // reset all saved quest status
+    PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_RESET_CHARACTER_QUESTSTATUS_DAILY);
+    CharacterDatabase.Execute(stmt);
+    // reset all quest status in memory
+    for (SessionMap::const_iterator itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
+        if (Player* player = itr->second->GetPlayer())
+            player->ResetDailyQuestStatus();
+
+    // reselect pools
+    sQuestPoolMgr->ChangeDailyQuests();
+
+    // store next reset time
+    time_t now = GameTime::GetGameTime();
+    time_t next = GetNextDailyResetTime(now);
+    ASSERT(now < next);
+
+    m_NextDailyQuestReset = next;
+    sWorld->setWorldState(WS_DAILY_QUEST_RESET_TIME, uint64(next));
+
+    TC_LOG_INFO("misc", "Daily quests for all characters have been reset.");
+}
+
+static time_t GetNextWeeklyResetTime(time_t t)
+{
+    t = GetNextDailyResetTime(t);
+    tm time = TimeBreakdown(t);
+    int wday = time.tm_wday;
+    int target = sWorld->getIntConfig(CONFIG_WEEKLY_QUEST_RESET_TIME_WDAY);
+    if (target < wday)
+        wday -= 7;
+    t += (DAY * (target - wday));
+    return t;
+}
+
+void World::ResetWeeklyQuests()
+{
+    // reset all saved quest status
+    PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_RESET_CHARACTER_QUESTSTATUS_WEEKLY);
+    CharacterDatabase.Execute(stmt);
+    // reset all quest status in memory
+    for (SessionMap::const_iterator itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
+        if (Player* player = itr->second->GetPlayer())
+            player->ResetWeeklyQuestStatus();
+
+    // reselect pools
+    sQuestPoolMgr->ChangeWeeklyQuests();
+
+    // store next reset time
+    time_t now = GameTime::GetGameTime();
+    time_t next = GetNextWeeklyResetTime(now);
+    ASSERT(now < next);
+
+    m_NextWeeklyQuestReset = next;
+    sWorld->setWorldState(WS_WEEKLY_QUEST_RESET_TIME, uint64(next));
+
+    TC_LOG_INFO("misc", "Weekly quests for all characters have been reset.");
+}
+
+static time_t GetNextMonthlyResetTime(time_t t)
+{
+    t = GetNextDailyResetTime(t);
+    tm time = TimeBreakdown(t);
+    if (time.tm_mday == 1)
+        return t;
+
+    time.tm_mday = 1;
+    time.tm_mon += 1;
+    return mktime(&time);
+}
+
+void World::ResetMonthlyQuests()
+{
+    // reset all saved quest status
+    PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_RESET_CHARACTER_QUESTSTATUS_MONTHLY);
+    CharacterDatabase.Execute(stmt);
+    // reset all quest status in memory
+    for (SessionMap::const_iterator itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
+        if (Player* player = itr->second->GetPlayer())
+            player->ResetMonthlyQuestStatus();
+
+    // reselect pools
+    sQuestPoolMgr->ChangeMonthlyQuests();
+
+    // store next reset time
+    time_t now = GameTime::GetGameTime();
+    time_t next = GetNextMonthlyResetTime(now);
+    ASSERT(now < next);
+
+    m_NextMonthlyQuestReset = next;
+    sWorld->setWorldState(WS_MONTHLY_QUEST_RESET_TIME, uint64(next));
+
+    TC_LOG_INFO("misc", "Monthly quests for all characters have been reset.");
+}
+
+void World::CheckQuestResetTimes()
+{
+    time_t const now = GameTime::GetGameTime();
+    if (m_NextDailyQuestReset <= now)
+        ResetDailyQuests();
+    if (m_NextWeeklyQuestReset <= now)
+        ResetWeeklyQuests();
+    if (m_NextMonthlyQuestReset <= now)
+        ResetMonthlyQuests();
 }
 
 void World::InitRandomBGResetTime()
 {
     time_t bgtime = uint64(sWorld->getWorldState(WS_BG_DAILY_RESET_TIME));
     if (!bgtime)
-        m_NextRandomBGReset = time_t(time(NULL));         // game time not yet init
+        m_NextRandomBGReset = GameTime::GetGameTime();         // game time not yet init
 
     // generate time by config
-    time_t curTime = time(NULL);
+    time_t curTime = GameTime::GetGameTime();
     tm localTm;
     localtime_r(&curTime, &localTm);
     localTm.tm_hour = getIntConfig(CONFIG_RANDOM_BG_RESET_HOUR);
@@ -2985,14 +3285,31 @@ void World::InitRandomBGResetTime()
         sWorld->setWorldState(WS_BG_DAILY_RESET_TIME, uint64(m_NextRandomBGReset));
 }
 
+void World::InitCalendarOldEventsDeletionTime()
+{
+    time_t now = GameTime::GetGameTime();
+    time_t nextDeletionTime = GetLocalHourTimestamp(now, getIntConfig(CONFIG_CALENDAR_DELETE_OLD_EVENTS_HOUR));
+    time_t currentDeletionTime = getWorldState(WS_DAILY_CALENDAR_DELETION_OLD_EVENTS_TIME);
+
+    // If the reset time saved in the worldstate is before now it means the server was offline when the reset was supposed to occur.
+    // In this case we set the reset time in the past and next world update will do the reset and schedule next one in the future.
+    if (currentDeletionTime < now)
+        m_NextCalendarOldEventsDeletionTime = nextDeletionTime - DAY;
+    else
+        m_NextCalendarOldEventsDeletionTime = nextDeletionTime;
+
+    if (!currentDeletionTime)
+        sWorld->setWorldState(WS_DAILY_CALENDAR_DELETION_OLD_EVENTS_TIME, uint64(m_NextCalendarOldEventsDeletionTime));
+}
+
 void World::InitGuildResetTime()
 {
     time_t gtime = uint64(getWorldState(WS_GUILD_DAILY_RESET_TIME));
     if (!gtime)
-        m_NextGuildReset = time_t(time(NULL));         // game time not yet init
+        m_NextGuildReset = GameTime::GetGameTime();         // game time not yet init
 
     // generate time by config
-    time_t curTime = time(NULL);
+    time_t curTime = GameTime::GetGameTime();
     tm localTm;
     localtime_r(&curTime, &localTm);
     localTm.tm_hour = getIntConfig(CONFIG_GUILD_RESET_HOUR);
@@ -3011,102 +3328,6 @@ void World::InitGuildResetTime()
 
     if (!gtime)
         sWorld->setWorldState(WS_GUILD_DAILY_RESET_TIME, uint64(m_NextGuildReset));
-}
-
-void World::ResetDailyQuests()
-{
-    TC_LOG_INFO("misc", "Daily quests reset for all characters.");
-
-    PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_RESET_CHARACTER_QUESTSTATUS_DAILY);
-    CharacterDatabase.Execute(stmt);
-
-    for (SessionMap::const_iterator itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
-        if (itr->second->GetPlayer())
-            itr->second->GetPlayer()->ResetDailyQuestStatus();
-
-    // change available dailies
-    sPoolMgr->ChangeDailyQuests();
-}
-
-void World::LoadDBAllowedSecurityLevel()
-{
-    PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_REALMLIST_SECURITY_LEVEL);
-    stmt->setInt32(0, int32(realm.Id.Realm));
-    PreparedQueryResult result = LoginDatabase.Query(stmt);
-
-    if (result)
-        SetPlayerSecurityLimit(AccountTypes(result->Fetch()->GetUInt8()));
-}
-
-void World::SetPlayerSecurityLimit(AccountTypes _sec)
-{
-    AccountTypes sec = _sec < SEC_CONSOLE ? _sec : SEC_PLAYER;
-    bool update = sec > m_allowedSecurityLevel;
-    m_allowedSecurityLevel = sec;
-    if (update)
-        KickAllLess(m_allowedSecurityLevel);
-}
-
-void World::ResetWeeklyQuests()
-{
-    TC_LOG_INFO("misc", "Weekly quests reset for all characters.");
-
-    PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_RESET_CHARACTER_QUESTSTATUS_WEEKLY);
-    CharacterDatabase.Execute(stmt);
-
-    for (SessionMap::const_iterator itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
-        if (itr->second->GetPlayer())
-            itr->second->GetPlayer()->ResetWeeklyQuestStatus();
-
-    m_NextWeeklyQuestReset = time_t(m_NextWeeklyQuestReset + WEEK);
-    sWorld->setWorldState(WS_WEEKLY_QUEST_RESET_TIME, uint64(m_NextWeeklyQuestReset));
-
-    // change available weeklies
-    sPoolMgr->ChangeWeeklyQuests();
-}
-
-void World::ResetMonthlyQuests()
-{
-    TC_LOG_INFO("misc", "Monthly quests reset for all characters.");
-
-    PreparedStatement* stmt = CharacterDatabase.GetPreparedStatement(CHAR_DEL_RESET_CHARACTER_QUESTSTATUS_MONTHLY);
-    CharacterDatabase.Execute(stmt);
-
-    for (SessionMap::const_iterator itr = m_sessions.begin(); itr != m_sessions.end(); ++itr)
-        if (itr->second->GetPlayer())
-            itr->second->GetPlayer()->ResetMonthlyQuestStatus();
-
-    // generate time
-    time_t curTime = time(NULL);
-    tm localTm;
-    localtime_r(&curTime, &localTm);
-
-    int month   = localTm.tm_mon;
-    int year    = localTm.tm_year;
-
-    ++month;
-
-    // month 11 is december, next is january (0)
-    if (month > 11)
-    {
-        month = 0;
-        year += 1;
-    }
-
-    // reset time for next month
-    localTm.tm_year     = year;
-    localTm.tm_mon      = month;
-    localTm.tm_mday     = 1;        // don't know if we really need config option for day / hour
-    localTm.tm_hour     = 0;
-    localTm.tm_min      = 0;
-    localTm.tm_sec      = 0;
-
-    time_t nextMonthResetTime = mktime(&localTm);
-
-    // plan next reset time
-    m_NextMonthlyQuestReset = (curTime >= nextMonthResetTime) ? nextMonthResetTime + MONTH : nextMonthResetTime;
-
-    sWorld->setWorldState(WS_MONTHLY_QUEST_RESET_TIME, uint64(m_NextMonthlyQuestReset));
 }
 
 void World::ResetEventSeasonalQuests(uint16 event_id)
@@ -3135,6 +3356,15 @@ void World::ResetRandomBG()
 
     m_NextRandomBGReset = time_t(m_NextRandomBGReset + DAY);
     sWorld->setWorldState(WS_BG_DAILY_RESET_TIME, uint64(m_NextRandomBGReset));
+}
+
+void World::CalendarDeleteOldEvents()
+{
+    TC_LOG_INFO("misc", "Calendar deletion of old events.");
+
+    m_NextCalendarOldEventsDeletionTime = time_t(m_NextCalendarOldEventsDeletionTime + DAY);
+    sWorld->setWorldState(WS_DAILY_CALENDAR_DELETION_OLD_EVENTS_TIME, uint64(m_NextCalendarOldEventsDeletionTime));
+    sCalendarMgr->DeleteOldEvents();
 }
 
 void World::ResetGuildCap()
@@ -3206,6 +3436,16 @@ void World::LoadWorldStates()
 
 }
 
+bool World::IsPvPRealm() const
+{
+    return (getIntConfig(CONFIG_GAME_TYPE) == REALM_TYPE_PVP || getIntConfig(CONFIG_GAME_TYPE) == REALM_TYPE_RPPVP || getIntConfig(CONFIG_GAME_TYPE) == REALM_TYPE_FFA_PVP);
+}
+
+bool World::IsFFAPvPRealm() const
+{
+    return getIntConfig(CONFIG_GAME_TYPE) == REALM_TYPE_FFA_PVP;
+}
+
 // Setting a worldstate will save it to DB
 void World::setWorldState(uint32 index, uint64 value)
 {
@@ -3260,3 +3500,13 @@ void World::RemoveOldCorpses()
 }
 
 Realm realm;
+
+CliCommandHolder::CliCommandHolder(void* callbackArg, char const* command, Print zprint, CommandFinished commandFinished)
+    : m_callbackArg(callbackArg), m_command(strdup(command)), m_print(zprint), m_commandFinished(commandFinished)
+{
+}
+
+CliCommandHolder::~CliCommandHolder()
+{
+    free(m_command);
+}

@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -24,7 +23,6 @@ SDCategory: Thousand Needles
 EndScriptData */
 
 /* ContentData
-npc_kanati
 npc_lakota_windsong
 npc_swiftmountain
 npc_enraged_panther
@@ -32,77 +30,11 @@ go_panther_cage
 EndContentData */
 
 #include "ScriptMgr.h"
-#include "ScriptedCreature.h"
-#include "ScriptedGossip.h"
-#include "ScriptedEscortAI.h"
+#include "GameObject.h"
+#include "GameObjectAI.h"
 #include "Player.h"
-
-/*#####
-# npc_kanati
-######*/
-
-enum Kanati
-{
-    SAY_KAN_START        = 0,
-    QUEST_PROTECT_KANATI = 4966,
-    NPC_GALAK_ASS        = 10720
-};
-
-Position const GalakLoc = {-4867.387695f, -1357.353760f, -48.226f, 0.0f};
-
-class npc_kanati : public CreatureScript
-{
-public:
-    npc_kanati() : CreatureScript("npc_kanati") { }
-
-    bool OnQuestAccept(Player* player, Creature* creature, const Quest* quest) override
-    {
-        if (quest->GetQuestId() == QUEST_PROTECT_KANATI)
-            if (npc_kanatiAI* pEscortAI = CAST_AI(npc_kanati::npc_kanatiAI, creature->AI()))
-                pEscortAI->Start(false, false, player->GetGUID(), quest, true);
-
-        return true;
-    }
-
-    CreatureAI* GetAI(Creature* creature) const override
-    {
-        return new npc_kanatiAI(creature);
-    }
-
-    struct npc_kanatiAI : public npc_escortAI
-    {
-        npc_kanatiAI(Creature* creature) : npc_escortAI(creature) { }
-
-        void Reset() override { }
-
-        void WaypointReached(uint32 waypointId) override
-        {
-            switch (waypointId)
-            {
-                case 0:
-                    Talk(SAY_KAN_START);
-                    DoSpawnGalak();
-                    break;
-                case 1:
-                    if (Player* player = GetPlayerForEscort())
-                        player->GroupEventHappens(QUEST_PROTECT_KANATI, me);
-                    break;
-            }
-        }
-
-        void DoSpawnGalak()
-        {
-            for (int i = 0; i < 3; ++i)
-                me->SummonCreature(NPC_GALAK_ASS, GalakLoc, TEMPSUMMON_TIMED_DESPAWN_OUT_OF_COMBAT, 25000);
-        }
-
-        void JustSummoned(Creature* summoned) override
-        {
-            summoned->AI()->AttackStart(me);
-        }
-    };
-
-};
+#include "ScriptedEscortAI.h"
+#include "ScriptedGossip.h"
 
 /*######
 # npc_lakota_windsong
@@ -118,7 +50,6 @@ enum Lakota
 
     QUEST_FREE_AT_LAST    = 4904,
     NPC_GRIM_BANDIT       = 10758,
-    FACTION_ESCORTEE_LAKO = 232,   //guessed
 
     ID_AMBUSH_1           = 0,
     ID_AMBUSH_2           = 2,
@@ -140,31 +71,13 @@ class npc_lakota_windsong : public CreatureScript
 public:
     npc_lakota_windsong() : CreatureScript("npc_lakota_windsong") { }
 
-    bool OnQuestAccept(Player* player, Creature* creature, const Quest* quest) override
+    struct npc_lakota_windsongAI : public EscortAI
     {
-        if (quest->GetQuestId() == QUEST_FREE_AT_LAST)
-        {
-            creature->AI()->Talk(SAY_LAKO_START, player);
-            creature->setFaction(FACTION_ESCORTEE_LAKO);
-
-            if (npc_lakota_windsongAI* pEscortAI = CAST_AI(npc_lakota_windsong::npc_lakota_windsongAI, creature->AI()))
-                pEscortAI->Start(false, false, player->GetGUID(), quest);
-        }
-        return true;
-    }
-
-    CreatureAI* GetAI(Creature* creature) const override
-    {
-        return new npc_lakota_windsongAI(creature);
-    }
-
-    struct npc_lakota_windsongAI : public npc_escortAI
-    {
-        npc_lakota_windsongAI(Creature* creature) : npc_escortAI(creature) { }
+        npc_lakota_windsongAI(Creature* creature) : EscortAI(creature) { }
 
         void Reset() override { }
 
-        void WaypointReached(uint32 waypointId) override
+        void WaypointReached(uint32 waypointId, uint32 /*pathId*/) override
         {
             switch (waypointId)
             {
@@ -193,7 +106,23 @@ public:
             for (int i = 0; i < 2; ++i)
                 me->SummonCreature(NPC_GRIM_BANDIT, BanditLoc[i+AmbushId], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
         }
+
+        void QuestAccept(Player* player, Quest const* quest) override
+        {
+            if (quest->GetQuestId() == QUEST_FREE_AT_LAST)
+            {
+                Talk(SAY_LAKO_START, player);
+                me->SetFaction(FACTION_ESCORTEE_H_NEUTRAL_ACTIVE);
+
+                Start(false, false, player->GetGUID(), quest);
+            }
+        }
     };
+
+    CreatureAI* GetAI(Creature* creature) const override
+    {
+        return new npc_lakota_windsongAI(creature);
+    }
 };
 
 /*######
@@ -207,8 +136,7 @@ enum Packa
     SAY_COMPLETE     = 2,
 
     QUEST_HOMEWARD   = 4770,
-    NPC_WYVERN       = 4107,
-    FACTION_ESCORTEE = 232                               //guessed
+    NPC_WYVERN       = 4107
 };
 
 Position const WyvernLoc[3] =
@@ -223,31 +151,13 @@ class npc_paoka_swiftmountain : public CreatureScript
 public:
     npc_paoka_swiftmountain() : CreatureScript("npc_paoka_swiftmountain") { }
 
-    bool OnQuestAccept(Player* player, Creature* creature, const Quest* quest) override
+    struct npc_paoka_swiftmountainAI : public EscortAI
     {
-        if (quest->GetQuestId() == QUEST_HOMEWARD)
-        {
-            creature->AI()->Talk(SAY_START, player);
-            creature->setFaction(FACTION_ESCORTEE);
-
-            if (npc_paoka_swiftmountainAI* pEscortAI = CAST_AI(npc_paoka_swiftmountain::npc_paoka_swiftmountainAI, creature->AI()))
-                pEscortAI->Start(false, false, player->GetGUID(), quest);
-        }
-        return true;
-    }
-
-    CreatureAI* GetAI(Creature* creature) const override
-    {
-        return new npc_paoka_swiftmountainAI(creature);
-    }
-
-    struct npc_paoka_swiftmountainAI : public npc_escortAI
-    {
-        npc_paoka_swiftmountainAI(Creature* creature) : npc_escortAI(creature) { }
+        npc_paoka_swiftmountainAI(Creature* creature) : EscortAI(creature) { }
 
         void Reset() override { }
 
-        void WaypointReached(uint32 waypointId) override
+        void WaypointReached(uint32 waypointId, uint32 /*pathId*/) override
         {
             switch (waypointId)
             {
@@ -270,7 +180,23 @@ public:
             for (int i = 0; i < 3; ++i)
                 me->SummonCreature(NPC_WYVERN, WyvernLoc[i], TEMPSUMMON_TIMED_OR_DEAD_DESPAWN, 60000);
         }
+
+        void QuestAccept(Player* player, Quest const* quest) override
+        {
+            if (quest->GetQuestId() == QUEST_HOMEWARD)
+            {
+                Talk(SAY_START, player);
+                me->SetFaction(FACTION_ESCORTEE_H_NEUTRAL_ACTIVE);
+
+                Start(false, false, player->GetGUID(), quest);
+            }
+        }
     };
+
+    CreatureAI* GetAI(Creature* creature) const override
+    {
+        return new npc_paoka_swiftmountainAI(creature);
+    }
 };
 
 enum PantherCage
@@ -284,20 +210,30 @@ class go_panther_cage : public GameObjectScript
 public:
     go_panther_cage() : GameObjectScript("go_panther_cage") { }
 
-    bool OnGossipHello(Player* player, GameObject* go) override
+    struct go_panther_cageAI : public GameObjectAI
     {
-        go->UseDoorOrButton();
-        if (player->GetQuestStatus(QUEST_HYPERCAPACITOR_GIZMO) == QUEST_STATUS_INCOMPLETE)
-        {
-            if (Creature* panther = go->FindNearestCreature(ENRAGED_PANTHER, 5, true))
-            {
-                panther->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
-                panther->SetReactState(REACT_AGGRESSIVE);
-                panther->AI()->AttackStart(player);
-            }
-        }
+        go_panther_cageAI(GameObject* go) : GameObjectAI(go) { }
 
-        return true;
+        bool GossipHello(Player* player) override
+        {
+            me->UseDoorOrButton();
+            if (player->GetQuestStatus(QUEST_HYPERCAPACITOR_GIZMO) == QUEST_STATUS_INCOMPLETE)
+            {
+                if (Creature* panther = me->FindNearestCreature(ENRAGED_PANTHER, 5, true))
+                {
+                    panther->RemoveFlag(UNIT_FIELD_FLAGS, UNIT_FLAG_NON_ATTACKABLE);
+                    panther->SetReactState(REACT_AGGRESSIVE);
+                    panther->AI()->AttackStart(player);
+                }
+            }
+
+            return true;
+        }
+    };
+
+    GameObjectAI* GetAI(GameObject* go) const override
+    {
+        return new go_panther_cageAI(go);
     }
 };
 
@@ -334,7 +270,6 @@ public:
 
 void AddSC_thousand_needles()
 {
-    new npc_kanati();
     new npc_lakota_windsong();
     new npc_paoka_swiftmountain();
     new npc_enraged_panther();

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -22,13 +22,16 @@ Comment: All guild related commands
 Category: commandscripts
 EndScriptData */
 
-#include "Chat.h"
-#include "Language.h"
-#include "Guild.h"
-#include "GuildMgr.h"
-#include "ObjectAccessor.h"
 #include "ScriptMgr.h"
 #include "CharacterCache.h"
+#include "Chat.h"
+#include "Guild.h"
+#include "GuildMgr.h"
+#include "Language.h"
+#include "ObjectAccessor.h"
+#include "ObjectMgr.h"
+#include "Player.h"
+#include "RBAC.h"
 
 class guild_commandscript : public CommandScript
 {
@@ -49,7 +52,7 @@ public:
         };
         static std::vector<ChatCommand> commandTable =
         {
-            { "guild", rbac::RBAC_PERM_COMMAND_GUILD,  true, NULL, "", guildCommandTable },
+            { "guild", rbac::RBAC_PERM_COMMAND_GUILD,  true, nullptr, "", guildCommandTable },
         };
         return commandTable;
     }
@@ -69,10 +72,10 @@ public:
 
         // if not guild name only (in "") then player name
         Player* target;
-        if (!handler->extractPlayerTarget(*args != '"' ? (char*)args : NULL, &target))
+        if (!handler->extractPlayerTarget(*args != '"' ? (char*)args : nullptr, &target))
             return false;
 
-        char* tailStr = *args != '"' ? strtok(NULL, "") : (char*)args;
+        char* tailStr = *args != '"' ? strtok(nullptr, "") : (char*)args;
         if (!tailStr)
             return false;
 
@@ -85,7 +88,22 @@ public:
         if (target->GetGuildId())
         {
             handler->SendSysMessage(LANG_PLAYER_IN_GUILD);
-            return true;
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        if (sGuildMgr->GetGuildByName(guildName))
+        {
+            handler->SendSysMessage(LANG_GUILD_RENAME_ALREADY_EXISTS);
+            handler->SetSentErrorMessage(true);
+            return false;
+        }
+
+        if (sObjectMgr->IsReservedName(guildName) || !sObjectMgr->IsValidCharterName(guildName))
+        {
+            handler->SendSysMessage(LANG_BAD_VALUE);
+            handler->SetSentErrorMessage(true);
+            return false;
         }
 
         Guild* guild = new Guild;
@@ -130,10 +148,10 @@ public:
 
         // if not guild name only (in "") then player name
         ObjectGuid targetGuid;
-        if (!handler->extractPlayerTarget(*args != '"' ? (char*)args : NULL, NULL, &targetGuid))
+        if (!handler->extractPlayerTarget(*args != '"' ? (char*)args : nullptr, nullptr, &targetGuid))
             return false;
 
-        char* tailStr = *args != '"' ? strtok(NULL, "") : (char*)args;
+        char* tailStr = *args != '"' ? strtok(nullptr, "") : (char*)args;
         if (!tailStr)
             return false;
 
@@ -213,7 +231,7 @@ public:
             return false;
         }
 
-        char const* newGuildStr = handler->extractQuotedArg(strtok(NULL, ""));
+        char const* newGuildStr = handler->extractQuotedArg(strtok(nullptr, ""));
         if (!newGuildStr)
         {
             handler->SendSysMessage(LANG_INSERT_GUILD_NAME);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -15,14 +15,19 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "ScriptMgr.h"
 #include "Chat.h"
 #include "Language.h"
+#include "Log.h"
+#include "Map.h"
+#include "ObjectMgr.h"
 #include "Pet.h"
 #include "Player.h"
-#include "ObjectMgr.h"
-#include "ScriptMgr.h"
+#include "RBAC.h"
+#include "SpellMgr.h"
+#include "WorldSession.h"
 
-static inline Pet* GetSelectedPlayerPetOrOwn(ChatHandler* handler)
+inline Pet* GetSelectedPlayerPetOrOwn(ChatHandler* handler)
 {
     if (Unit* target = handler->getSelectedUnit())
     {
@@ -35,6 +40,7 @@ static inline Pet* GetSelectedPlayerPetOrOwn(ChatHandler* handler)
     Player* player = handler->GetSession()->GetPlayer();
     return player ? player->GetPet() : nullptr;
 }
+
 class pet_commandscript : public CommandScript
 {
 public:
@@ -52,7 +58,7 @@ public:
 
         static std::vector<ChatCommand> commandTable =
         {
-            { "pet", rbac::RBAC_PERM_COMMAND_PET, false, NULL, "", petCommandTable },
+            { "pet", rbac::RBAC_PERM_COMMAND_PET, false, nullptr, "", petCommandTable },
         };
         return commandTable;
     }
@@ -97,9 +103,9 @@ public:
         creatureTarget->SetHealth(0); // just for nice GM-mode view
 
         pet->SetGuidValue(UNIT_FIELD_CREATEDBY, player->GetGUID());
-        pet->SetUInt32Value(UNIT_FIELD_FACTIONTEMPLATE, player->getFaction());
+        pet->SetFaction(player->GetFaction());
 
-        if (!pet->InitStatsForLevel(creatureTarget->getLevel()))
+        if (!pet->InitStatsForLevel(creatureTarget->GetLevel()))
         {
             TC_LOG_ERROR("misc", "InitStatsForLevel() in EffectTameCreature failed! Pet deleted.");
             handler->PSendSysMessage("Error 2");
@@ -108,7 +114,7 @@ public:
         }
 
         // prepare visual effect for levelup
-        pet->SetUInt32Value(UNIT_FIELD_LEVEL, creatureTarget->getLevel()-1);
+        pet->SetUInt32Value(UNIT_FIELD_LEVEL, creatureTarget->GetLevel()-1);
 
         pet->GetCharmInfo()->SetPetNumber(sObjectMgr->GeneratePetNumber(), true);
         // this enables pet details window (Shift+P)
@@ -118,7 +124,7 @@ public:
         pet->GetMap()->AddToMap(pet->ToCreature());
 
         // visual effect for levelup
-        pet->SetUInt32Value(UNIT_FIELD_LEVEL, creatureTarget->getLevel());
+        pet->SetUInt32Value(UNIT_FIELD_LEVEL, creatureTarget->GetLevel());
 
         player->SetMinion(pet, true);
         pet->SavePetToDB(PET_SAVE_AS_CURRENT);
@@ -205,7 +211,7 @@ public:
 
         int32 level = args ? atoi(args) : 0;
         if (level == 0)
-            level = owner->getLevel() - pet->getLevel();
+            level = owner->GetLevel() - pet->GetLevel();
         if (level == 0 || level < -STRONG_MAX_LEVEL || level > STRONG_MAX_LEVEL)
         {
             handler->SendSysMessage(LANG_BAD_VALUE);
@@ -213,11 +219,11 @@ public:
             return false;
         }
 
-        int32 newLevel = pet->getLevel() + level;
+        int32 newLevel = pet->GetLevel() + level;
         if (newLevel < 1)
             newLevel = 1;
-        else if (newLevel > owner->getLevel())
-            newLevel = owner->getLevel();
+        else if (newLevel > owner->GetLevel())
+            newLevel = owner->GetLevel();
 
         pet->GivePetLevel(newLevel);
         return true;

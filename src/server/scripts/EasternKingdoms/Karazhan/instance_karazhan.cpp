@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -24,8 +23,11 @@ SDCategory: Karazhan
 EndScriptData */
 
 #include "ScriptMgr.h"
+#include "Creature.h"
+#include "GameObject.h"
 #include "InstanceScript.h"
 #include "karazhan.h"
+#include "Map.h"
 
 /*
 0  - Attumen + Midnight (optional)
@@ -52,7 +54,7 @@ const Position OptionalSpawn[] =
 class instance_karazhan : public InstanceMapScript
 {
 public:
-    instance_karazhan() : InstanceMapScript("instance_karazhan", 532) { }
+    instance_karazhan() : InstanceMapScript(KZScriptName, 532) { }
 
     InstanceScript* GetInstanceScript(InstanceMap* map) const override
     {
@@ -161,7 +163,7 @@ public:
                         HandleGameObject(StageDoorRightGUID, true);
                         if (GameObject* sideEntrance = instance->GetGameObject(SideEntranceDoor))
                             sideEntrance->RemoveFlag(GAMEOBJECT_FLAGS, GO_FLAG_LOCKED);
-                        UpdateEncounterState(ENCOUNTER_CREDIT_KILL_CREATURE, 16812, NULL);
+                        UpdateEncounterStateForKilledCreature(16812, nullptr);
                     }
                     break;
                 case DATA_CHESS:

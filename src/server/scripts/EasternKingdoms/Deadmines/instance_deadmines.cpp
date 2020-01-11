@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2006-2008 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -24,10 +23,13 @@ SDCategory: Deadmines
 EndScriptData */
 
 #include "ScriptMgr.h"
-#include "InstanceScript.h"
+#include "CreatureAI.h"
 #include "deadmines.h"
+#include "GameObject.h"
+#include "InstanceScript.h"
+#include "Map.h"
+#include "MotionMaster.h"
 #include "TemporarySummon.h"
-#include "WorldPacket.h"
 
 enum Sounds
 {
@@ -45,8 +47,7 @@ enum Misc
 class instance_deadmines : public InstanceMapScript
 {
     public:
-        instance_deadmines()
-            : InstanceMapScript("instance_deadmines", 36)
+        instance_deadmines() : InstanceMapScript(DMScriptName, 36)
         {
         }
 
@@ -213,15 +214,15 @@ class instance_deadmines : public InstanceMapScript
             {
                 switch (type)
                 {
-                case EVENT_STATE:
-                    if (DefiasCannonGUID && IronCladDoorGUID)
-                        State=data;
-                    break;
-                case EVENT_RHAHKZOR:
-                    if (data == DONE)
-                        if (GameObject* go = instance->GetGameObject(FactoryDoorGUID))
-                            go->SetGoState(GO_STATE_ACTIVE);
-                    break;
+                    case EVENT_STATE:
+                        if (DefiasCannonGUID && IronCladDoorGUID)
+                            State = data;
+                        break;
+                    case EVENT_RHAHKZOR:
+                        if (data == DONE)
+                            if (GameObject* go = instance->GetGameObject(FactoryDoorGUID))
+                                go->SetGoState(GO_STATE_ACTIVE);
+                        break;
                 }
             }
 

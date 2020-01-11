@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2010 MaNGOS <http://getmangos.com/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -17,6 +16,7 @@
  */
 
 #include "MMapManager.h"
+#include "Errors.h"
 #include "Log.h"
 #include "Config.h"
 #include "MapDefines.h"
@@ -39,7 +39,7 @@ namespace MMAP
     void MMapManager::InitializeThreadUnsafe(const std::vector<uint32>& mapIds)
     {
         // the caller must pass the list of all mapIds that will be used in the VMapManager2 lifetime
-        for (const uint32& mapId : mapIds)
+        for (uint32 const& mapId : mapIds)
             loadedMMaps.insert(MMapDataSet::value_type(mapId, nullptr));
 
         thread_safe_environment = false;
@@ -156,7 +156,7 @@ namespace MMAP
 
         long pos = ftell(file);
         fseek(file, 0, SEEK_END);
-        if (static_cast<int32>(fileHeader.size) > ftell(file) - pos)
+        if (pos < 0 || static_cast<int32>(fileHeader.size) > ftell(file) - pos)
         {
             TC_LOG_ERROR("maps", "MMAP:loadMap: %03u%02i%02i.mmtile has corrupted data size", mapId, x, y);
             fclose(file);
@@ -222,7 +222,7 @@ namespace MMAP
         dtTileRef tileRef = mmap->loadedTileRefs[packedGridPos];
 
         // unload, and mark as non loaded
-        if (dtStatusFailed(mmap->navMesh->removeTile(tileRef, NULL, NULL)))
+        if (dtStatusFailed(mmap->navMesh->removeTile(tileRef, nullptr, nullptr)))
         {
             // this is technically a memory leak
             // if the grid is later reloaded, dtNavMesh::addTile will return error but no extra memory is used
@@ -257,7 +257,7 @@ namespace MMAP
         {
             uint32 x = (i->first >> 16);
             uint32 y = (i->first & 0x0000FFFF);
-            if (dtStatusFailed(mmap->navMesh->removeTile(i->second, NULL, NULL)))
+            if (dtStatusFailed(mmap->navMesh->removeTile(i->second, nullptr, nullptr)))
                 TC_LOG_ERROR("maps", "MMAP:unloadMap: Could not unload %03u%02i%02i.mmtile from navmesh", mapId, x, y);
             else
             {
@@ -304,7 +304,7 @@ namespace MMAP
     {
         MMapDataSet::const_iterator itr = GetMMapData(mapId);
         if (itr == loadedMMaps.end())
-            return NULL;
+            return nullptr;
 
         return itr->second->navMesh;
     }
@@ -313,7 +313,7 @@ namespace MMAP
     {
         MMapDataSet::const_iterator itr = GetMMapData(mapId);
         if (itr == loadedMMaps.end())
-            return NULL;
+            return nullptr;
 
         MMapData* mmap = itr->second;
         if (mmap->navMeshQueries.find(instanceId) == mmap->navMeshQueries.end())
@@ -325,7 +325,7 @@ namespace MMAP
             {
                 dtFreeNavMeshQuery(query);
                 TC_LOG_ERROR("maps", "MMAP:GetNavMeshQuery: Failed to initialize dtNavMeshQuery for mapId %03u instanceId %u", mapId, instanceId);
-                return NULL;
+                return nullptr;
             }
 
             TC_LOG_DEBUG("maps", "MMAP:GetNavMeshQuery: created dtNavMeshQuery for mapId %03u instanceId %u", mapId, instanceId);

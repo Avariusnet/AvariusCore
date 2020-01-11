@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -20,6 +19,7 @@
 #define TRINITY_MAIL_H
 
 #include "Common.h"
+#include "DatabaseEnvFwd.h"
 #include "ObjectGuid.h"
 #include <map>
 
@@ -104,15 +104,15 @@ class TC_GAME_API MailSender
 class TC_GAME_API MailReceiver
 {
     public:                                                 // Constructors
-        explicit MailReceiver(ObjectGuid::LowType receiver_lowguid) : m_receiver(NULL), m_receiver_lowguid(receiver_lowguid) { }
+        explicit MailReceiver(ObjectGuid::LowType receiver_lowguid) : m_receiver(nullptr), m_receiver_lowguid(receiver_lowguid) { }
         MailReceiver(Player* receiver);
         MailReceiver(Player* receiver, ObjectGuid::LowType receiver_lowguid);
     public:                                                 // Accessors
         Player* GetPlayer() const { return m_receiver; }
-        ObjectGuid::LowType  GetPlayerGUIDLow() const { return m_receiver_lowguid; }
+        ObjectGuid::LowType GetPlayerGUIDLow() const { return m_receiver_lowguid; }
     private:
         Player* m_receiver;
-        ObjectGuid::LowType  m_receiver_lowguid;
+        ObjectGuid::LowType m_receiver_lowguid;
 };
 
 class TC_GAME_API MailDraft

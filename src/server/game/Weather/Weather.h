@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -43,10 +42,11 @@ struct WeatherData
     uint32 ScriptId;
 };
 
-enum WeatherState
+enum WeatherState : uint32
 {
     WEATHER_STATE_FINE              = 0,
     WEATHER_STATE_FOG               = 1,
+    WEATHER_STATE_DRIZZLE           = 2,
     WEATHER_STATE_LIGHT_RAIN        = 3,
     WEATHER_STATE_MEDIUM_RAIN       = 4,
     WEATHER_STATE_HEAVY_RAIN        = 5,
@@ -74,6 +74,7 @@ class TC_GAME_API Weather
         bool UpdateWeather();
 
         void SendWeatherUpdateToPlayer(Player* player);
+        static void SendFineWeatherUpdateToPlayer(Player* player);
         void SetWeather(WeatherType type, float grade);
 
         /// For which zone is this weather?

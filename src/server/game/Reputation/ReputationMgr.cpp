@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -16,14 +15,15 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "DatabaseEnv.h"
 #include "ReputationMgr.h"
+#include "DatabaseEnv.h"
 #include "DBCStores.h"
-#include "Player.h"
-#include "WorldPacket.h"
-#include "World.h"
+#include "Log.h"
 #include "ObjectMgr.h"
+#include "Player.h"
 #include "ScriptMgr.h"
+#include "World.h"
+#include "WorldPacket.h"
 #include "WorldSession.h"
 
 const int32 ReputationMgr::PointsInRank[MAX_REPUTATION_RANK] = {36000, 3000, 3000, 3000, 6000, 12000, 21000, 1000};
@@ -66,6 +66,21 @@ bool ReputationMgr::IsAtWar(FactionEntry const* factionEntry) const
     return false;
 }
 
+bool ReputationMgr::IsReputationAllowedForTeam(TeamId team, uint32 factionId) const
+{
+    // @hack some quests give reputation to Alliance-only AND Horde-only factions, but DBC data does not allow to identify faction-only reputations
+    if (team == TEAM_HORDE && (
+        factionId == 1037 || // Alliance Vanguard
+        factionId == 946))   // Honor Hold
+        return false;
+
+    if (team == TEAM_ALLIANCE &&
+        factionId == 947)    // Thrallmar
+        return false;
+
+    return true;
+}
+
 int32 ReputationMgr::GetReputation(uint32 faction_id) const
 {
     FactionEntry const* factionEntry = sFactionStore.LookupEntry(faction_id);
@@ -84,8 +99,8 @@ int32 ReputationMgr::GetBaseReputation(FactionEntry const* factionEntry) const
     if (!factionEntry)
         return 0;
 
-    uint32 raceMask = _player->getRaceMask();
-    uint32 classMask = _player->getClassMask();
+    uint32 raceMask = _player->GetRaceMask();
+    uint32 classMask = _player->GetClassMask();
     for (int i=0; i < 4; i++)
     {
         if ((factionEntry->BaseRepRaceMask[i] & raceMask  ||
@@ -138,8 +153,8 @@ uint32 ReputationMgr::GetDefaultStateFlags(FactionEntry const* factionEntry) con
     if (!factionEntry)
         return 0;
 
-    uint32 raceMask = _player->getRaceMask();
-    uint32 classMask = _player->getClassMask();
+    uint32 raceMask = _player->GetRaceMask();
+    uint32 classMask = _player->GetClassMask();
     for (int i=0; i < 4; i++)
     {
         if ((factionEntry->BaseRepRaceMask[i] & raceMask  ||
@@ -168,7 +183,7 @@ void ReputationMgr::SendForceReactions()
 
 void ReputationMgr::SendState(FactionState const* faction)
 {
-    uint32 count = 1;
+    uint32 count = faction ? 1 : 0;
 
     WorldPacket data(SMSG_SET_FACTION_STANDING, 17);
     data << float(0);
@@ -178,15 +193,18 @@ void ReputationMgr::SendState(FactionState const* faction)
     size_t p_count = data.wpos();
     data << uint32(count);
 
-    data << uint32(faction->ReputationListID);
-    data << uint32(faction->Standing);
+    if (faction)
+    {
+        data << uint32(faction->ReputationListID);
+        data << uint32(faction->Standing);
+    }
 
     for (FactionStateList::iterator itr = _factions.begin(); itr != _factions.end(); ++itr)
     {
         if (itr->second.needSend)
         {
             itr->second.needSend = false;
-            if (itr->second.ReputationListID != faction->ReputationListID)
+            if (!faction || itr->second.ReputationListID != faction->ReputationListID)
             {
                 data << uint32(itr->second.ReputationListID);
                 data << uint32(itr->second.Standing);
@@ -233,12 +251,6 @@ void ReputationMgr::SendInitialReputations()
     }
 
     _player->SendDirectMessage(&data);
-}
-
-void ReputationMgr::SendStates()
-{
-    for (FactionStateList::iterator itr = _factions.begin(); itr != _factions.end(); ++itr)
-        SendState(&(itr->second));
 }
 
 void ReputationMgr::SendVisible(FactionState const* faction) const
@@ -290,7 +302,7 @@ bool ReputationMgr::SetReputation(FactionEntry const* factionEntry, int32 standi
     sScriptMgr->OnPlayerReputationChange(_player, factionEntry->ID, standing, incremental);
     bool res = false;
     // if spillover definition exists in DB, override DBC
-    if (const RepSpilloverTemplate* repTemplate = sObjectMgr->GetRepSpilloverTemplate(factionEntry->ID))
+    if (RepSpilloverTemplate const* repTemplate = sObjectMgr->GetRepSpilloverTemplate(factionEntry->ID))
     {
         for (uint32 i = 0; i < MAX_SPILLOVER_FACTIONS; ++i)
         {
@@ -414,7 +426,7 @@ void ReputationMgr::SetVisible(FactionTemplateEntry const*factionTemplateEntry)
 
     if (FactionEntry const* factionEntry = sFactionStore.LookupEntry(factionTemplateEntry->faction))
         // Never show factions of the opposing team
-        if (!(factionEntry->BaseRepRaceMask[1] & _player->getRaceMask() && factionEntry->BaseRepValue[1] == Reputation_Bottom))
+        if (!(factionEntry->BaseRepRaceMask[1] & _player->GetRaceMask() && factionEntry->BaseRepValue[1] == Reputation_Bottom))
             SetVisible(factionEntry);
 }
 
@@ -465,8 +477,8 @@ void ReputationMgr::SetAtWar(RepListID repListID, bool on)
 
 void ReputationMgr::SetAtWar(FactionState* faction, bool atWar) const
 {
-    // not allow declare war to own faction
-    if (atWar && (faction->Flags & FACTION_FLAG_PEACE_FORCED))
+    // Do not allow to declare war to our own faction. But allow for rival factions (eg Aldor vs Scryer).
+    if (atWar && (faction->Flags & FACTION_FLAG_PEACE_FORCED) && !(faction->Flags & FACTION_FLAG_RIVAL))
         return;
 
     // already set

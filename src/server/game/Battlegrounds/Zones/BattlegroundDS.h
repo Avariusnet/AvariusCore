@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -20,6 +19,7 @@
 #define __BATTLEGROUNDDS_H
 
 #include "Arena.h"
+#include "EventMap.h"
 
 enum BattlegroundDSObjectTypes
 {
@@ -99,7 +99,7 @@ class BattlegroundDS : public Arena
 
         void HandleAreaTrigger(Player* Source, uint32 Trigger) override;
         bool SetupBattleground() override;
-        void FillInitialWorldStates(WorldPacket &d) override;
+        void FillInitialWorldStates(WorldPackets::WorldState::InitWorldStates& packet) override;
 
     private:
         void PostUpdateImpl(uint32 diff) override;
@@ -109,4 +109,5 @@ class BattlegroundDS : public Arena
         uint32 _pipeKnockBackTimer;
         uint8 _pipeKnockBackCount;
 };
+
 #endif

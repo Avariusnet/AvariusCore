@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -16,20 +15,22 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "CharacterCache.h"
-#include "Common.h"
 #include "TicketMgr.h"
+#include "CharacterCache.h"
+#include "Chat.h"
+#include "Common.h"
 #include "DatabaseEnv.h"
-#include "Log.h"
+#include "GameTime.h"
 #include "Language.h"
+#include "Log.h"
+#include "ObjectAccessor.h"
+#include "Opcodes.h"
+#include "Player.h"
+#include "World.h"
 #include "WorldPacket.h"
 #include "WorldSession.h"
-#include "Chat.h"
-#include "World.h"
-#include "Player.h"
-#include "Opcodes.h"
 
-inline float GetAge(uint64 t) { return float(time(NULL) - t) / DAY; }
+inline float GetAge(uint64 t) { return float(GameTime::GetGameTime() - t) / DAY; }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // GM ticket
@@ -37,7 +38,7 @@ GmTicket::GmTicket() : _id(0), _type(TICKET_TYPE_OPEN), _posX(0), _posY(0), _pos
                        _completed(false), _escalatedStatus(TICKET_UNASSIGNED), _viewed(false),
                        _needResponse(false), _needMoreHelp(false) { }
 
-GmTicket::GmTicket(Player* player) : _type(TICKET_TYPE_OPEN), _posX(0), _posY(0), _posZ(0), _mapId(0), _createTime(time(NULL)), _lastModifiedTime(time(NULL)),
+GmTicket::GmTicket(Player* player) : _type(TICKET_TYPE_OPEN), _posX(0), _posY(0), _posZ(0), _mapId(0), _createTime(GameTime::GetGameTime()), _lastModifiedTime(GameTime::GetGameTime()),
                        _completed(false), _escalatedStatus(TICKET_UNASSIGNED), _viewed(false),
                        _needResponse(false), _needMoreHelp(false)
 {
@@ -46,7 +47,19 @@ GmTicket::GmTicket(Player* player) : _type(TICKET_TYPE_OPEN), _posX(0), _posY(0)
     _playerGuid = player->GetGUID();
 }
 
-GmTicket::~GmTicket() { }
+GmTicket::~GmTicket()
+{
+}
+
+Player* GmTicket::GetPlayer() const
+{
+    return ObjectAccessor::FindPlayer(_playerGuid);
+}
+
+Player* GmTicket::GetAssignedPlayer() const
+{
+    return ObjectAccessor::FindPlayer(_assignedTo);
+}
 
 bool GmTicket::LoadFromDB(Field* fields)
 {
@@ -160,7 +173,7 @@ void GmTicket::SendResponse(WorldSession* session) const
 
 std::string GmTicket::FormatMessageString(ChatHandler& handler, bool detailed) const
 {
-    time_t curTime = time(NULL);
+    time_t curTime = GameTime::GetGameTime();
 
     std::stringstream ss;
     ss << handler.PGetParseString(LANG_COMMAND_TICKETLISTGUID, _id);
@@ -183,7 +196,7 @@ std::string GmTicket::FormatMessageString(ChatHandler& handler, bool detailed) c
     return ss.str();
 }
 
-std::string GmTicket::FormatMessageString(ChatHandler& handler, const char* szClosedName, const char* szAssignedToName, const char* szUnassignedName, const char* szDeletedName, const char* szCompletedName) const
+std::string GmTicket::FormatMessageString(ChatHandler& handler, char const* szClosedName, char const* szAssignedToName, char const* szUnassignedName, char const* szDeletedName, char const* szCompletedName) const
 {
     std::stringstream ss;
     ss << handler.PGetParseString(LANG_COMMAND_TICKETLISTGUID, _id);
@@ -199,6 +212,12 @@ std::string GmTicket::FormatMessageString(ChatHandler& handler, const char* szCl
     if (szCompletedName)
         ss << handler.PGetParseString(LANG_COMMAND_TICKETCOMPLETED, szCompletedName);
     return ss.str();
+}
+
+void GmTicket::SetMessage(std::string const& message)
+{
+    _message = message;
+    _lastModifiedTime = uint64(GameTime::GetGameTime());
 }
 
 void GmTicket::SetUnassigned()
@@ -251,7 +270,7 @@ void GmTicket::SetChatLog(std::list<uint32> time, std::string const& log)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 // Ticket manager
 TicketMgr::TicketMgr() : _status(true), _lastTicketId(0), _lastSurveyId(0), _openTicketCount(0),
-    _lastChange(time(NULL)) { }
+    _lastChange(GameTime::GetGameTime()) { }
 
 TicketMgr::~TicketMgr()
 {
@@ -355,7 +374,7 @@ void TicketMgr::AddTicket(GmTicket* ticket)
     _ticketList[ticket->GetId()] = ticket;
     if (!ticket->IsClosed())
         ++_openTicketCount;
-    SQLTransaction trans = SQLTransaction(NULL);
+    SQLTransaction trans = SQLTransaction(nullptr);
     ticket->SaveToDB(trans);
 }
 
@@ -363,7 +382,7 @@ void TicketMgr::CloseTicket(uint32 ticketId, ObjectGuid source)
 {
     if (GmTicket* ticket = GetTicket(ticketId))
     {
-        SQLTransaction trans = SQLTransaction(NULL);
+        SQLTransaction trans = SQLTransaction(nullptr);
         ticket->SetClosedBy(source);
         if (source)
             --_openTicketCount;
@@ -394,6 +413,11 @@ void TicketMgr::RemoveTicket(uint32 ticketId)
     }
 }
 
+void TicketMgr::UpdateLastChange()
+{
+    _lastChange = uint64(GameTime::GetGameTime());
+}
+
 void TicketMgr::ShowList(ChatHandler& handler, bool onlineOnly) const
 {
     handler.SendSysMessage(onlineOnly ? LANG_COMMAND_TICKETSHOWONLINELIST : LANG_COMMAND_TICKETSHOWLIST);
@@ -421,7 +445,7 @@ void TicketMgr::ShowEscalatedList(ChatHandler& handler) const
 
 void TicketMgr::SendTicket(WorldSession* session, GmTicket* ticket) const
 {
-    WorldPacket data(SMSG_GMTICKET_GETTICKET, (ticket ? (4 + 4 + 1 + 4 + 4 + 4 + 1 + 1) : 4));
+    WorldPacket data(SMSG_GMTICKET_GETTICKET, (4 + 4 + 1 + 4 + 4 + 4 + 1 + 1));
 
     if (ticket)
         ticket->WritePacket(data);

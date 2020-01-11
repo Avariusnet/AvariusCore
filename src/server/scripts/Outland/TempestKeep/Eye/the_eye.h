@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -19,6 +18,9 @@
 #ifndef DEF_THE_EYE_H
 #define DEF_THE_EYE_H
 
+#include "CreatureAIImpl.h"
+
+#define TheEyeScriptName "instance_the_eye"
 #define DataHeader "TE"
 
 uint32 const EncounterCount = 4;
@@ -62,5 +64,11 @@ enum TEGameObjectIds
     GO_ARCANE_DOOR_LEFT                 = 184324,
     GO_ARCANE_DOOR_RIGHT                = 184325
 };
+
+template <class AI, class T>
+inline AI* GetTheEyeAI(T* obj)
+{
+    return GetInstanceAI<AI>(obj, TheEyeScriptName);
+}
 
 #endif

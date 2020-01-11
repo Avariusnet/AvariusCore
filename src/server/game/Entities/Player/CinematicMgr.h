@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -21,12 +20,12 @@
 
 #include "Define.h"
 #include "Object.h"
-#include "M2Stores.h"
 
 #define CINEMATIC_LOOKAHEAD (2 * IN_MILLISECONDS)
 #define CINEMATIC_UPDATEDIFF 500
 
 class Player;
+struct FlyByCamera;
 
 class TC_GAME_API CinematicMgr
 {
@@ -52,7 +51,7 @@ protected:
     uint32      m_lastCinematicCheck;
     uint32      m_activeCinematicCameraId;
     uint32      m_cinematicLength;
-    FlyByCameraCollection* m_cinematicCamera;
+    std::vector<FlyByCamera> const* m_cinematicCamera;
     Position    m_remoteSightPosition;
     TempSummon*   m_CinematicObject;
 };

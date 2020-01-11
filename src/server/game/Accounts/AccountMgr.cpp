@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -19,11 +18,14 @@
 #include "AccountMgr.h"
 #include "Config.h"
 #include "DatabaseEnv.h"
+#include "Log.h"
 #include "ObjectAccessor.h"
 #include "Player.h"
+#include "Realm.h"
 #include "ScriptMgr.h"
-#include "Util.h"
 #include "SHA1.h"
+#include "Util.h"
+#include "World.h"
 #include "WorldSession.h"
 
 AccountMgr::AccountMgr() { }
@@ -387,6 +389,18 @@ std::string AccountMgr::CalculateShaPassHash(std::string const& name, std::strin
     return ByteArrayToHexStr(sha.GetDigest(), sha.GetLength());
 }
 
+bool AccountMgr::IsBannedAccount(std::string const& name)
+{
+    PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_ACCOUNT_BANNED_BY_USERNAME);
+    stmt->setString(0, name);
+    PreparedQueryResult result = LoginDatabase.Query(stmt);
+
+    if (!result)
+        return false;
+
+    return true;
+}
+
 bool AccountMgr::IsPlayerAccount(uint32 gmlevel)
 {
     return gmlevel == SEC_PLAYER;
@@ -438,7 +452,7 @@ void AccountMgr::LoadRBAC()
     }
 
     uint32 permissionId = 0;
-    rbac::RBACPermission* permission = NULL;
+    rbac::RBACPermission* permission = nullptr;
 
     do
     {
@@ -470,12 +484,12 @@ void AccountMgr::LoadRBAC()
     }
 
     uint8 secId = 255;
-    rbac::RBACPermissionContainer* permissions = NULL;
+    rbac::RBACPermissionContainer* permissions = nullptr;
     do
     {
         Field* field = result->Fetch();
         uint32 newId = field[0].GetUInt32();
-        if (secId != newId || permissions == NULL)
+        if (secId != newId || permissions == nullptr)
         {
             secId = newId;
             permissions = &_defaultPermissions[secId];
@@ -491,7 +505,7 @@ void AccountMgr::LoadRBAC()
 
 void AccountMgr::UpdateAccountAccess(rbac::RBACData* rbac, uint32 accountId, uint8 securityLevel, int32 realmId)
 {
-    if (rbac && securityLevel == rbac->GetSecurityLevel())
+    if (rbac && securityLevel != rbac->GetSecurityLevel())
         rbac->SetSecurityLevel(securityLevel);
 
     SQLTransaction trans = LoginDatabase.BeginTransaction();
@@ -530,7 +544,7 @@ rbac::RBACPermission const* AccountMgr::GetRBACPermission(uint32 permissionId) c
     if (it != _permissions.end())
         return it->second;
 
-    return NULL;
+    return nullptr;
 }
 
 bool AccountMgr::HasPermission(uint32 accountId, uint32 permissionId, uint32 realmId)

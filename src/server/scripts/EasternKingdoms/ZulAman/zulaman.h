@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -19,6 +18,8 @@
 #ifndef DEF_ZULAMAN_H
 #define DEF_ZULAMAN_H
 
+#include "CreatureAIImpl.h"
+
 #define ZulamanScriptName "instance_zulaman"
 #define DataHeader "ZA"
 
@@ -31,7 +32,7 @@ enum ZADataTypes
     BOSS_HEXLORD                        = 4,
     BOSS_ZULJIN                         = 5,
     MAX_ENCOUNTER,
-    
+
     DATA_GONGEVENT,
     DATA_CHESTLOOTED,
     TYPE_RAND_VENDOR_1,
@@ -65,10 +66,10 @@ enum ZAGameObjectIds
     GO_STRANGE_GONG                     = 187359
 };
 
-template <class AI>
-inline AI* GetZulAmanAI(Creature* creature)
+template <class AI, class T>
+inline AI* GetZulAmanAI(T* obj)
 {
-    return GetInstanceAI<AI>(creature, ZulamanScriptName);
+    return GetInstanceAI<AI>(obj, ZulamanScriptName);
 }
 
 #endif

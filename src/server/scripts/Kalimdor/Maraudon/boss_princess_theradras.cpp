@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -24,7 +23,7 @@ SDCategory: Maraudon
 EndScriptData */
 
 #include "ScriptMgr.h"
-#include "ScriptedCreature.h"
+#include "maraudon.h"
 #include "ScriptedCreature.h"
 
 enum Spells
@@ -42,7 +41,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const override
     {
-        return new boss_ptheradrasAI(creature);
+        return GetMaraudonAI<boss_ptheradrasAI>(creature);
     }
 
     struct boss_ptheradrasAI : public ScriptedAI
@@ -70,7 +69,7 @@ public:
             Initialize();
         }
 
-        void EnterCombat(Unit* /*who*/) override { }
+        void JustEngagedWith(Unit* /*who*/) override { }
 
         void JustDied(Unit* /*killer*/) override
         {

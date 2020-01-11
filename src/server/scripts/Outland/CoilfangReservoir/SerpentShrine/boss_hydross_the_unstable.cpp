@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2006-2009 ScriptDev2 <https://scriptdev2.svn.sourceforge.net/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -24,8 +23,11 @@ SDCategory: Coilfang Resevoir, Serpent Shrine Cavern
 EndScriptData */
 
 #include "ScriptMgr.h"
+#include "InstanceScript.h"
+#include "ObjectAccessor.h"
 #include "ScriptedCreature.h"
 #include "serpent_shrine.h"
+#include "TemporarySummon.h"
 
 enum HydrossTheUnstable
 {
@@ -59,7 +61,7 @@ enum HydrossTheUnstable
     SPELL_ENRAGE                = 27680,                   //this spell need verification
     SPELL_SUMMON_WATER_ELEMENT  = 36459,                   //not in use yet(in use ever?)
     SPELL_ELEMENTAL_SPAWNIN     = 25035,
-    SPELL_BLUE_BEAM             = 40227,                   //channeled Hydross Beam Helper (not in use yet)
+    SPELL_BLUE_BEAM             = 38015,
 
     ENTRY_PURE_SPAWN            = 22035,
     ENTRY_TAINTED_SPAWN         = 22036,
@@ -86,7 +88,7 @@ public:
 
     CreatureAI* GetAI(Creature* creature) const override
     {
-        return GetInstanceAI<boss_hydross_the_unstableAI>(creature);
+        return GetSerpentshrineCavernAI<boss_hydross_the_unstableAI>(creature);
     }
 
     struct boss_hydross_the_unstableAI : public ScriptedAI
@@ -171,7 +173,7 @@ public:
                     mob->DespawnOrUnsummon();
             }
         }
-        void EnterCombat(Unit* /*who*/) override
+        void JustEngagedWith(Unit* /*who*/) override
         {
             Talk(SAY_AGGRO);
 
@@ -217,7 +219,7 @@ public:
             if (!beam)
             {
                 SummonBeams();
-                beam=true;
+                beam = true;
             }
             //Return since we have no target
             if (!UpdateVictim())
@@ -289,7 +291,7 @@ public:
                         MarkOfHydross_Count = 0;
 
                         Talk(SAY_SWITCH_TO_CLEAN);
-                        DoResetThreat();
+                        ResetThreatList();
                         SummonBeams();
 
                         // spawn 4 adds
@@ -373,7 +375,7 @@ public:
                         CorruptedForm = true;
 
                         Talk(SAY_SWITCH_TO_CORRUPT);
-                        DoResetThreat();
+                        ResetThreatList();
                         DeSummonBeams();
 
                         // spawn 4 adds

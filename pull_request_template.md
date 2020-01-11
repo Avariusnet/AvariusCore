@@ -4,7 +4,7 @@
 - 
 - 
 
-**Target branch(es)**: Dev
+**Target branch(es)**: 335/6x
 
 **Issues addressed**: Fixes #
 

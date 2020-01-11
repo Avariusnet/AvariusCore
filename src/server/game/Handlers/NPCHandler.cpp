@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -16,26 +15,32 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "Common.h"
-#include "Language.h"
-#include "DatabaseEnv.h"
-#include "QueryCallback.h"
-#include "WorldPacket.h"
 #include "WorldSession.h"
-#include "Opcodes.h"
-#include "Log.h"
-#include "ObjectMgr.h"
-#include "SpellMgr.h"
-#include "Player.h"
-#include "GossipDef.h"
-#include "Creature.h"
-#include "Pet.h"
-#include "ReputationMgr.h"
-#include "BattlegroundMgr.h"
 #include "Battleground.h"
-#include "ScriptMgr.h"
+#include "BattlegroundMgr.h"
+#include "Common.h"
+#include "Creature.h"
 #include "CreatureAI.h"
+#include "DatabaseEnv.h"
+#include "DBCStores.h"
+#include "GossipDef.h"
+#include "Item.h"
+#include "Language.h"
+#include "Log.h"
+#include "Map.h"
+#include "NPCPackets.h"
+#include "Opcodes.h"
+#include "ObjectMgr.h"
+#include "Pet.h"
+#include "Player.h"
+#include "QueryCallback.h"
+#include "ReputationMgr.h"
+#include "ScriptMgr.h"
 #include "SpellInfo.h"
+#include "SpellMgr.h"
+#include "Trainer.h"
+#include "World.h"
+#include "WorldPacket.h"
 
 enum StableResultCode
 {
@@ -110,135 +115,48 @@ void WorldSession::SendShowMailBox(ObjectGuid guid)
     SendPacket(&data);
 }
 
-void WorldSession::HandleTrainerListOpcode(WorldPacket& recvData)
+void WorldSession::HandleTrainerListOpcode(WorldPackets::NPC::Hello& packet)
 {
-    ObjectGuid guid;
-
-    recvData >> guid;
-    SendTrainerList(guid);
-}
-
-void WorldSession::SendTrainerList(ObjectGuid guid)
-{
-    std::string str = GetTrinityString(LANG_NPC_TAINER_HELLO);
-    SendTrainerList(guid, str);
-}
-
-void WorldSession::SendTrainerList(ObjectGuid guid, const std::string& strTitle)
-{
-    Creature* unit = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_TRAINER);
-    if (!unit)
+    Creature* npc = GetPlayer()->GetNPCIfCanInteractWith(packet.Unit, UNIT_NPC_FLAG_TRAINER);
+    if (!npc)
     {
-        TC_LOG_DEBUG("network", "WORLD: SendTrainerList - %s not found or you can not interact with him.", guid.ToString().c_str());
+        TC_LOG_DEBUG("network", "WorldSession: SendTrainerList - %s not found or you can not interact with him.", packet.Unit.ToString().c_str());
         return;
     }
 
+    SendTrainerList(npc);
+}
+
+void WorldSession::SendTrainerList(Creature* npc)
+{
     // remove fake death
     if (GetPlayer()->HasUnitState(UNIT_STATE_DIED))
         GetPlayer()->RemoveAurasByType(SPELL_AURA_FEIGN_DEATH);
 
-    TrainerSpellData const* trainer_spells = unit->GetTrainerSpells();
-    if (!trainer_spells)
-    {
-        TC_LOG_DEBUG("network", "WORLD: SendTrainerList - Training spells not found for %s", guid.ToString().c_str());
-        return;
-    }
-
-    WorldPacket data(SMSG_TRAINER_LIST, 8+4+4+trainer_spells->spellList.size()*38 + strTitle.size()+1);
-    data << guid;
-    data << uint32(trainer_spells->trainerType);
-
-    size_t count_pos = data.wpos();
-    data << uint32(trainer_spells->spellList.size());
-
-    // reputation discount
-    float fDiscountMod = _player->GetReputationPriceDiscount(unit);
-    bool can_learn_primary_prof = GetPlayer()->GetFreePrimaryProfessionPoints() > 0;
-
-    uint32 count = 0;
-    for (TrainerSpellMap::const_iterator itr = trainer_spells->spellList.begin(); itr != trainer_spells->spellList.end(); ++itr)
-    {
-        TrainerSpell const* tSpell = &itr->second;
-
-        bool valid = true;
-        bool primary_prof_first_rank = false;
-        for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
-        {
-            if (!tSpell->learnedSpell[i])
-                continue;
-            if (!_player->IsSpellFitByClassAndRace(tSpell->learnedSpell[i]))
-            {
-                valid = false;
-                break;
-            }
-            SpellInfo const* learnedSpellInfo = sSpellMgr->GetSpellInfo(tSpell->learnedSpell[i]);
-            if (learnedSpellInfo && learnedSpellInfo->IsPrimaryProfessionFirstRank())
-                primary_prof_first_rank = true;
-        }
-        if (!valid)
-            continue;
-
-        TrainerSpellState state = _player->GetTrainerSpellState(tSpell);
-
-        data << uint32(tSpell->spell);                      // learned spell (or cast-spell in profession case)
-        data << uint8(state == TRAINER_SPELL_GREEN_DISABLED ? TRAINER_SPELL_GREEN : state);
-        data << uint32(floor(tSpell->spellCost * fDiscountMod));
-
-        data << uint32(primary_prof_first_rank && can_learn_primary_prof ? 1 : 0);
-                                                            // primary prof. learn confirmation dialog
-        data << uint32(primary_prof_first_rank ? 1 : 0);    // must be equal prev. field to have learn button in enabled state
-        data << uint8(tSpell->reqLevel);
-        data << uint32(tSpell->reqSkill);
-        data << uint32(tSpell->reqSkillValue);
-        //prev + req or req + 0
-        uint8 maxReq = 0;
-        for (uint8 i = 0; i < MAX_SPELL_EFFECTS; ++i)
-        {
-            if (!tSpell->learnedSpell[i])
-                continue;
-            if (uint32 prevSpellId = sSpellMgr->GetPrevSpellInChain(tSpell->learnedSpell[i]))
-            {
-                data << uint32(prevSpellId);
-                ++maxReq;
-            }
-            if (maxReq == 3)
-                break;
-            SpellsRequiringSpellMapBounds spellsRequired = sSpellMgr->GetSpellsRequiredForSpellBounds(tSpell->learnedSpell[i]);
-            for (SpellsRequiringSpellMap::const_iterator itr2 = spellsRequired.first; itr2 != spellsRequired.second && maxReq < 3; ++itr2)
-            {
-                data << uint32(itr2->second);
-                ++maxReq;
-            }
-            if (maxReq == 3)
-                break;
-        }
-        while (maxReq < 3)
-        {
-            data << uint32(0);
-            ++maxReq;
-        }
-
-        ++count;
-    }
-
-    data << strTitle;
-
-    data.put<uint32>(count_pos, count);
-    SendPacket(&data);
-}
-
-void WorldSession::HandleTrainerBuySpellOpcode(WorldPacket& recvData)
-{
-    ObjectGuid guid;
-    uint32 spellId = 0;
-
-    recvData >> guid >> spellId;
-    TC_LOG_DEBUG("network", "WORLD: Received CMSG_TRAINER_BUY_SPELL %s, learn spell id is: %u", guid.ToString().c_str(), spellId);
-
-    Creature* trainer = GetPlayer()->GetNPCIfCanInteractWith(guid, UNIT_NPC_FLAG_TRAINER);
+    Trainer::Trainer const* trainer = sObjectMgr->GetTrainer(npc->GetEntry());
     if (!trainer)
     {
-        TC_LOG_DEBUG("network", "WORLD: HandleTrainerBuySpellOpcode - %s not found or you can not interact with him.", guid.ToString().c_str());
+        TC_LOG_DEBUG("network", "WorldSession: SendTrainerList - trainer spells not found for %s", npc->GetGUID().ToString().c_str());
+        return;
+    }
+
+    if (!trainer->IsTrainerValidForPlayer(_player))
+    {
+        TC_LOG_DEBUG("network", "WorldSession: SendTrainerList - trainer %s not valid for player %s", npc->GetGUID().ToString().c_str(), GetPlayerInfo().c_str());
+        return;
+    }
+
+    trainer->SendSpells(npc, _player, GetSessionDbLocaleIndex());
+}
+
+void WorldSession::HandleTrainerBuySpellOpcode(WorldPackets::NPC::TrainerBuySpell& packet)
+{
+    TC_LOG_DEBUG("network", "WORLD: Received CMSG_TRAINER_BUY_SPELL %s, learn spell id is: %u", packet.TrainerGUID.ToString().c_str(), packet.SpellID);
+
+    Creature* npc = GetPlayer()->GetNPCIfCanInteractWith(packet.TrainerGUID, UNIT_NPC_FLAG_TRAINER);
+    if (!npc)
+    {
+        TC_LOG_DEBUG("network", "WORLD: HandleTrainerBuySpellOpcode - %s not found or you can not interact with him.", packet.TrainerGUID.ToString().c_str());
         return;
     }
 
@@ -246,54 +164,11 @@ void WorldSession::HandleTrainerBuySpellOpcode(WorldPacket& recvData)
     if (GetPlayer()->HasUnitState(UNIT_STATE_DIED))
         GetPlayer()->RemoveAurasByType(SPELL_AURA_FEIGN_DEATH);
 
-    // check race for mount trainers
-    if (trainer->GetCreatureTemplate()->trainer_type == TRAINER_TYPE_MOUNTS)
-    {
-        if (uint32 trainerRace = trainer->GetCreatureTemplate()->trainer_race)
-            if (_player->getRace() != trainerRace)
-                return;
-    }
-
-    // check class for class trainers
-    if (_player->getClass() != trainer->GetCreatureTemplate()->trainer_class && trainer->GetCreatureTemplate()->trainer_type == TRAINER_TYPE_CLASS)
+    Trainer::Trainer const* trainer = sObjectMgr->GetTrainer(npc->GetEntry());
+    if (!trainer)
         return;
 
-    // check present spell in trainer spell list
-    TrainerSpellData const* trainer_spells = trainer->GetTrainerSpells();
-    if (!trainer_spells)
-        return;
-
-    // not found, cheat?
-    TrainerSpell const* trainer_spell = trainer_spells->Find(spellId);
-    if (!trainer_spell)
-        return;
-
-    // can't be learn, cheat? Or double learn with lags...
-    if (_player->GetTrainerSpellState(trainer_spell) != TRAINER_SPELL_GREEN)
-        return;
-
-    // apply reputation discount
-    uint32 nSpellCost = uint32(floor(trainer_spell->spellCost * _player->GetReputationPriceDiscount(trainer)));
-
-    // check money requirement
-    if (!_player->HasEnoughMoney(nSpellCost))
-        return;
-
-    _player->ModifyMoney(-int32(nSpellCost));
-
-    trainer->SendPlaySpellVisual(179); // 53 SpellCastDirected
-    trainer->SendPlaySpellImpact(_player->GetGUID(), 362); // 113 EmoteSalute
-
-    // learn explicitly or cast explicitly
-    if (trainer_spell->IsCastable())
-        _player->CastSpell(_player, trainer_spell->spell, true);
-    else
-        _player->LearnSpell(spellId, false);
-
-    WorldPacket data(SMSG_TRAINER_BUY_SUCCEEDED, 12);
-    data << uint64(guid);
-    data << uint32(spellId);                                // should be same as in packet from client
-    SendPacket(&data);
+    trainer->TeachSpell(npc, _player, packet.SpellID);
 }
 
 void WorldSession::HandleGossipHelloOpcode(WorldPacket& recvData)
@@ -311,7 +186,7 @@ void WorldSession::HandleGossipHelloOpcode(WorldPacket& recvData)
     }
 
     // set faction visible if needed
-    if (FactionTemplateEntry const* factionTemplateEntry = sFactionTemplateStore.LookupEntry(unit->getFaction()))
+    if (FactionTemplateEntry const* factionTemplateEntry = sFactionTemplateStore.LookupEntry(unit->GetFaction()))
         _player->GetReputationMgr().SetVisible(factionTemplateEntry);
 
     GetPlayer()->RemoveAurasWithInterruptFlags(AURA_INTERRUPT_FLAG_TALK);
@@ -319,11 +194,9 @@ void WorldSession::HandleGossipHelloOpcode(WorldPacket& recvData)
     //if (GetPlayer()->HasUnitState(UNIT_STATE_DIED))
     //    GetPlayer()->RemoveAurasByType(SPELL_AURA_FEIGN_DEATH);
 
-    // and if he has pure gossip or is banker and moves or is tabard designer?
-    //if (unit->IsArmorer() || unit->IsCivilian() || unit->IsQuestGiver() || unit->IsServiceProvider() || unit->IsGuard())
-    {
-        unit->StopMoving();
-    }
+    // Stop the npc if moving
+    unit->PauseMovement(sWorld->getIntConfig(CONFIG_CREATURE_STOP_FOR_PLAYER));
+    unit->SetHomePosition(unit->GetPosition());
 
     // If spiritguide, no need for gossip menu, just put player into resurrect queue
     if (unit->IsSpiritGuide())
@@ -337,13 +210,13 @@ void WorldSession::HandleGossipHelloOpcode(WorldPacket& recvData)
         }
     }
 
-    if (!sScriptMgr->OnGossipHello(_player, unit))
+    _player->PlayerTalkClass->ClearMenus();
+    if (!unit->AI()->GossipHello(_player))
     {
 //        _player->TalkedToCreature(unit->GetEntry(), unit->GetGUID());
         _player->PrepareGossipMenu(unit, unit->GetCreatureTemplate()->GossipMenuId, true);
         _player->SendPreparedGossip(unit);
     }
-    unit->AI()->sGossipHello(_player);
 }
 
 void WorldSession::HandleSpiritHealerActivateOpcode(WorldPacket& recvData)
@@ -373,11 +246,11 @@ void WorldSession::SendSpiritResurrect()
     _player->DurabilityLossAll(0.25f, true);
 
     // get corpse nearest graveyard
-    WorldSafeLocsEntry const* corpseGrave = NULL;
+    WorldSafeLocsEntry const* corpseGrave = nullptr;
     WorldLocation corpseLocation = _player->GetCorpseLocation();
     if (_player->HasCorpse())
     {
-        corpseGrave = sObjectMgr->GetClosestGraveYard(corpseLocation.GetPositionX(), corpseLocation.GetPositionY(),
+        corpseGrave = sObjectMgr->GetClosestGraveyard(corpseLocation.GetPositionX(), corpseLocation.GetPositionY(),
             corpseLocation.GetPositionZ(), corpseLocation.GetMapId(), _player->GetTeam());
     }
 
@@ -387,7 +260,7 @@ void WorldSession::SendSpiritResurrect()
     // teleport to nearest from corpse graveyard, if different from nearest to player ghost
     if (corpseGrave)
     {
-        WorldSafeLocsEntry const* ghostGrave = sObjectMgr->GetClosestGraveYard(
+        WorldSafeLocsEntry const* ghostGrave = sObjectMgr->GetClosestGraveyard(
             _player->GetPositionX(), _player->GetPositionY(), _player->GetPositionZ(), _player->GetMapId(), _player->GetTeam());
 
         if (corpseGrave != ghostGrave)
@@ -493,7 +366,7 @@ void WorldSession::SendStablePetCallback(ObjectGuid guid, PreparedQueryResult re
     {
         data << uint32(pet->GetCharmInfo()->GetPetNumber());
         data << uint32(pet->GetEntry());
-        data << uint32(pet->getLevel());
+        data << uint32(pet->GetLevel());
         data << pet->GetName();                             // petname
         data << uint8(1);                                   // 1 = current, 2/3 = in stable (any from 4, 5, ... create problems with proper show)
         ++num;
@@ -675,7 +548,7 @@ void WorldSession::HandleUnstablePetCallback(uint32 petId, PreparedQueryResult r
     if (!newPet->LoadPetFromDB(_player, petEntry, petId))
     {
         delete newPet;
-        newPet = NULL;
+        newPet = nullptr;
         SendStableResult(STABLE_ERR_STABLE);
         return;
     }
@@ -849,4 +722,3 @@ void WorldSession::HandleRepairItemOpcode(WorldPacket& recvData)
         _player->DurabilityRepairAll(true, discountMod, guildBank != 0);
     }
 }
-

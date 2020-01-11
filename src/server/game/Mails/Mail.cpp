@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2009 MaNGOS <http://getmangos.com/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -16,17 +15,20 @@
  * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "DatabaseEnv.h"
 #include "Mail.h"
-#include "Log.h"
-#include "World.h"
-#include "ObjectMgr.h"
-#include "Player.h"
-#include "BattlegroundMgr.h"
-#include "Item.h"
 #include "AuctionHouseMgr.h"
+#include "BattlegroundMgr.h"
 #include "CalendarMgr.h"
 #include "CharacterCache.h"
+#include "DatabaseEnv.h"
+#include "GameTime.h"
+#include "Item.h"
+#include "Log.h"
+#include "LootMgr.h"
+#include "ObjectAccessor.h"
+#include "ObjectMgr.h"
+#include "Player.h"
+#include "World.h"
 
 MailSender::MailSender(Object* sender, MailStationery stationery) : m_stationery(stationery)
 {
@@ -96,6 +98,10 @@ void MailDraft::prepareItems(Player* receiver, SQLTransaction& trans)
         return;
 
     m_mailTemplateItemsNeed = false;
+
+    // The mail sent after turning in the quest The Good News and The Bad News contains 100g
+    if (m_mailTemplateId == 123)
+        m_money = 1000000;
 
     Loot mailLoot;
 
@@ -188,7 +194,7 @@ void MailDraft::SendMailTo(SQLTransaction& trans, MailReceiver const& receiver, 
 
     uint32 mailId = sObjectMgr->GenerateMailID();
 
-    time_t deliver_time = time(NULL) + deliver_delay;
+    time_t deliver_time = GameTime::GetGameTime() + deliver_delay;
 
     //expire time if COD 3 days, if no COD 30 days, if auction sale pending 1 hour
     uint32 expire_delay;
@@ -279,13 +285,13 @@ void MailDraft::SendMailTo(SQLTransaction& trans, MailReceiver const& receiver, 
         }
         else if (!m_items.empty())
         {
-            SQLTransaction temp = SQLTransaction(NULL);
+            SQLTransaction temp = SQLTransaction(nullptr);
             deleteIncludedItems(temp);
         }
     }
     else if (!m_items.empty())
     {
-        SQLTransaction temp = SQLTransaction(NULL);
+        SQLTransaction temp = SQLTransaction(nullptr);
         deleteIncludedItems(temp);
     }
 }

@@ -1,4 +1,4 @@
-# Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
+# This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
 #
 # This file is free software; as a special exception the author gives
 # unlimited permission to copy and/or distribute it, with or without
@@ -91,7 +91,6 @@ endforeach()
 # Base sources which are used by every script project
 if (USE_SCRIPTPCH)
   set(PRIVATE_PCH_HEADER ScriptPCH.h)
-  set(PRIVATE_PCH_SOURCE ScriptPCH.cpp)
 endif ()
 
 GroupSources(${CMAKE_CURRENT_SOURCE_DIR})
@@ -160,12 +159,18 @@ foreach(SCRIPT_MODULE ${SCRIPT_MODULE_LIST})
     list(APPEND DYNAMIC_SCRIPT_MODULE_PROJECTS ${SCRIPT_MODULE_PROJECT_NAME})
     # Create the script module project
     add_library(${SCRIPT_MODULE_PROJECT_NAME} SHARED
-      ${PRIVATE_PCH_SOURCE}
       ${SCRIPT_MODULE_PRIVATE_SOURCES}
       ${SCRIPT_MODULE_PRIVATE_SCRIPTLOADER})
     target_link_libraries(${SCRIPT_MODULE_PROJECT_NAME}
+      PRIVATE
+        trinity-core-interface
       PUBLIC
         game)
+
+    target_include_directories(${SCRIPT_MODULE_PROJECT_NAME}
+      PUBLIC
+        ${CMAKE_CURRENT_SOURCE_DIR})
+
     set_target_properties(${SCRIPT_MODULE_PROJECT_NAME}
       PROPERTIES
         FOLDER
@@ -200,11 +205,12 @@ ConfigureScriptLoader("static" SCRIPT_MODULE_PRIVATE_SCRIPTLOADER OFF ${STATIC_S
 
 add_library(scripts STATIC
   ScriptLoader.h
-  ${PRIVATE_PCH_SOURCE}
   ${SCRIPT_MODULE_PRIVATE_SCRIPTLOADER}
   ${PRIVATE_SOURCES})
 
 target_link_libraries(scripts
+  PRIVATE
+    trinity-core-interface
   PUBLIC
     game-interface)
 
@@ -220,7 +226,7 @@ set_target_properties(scripts
 # Generate precompiled header
 if (USE_SCRIPTPCH)
   list(APPEND ALL_SCRIPT_PROJECTS scripts ${DYNAMIC_SCRIPT_MODULE_PROJECTS})
-  add_cxx_pch("${ALL_SCRIPT_PROJECTS}" ${PRIVATE_PCH_HEADER} ${PRIVATE_PCH_SOURCE})
+  add_cxx_pch("${ALL_SCRIPT_PROJECTS}" ${PRIVATE_PCH_HEADER})
 endif()
 
 # Remove all shared libraries in the installl directory which

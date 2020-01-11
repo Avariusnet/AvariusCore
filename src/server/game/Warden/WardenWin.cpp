@@ -1,6 +1,5 @@
 /*
- * Copyright (C) 2008-2017 TrinityCore <http://www.trinitycore.org/>
- * Copyright (C) 2005-2011 MaNGOS <http://getmangos.com/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
  * This program is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -26,11 +25,13 @@
 #include "ByteBuffer.h"
 #include "Database/DatabaseEnv.h"
 #include "GameTime.h"
+#include "World.h"
 #include "Player.h"
 #include "Util.h"
 #include "WardenWin.h"
 #include "WardenModuleWin.h"
 #include "WardenCheckMgr.h"
+#include "Random.h"
 #include <openssl/md5.h>
 
 WardenWin::WardenWin() : Warden(), _serverTicks(0) {}

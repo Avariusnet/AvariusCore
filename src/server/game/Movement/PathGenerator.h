@@ -1,19 +1,18 @@
 /*
- * Copyright (C) 2005-2011 MaNGOS <http://getmangos.com/>
+ * This file is part of the TrinityCore Project. See AUTHORS file for Copyright information
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the
+ * Free Software Foundation; either version 2 of the License, or (at your
+ * option) any later version.
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for
+ * more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License along
+ * with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
 #ifndef _PATH_GENERATOR_H
@@ -23,10 +22,11 @@
 #include "DetourNavMesh.h"
 #include "DetourNavMeshQuery.h"
 #include "MoveSplineInitArgs.h"
+#include <G3D/Vector3.h>
 
 class Unit;
 
-// 74*4.0f=296y  number_of_points*interval = max_path_len
+// 74*4.0f=296y number_of_points*interval = max_path_len
 // this is way more than actual evade range
 // I think we can safely cut those down even more
 #define MAX_PATH_LENGTH         74
@@ -73,7 +73,8 @@ class TC_GAME_API PathGenerator
 
         PathType GetPathType() const { return _type; }
 
-        void ReducePathLenghtByDist(float dist); // path must be already built
+        // shortens the path until the destination is the specified distance from the target point
+        void ShortenPathUntilDist(G3D::Vector3 const& point, float dist);
 
     private:
 
@@ -113,7 +114,7 @@ class TC_GAME_API PathGenerator
         float Dist3DSqr(G3D::Vector3 const& p1, G3D::Vector3 const& p2) const;
         bool InRangeYZX(float const* v1, float const* v2, float r, float h) const;
 
-        dtPolyRef GetPathPolyByPosition(dtPolyRef const* polyPath, uint32 polyPathSize, float const* Point, float* Distance = NULL) const;
+        dtPolyRef GetPathPolyByPosition(dtPolyRef const* polyPath, uint32 polyPathSize, float const* Point, float* Distance = nullptr) const;
         dtPolyRef GetPolyByLocation(float const* Point, float* Distance) const;
         bool HaveTile(G3D::Vector3 const& p) const;
 
@@ -121,7 +122,7 @@ class TC_GAME_API PathGenerator
         void BuildPointPath(float const* startPoint, float const* endPoint);
         void BuildShortcut();
 
-        NavTerrain GetNavTerrain(float x, float y, float z);
+        NavTerrainFlag GetNavTerrain(float x, float y, float z);
         void CreateFilter();
         void UpdateFilter();
 
