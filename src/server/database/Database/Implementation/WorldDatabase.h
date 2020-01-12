@@ -28,6 +28,14 @@ enum WorldDatabaseStatements : uint32
         name for a suiting suffix.
     */
 
+    /*Exi Start*/
+    WORLD_SEL_ITEM_NR,
+    WORLD_SEL_PORT,
+    WORLD_SEL_QUESTID_BY_NAME,
+    WORLD_SEL_QUESTNAME_BY_ID,
+    WORLD_SEL_ITEMNAME_BY_ID,
+    /*Exi END*/
+
     WORLD_DEL_LINKED_RESPAWN,
     WORLD_DEL_LINKED_RESPAWN_MASTER,
     WORLD_REP_LINKED_RESPAWN,

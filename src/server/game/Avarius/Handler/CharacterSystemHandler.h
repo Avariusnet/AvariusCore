@@ -21,8 +21,6 @@ private:
 	PreparedQueryResult getFirstCharacterPlayerLog(int accountid);
 	int checkPlayerAccountSecurity(int accountid);
 	
-
-
 	
 	int getGuildLeader(int guildid);
 	//PreparedQueryResult getCharacterByName(std::string charactername);

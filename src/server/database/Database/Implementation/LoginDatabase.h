@@ -28,6 +28,21 @@ enum LoginDatabaseStatements : uint32
         name for a suiting suffix.
     */
 
+    /*Custom Start*/
+    LOGIN_SEL_ACCOUNT_BYID,
+
+    //Autobroadcast
+    LOGIN_INS_AUTOBROADCAST_NEW,
+    LOGIN_SEL_AUTOBROADCAST_MAX_COUNT_ID,
+
+    //FIRSTNP
+    LOGIN_SEL_ACCOUNT_LAST_IP,
+    LOGIN_SEL_ACCOUNT_LAST_IP_COUNT,
+    LOGIN_SEL_ACCOUNT_SECURITY,
+
+
+    /*Custom End*/
+
     LOGIN_SEL_REALMLIST,
     LOGIN_DEL_EXPIRED_IP_BANS,
     LOGIN_UPD_EXPIRED_ACCOUNT_BANS,

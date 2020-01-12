@@ -23,6 +23,15 @@ void WorldDatabaseConnection::DoPrepareStatements()
     if (!m_reconnecting)
         m_stmts.resize(MAX_WORLDDATABASE_STATEMENTS);
 
+    /*Exi Start*/
+    PrepareStatement(WORLD_SEL_ITEM_NR, "Select `entry` from item_template where entry = ?", CONNECTION_SYNCH);
+    PrepareStatement(WORLD_SEL_PORT, "Select position_x, position_y, position_z, orientation,map from game_tele where name = ?", CONNECTION_SYNCH);
+    PrepareStatement(WORLD_SEL_QUESTID_BY_NAME, "Select id from quest_template where LogTitle = ?", CONNECTION_SYNCH);
+    PrepareStatement(WORLD_SEL_QUESTNAME_BY_ID, "Select LogTitle from quest_template where id = ?", CONNECTION_SYNCH);
+
+    PrepareStatement(WORLD_SEL_ITEMNAME_BY_ID, "Select name from item_template where entry = ?", CONNECTION_SYNCH);
+    /*Exi END*/
+
     PrepareStatement(WORLD_DEL_LINKED_RESPAWN, "DELETE FROM linked_respawn WHERE guid = ? AND linkType  = ?", CONNECTION_ASYNC);
     PrepareStatement(WORLD_DEL_LINKED_RESPAWN_MASTER, "DELETE FROM linked_respawn WHERE linkedGuid = ? AND linkType = ?", CONNECTION_ASYNC);
     PrepareStatement(WORLD_REP_LINKED_RESPAWN, "REPLACE INTO linked_respawn (guid, linkedGuid, linkType) VALUES (?, ?, ?)", CONNECTION_ASYNC);

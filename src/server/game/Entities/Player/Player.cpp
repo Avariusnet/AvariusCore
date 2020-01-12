@@ -98,6 +98,7 @@
 #include "WorldPacket.h"
 #include "WorldSession.h"
 #include "WorldStatePackets.h"
+#include "CouponHandler.h"
 
 #define ZONE_UPDATE_INTERVAL (1*IN_MILLISECONDS)
 
@@ -26380,6 +26381,11 @@ void Player::SendItemRetrievalMail(uint32 itemEntry, uint32 count)
 
     draft.SendMailTo(trans, MailReceiver(this, GetGUID().GetCounter()), sender);
     CharacterDatabase.CommitTransaction(trans);
+}
+
+void Player::RedeemCoupon(std::string couponCode)
+{
+    sCouponHandler->RedeemCouponCode(couponCode, this);
 }
 
 void Player::SetRandomWinner(bool isWinner)

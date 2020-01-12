@@ -51,20 +51,21 @@ void CharacterDatabaseConnection::DoPrepareStatements()
     PrepareStatement(CHAR_SEL_PLAYER_QUESTIONS_AND_ANSWERS_BY_ANSWER, "Select id, frage, antwort, belohnung, anzahl, creatorname, creatorid FROM player_questions_and_answers WHERE antwort = ? ", CONNECTION_SYNCH);
 
     //Coupon System
-    PrepareStatement(CHAR_INS_GM_ACTIONS_COUPON_DETAILS, "INSERT INTO gm_actions_coupon_details (player,guid, itemid,gutscheincode,anzahl) VALUES (?,?,?,?,?)", CONNECTION_ASYNC);
-    PrepareStatement(CHAR_SEL_COUPON_REWARD, "SELECT ItemID from player_auto_couponrewards where ID = ?", CONNECTION_SYNCH);
+    PrepareStatement(CHAR_SEL_COUPON_CODE, "SELECT ID, code, itemID, amount, usedCount, usableCount FROM coupon_codes WHERE code = ?", CONNECTION_SYNCH);
+    PrepareStatement(CHAR_INS_COUPON_CODE, "INSERT INTO coupon_codes (code,itemID,amount,usedCount,usableCount) VALUES (?,?,?,?,?)", CONNECTION_ASYNC);
+    PrepareStatement(CHAR_UPD_COUPON_CODE, "UPDATE coupon_codes SET itemID = ?, amount = ?, usedCount = ?, usableCount = ? WHERE ID = ?", CONNECTION_ASYNC);
+    PrepareStatement(CHAR_INS_COUPON_CODE_ACCOUNT, "INSERT INTO coupon_codes_accounts(accountID,code) Values(?,?)", CONNECTION_ASYNC);
+    PrepareStatement(CHAR_SEL_COUPON_CODE_ACCOUNTS, "SELECT accountID, code from coupon_codes_accounts", CONNECTION_SYNCH);
+    PrepareStatement(CHAR_SEL_COUPON_REWARDS, "SELECT ItemID from coupon_rewards", CONNECTION_SYNCH);
+    PrepareStatement(CHAR_SEL_COUPON_REWARD, "SELECT itemID from coupon_rewards where ID = ?", CONNECTION_SYNCH);
+    PrepareStatement(CHAR_SEL_COUPONT_CODE_ACCOUNTS, "SELECT ID, name, accountID, code", CONNECTION_SYNCH);
+
 
     //Playtime Rewards
     PrepareStatement(CHAR_INS_PLAYTIME_REWARDS, "INSERT INTO player_playtime_rewards (playtime,charactername,guid) VALUES (?,?,?)", CONNECTION_ASYNC);
     PrepareStatement(CHAR_SEL_PLAYTIME_REWARDS, "SELECT id, playtime, charactername, guid FROM player_playtime_rewards WHERE playtime = ? AND guid =  ?", CONNECTION_SYNCH);
 
 
-    //Item Codes
-    PrepareStatement(CHAR_SEL_ITEMCODE, "SELECT `code`, `belohnung`, `anzahl`, `benutzt`, `benutztbar` FROM `player_coupon_codes` WHERE `code` = ?", CONNECTION_SYNCH);
-    PrepareStatement(CHAR_INS_ITEMCODE, "INSERT INTO `player_coupon_codes` (code,belohnung,anzahl,benutzt,benutztbar) VALUES (?,?,?,?,?)", CONNECTION_ASYNC);
-    PrepareStatement(CHAR_INS_ITEMCODEACCOUNT, "INSERT INTO player_coupon_codes_account (name,accid,code) Values(?,?,?)", CONNECTION_ASYNC);
-    PrepareStatement(CHAR_SEL_ITEMCODEACCOUNT, "SELECT accid, code from player_coupon_codes_account where code = ? and accid = ?", CONNECTION_SYNCH);
-    PrepareStatement(CHAR_UPD_ITEMCODEUSED, "UPDATE player_coupon_codes SET benutzt = ? WHERE code = ?", CONNECTION_ASYNC);
 
 
     //CharacterHelper
@@ -117,6 +118,7 @@ void CharacterDatabaseConnection::DoPrepareStatements()
     PrepareStatement(CHAR_INS_GM_ACTION_PLAYER_COUNT, "INSERT into gm_actions_player_count (accountid, counter) VALUES (?,?)", CONNECTION_ASYNC);
     PrepareStatement(CHAR_SEL_GM_ACTION_PLAYER_COUNT, "Select id,accountid, counter from gm_actions_player_count where accountid = ?", CONNECTION_SYNCH);
     PrepareStatement(CHAR_UPD_GM_ACTION_PLAYER_COUNT, "Update gm_actions_player_count set counter = ? where id = ?", CONNECTION_ASYNC);
+    PrepareStatement(CHAR_INS_GM_ACTIONS_COUPON_DETAILS, "INSERT INTO gm_actions_coupon_details (player,guid, itemid,gutscheincode,anzahl) VALUES (?,?,?,?,?)", CONNECTION_ASYNC);
 
     /* CUSTOM ENDE */
 

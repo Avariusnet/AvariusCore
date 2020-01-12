@@ -4,31 +4,35 @@
 #include <string>
 #include "DatabaseEnv.h"
 #include "Player.h"
+#include "AccountCouponCode.h"
+#include "CouponCode.h"
 
 class CouponHandler {
 
-private:
-	std::string createNewCouponCode();
-	void insertNewCouponCodeinDB(std::string code, int itemid, int itemquantity, int used, int useablequantity);
-	bool isItemCodeStillValid(std::string couponcode);
-	void updateCouponCodeUsed(int used, std::string couponcode);
-	int getFortuneItem();
-	int getCouponRewardbyID(int modulo);
-	void insertNewPlayerUsedCode(std::string charactername, int accountid, std::string couponcode);
-	PreparedQueryResult getRequestedCodeData(std::string couponcode);
-	bool hasPlayeralreadyUsedCode(std::string couponcode, int accountid);
 
 public:
-
-	 
     static CouponHandler* instance();
 
-	 void playerRedeemCommand(Player * player, const char* args);
-	 void couponGenerationperCommand(Player * player, const char* args);
-	 void playerCouponGenerationAndRedeeming(Player * player, std::string logmessage);
-	 void playerCouponGerationForAFriend(Player * player, std::string logmessage);
+    void LoadRewards();
+    void LoadPlayerUsedCoupons();
+    std::string Create(uint32 amount);
+    std::string Create(uint32 amount, uint32 usableCount);
+    std::string Create(uint32 itemID, uint32 amount, uint32 usableCount);
+    bool RedeemCouponCode(std::string couponCode, Player* player);
+    
 
+private:
 
+    uint32 RollItem();
+    std::string CreateCode();
+    AccountCouponCode::AccCode FindAccount(uint32 accountID);
+    bool IsValid(std::string couponcode);
+    bool IsValid(std::string couponcode, Player* player);
+    CouponCode::CCode GetCoupon(std::string couponCode);
+
+    std::vector<uint32> m_RewardsList;
+    std::vector<CouponCode::CCode> m_CouponCodes;
+    std::vector<AccountCouponCode::AccCode> m_AccountUsedCodes;
 };
 
 

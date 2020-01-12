@@ -6,7 +6,10 @@
 #include "Player.h"
 #include "ScriptedGossip.h"
 #include "Chat.h"
-
+#include "SpellMgr.h"
+#include "GameEventMgr.h"
+#include "Mail.h"
+#include "Item.h"
 
 
 #define NOCHARACTERFOUND "No Character in DB!"
@@ -802,7 +805,7 @@ bool  CharacterSystemHandler::LearnAllRecipesInProfession(Player *pPlayer, Skill
 
 void CharacterSystemHandler::LearnSkillRecipesHelper(Player *player, uint32 skill_id)
 {
-	uint32 classmask = player->getClassMask();
+	uint32 classmask = player->GetClassMask();
 
 	for (uint32 j = 0; j < sSkillLineAbilityStore.GetNumRows(); ++j)
 	{
@@ -907,9 +910,9 @@ void CharacterSystemHandler::givePlayerLevelWithCurrency(Player * player, uint16
 		if (player->HasItemCount(vipcurrency, cost, true))
 		{
 			if (levelup == 80) {
-				int actualplayerlevel = player->getLevel();
+				int actualplayerlevel = player->GetLevel();
 				int difference = 80 - actualplayerlevel;
-				player->SetLevel(player->getLevel() + difference);
+				player->SetLevel(player->GetLevel() + difference);
 				player->DestroyItemCount(vipcurrency, cost, true);
 				ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 					player->GetName());
@@ -922,7 +925,7 @@ void CharacterSystemHandler::givePlayerLevelWithCurrency(Player * player, uint16
 			}
 
 
-			player->SetLevel(player->getLevel() + levelup);
+			player->SetLevel(player->GetLevel() + levelup);
 			player->DestroyItemCount(vipcurrency, cost, true);
 			ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 				player->GetName());
@@ -970,7 +973,7 @@ void CharacterSystemHandler::executeGuildCharacter(Player * player, std::string 
 	player->TeleportTo(0, -792.84f, -1607.55f, 142.30f, 2.33f, 0);
 	player->AddItem(20400, 4);
 	player->SetMoney(50000000);
-	player->UpdateSkillsToMaxSkillsForLevel();
+	// player->UpdateSkillsToMaxSkillsForLevel();
 	player->UpdateSkillsForLevel();
 	if (membercount >= 10 && membercount < 25) {
 		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
@@ -991,7 +994,7 @@ void CharacterSystemHandler::executeGuildCharacter(Player * player, std::string 
 		player->LearnDefaultSkill(762, 4);
 	}
 	
-	PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), playerlog);
+	sPlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), playerlog);
 	player->SaveRecallPosition();
 }
 
@@ -1079,8 +1082,6 @@ std::string CharacterSystemHandler::getAccountName(int accountid) {
 
 void CharacterSystemHandler::moveCharacterToAnotherAccount(Player * player, const char* args)
 {
-	CustomPlayerLog * PlayerLog = 0;
-	CustomGMLogic * GMLogic = 0;
 	std::string accountname = args;
 	PreparedStatement* stmt = LoginDatabase.GetPreparedStatement(LOGIN_SEL_ACCOUNT_ID_BY_NAME);
 	stmt->setString(0, accountname);
@@ -1109,7 +1110,7 @@ void CharacterSystemHandler::moveCharacterToAnotherAccount(Player * player, cons
 	uint32 charactersum = felder[0].GetInt32();
 
 	if (player->GetSession()->GetSecurity() > 0) {
-		GMLogic->addCompleteGMCountLogic(player->GetSession()->GetPlayer(), "Try to transfer Character to a Lower or Higher Sec Account!");
+		sTeamMonitoringHandler->AddCompleteGMCountLogic(player->GetSession()->GetPlayer(), "Try to transfer Character to a Lower or Higher Sec Account!");
 		ChatHandler(player->GetSession()).PSendSysMessage("##########################################################",
 			player->GetName());
 		ChatHandler(player->GetSession()).PSendSysMessage("Warning: GM should be a supporter not a cheater!",
@@ -1133,7 +1134,7 @@ void CharacterSystemHandler::moveCharacterToAnotherAccount(Player * player, cons
 		std::ostringstream tt;
 		tt << "Transfer character to Account " << accountname;
 		std::string reason = tt.str().c_str();
-		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
+        sPlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 		return;
 	}
 
@@ -1152,8 +1153,6 @@ void CharacterSystemHandler::moveCharacterToAnotherAccount(Player * player, cons
 void CharacterSystemHandler::doesCharacterExist(Player * player, const char * args)
 {
 	std::string charactername = args;
-	CustomPlayerLog * PlayerLog = 0;
-
 	PreparedStatement* charselbyname = CharacterDatabase.GetPreparedStatement(CHAR_SEL_CHARACTER_BYNAME);
 	charselbyname->setString(0, charactername);
 	PreparedQueryResult result = CharacterDatabase.Query(charselbyname);
@@ -1178,7 +1177,7 @@ void CharacterSystemHandler::doesCharacterExist(Player * player, const char * ar
 		PreparedQueryResult ergebnis = LoginDatabase.Query(getaccountnamebyid);
 
 		if (!result) {
-			PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Player Character search error!");
+			sPlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), "Player Character search error!");
 			ChatHandler(player->GetSession()).PSendSysMessage("#############################################",
 				player->GetName());
 			ChatHandler(player->GetSession()).PSendSysMessage("No Character with Name %s exist.", charactername,
@@ -1197,7 +1196,7 @@ void CharacterSystemHandler::doesCharacterExist(Player * player, const char * ar
 		std::ostringstream tt;
 		tt << "Search for Character " << charactername;
 		std::string reason = tt.str().c_str();
-		PlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
+		sPlayerLog->addCompletePlayerLog(player->GetSession()->GetPlayer(), reason);
 		ChatHandler(player->GetSession()).PSendSysMessage("############################################",
 			player->GetName());
 		ChatHandler(player->GetSession()).PSendSysMessage("Charactername: %s", charactername,

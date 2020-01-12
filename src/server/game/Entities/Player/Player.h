@@ -1390,6 +1390,13 @@ class TC_GAME_API Player : public Unit, public GridObject<Player>
 
         void SendItemRetrievalMail(uint32 itemEntry, uint32 count); // Item retrieval mails sent by The Postmaster (34337), used in multiple places.
 
+
+        /*********************************************************/
+        /***                   Coupon SYSTEM                     ***/
+        /*********************************************************/
+
+        void RedeemCoupon(std::string couponCode);
+
         /*********************************************************/
         /*** MAILED ITEMS SYSTEM ***/
         /*********************************************************/
